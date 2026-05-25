@@ -941,7 +941,7 @@
     gap: var(--dl-layout-space-halfunit);
     width: 292px;
     height: 853px;
-    heigth: 50vh;
+    height: 50vh;
     opacity: 1;
     padding: var(--dl-layout-space-unit);
     background-color: #FFFFFF;

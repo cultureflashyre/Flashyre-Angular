@@ -848,9 +848,12 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   // Placeholder for the button action
   onCreateAssessment(item: any) {
-    console.log("Create Assessment clicked for:", item.job_role);
-    // Add your navigation logic here, e.g.:
-    // this.router.navigate(['/create-assessment', item.id]);
+    if (item && item.id) {
+      // Navigates to the Job Creation Step 1 with the requirement ID
+      this.router.navigate(['/create-job'], { queryParams: { requirementId: item.id } });
+    } else {
+      console.error('Requirement ID is missing, cannot navigate to Assessment Creation.');
+    }
   }
 
 
@@ -2040,7 +2043,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   navigateToAts(id: number): void {
     if (id) {
-      // Navigates to the URL 'recruiter-workflow-ats/:id'
+      // Navigates to the original ATS workflow page
       this.router.navigate(['/recruiter-workflow-ats', id]);
     } else {
       console.error('Requirement ID is missing, cannot navigate to ATS.');

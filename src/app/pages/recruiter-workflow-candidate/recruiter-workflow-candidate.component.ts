@@ -1309,8 +1309,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       last_name: data.last_name,
       email: data.email,
       work_experience: data.work_experience,
-      total_experience: data.total_experience || data.total_experience_min || data.total_experience_years,
-      relevant_experience: data.relevant_experience || data.relevant_experience_min || data.relevant_experience_years,
+      total_experience: data.total_experience || data.total_experience_years,
+      relevant_experience: data.relevant_experience || data.relevant_experience_years,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
@@ -1380,8 +1380,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       last_name: data.last_name,
       email: data.email,
       work_experience: data.work_experience,
-      total_experience: data.total_experience || data.total_experience_min,
-      relevant_experience: data.relevant_experience || data.relevant_experience_min,
+      total_experience: data.total_experience,
+      relevant_experience: data.relevant_experience,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
@@ -1458,12 +1458,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         formData.append('preferred_location', JSON.stringify(this.preferredLocationsList));
       }
       else if (key === 'total_experience' && this.candidateForm.get(key)?.value !== null) {
-        formData.append('total_experience_min', this.candidateForm.get(key)?.value);
-        formData.append('total_experience_max', this.candidateForm.get(key)?.value);
+        formData.append('total_experience', this.candidateForm.get(key)?.value);
       }
       else if (key === 'relevant_experience' && this.candidateForm.get(key)?.value !== null) {
-        formData.append('relevant_experience_min', this.candidateForm.get(key)?.value);
-        formData.append('relevant_experience_max', this.candidateForm.get(key)?.value);
+        formData.append('relevant_experience', this.candidateForm.get(key)?.value);
       }
       else if (this.candidateForm.get(key)?.value !== null && this.candidateForm.get(key)?.value !== undefined) {
         formData.append(key, this.candidateForm.get(key)?.value);

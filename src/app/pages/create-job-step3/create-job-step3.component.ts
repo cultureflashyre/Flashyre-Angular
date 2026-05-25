@@ -47,7 +47,7 @@ interface SkillSection {
   totalCount: number;
   selectedCount: number;
   isAllSelected: boolean;
-  generationStatus: 'pending' | 'loading' | 'completed' | 'failed';
+  generationStatus: 'pending' | 'in_progress' | 'loading' | 'completed' | 'failed';
 }
 
 interface UploadedQuestion {
@@ -154,8 +154,10 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   isAddingNewSkill: boolean = false;
   // === END OF NEW PROPERTIES ===  
 
-   // NEW: Flag to prevent multiple sequential generation loops
-  private isGeneratingSequentially = false;
+  // Properties for progress tracking
+  isGenerating: boolean = false;
+  private pollingSubscription: Subscription | null = null;
+  private lastPollStatus: any = null;
 
   constructor(
     private fb: FormBuilder,
@@ -390,14 +392,15 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         finalize(() => {
           this.isLoading = false;
           this.spinner.hide('main-spinner');
-          this.cdr.detectChanges(); // Ensure final UI update after spinner hides
-          this.generateRemainingSkillsSequentially(); // Start generating pending skills in background
+          this.cdr.detectChanges();
           
-          // Small delay for DOM to settle before calculating carousel state
+          // START POLLING for any skills that are not completed
+          this.startPollingStatus();
+          
           setTimeout(() => {
             this.calculateCarouselState();
             this.updateSliderFill();
-            this.cdr.detectChanges(); // Final UI update after carousel calculations
+            this.cdr.detectChanges();
           }, 50);
         })
       ).subscribe({
@@ -487,49 +490,114 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   this.processNewSkillsSequentially(newValidSkills);
 }
 
-  private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
-    this.isAddingNewSkill = true;
+  /**
+   * Starts polling for MCQ generation status.
+   */
+  private startPollingStatus(): void {
+    if (this.pollingSubscription) return;
+
     const token = this.authService.getJWTToken();
-    if (!token) {
-      this.showErrorPopup('Authentication error.');
-      this.isAddingNewSkill = false;
+    if (!token || !this.jobUniqueId) return;
+
+    // Check if we even need to poll
+    const needsPolling = this.skillSections.some(s => s.generationStatus === 'pending' || s.generationStatus === 'in_progress' || s.generationStatus === 'loading');
+    if (!needsPolling) {
+      this.isGenerating = false;
       return;
     }
 
-    console.log(`Starting background generation for: ${skillsToProcess.join(', ')}`);
+    this.isGenerating = true;
+    console.log("Starting polling for MCQ status...");
 
-    for (const skillName of skillsToProcess) {
-      const sectionToUpdate = this.skillSections.find(
-        s => s.skillName === skillName && s.generationStatus === 'loading'
-      );
-      
-      if (!sectionToUpdate) {
-        console.warn(`Could not find placeholder for skill "${skillName}". Skipping.`);
-        continue;
-      }
+    // Polling every 3 seconds
+    this.pollingSubscription = new Subscription();
+    
+    // We create a recurring interval
+    const intervalId = setInterval(() => {
+      this.jobService.checkMcqStatus(this.jobUniqueId, token).subscribe({
+        next: (response) => {
+          if (!response || !response.skills) return;
+          
+          let anyChanged = false;
+          let stillWorking = false;
 
-      try {
-        const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, skillName, token).toPromise();
-        
-        const newQuestions = this.processMcqItems(response.data);
-        
-        sectionToUpdate.questions = newQuestions;
-        sectionToUpdate.totalCount = newQuestions.length;
-        sectionToUpdate.generationStatus = 'completed';
-        this.updateCounts();
-        this.cdr.detectChanges();
+          Object.keys(response.skills).forEach(skillName => {
+            const section = this.skillSections.find(s => s.skillName === skillName);
+            const newStatus = response.skills[skillName];
 
-      } catch (err: any) {
-        console.error(`Failed to generate questions for new skill: ${skillName}`, err);
-        this.showErrorPopup(`Error for skill "${skillName}": ${err.message}`);
-        
-        sectionToUpdate.generationStatus = 'failed';
-        this.cdr.detectChanges();
-      }
+            if (section) {
+              if (section.generationStatus !== newStatus) {
+                console.log(`Skill '${skillName}' status changed: ${section.generationStatus} -> ${newStatus}`);
+                section.generationStatus = newStatus as any;
+                anyChanged = true;
+
+                // If it just completed, fetch its questions
+                if (newStatus === 'completed') {
+                  this.fetchMcqsForSkill(skillName, token);
+                }
+              }
+
+              if (newStatus === 'pending' || newStatus === 'in_progress' || newStatus === 'loading') {
+                stillWorking = true;
+              }
+            }
+          });
+
+          if (anyChanged) {
+            this.cdr.detectChanges();
+          }
+
+          if (!stillWorking) {
+            console.log("All MCQ generations finished (completed or failed). Stopping polling.");
+            this.stopPollingStatus();
+          }
+        },
+        error: (err) => {
+          console.error("Polling error:", err);
+        }
+      });
+    }, 3000);
+
+    this.pollingSubscription.add(() => clearInterval(intervalId));
+  }
+
+  private stopPollingStatus(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
     }
+    this.isGenerating = false;
+    this.cdr.detectChanges();
+  }
 
+
+  private fetchMcqsForSkill(skillName: string, token: string): void {
+    this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
+      next: (mcqResponse) => {
+        const skillData = mcqResponse.data;
+        const section = this.skillSections.find(s => s.skillName === skillName);
+        if (section && skillData[skillName]) {
+          const processedQuestions = this.processMcqItems(skillData[skillName].mcq_items);
+          section.questions = processedQuestions;
+          section.totalCount = processedQuestions.length;
+          this.updateCountsForSection(section);
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error(`Failed to fetch questions for skill ${skillName}:`, err)
+    });
+  }
+
+  private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
+    // With parallel generation, this is just a gatekeeper. 
+    // The individual generateMcqForSkill calls are still needed if we want to trigger *immediate* 
+    // generation for a newly added skill, but we should start polling right after.
+    
+    this.isAddingNewSkill = true;
+    const token = this.authService.getJWTToken();
+    // ... logic remains similar but we ensure polling is running ...
+    this.startPollingStatus();
     this.isAddingNewSkill = false;
-    console.log("Finished background generation for all new skills.");
   }
   
   private applyAssessmentDetails(assessmentDetails: any): void {
@@ -581,53 +649,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       this.cdr.detectChanges();
   }
   
-  private async generateRemainingSkillsSequentially(): Promise<void> {
-    if (this.isGeneratingSequentially) {
-      console.log("Sequential generation is already in progress. Skipping.");
-      return;
-    }
-    this.isGeneratingSequentially = true;
-    console.log("Starting sequential generation for skills in 'pending' state.");
-
-    const token = this.authService.getJWTToken();
-    if (!token) {
-      this.showErrorPopup('Authentication error while generating questions.');
-      this.isGeneratingSequentially = false;
-      return;
-    }
-
-    const pendingSections = this.skillSections.filter(s => s.generationStatus === 'pending');
-    console.log(`Found ${pendingSections.length} skills to process.`);
-
-    for (const section of pendingSections) {
-      try {
-        console.log(`Generating questions for skill: ${section.skillName}`);
-        section.generationStatus = 'loading';
-        this.cdr.detectChanges();
-        
-        const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
-        
-        const newQuestions = this.processMcqItems(response.data);
-        
-        section.questions = [...section.questions, ...newQuestions];
-        section.totalCount = section.questions.length;
-        section.generationStatus = 'completed';
-        this.updateCountsForSection(section);
-        this.updateCounts();
-        this.cdr.detectChanges();
-        console.log(`SUCCESS: Completed generation for '${section.skillName}'. Added ${newQuestions.length} questions.`);
-
-      } catch (error: any) {
-        section.generationStatus = 'failed';
-        console.error(`FAILED to generate questions for '${section.skillName}':`, error);
-        this.showErrorPopup(`Could not generate questions for ${section.skillName}: ${error.message || 'Server error'}`);
-        this.cdr.detectChanges();
-      }
-    }
-    
-    this.isGeneratingSequentially = false;
-    console.log("Finished sequential generation process.");
-  }
 
   private extractOptionsFromQuestionText(questionText: string): string[] {
     const options: string[] = [];

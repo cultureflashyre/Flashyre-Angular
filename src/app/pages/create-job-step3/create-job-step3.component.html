@@ -339,8 +339,10 @@
                 </div>
               </div>
             </div>
-            <div id="language-questions-main-container" class="admin-create-job-step3-language-questions-main-container">
-              <div id="languages-main-container" class="admin-create-job-step3-languages-main-container">
+
+              <div id="language-questions-main-container" class="admin-create-job-step3-language-questions-main-container">
+                <div id="languages-main-container" class="admin-create-job-step3-languages-main-container">
+                  <!-- ... arrows and skill tabs remain ... -->
                 <!-- Left Arrow Icon (can be implemented with a scroll function later if needed) -->
                 <div
                   id="left-arrow-container"
@@ -414,93 +416,101 @@
                 </div>
                 <!-- This container shows the questions for the currently active section -->
                 @if (activeTab === 'ai-generated' && skillSections.length > 0 && skillSections[activeSectionIndex]; as activeSection) {
-                  @if (skillSections.length <= 0) {
-                    <div>
-                      <span class="admin-create-job-step3-selected-text">AI question are not generated!</span>
-                    </div>
-                  }
-                  <div id="select-all-container" class="admin-create-job-step3-select-all-container">
-                    <div id="check-box-container" class="admin-create-job-step3-check-box-container">
-                      <input type="checkbox" id="select-all-checkbox" class="admin-create-job-step3-checkbox-icon" [(ngModel)]="activeSection.isAllSelected" [ngModelOptions]="{standalone: true}" (change)="toggleSelectAllForSection($event)" />
-                    </div>
-                    <label for="select-all-checkbox" id="select-all-text" class="admin-create-job-step3-select-all-text">Select all ({{ activeSection.questions.length }})</label>
-                  </div>
                   <div id="questions-main-container" class="admin-create-job-step3-questions-main-container2">
-                    <!-- Looping through each question in the active section -->
-                    @for (question of activeSection.questions; track question; let i = $index) {
-                      <div id="questions-container" class="admin-create-job-step3-questions-container">
-                        <div class="admin-create-job-step3-container19">
-                          <div id="questions-checkbox-container" class="admin-create-job-step3-questions-checkbox-container">
-                            <input type="checkbox" [id]="'q-checkbox-' + question.mcq_item_id" class="admin-create-job-step3-questions-checkbox" [(ngModel)]="question.isSelected" [ngModelOptions]="{standalone: true}" (ngModelChange)="onQuestionSelectionChange()" />
-                          </div>
-                          <div id="question-1-container" class="admin-create-job-step3-question1-container">
-                            <label [for]="'q-checkbox-' + question.mcq_item_id" id="questions-text" class="admin-create-job-step3-questions-text2">
-                              <!-- AI icon shown conditionally -->
-                              <span>✨ </span>
-                              <!-- Display question text -->
-                              {{ question.parsed.question }}
-                            </label>
-                            <div id="options-container" class="admin-create-job-step3-options-container">
-                              @for (option of question.parsed.options; track option; let j = $index) {
-                                <div class="admin-create-job-step3-option1-container">
-                                  <input type="radio" [id]="'q-' + question.mcq_item_id + '-option-' + j" [name]="'q-radio-' + question.mcq_item_id" class="admin-create-job-step3-radio-icon" [checked]="'abcd'[j] === question.parsed.correctAnswer" disabled />
-                                  <div class="option-text-wrapper">
-                                    <label [for]="'q-' + question.mcq_item_id + '-option-' + j" class="admin-create-job-step3-option1-text">{{ option }}</label>
-                                  </div>
+                    
+                    <!-- 1. SKELETON LOADING STATE -->
+                    @if (activeSection.generationStatus === 'loading' || activeSection.generationStatus === 'in_progress' || activeSection.generationStatus === 'pending') {
+                      <div class="skeleton-questions-container">
+                        <div class="skeleton-header">
+                          <div class="skeleton-shimmer skeleton-title-short"></div>
+                          <div class="skeleton-shimmer skeleton-text-med"></div>
+                        </div>
+                        
+                        @for (i of [1,2,3]; track i) {
+                          <div class="skeleton-question-card">
+                            <div class="skeleton-row">
+                              <div class="skeleton-shimmer skeleton-checkbox"></div>
+                              <div class="skeleton-content">
+                                <div class="skeleton-shimmer skeleton-title"></div>
+                                <div class="skeleton-options">
+                                  <div class="skeleton-shimmer skeleton-option"></div>
+                                  <div class="skeleton-shimmer skeleton-option"></div>
+                                  <div class="skeleton-shimmer skeleton-option"></div>
+                                  <div class="skeleton-shimmer skeleton-option"></div>
                                 </div>
-                              }
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div id="marks-container" class="admin-create-job-step3-marks-container">
-                          <span id="marks-text" class="admin-create-job-step3-marks-text">2 marks</span>
-                          <div id="levels-container" class="admin-create-job-step3-levels-container">
-                            <span class="admin-create-job-step3-level-tag" [ngClass]="question.parsed.difficulty.toLowerCase()">{{ question.parsed.difficulty }}</span>
-                          </div>
+                        }
+                        
+                        <div class="skeleton-status-footer">
+                          <span class="tab-spinner"></span>
+                          <span class="skeleton-status-msg">AI is generating questions for {{ activeSection.skillName }}...</span>
                         </div>
                       </div>
                     }
-                    @if (activeSection.generationStatus === 'loading') {
-                      <div class="status-container">
-                        <div class="tab-spinner large-spinner"></div>
-                        <p class="status-text">Generating questions for {{ activeSection.skillName }}...</p>
-                      </div>
-                    }
+
                     <!-- 2. FAILED STATE -->
                     @if (activeSection.generationStatus === 'failed') {
                       <div class="status-container">
                         <div class="status-icon error-icon">!</div>
                         <p class="status-text error-text">
-                          Failed to generate questions for {{ activeSection.skillName }}.<br>
-                          You can try again using the "✨ Add Question with AI" button.
+                          Failed to generate questions for {{ activeSection.skillName }}.
                         </p>
+                        <button class="retry-button" (click)="addMoreAiQuestions()">
+                          ✨ Try Regenerating
+                        </button>
                       </div>
                     }
-                    <!-- 3. COMPLETED STATE (Contains the existing question list) -->
+
+                    <!-- 3. COMPLETED STATE -->
                     @if (activeSection.generationStatus === 'completed') {
-                      <div id="select-all-container" class="admin-create-job-step3-select-all-container">
-                        <div id="check-box-container" class="admin-create-job-step3-check-box-container">
-                          <input type="checkbox" id="select-all-checkbox" class="admin-create-job-step3-checkbox-icon" [(ngModel)]="activeSection.isAllSelected" [ngModelOptions]="{standalone: true}" (change)="toggleSelectAllForSection($event)" />
+                      @if (activeSection.questions.length > 0) {
+                        <div id="select-all-container" class="admin-create-job-step3-select-all-container">
+                          <div id="check-box-container" class="admin-create-job-step3-check-box-container">
+                            <input type="checkbox" id="select-all-checkbox" class="admin-create-job-step3-checkbox-icon" [(ngModel)]="activeSection.isAllSelected" [ngModelOptions]="{standalone: true}" (change)="toggleSelectAllForSection($event)" />
+                          </div>
+                          <label for="select-all-checkbox" id="select-all-text" class="admin-create-job-step3-select-all-text">Select all ({{ activeSection.questions.length }})</label>
                         </div>
-                        <label for="select-all-checkbox" id="select-all-text" class="admin-create-job-step3-select-all-text">Select all ({{ activeSection.questions.length }})</label>
-                      </div>
-                      <div id="questions-main-container" class="admin-create-job-step3-questions-main-container2">
-                        <!-- Looping through each question in the active section -->
+
+                        <!-- Question List -->
                         @for (question of activeSection.questions; track question; let i = $index) {
                           <div id="questions-container" class="admin-create-job-step3-questions-container">
-                            <!-- ... (The entire *ngFor loop with question details remains exactly the same) ... -->
+                            <div class="admin-create-job-step3-container19">
+                              <div id="questions-checkbox-container" class="admin-create-job-step3-questions-checkbox-container">
+                                <input type="checkbox" [id]="'q-checkbox-' + question.mcq_item_id" class="admin-create-job-step3-questions-checkbox" [(ngModel)]="question.isSelected" [ngModelOptions]="{standalone: true}" (ngModelChange)="onQuestionSelectionChange()" />
+                              </div>
+                              <div id="question-1-container" class="admin-create-job-step3-question1-container">
+                                <label [for]="'q-checkbox-' + question.mcq_item_id" id="questions-text" class="admin-create-job-step3-questions-text2">
+                                  <span>✨ </span>
+                                  {{ question.parsed.question }}
+                                </label>
+                                <div id="options-container" class="admin-create-job-step3-options-container">
+                                  @for (option of question.parsed.options; track option; let j = $index) {
+                                    <div class="admin-create-job-step3-option1-container">
+                                      <input type="radio" [id]="'q-' + question.mcq_item_id + '-option-' + j" [name]="'q-radio-' + question.mcq_item_id" class="admin-create-job-step3-radio-icon" [checked]="'abcd'[j] === question.parsed.correctAnswer" disabled />
+                                      <div class="option-text-wrapper">
+                                        <label [for]="'q-' + question.mcq_item_id + '-option-' + j" class="admin-create-job-step3-option1-text">{{ option }}</label>
+                                      </div>
+                                    </div>
+                                  }
+                                </div>
+                              </div>
+                            </div>
+                            <div id="marks-container" class="admin-create-job-step3-marks-container">
+                              <span id="marks-text" class="admin-create-job-step3-marks-text">2 marks</span>
+                              <div id="levels-container" class="admin-create-job-step3-levels-container">
+                                <span class="admin-create-job-step3-level-tag" [ngClass]="question.parsed.difficulty.toLowerCase()">{{ question.parsed.difficulty }}</span>
+                              </div>
+                            </div>
                           </div>
                         }
-                        <!-- MODIFIED: This message now only shows if generation is complete AND there are zero questions -->
-                        @if (activeSection.questions.length === 0) {
-                          <div class="no-questions-message">
-                            No questions were generated for this skill. You can try adding more.
-                          </div>
-                        }
-                      </div>
-                      @if (activeSection.questions.length === 0) {
-                        <div class="no-questions-message">
-                          No questions found for this skill.
+                      } @else {
+                        <div class="status-container">
+                          <p class="status-text">No questions were generated for this skill.</p>
+                          <button class="retry-button" (click)="addMoreAiQuestions()">
+                            ✨ Add Questions with AI
+                          </button>
                         </div>
                       }
                     }

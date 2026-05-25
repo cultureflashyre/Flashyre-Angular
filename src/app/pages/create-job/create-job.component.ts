@@ -10,6 +10,7 @@ import { AdminJobDescriptionService } from '../../services/admin-job-description
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SkillService, ApiSkill } from '../../services/skill.service';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
+import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from '../../../environments/environment';
@@ -110,6 +111,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     @Inject(DOCUMENT) private document: Document,
     private skillService: SkillService,
     private workflowService: AdminJobCreationWorkflowService,
+    private adbRequirementService: AdbRequirementService,
     private spinner: NgxSpinnerService,
   ) {
     const numberValidator = (control: import('@angular/forms').AbstractControl): { [key: string]: any } | null => {
@@ -264,7 +266,14 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         console.log('Resuming existing admin job post with unique_id from workflow service:', workflowId);
         this.loadJobPostForEditing(workflowId);
       } else {
-        this.resetForm();
+        // NEW: Check for requirementId in query parameters
+        const requirementId = this.route.snapshot.queryParamMap.get('requirementId');
+        if (requirementId) {
+          console.log('Requirement ID detected, loading data from requirement:', requirementId);
+          this.loadFromRequirement(requirementId);
+        } else {
+          this.resetForm();
+        }
       }
     }
 
@@ -1114,6 +1123,103 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.workflowService.clearWorkflow();
       this.resetForm();
     }
+  }
+
+  private loadFromRequirement(requirementId: string): void {
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) return;
+
+    this.isSubmitting = true;
+    this.spinner.show('main-spinner');
+
+    this.subscriptions.add(
+      this.adbRequirementService.getRequirement(requirementId).subscribe({
+        next: (requirement: any) => {
+          this.mapRequirementToForm(requirement);
+          // Automatically save as draft to establish the "Staging ID" (unique_id)
+          this.initialDraftSave(token);
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          this.spinner.hide('main-spinner');
+          this.showErrorPopup('Failed to load requirement data.');
+          console.error('Error loading requirement:', err);
+        }
+      })
+    );
+  }
+
+  private mapRequirementToForm(req: any): void {
+    const role = req.job_role || '';
+    const company_name = req.client_name || 'Flashyre';
+    const locationArray = Array.isArray(req.location) ? req.location : [];
+    const total_experience_min = req.total_experience_min || 0;
+    const total_experience_max = req.total_experience_max || 30;
+    const relevant_experience_min = req.relevant_experience_min || 0;
+    const relevant_experience_max = req.relevant_experience_max || 30;
+    const min_budget = req.salary_min || null;
+    const max_budget = req.salary_max || null;
+    const notice_period = this._normalizeNoticePeriod(req.notice_period);
+    const skills = Array.isArray(req.skills) ? req.skills : [];
+    const job_description = req.job_description || '';
+
+    this.jobForm.patchValue({
+      role,
+      location: locationArray,
+      job_type: 'Permanent', // Default
+      workplace_type: 'On-site', // Default for requirements usually
+      total_experience_min,
+      total_experience_max,
+      relevant_experience_min,
+      relevant_experience_max,
+      budget_type: 'Annually',
+      min_budget,
+      max_budget,
+      notice_period,
+      skills,
+      job_description
+    });
+
+    if (this.isViewInitialized) {
+      this.populateSkills(skills);
+      this.setJobDescription(job_description);
+      this.updateExperienceUI();
+    }
+  }
+
+  /**
+   * Performs an immediate draft save to get a unique_id and establish the workflow.
+   */
+  private initialDraftSave(token: string): void {
+    const formValues = this.jobForm.getRawValue();
+    const jobDetails: any = {
+      ...formValues,
+      location: Array.isArray(formValues.location) ? formValues.location.join(', ') : '',
+      skills: {
+        primary: (formValues.skills || []).map((s: string) => ({ skill: s, skill_confidence: 1.0, type_confidence: 1.0 })),
+        secondary: []
+      },
+      status: 'draft',
+      company_name: formValues.role ? this.jobForm.get('company_name')?.value || 'Flashyre' : 'Flashyre'
+    };
+
+    this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
+      next: (response) => {
+        this.currentJobUniqueId = response.unique_id;
+        this.isEditMode = true;
+        this.jobForm.patchValue({ unique_id: response.unique_id });
+        this.workflowService.startWorkflow(response.unique_id);
+        
+        this.isSubmitting = false;
+        this.spinner.hide('main-spinner');
+        this.showSuccessPopup('Job draft initiated from requirement.');
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        this.spinner.hide('main-spinner');
+        console.error('Initial draft save failed:', err);
+      }
+    });
   }
 
   resetForm(): void {

@@ -48,8 +48,8 @@ export interface SourcedData {
   current_location: string;
   preferred_location: string;
   current_ctc: string;
-  total_experience_min: number;
-  total_experience_max: number;
+  total_experience: number;
+  relevant_experience: number;
   source: string;
   resume: string | null;
 }
