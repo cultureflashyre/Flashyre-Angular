@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+import { RecruiterWorkflowNavbarComponent } from 'src/app/components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -47,7 +47,7 @@ function forbiddenLocationValidator(control: AbstractControl): { [key: string]: 
   selector: 'create-job',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule, 
-    NavbarForAdminView, AlertMessageComponent, ReactiveFormsModule,
+    RecruiterWorkflowNavbarComponent, AlertMessageComponent, ReactiveFormsModule,
     NgxSpinnerModule,
   ],
   templateUrl: './create-job.component.html',
@@ -565,9 +565,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
       role = details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '';
       const aiLocationString = details.location || '';
-      locationArray = (typeof aiLocationString === 'string' && aiLocationString.trim() !== '')
-        ? aiLocationString.split(',').map(s => s.trim()).filter(s => s)
-        : [];
+      locationArray = this.cleanLocationValue(aiLocationString);
       job_type = this.mapJobType(details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '');
       workplace_type = details.workplace_type || 'Remote';
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(minExp, maxExp);
@@ -586,9 +584,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       const details = jobData as JobDetails;
       role = details.role;
       const dbLocationString = details.location || '';
-      locationArray = (typeof dbLocationString === 'string' && dbLocationString.trim() !== '')
-        ? dbLocationString.split(',').map(s => s.trim()).filter(s => s)
-        : [];
+      locationArray = this.cleanLocationValue(dbLocationString);
       job_type = details.job_type;
       workplace_type = details.workplace_type;
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(details.total_experience_min, details.total_experience_max);
@@ -621,14 +617,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     });
 
     if (job_description_url_val) {
-      try {
-        const url = new URL(job_description_url_val);
-        const pathnameParts = url.pathname.split('/');
-        this.displayedFileName = decodeURIComponent(pathnameParts[pathnameParts.length - 1]);
-      } catch (e) {
-        const pathParts = job_description_url_val.split('/');
-        this.displayedFileName = pathParts[pathParts.length - 1];
-      }
+      this.displayedFileName = this.extractFilename(job_description_url_val);
       this.isFileUploadCompletedSuccessfully = true;
     } else {
       this.isFileUploadCompletedSuccessfully = false;
@@ -1149,10 +1138,103 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     );
   }
 
+  private cleanLocationValue(loc: any): string[] {
+    if (!loc) return [];
+    
+    const strLoc = typeof loc === 'string' ? loc.trim() : '';
+    
+    // Check if it's JSON (starts with [ or {)
+    if (strLoc.startsWith('[') || strLoc.startsWith('{') || typeof loc === 'object') {
+      const extract = (val: any): string[] => {
+        if (!val) return [];
+        
+        if (typeof val === 'string') {
+          const trimmed = val.trim();
+          if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+            try {
+              return extract(JSON.parse(trimmed));
+            } catch (e) {
+              try {
+                return extract(JSON.parse(trimmed.replace(/'/g, '"')));
+              } catch (e2) {}
+            }
+          }
+          
+          // Fallback to name regex
+          const nameMatch = trimmed.match(/(['"])?name\1?\s*:\s*(['"])(.*?)\2/);
+          if (nameMatch && nameMatch[3]) {
+            return [nameMatch[3]];
+          }
+          return [trimmed];
+        }
+        
+        if (Array.isArray(val)) {
+          let results: string[] = [];
+          for (const item of val) {
+            results = results.concat(extract(item));
+          }
+          return results;
+        }
+        
+        if (typeof val === 'object') {
+          const nameVal = val.name || val.description || val.formatted_address || val.address;
+          if (nameVal) return [String(nameVal)];
+          return [];
+        }
+        
+        return [String(val)];
+      };
+      
+      return extract(loc).filter(s => s && s.trim() !== '');
+    }
+    
+    // Fallback to splitting by comma for plain strings
+    if (typeof loc === 'string') {
+      return loc.split(',').map(s => s.trim()).filter(s => s);
+    }
+    
+    if (Array.isArray(loc)) {
+      let results: string[] = [];
+      for (const item of loc) {
+        results = results.concat(this.cleanLocationValue(item));
+      }
+      return results;
+    }
+    
+    return [];
+  }
+
+  private extractFilename(pathOrUrl: string): string {
+    if (!pathOrUrl) return '';
+    let cleanPath = pathOrUrl;
+    try {
+      const url = new URL(pathOrUrl);
+      cleanPath = url.pathname;
+    } catch (e) {
+      const queryIndex = cleanPath.indexOf('?');
+      if (queryIndex !== -1) {
+        cleanPath = cleanPath.substring(0, queryIndex);
+      }
+      const hashIndex = cleanPath.indexOf('#');
+      if (hashIndex !== -1) {
+        cleanPath = cleanPath.substring(0, hashIndex);
+      }
+    }
+    cleanPath = cleanPath.replace(/\\/g, '/');
+    const segments = cleanPath.split('/');
+    let filename = segments[segments.length - 1] || '';
+    try {
+      filename = decodeURIComponent(filename);
+    } catch (e) {}
+    return filename;
+  }
+
   private mapRequirementToForm(req: any): void {
     const role = req.job_role || '';
     const company_name = req.client_name || 'Flashyre';
-    const locationArray = Array.isArray(req.location) ? req.location : [];
+
+    const locationArray = this.cleanLocationValue(req.location);
+
     const total_experience_min = req.total_experience_min || 0;
     const total_experience_max = req.total_experience_max || 30;
     const relevant_experience_min = req.relevant_experience_min || 0;
@@ -1162,6 +1244,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const notice_period = this._normalizeNoticePeriod(req.notice_period);
     const skills = Array.isArray(req.skills) ? req.skills : [];
     const job_description = req.job_description || '';
+    const job_description_url = req.file_attachment || '';
 
     this.jobForm.patchValue({
       role,
@@ -1177,8 +1260,17 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       max_budget,
       notice_period,
       skills,
-      job_description
+      job_description,
+      job_description_url
     });
+
+    if (job_description_url) {
+      this.displayedFileName = this.extractFilename(job_description_url);
+      this.isFileUploadCompletedSuccessfully = true;
+    } else {
+      this.displayedFileName = null;
+      this.isFileUploadCompletedSuccessfully = false;
+    }
 
     if (this.isViewInitialized) {
       this.populateSkills(skills);

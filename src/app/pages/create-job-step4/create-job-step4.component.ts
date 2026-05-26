@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { NgxSpinner } from 'ngx-spinner';
-import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+import { RecruiterWorkflowNavbarComponent } from 'src/app/components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 import { ProgressBar2Code } from 'src/app/components/progress-bar-2-code/progress-bar-2-code.component';
 import { CreateJobPostFooter2 } from 'src/app/components/create-job-post-footer-2/create-job-post-footer-2.component';
@@ -21,7 +21,7 @@ import { Title, Meta } from '@angular/platform-browser';
   selector: 'create-job-step4',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    NavbarForAdminView, AlertMessageComponent,
+    RecruiterWorkflowNavbarComponent, AlertMessageComponent,
     ProgressBar2Code, CreateJobPostFooter2, ReactiveFormsModule,
   ],
   templateUrl: './create-job-step4.component.html',
