@@ -34,6 +34,15 @@ const addToken = (request: HttpRequest<any>, token: string) => {
   });
 };
 
+const getDeviceId = (): string => {
+  let deviceId = localStorage.getItem('device_id');
+  if (!deviceId) {
+    deviceId = crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('device_id', deviceId);
+  }
+  return deviceId;
+};
+
 // --- Main Interceptor Function ---
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   // Inject dependencies
@@ -50,9 +59,15 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     token = null;
   }
 
-  let authReq = req;
+  // Attach Device ID to all requests
+  let authReq = req.clone({
+    setHeaders: {
+      'X-Device-ID': getDeviceId()
+    }
+  });
+
   if (token) {
-    authReq = addToken(req, token);
+    authReq = addToken(authReq, token);
   }
 
   return next(authReq).pipe(

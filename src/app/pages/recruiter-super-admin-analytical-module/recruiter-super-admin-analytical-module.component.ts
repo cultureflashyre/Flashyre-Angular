@@ -475,7 +475,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       this.jobsList = data.results || data;
     });
     this.http.get(`${this.baseUrl}api/super-admin/list/`).subscribe((data: any) => {
-      this.recruitersList = data;
+      this.recruitersList = (data || []).filter((u: any) => u.user_type === 'recruiter');
     });
   }
 
