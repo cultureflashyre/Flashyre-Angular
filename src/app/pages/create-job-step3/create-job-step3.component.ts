@@ -207,6 +207,22 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     this.isLoading = true; // Ensure isLoading is true before any async operations start
     this.spinner.show('main-spinner'); // Show spinner immediately
     
+    // --- NEW: Instant UI rendering if skills are known from Step 2 ---
+    const knownSkills = this.workflowService.getGeneratedSkills();
+    if (knownSkills && knownSkills.length > 0) {
+      this.skillSections = knownSkills.map(skillName => ({
+        skillName,
+        questions: [],
+        totalCount: 0,
+        selectedCount: 0,
+        isAllSelected: false,
+        generationStatus: 'loading' // Assume loading until polled
+      }));
+      this.isLoading = false;
+      this.spinner.hide('main-spinner');
+    }
+    // --- END NEW ---
+
     // Orchestrate all initial data loading
     this.loadAllInitialData();
   }
@@ -264,7 +280,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         // Process results from parallel fetches
         tap(({ mcqStatus, uploadedQuestions, codingProblems }) => {
           // Initialize skillSections based on status
-          if (mcqStatus && mcqStatus.skills) {
+          if (mcqStatus && mcqStatus.skills && Object.keys(mcqStatus.skills).length > 0) {
+            // Only update if we received valid skills from the backend, 
+            // otherwise keep the optimistic ones from Step 2 (if any).
             this.skillSections = Object.keys(mcqStatus.skills).map(skillName => ({
               skillName,
               questions: [], // Will be filled later
@@ -273,7 +291,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
               isAllSelected: false,
               generationStatus: mcqStatus.skills[skillName] as 'pending' | 'loading' | 'completed' | 'failed',
             }));
-          } else {
+          } else if (!this.skillSections || this.skillSections.length === 0) {
             this.skillSections = [];
           }
 
@@ -289,7 +307,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
                   options: parsed.options,
                   correctAnswer: parsed.correctAnswer,
                   marks: 2,
-                  difficulty: parsed.difficulty,
+                  difficulty: q.difficulty || parsed.difficulty,
                   isSelected: false,
                 };
               }) : [];
@@ -714,11 +732,11 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         ...item,
         isSelected: false,
         isAiGenerated: true,
-        parsed: this.parseQuestionText(item.question_text)
+        parsed: this.parseQuestionText(item.question_text, item.difficulty)
     }));
   }
 
-    private parseQuestionText(rawText: string): ParsedDetails {
+    private parseQuestionText(rawText: string, defaultDifficulty?: string): ParsedDetails {
         if (!rawText) {
             return { question: 'Error: Empty question text.', options: [], correctAnswer: '', difficulty: 'Medium' };
         }
@@ -731,7 +749,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
             textToParse = textToParse.substring(0, answerMatch.index).trim();
         }
 
-        let difficulty = 'Medium';
+        let difficulty = defaultDifficulty || 'Medium';
         const difficultyMatch = textToParse.match(/\s*\((Easy|Medium|Hard)\)$/i);
         if (difficultyMatch) {
             difficulty = difficultyMatch[1].charAt(0).toUpperCase() + difficultyMatch[1].slice(1).toLowerCase();

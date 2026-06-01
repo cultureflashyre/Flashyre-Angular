@@ -180,9 +180,9 @@ export class AdminJobDescriptionService {
     ).pipe(catchError(this.handleError));
   }
 
-  generateMcqsForJob(jobUniqueId: string, token: string): Observable<{ message: string }> {
+  generateMcqsForJob(jobUniqueId: string, token: string): Observable<{ message: string; data?: { skills: string[] } }> {
     return this.http
-      .post<{ message: string }>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-mcqs/`, {}, { headers: this.bearer(token) })
+      .post<{ message: string; data?: { skills: string[] } }>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-mcqs/`, {}, { headers: this.bearer(token) })
       .pipe(catchError(this.handleError));
   }
 

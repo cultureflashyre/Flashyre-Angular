@@ -471,6 +471,11 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
           this.aiQuestionsGenerated = true;    // Set button state to 'Regenerate'
           this.showAiSuccessMessage = true; // Show the success message
 
+          // Save the primary skills to display skeleton loaders instantly in step 3
+          if (response.data && response.data.skills) {
+            this.workflowService.setGeneratedSkills(response.data.skills);
+          }
+
           // Persist the AI generation state in localStorage
           this.uploadedFileName = null;
           localStorage.setItem(`aiQuestionsGenerated_${this.jobUniqueId}`, 'true');

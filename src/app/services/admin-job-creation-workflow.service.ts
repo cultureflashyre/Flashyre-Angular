@@ -108,10 +108,28 @@ export class AdminJobCreationWorkflowService {
     sessionStorage.removeItem(this.UPLOADED_MCQS_KEY);
   }
 
+  // --- NEW: Track skills generated in current session ---
+  private readonly GENERATED_SKILLS_KEY = 'admin_temp_generated_skills';
+
+  setGeneratedSkills(skills: string[]): void {
+    sessionStorage.setItem(this.GENERATED_SKILLS_KEY, JSON.stringify(skills));
+  }
+
+  getGeneratedSkills(): string[] | null {
+    const data = sessionStorage.getItem(this.GENERATED_SKILLS_KEY);
+    return data ? JSON.parse(data) : null;
+  }
+
+  clearGeneratedSkills(): void {
+    sessionStorage.removeItem(this.GENERATED_SKILLS_KEY);
+  }
+  // --- END NEW ---
+
   clearWorkflow(): void {
     sessionStorage.removeItem(this.JOB_ID_KEY);
     sessionStorage.removeItem(this.ASSESSMENT_ID_KEY);
     sessionStorage.removeItem(this.EDIT_MODE_KEY); // Also clear the edit mode flag
     this.clearUploadedMcqs();
+    this.clearGeneratedSkills();
   }
 }

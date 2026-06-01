@@ -124,6 +124,8 @@ export interface MCQItem {
   job_mcq_id: number;       // FK to the parent JobMCQ model
   question_number: number;
   question_text: string;    // The raw text including the question, options, and answer
+  difficulty?: string;
+  explanation?: string;
 }
 interface SelectedMcqDetail {
   id: number;
