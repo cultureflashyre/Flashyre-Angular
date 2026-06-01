@@ -1207,25 +1207,30 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   private extractFilename(pathOrUrl: string): string {
     if (!pathOrUrl) return '';
     let cleanPath = pathOrUrl;
-    try {
-      const url = new URL(pathOrUrl);
-      cleanPath = url.pathname;
-    } catch (e) {
-      const queryIndex = cleanPath.indexOf('?');
-      if (queryIndex !== -1) {
-        cleanPath = cleanPath.substring(0, queryIndex);
-      }
-      const hashIndex = cleanPath.indexOf('#');
-      if (hashIndex !== -1) {
-        cleanPath = cleanPath.substring(0, hashIndex);
-      }
+    
+    // Strip query parameters
+    const queryIndex = cleanPath.indexOf('?');
+    if (queryIndex !== -1) {
+      cleanPath = cleanPath.substring(0, queryIndex);
     }
+    
+    // Strip hash
+    const hashIndex = cleanPath.indexOf('#');
+    if (hashIndex !== -1) {
+      cleanPath = cleanPath.substring(0, hashIndex);
+    }
+    
+    // Normalize backslashes to forward slashes
     cleanPath = cleanPath.replace(/\\/g, '/');
+    
+    // Extract the last segment
     const segments = cleanPath.split('/');
     let filename = segments[segments.length - 1] || '';
+    
     try {
       filename = decodeURIComponent(filename);
     } catch (e) {}
+    
     return filename;
   }
 

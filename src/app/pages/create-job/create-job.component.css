@@ -836,11 +836,11 @@ gmp-place-autocomplete::part(input):focus {
   }
   
   .admin-create-job-step1-jd-main-container {
+    display: none !important;
     gap: 16px;
     flex: 0 0 auto;
     width: 100%;
     height: 128px;
-    display: flex;
     align-items: flex-start;
     flex-direction: column;
   }
@@ -936,11 +936,11 @@ gmp-place-autocomplete::part(input):focus {
   }
   
   .admin-create-job-step1-enter-manually-text-container {
+    display: none !important;
     gap: 24px;
     flex: 0 0 auto;
     width: 736px;
     height: 24px;
-    display: flex;
     align-items: center;
     justify-content: flex-start;
   }
