@@ -362,6 +362,13 @@
                             d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
                             fill="currentColor"></path>
                         </svg>
+                        
+                        <!-- Rating Badge/Button -->
+                        <button (click)="openRatingModal(candidate)" class="rating-badge-btn"
+                          [ngClass]="candidate.latest_rating_score ? 'rated' : 'not-rated'">
+                          <span class="rating-icon">★</span>
+                          <span>{{ candidate.latest_rating_score ? 'Rated: ' + candidate.latest_rating_score : 'Rate' }}</span>
+                        </button>
                       </div>
                     </div>
                     <!-- Sourced Footer -->
@@ -573,11 +580,18 @@
 
                   <div class="recruiter-workflow-candidate-container56">
                     <svg *ngIf="isSuperUser" (click)="deleteRegisteredUser(user.user_id)" width="20" height="20"
-                      viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44" style="cursor: pointer;">
+                      viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44" style="cursor: pointer; margin-bottom: 8px;">
                       <path
                         d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
                         fill="currentColor"></path>
                     </svg>
+
+                    <!-- Rating Badge/Button -->
+                    <button (click)="openRatingModal(user)" class="rating-badge-btn"
+                      [ngClass]="user.sourced_data?.latest_rating_score ? 'rated' : 'not-rated'">
+                      <span class="rating-icon">★</span>
+                      <span>{{ user.sourced_data?.latest_rating_score ? 'Rated: ' + user.sourced_data.latest_rating_score : 'Rate' }}</span>
+                    </button>
                   </div>
                 </div>
 
@@ -1093,3 +1107,104 @@
     </div>
   </div>
 </ng-container>
+
+<!-- Rating Modal (standalone — not nested in details modal) -->
+<div *ngIf="showRatingModal" class="custom-modal-overlay">
+  <div class="custom-modal-container rating-modal-container">
+    <div class="custom-modal-header">
+      <h3 class="custom-modal-title">Rate Candidate: {{ ratingCandidate?.first_name }} {{ ratingCandidate?.last_name }}</h3>
+      <button (click)="closeRatingModal()" class="custom-modal-close-btn">&times;</button>
+    </div>
+
+    <div class="custom-modal-body rating-modal-body">
+      <div class="rating-modal-form-section">
+        <!-- Job Requirement Selection -->
+        <div class="form-group-rating">
+          <label class="form-label-rating">Target Job Role</label>
+          <select [(ngModel)]="selectedRatingJobId" class="form-select-rating">
+            <option [ngValue]="null">General / No Specific Job</option>
+            <option *ngFor="let job of availableJobs" [value]="job.id">
+              {{ job.job_role }} - {{ job.client_name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Category Selection -->
+        <div class="form-group-rating">
+          <label class="form-label-rating">Evaluation Category</label>
+          <select [ngModel]="selectedRatingCategory" (ngModelChange)="onRatingCategoryChange($event)" class="form-select-rating">
+            <option *ngFor="let cat of ratingCategories" [value]="cat.value">
+              {{ cat.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Dynamic Rating Criteria -->
+        <div class="rating-criteria-grid">
+          <div *ngFor="let criterion of ratingCriteria" class="rating-criterion-row">
+            <span class="rating-criterion-label">{{ criterion.criterion_label }}</span>
+            <select [(ngModel)]="criteriaScores[criterion.criterion_key]" class="form-select-rating criterion-select">
+              <option [value]="0">Select Rating</option>
+              <option *ngFor="let label of getScoreLabels(criterion.label_preset); let idx = index" [value]="idx + 1">
+                {{ label }} ({{ idx + 1 }})
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group-rating notes-section">
+          <label class="form-label-rating">Recruiter Notes / Comments</label>
+          <textarea [(ngModel)]="ratingNotes" placeholder="Provide details about candidate's strengths and areas of improvement..." class="form-textarea-rating"></textarea>
+        </div>
+
+        <!-- Modal Action Buttons -->
+        <div class="rating-modal-actions">
+          <button (click)="closeRatingModal()" class="btn-rating-secondary">Cancel</button>
+          <button (click)="submitRating()" class="btn-rating-primary" [disabled]="isActionLoading">
+            {{ isActionLoading ? 'Submitting...' : 'Submit Rating' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Previous Ratings History Panel -->
+      <div class="rating-modal-history-section">
+        <h4 class="history-title">Rating Logs & History</h4>
+        <div *ngIf="candidateRatings.length === 0" class="no-history-msg">
+          No previous ratings logged for this candidate.
+        </div>
+        <div *ngIf="candidateRatings.length > 0" class="history-list">
+          <div *ngFor="let rat of candidateRatings" class="history-card">
+            <div class="history-card-header">
+              <div class="history-overall-badge">★ {{ rat.overall_score }}/4</div>
+              <div class="history-meta">
+                <div class="history-rated-by">by <strong>{{ rat.rated_by_name }}</strong></div>
+                <div class="history-date">{{ rat.created_at | relativeDate }}</div>
+              </div>
+              <!-- Delete button (Superuser only) -->
+              <button *ngIf="isSuperUser" (click)="deleteRating(rat.id!)" class="btn-delete-rating" title="Delete Rating Entry">&times;</button>
+            </div>
+            
+            <div class="history-card-details">
+              <div class="history-category-job">
+                <span class="badge-category">{{ rat.rating_category }}</span>
+                <span class="history-job-role" *ngIf="rat.job_title && rat.job_title !== 'N/A'">for {{ rat.job_title }}</span>
+              </div>
+              
+              <div class="history-scores-chips">
+                <div *ngFor="let score of rat.scores" class="score-chip">
+                  <span class="score-chip-label">{{ score.criterion_label }}:</span>
+                  <span class="score-chip-val">{{ score.score_label }} ({{ score.score }})</span>
+                </div>
+              </div>
+
+              <div class="history-notes" *ngIf="rat.notes">
+                <strong>Notes:</strong> {{ rat.notes }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

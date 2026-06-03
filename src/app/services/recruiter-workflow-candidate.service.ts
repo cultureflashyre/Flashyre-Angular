@@ -26,6 +26,7 @@ export interface Candidate {
   user?: number;
   recruiter_name?: string;
   source?: string;
+  latest_rating_score?: number | null;
 }
 
 // --- VERIFY THIS INTERFACE ---
@@ -52,6 +53,8 @@ export interface SourcedData {
   relevant_experience: number;
   source: string;
   resume: string | null;
+  id?: number;
+  latest_rating_score?: number | null;
 }
 
 // Update RegisteredUser
@@ -71,6 +74,37 @@ export interface PollStatusResponse {
   status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
   data?: any;
   error?: string;
+}
+
+export interface RatingCriteria {
+  id?: number;
+  category: string;
+  criterion_key: string;
+  criterion_label: string;
+  label_preset: 'standard' | 'communication' | 'proficiency';
+  display_order: number;
+  is_active?: boolean;
+}
+
+export interface RatingScore {
+  criterion_key: string;
+  criterion_label: string;
+  score: number;
+  score_label: string;
+}
+
+export interface CandidateRating {
+  id?: number;
+  candidate: number;
+  job_requirement?: number;
+  rated_by?: number;
+  rated_by_name: string;
+  rating_category: string;
+  overall_score: number;
+  notes?: string;
+  scores: RatingScore[];
+  job_title: string;
+  created_at: string;
 }
 
 @Injectable({
@@ -135,5 +169,30 @@ export class RecruiterWorkflowCandidateService {
 
   deleteRegisteredUser(userId: string): Observable<void> {
     return this.http.delete<void>(`${this.deleteUserUrl}${userId}/`);
+  }
+
+  getRatingCriteria(category?: string): Observable<RatingCriteria[]> {
+    const url = category
+      ? `${this.apiUrl}api/rating-criteria/?category=${category}`
+      : `${this.apiUrl}api/rating-criteria/`;
+    return this.http.get<RatingCriteria[]>(url);
+  }
+
+  submitRating(payload: {
+    candidate_id: number;
+    job_requirement_id?: number | null;
+    rating_category: string;
+    notes?: string;
+    scores: { criterion_key: string; score: number }[];
+  }): Observable<CandidateRating> {
+    return this.http.post<CandidateRating>(`${this.apiUrl}api/candidate-ratings/`, payload);
+  }
+
+  getCandidateRatings(candidateId: number): Observable<CandidateRating[]> {
+    return this.http.get<CandidateRating[]>(`${this.apiUrl}api/candidate-ratings/?candidate_id=${candidateId}`);
+  }
+
+  deleteRating(ratingId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}api/candidate-ratings/${ratingId}/`);
   }
 }

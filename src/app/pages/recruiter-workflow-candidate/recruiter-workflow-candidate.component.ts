@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule, FormArray, FormControl } from '@angular/forms';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
-import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
+import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser, RatingCriteria, RatingScore, CandidateRating } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, Subject, of, Observable, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap, tap, takeWhile } from 'rxjs/operators';
@@ -147,6 +147,21 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   selectedCandidateCount = 0;
   availableJobs: any[] = [];
   selectedJobId: number | null = null;
+
+  // --- Rating Modal State ---
+  showRatingModal = false;
+  ratingCandidate: any = null;
+  ratingCriteria: RatingCriteria[] = [];
+  candidateRatings: CandidateRating[] = [];
+  selectedRatingCategory = 'Technical-IT';
+  ratingNotes = '';
+  criteriaScores: { [key: string]: number } = {};
+  selectedRatingJobId: number | null = null;
+  ratingCategories = [
+    { value: 'Technical-IT', label: 'Technical - IT' },
+    { value: 'Technical-NonIT', label: 'Technical - Non-IT' },
+    { value: 'Non-Technical', label: 'Non-Technical' }
+  ];
 
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
@@ -1635,6 +1650,198 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.showAlert("Failed to add candidates to workflow.", ["Close"]);
       }
     });
+  }
+
+  openRatingModal(candidate: any): void {
+    this.ratingCandidate = candidate;
+    this.showRatingModal = true;
+    this.selectedRatingJobId = null;
+    this.ratingNotes = '';
+    this.criteriaScores = {};
+    this.selectedRatingCategory = 'Technical-IT';
+    
+    this.adbRequirementService.getRequirements().subscribe({
+      next: (jobs: any) => {
+        const allJobs = Array.isArray(jobs) ? jobs : (jobs?.results || []);
+        this.availableJobs = (this.isRecruiterUser && !this.isSuperUser)
+          ? allJobs.filter((job: any) => this.isUserAuthorizedForJob(job))
+          : allJobs;
+      }
+    });
+
+    this.onRatingCategoryChange(this.selectedRatingCategory);
+
+    const candId = this.activeTab === 'sourced' ? candidate.id : (candidate.sourced_data?.id || null);
+    if (candId) {
+      this.candidateService.getCandidateRatings(candId).subscribe({
+        next: (history) => {
+          this.candidateRatings = history;
+        },
+        error: (err) => {
+          console.error("Failed to load rating history", err);
+        }
+      });
+    } else {
+      this.candidateRatings = [];
+    }
+  }
+
+  onRatingCategoryChange(category: string): void {
+    this.selectedRatingCategory = category;
+    this.candidateService.getRatingCriteria(category).subscribe({
+      next: (criteria) => {
+        this.ratingCriteria = criteria.sort((a, b) => a.display_order - b.display_order);
+        this.criteriaScores = {};
+        this.ratingCriteria.forEach(c => {
+          this.criteriaScores[c.criterion_key] = 0;
+        });
+      },
+      error: (err) => {
+        console.error("Failed to load rating criteria", err);
+      }
+    });
+  }
+
+  closeRatingModal(): void {
+    this.showRatingModal = false;
+    this.ratingCandidate = null;
+    this.ratingCriteria = [];
+    this.candidateRatings = [];
+    this.criteriaScores = {};
+  }
+
+  submitRating(): void {
+    const scoresPayload: { criterion_key: string; score: number }[] = [];
+    let hasUnrated = false;
+
+    for (const criterion of this.ratingCriteria) {
+      const score = Number(this.criteriaScores[criterion.criterion_key]);
+      if (!score || score < 1 || score > 4) {
+        hasUnrated = true;
+        break;
+      }
+      scoresPayload.push({
+        criterion_key: criterion.criterion_key,
+        score: score
+      });
+    }
+
+    if (hasUnrated) {
+      this.showAlert("Please select a rating for all criteria.", ["Close"]);
+      return;
+    }
+
+    const isSourced = this.activeTab === 'sourced';
+    const payload: any = {
+      job_requirement_id: this.selectedRatingJobId,
+      rating_category: this.selectedRatingCategory,
+      notes: this.ratingNotes,
+      scores: scoresPayload
+    };
+
+    if (isSourced) {
+      payload.candidate_id = this.ratingCandidate.id;
+    } else {
+      const candId = this.ratingCandidate.sourced_data?.id;
+      if (candId) {
+        payload.candidate_id = candId;
+      } else {
+        payload.user_id = this.ratingCandidate.user_id;
+      }
+    }
+
+    this.isActionLoading = true;
+    this.candidateService.submitRating(payload).subscribe({
+      next: (newRating) => {
+        this.isActionLoading = false;
+        
+        if (isSourced) {
+          const cand = this.masterCandidates.find(c => c.id === this.ratingCandidate.id);
+          if (cand) {
+            cand.latest_rating_score = newRating.overall_score;
+          }
+        } else {
+          const user = this.registeredCandidates.find(u => u.user_id === this.ratingCandidate.user_id);
+          if (user) {
+            if (!user.sourced_data) {
+              user.sourced_data = {
+                id: newRating.candidate,
+                work_experience: 'Not Specified',
+                skills: 'Not Specified',
+                current_location: 'Not Specified',
+                preferred_location: 'Not Specified',
+                current_ctc: 'Fresher',
+                total_experience: 0,
+                relevant_experience: 0,
+                source: 'External',
+                resume: null,
+                latest_rating_score: newRating.overall_score
+              } as any;
+            } else {
+              user.sourced_data.latest_rating_score = newRating.overall_score;
+              user.sourced_data.id = newRating.candidate;
+            }
+          }
+        }
+
+        this.applyFiltersAndSort();
+        this.showAlert("Rating submitted successfully!", ["Close"]);
+        this.closeRatingModal();
+      },
+      error: (err) => {
+        this.isActionLoading = false;
+        console.error("Failed to submit rating", err);
+        const errMsg = err.error?.detail || err.error?.non_field_errors?.[0] || "Failed to submit rating. Please try again.";
+        this.showAlert(errMsg, ["Close"]);
+      }
+    });
+  }
+
+  deleteRating(ratingId: number): void {
+    this.alertMessage = 'Are you sure you want to delete this rating entry?';
+    this.alertButtons = ['Cancel', 'Delete'];
+
+    this.pendingAction = () => {
+      this.isActionLoading = true;
+      this.candidateService.deleteRating(ratingId).subscribe({
+        next: () => {
+          this.isActionLoading = false;
+          this.candidateRatings = this.candidateRatings.filter(r => r.id !== ratingId);
+          
+          const latest = this.candidateRatings[0];
+          const latestScore = latest ? latest.overall_score : null;
+
+          if (this.activeTab === 'sourced') {
+            const cand = this.masterCandidates.find(c => c.id === this.ratingCandidate.id);
+            if (cand) {
+              cand.latest_rating_score = latestScore;
+            }
+          } else {
+            const user = this.registeredCandidates.find(u => u.user_id === this.ratingCandidate.user_id);
+            if (user && user.sourced_data) {
+              user.sourced_data.latest_rating_score = latestScore;
+            }
+          }
+          this.applyFiltersAndSort();
+          this.showAlert('Rating deleted successfully.', ['Close']);
+        },
+        error: (err) => {
+          this.isActionLoading = false;
+          console.error("Failed to delete rating", err);
+          this.showAlert('Error: Could not delete rating. Only superusers are authorized.', ['Close']);
+        }
+      });
+    };
+    this.isAlertVisible = true;
+  }
+
+  getScoreLabels(labelPreset: string): string[] {
+    if (labelPreset === 'communication') {
+      return ['Needs Improvement', 'Average', 'Fluent', 'Native'];
+    } else if (labelPreset === 'proficiency') {
+      return ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+    }
+    return ['Needs Improvement', 'Average', 'Good', 'Excellent'];
   }
 
   trackByCandidate(index: number, candidate: any): number {
