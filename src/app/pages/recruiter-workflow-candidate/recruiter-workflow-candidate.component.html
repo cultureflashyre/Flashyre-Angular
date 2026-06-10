@@ -210,9 +210,68 @@
                 </div>
                 <div class="filter-group">
                   <label for="filter-phone">Phone Number</label>
-                  <input id="filter-phone" type="text" formControlName="phone" placeholder="Search Phone Number..."
-                    class="input">
+                  <input id="filter-phone" type="text" formControlName="phone" placeholder="Search Phone Number..." class="input">
                 </div>
+
+                <!-- RATING FILTERS -->
+                <hr class="filter-divider">
+                <h4 class="filter-section-title">Rating Filters</h4>
+
+                <div class="filter-group" style="grid-column: 1 / -1;">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [(ngModel)]="filterUnrated" [ngModelOptions]="{standalone: true}" (change)="onRatingFilterChange()"> 
+                    Show Unrated Candidates Only
+                  </label>
+                </div>
+
+                <ng-container *ngIf="!filterUnrated">
+                  <div class="filter-group">
+                    <label for="filter-rating-category">Rating Category</label>
+                    <select id="filter-rating-category" [(ngModel)]="selectedFilterCategory" [ngModelOptions]="{standalone: true}" (change)="onFilterCategoryChange()" class="input">
+                      <option value="">All Categories</option>
+                      <option *ngFor="let cat of ratingCategories" [value]="cat.value">{{ cat.label }}</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <label for="filter-overall-rating">Overall Rating Minimum</label>
+                    <select id="filter-overall-rating" [(ngModel)]="filterOverallRating" [ngModelOptions]="{standalone: true}" (change)="onRatingFilterChange()" class="input">
+                      <option value="">Any Rating</option>
+                      <option value="1">1.0 & Above</option>
+                      <option value="2">2.0 & Above</option>
+                      <option value="3">3.0 & Above</option>
+                      <option value="4">4.0</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group dynamic-filter-section" style="grid-column: 1 / -1;">
+                    <label>Individual Criteria Minimums</label>
+                    <div class="add-criterion-controls">
+                      <select [(ngModel)]="selectedFilterCriterionKey" [ngModelOptions]="{standalone: true}" (change)="onCriterionSelectChange()" class="input inline-select">
+                        <option value="">Select Criterion...</option>
+                        <option *ngFor="let crit of filteredRatingCriteria" [value]="crit.criterion_key">{{ crit.criterion_label }}</option>
+                      </select>
+                      
+                      <select [(ngModel)]="selectedFilterScore" [ngModelOptions]="{standalone: true}" (change)="onCriterionSelectChange()" class="input inline-select small">
+                        <option value="">Score</option>
+                        <option value="1">>= 1</option>
+                        <option value="2">>= 2</option>
+                        <option value="3">>= 3</option>
+                        <option value="4">4</option>
+                      </select>
+                      
+                      <button type="button" class="btn-add-criterion" (click)="addCriterionFilter()">+ Add</button>
+                    </div>
+                    
+                    <div class="active-criteria-list" *ngIf="activeCriteriaFilters.length > 0">
+                      <div *ngFor="let filter of activeCriteriaFilters" class="active-criterion-chip">
+                        <span>{{ filter.label }} >= {{ filter.minScore }}</span>
+                        <button type="button" class="btn-remove-criterion" (click)="removeCriterionFilter(filter.key)">&times;</button>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
               </form>
               <div class="filter-panel-actions">
                 <button type="button" (click)="clearFilters()" class="button clear-button">Clear</button>
@@ -376,6 +435,9 @@
                       <div class="recruiter-workflow-candidate-container58">
                         <span class="recruiter-workflow-candidate-text78">Recruiter :&nbsp;</span>
                         <span class="recruiter-workflow-candidate-text79">{{ candidate.recruiter_name }}</span>
+                        <span *ngIf="candidate.source_form" class="form-submission-icon"
+                              style="margin-left: 6px; cursor: help;"
+                              title="Submitted via Collection Form: {{ candidate.source_form_title }}">📋</span>
                       </div>
                       <div class="recruiter-workflow-candidate-container59">
                         <span class="recruiter-workflow-candidate-text80">Created :&nbsp;</span>

@@ -1,0 +1,372 @@
+<div class="top-rule"></div>
+
+<recruiter-workflow-navbar></recruiter-workflow-navbar>
+
+<main class="page">
+
+  <div class="page-header">
+    <div class="page-heading">
+      <div class="page-eyebrow">Recruiter workspace</div>
+      <h1 class="page-title">Collection Forms</h1>
+      <p class="page-subtitle">Manage public application forms, track submissions, and control access in one place.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-num" id="stat-total">{{ forms.length }}</div>
+        <div class="stat-label">Total Forms</div>
+      </div>
+      <div class="stat-cell highlight">
+        <div class="stat-num" id="stat-active">{{ activeFormsCount }}</div>
+        <div class="stat-label">Active Now</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" id="stat-subs">{{ totalSubmissionsCount }}</div>
+        <div class="stat-label">Submissions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-rule"></div>
+
+  <div class="controls-bar">
+    <div class="controls-left">
+      <div class="search-wrap">
+        <div class="search-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <input type="text" class="search-input" placeholder="Search forms or companies…" (input)="onSearchChange($event)">
+      </div>
+      <div class="filter-pills" id="filter-pills">
+        <button class="pill" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
+        <button class="pill" [class.active]="currentFilter === 'active'" (click)="setFilter('active')">Active</button>
+        <button class="pill" [class.active]="currentFilter === 'inactive'" (click)="setFilter('inactive')">Paused</button>
+        <button class="pill" [class.active]="currentFilter === 'expired'" (click)="setFilter('expired')">Expired</button>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="openCreateModal()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <path d="M6.5 1V12M1 6.5H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      New Form
+    </button>
+  </div>
+
+  <div id="forms-container">
+    
+    <!-- Empty State -->
+    <div class="state-box" *ngIf="!isLoading && forms.length === 0">
+      <div class="state-icon">📝</div>
+      <div class="state-title">No forms yet</div>
+      <p class="state-desc">Create your first collection form to start gathering candidate applications.</p>
+      <button class="btn-primary" (click)="openCreateModal()" style="margin:0 auto;">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M6.5 1V12M1 6.5H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>New Form
+      </button>
+    </div>
+
+    <!-- Empty Search State -->
+    <div class="state-box" *ngIf="!isLoading && forms.length > 0 && filteredForms.length === 0">
+      <div class="state-icon">🔍</div>
+      <div class="state-title">No results found</div>
+      <p class="state-desc">Try a different search or filter.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="state-box" *ngIf="isLoading && forms.length === 0">
+      <div class="state-icon">⏳</div>
+      <div class="state-title">Loading</div>
+      <p class="state-desc">Please wait while we load your forms.</p>
+    </div>
+
+    <!-- Forms Grid -->
+    <div class="forms-grid" *ngIf="filteredForms.length > 0">
+      
+      <div class="form-card" *ngFor="let form of filteredForms" [ngClass]="'status-' + getFormStatus(form)">
+        <div class="card-top">
+          <div class="card-logo" [style.backgroundImage]="form.logo_url ? 'url(' + form.logo_url + ')' : 'none'">
+            <span *ngIf="!form.logo_url">🏢</span>
+          </div>
+          <div class="card-identity">
+            <div class="card-title" [title]="form.title">{{ form.title }}</div>
+            <div class="card-meta">
+              <span>{{ form.company_name || 'Flashyre' }}</span>
+              <div class="meta-dot"></div>
+              <span>by {{ form.created_by_name || 'Unknown' }}</span>
+            </div>
+          </div>
+          <div class="status-badge" [ngClass]="getFormStatus(form)">
+            {{ getFormStatus(form) === 'limit-reached' ? 'Capped' : (getFormStatus(form) === 'inactive' ? 'Paused' : getFormStatus(form)) }}
+          </div>
+        </div>
+        <div class="card-mid">
+          <div class="card-field">
+            <span class="field-label">Job</span>
+            <span class="field-val">{{ form.job_post_title || 'General Application' }}</span>
+          </div>
+          <div class="card-tags">
+            <span class="tag">{{ form.template_type | titlecase }}</span>
+            <span class="tag" [ngClass]="form.require_resume ? 'resume-req' : ''">Resume {{ form.require_resume ? 'Required' : 'Optional' }}</span>
+          </div>
+        </div>
+        <div class="card-metrics">
+          <div class="metric-count">
+            <div class="metric-num">{{ form.submission_count || 0 }}</div>
+            <div class="metric-lbl">Submissions</div>
+          </div>
+          <div class="metric-side">
+            <div class="progress-wrap" *ngIf="form.max_submissions">
+              <div class="progress-hdr">
+                <span>Cap: {{ form.max_submissions }}</span>
+                <span>{{ ((form.submission_count || 0) / form.max_submissions * 100) | number:'1.0-0' }}%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="((form.submission_count || 0) / form.max_submissions * 100)"></div>
+              </div>
+            </div>
+            <div class="time-chip" *ngIf="form.expires_at" [class.expired]="form.is_expired">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M5 2.5V5L6.5 6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>{{ getTimeRemaining(form.expires_at) }}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="footer-left">
+            <button class="icon-btn copy-btn" [class.copied]="copiedFormId === form.unique_id" (click)="copyLink(form)" title="Copy link">
+              <svg *ngIf="copiedFormId !== form.unique_id" width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <rect x="1" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+                <path d="M4 1h7a1 1 0 011 1v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+              <svg *ngIf="copiedFormId === form.unique_id" width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M2 6.5l3 3L11 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="icon-btn qr-btn" (click)="openQRModal(form)" title="QR code">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <rect x="1" y="1" width="4.5" height="4.5" rx="0.8" stroke="currentColor" stroke-width="1.2"/>
+                <rect x="7.5" y="1" width="4.5" height="4.5" rx="0.8" stroke="currentColor" stroke-width="1.2"/>
+                <rect x="1" y="7.5" width="4.5" height="4.5" rx="0.8" stroke="currentColor" stroke-width="1.2"/>
+                <rect x="8.2" y="8.2" width="1.3" height="1.3" fill="currentColor"/><rect x="10.1" y="8.2" width="1.3" height="1.3" fill="currentColor"/>
+                <rect x="8.2" y="10.1" width="1.3" height="1.3" fill="currentColor"/><rect x="10.1" y="10.1" width="1.3" height="1.3" fill="currentColor"/>
+              </svg>
+            </button>
+            <button class="icon-btn danger delete-btn" (click)="openDeleteModal(form)" title="Delete">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M1 3h11M4.5 3V2a1 1 0 011-1h2a1 1 0 011 1v1M5 5.5v5M8 5.5v5M2 3l.7 8a1 1 0 001 .9h5.6a1 1 0 001-.9L11 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <label class="toggle" title="Toggle active">
+              <input type="checkbox" class="toggle-chk" [checked]="form.is_active" (change)="toggleActive(form)">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </label>
+          </div>
+          <button class="btn-candidates view-cand" (click)="viewCandidates(form)">
+            Candidates
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1 5h8M5.5 1.5L9 5l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══ CREATE MODAL ═══ -->
+<div class="modal-backdrop" *ngIf="showCreateModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">New Collection Form</div>
+        <div class="modal-subtitle">Set up a public link candidates can fill out</div>
+      </div>
+      <button class="modal-close" (click)="closeCreateModal()">×</button>
+    </div>
+    
+    <form [formGroup]="createFormGroup" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+      <div class="modal-body">
+
+        <div class="form-section">
+          <div class="section-label">Basic details</div>
+          <div class="form-group">
+            <label class="form-label">Form title <span class="req">*</span></label>
+            <input type="text" formControlName="title" class="form-input" placeholder="e.g. Frontend Developer Application">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Linked job post</label>
+              <select formControlName="job_post" class="form-input">
+                <option [ngValue]="null">— General Application —</option>
+                <option *ngFor="let req of jobRequirements" [ngValue]="req.id">{{ req.job_role }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Company name</label>
+              <input type="text" formControlName="company_name" class="form-input" placeholder="e.g. Flashyre">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company logo URL</label>
+            <input type="text" formControlName="logo_url" class="form-input" placeholder="https://example.com/logo.png">
+            <p class="form-hint">Leave blank to use the default icon.</p>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-label">Configuration</div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="require_resume">
+              <div class="checkbox-box">
+                <svg class="check-mark" width="10" height="8" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4L3.5 6.5L9 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="checkbox-text">Require candidate resume upload</span>
+            </label>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Auto-expire at</label>
+              <input type="datetime-local" formControlName="expires_at" class="form-input">
+              <p class="form-hint">Form deactivates automatically.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max submissions</label>
+              <input type="number" formControlName="max_submissions" class="form-input" placeholder="Unlimited" min="1">
+              <p class="form-hint">Leave blank for no cap.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-label">Template <span class="req" style="margin-left:4px; text-transform:none; letter-spacing:0;">*</span></div>
+          <div class="template-grid">
+            <label class="tpl-card" [class.selected]="createFormGroup.get('template_type')?.value === 'standard'">
+              <input type="radio" formControlName="template_type" value="standard">
+              <div class="tpl-icon-box">📄</div>
+              <div><div class="tpl-name">Standard</div><div class="tpl-desc">Base application fields</div></div>
+              <button type="button" class="tpl-preview-btn" (click)="$event.preventDefault(); previewTemplate('standard')" title="Preview template">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7C1 7 3.5 2.5 7 2.5C10.5 2.5 13 7 13 7C13 7 10.5 11.5 7 11.5C3.5 11.5 1 7 1 7Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </label>
+            <label class="tpl-card" [class.selected]="createFormGroup.get('template_type')?.value === 'campus'">
+              <input type="radio" formControlName="template_type" value="campus">
+              <div class="tpl-icon-box">🎓</div>
+              <div><div class="tpl-name">Campus</div><div class="tpl-desc">University + grad year</div></div>
+              <button type="button" class="tpl-preview-btn" (click)="$event.preventDefault(); previewTemplate('campus')" title="Preview template">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7C1 7 3.5 2.5 7 2.5C10.5 2.5 13 7 13 7C13 7 10.5 11.5 7 11.5C3.5 11.5 1 7 1 7Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </label>
+            <label class="tpl-card" [class.selected]="createFormGroup.get('template_type')?.value === 'experienced'">
+              <input type="radio" formControlName="template_type" value="experienced">
+              <div class="tpl-icon-box">💼</div>
+              <div><div class="tpl-name">Experienced</div><div class="tpl-desc">Company history + CTC</div></div>
+              <button type="button" class="tpl-preview-btn" (click)="$event.preventDefault(); previewTemplate('experienced')" title="Preview template">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7C1 7 3.5 2.5 7 2.5C10.5 2.5 13 7 13 7C13 7 10.5 11.5 7 11.5C3.5 11.5 1 7 1 7Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </label>
+            <label class="tpl-card" [class.selected]="createFormGroup.get('template_type')?.value === 'walkin'">
+              <input type="radio" formControlName="template_type" value="walkin">
+              <div class="tpl-icon-box">🏢</div>
+              <div><div class="tpl-name">Walk-in</div><div class="tpl-desc">Quick apply, minimal fields</div></div>
+              <button type="button" class="tpl-preview-btn" (click)="$event.preventDefault(); previewTemplate('walkin')" title="Preview template">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7C1 7 3.5 2.5 7 2.5C10.5 2.5 13 7 13 7C13 7 10.5 11.5 7 11.5C3.5 11.5 1 7 1 7Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </label>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeCreateModal()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="createFormGroup.invalid || isLoading">
+          {{ isLoading ? 'Creating...' : 'Create Form' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ QR MODAL ═══ -->
+<div class="modal-backdrop" *ngIf="showQRModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Share via QR</div>
+        <div class="modal-subtitle">Candidates scan to open on mobile</div>
+      </div>
+      <button class="modal-close" (click)="closeQRModal()">×</button>
+    </div>
+    <div class="qr-body">
+      <div class="qr-form-name">{{ selectedFormForQR?.title }}</div>
+      <div class="qr-desc">Point camera to open the form directly</div>
+      <div class="qr-box">
+        <img [src]="qrCodeUrl" alt="QR Code" width="190" height="190">
+      </div>
+      <input type="text" class="qr-link-input" readonly [value]="formUrl">
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn-primary" (click)="downloadQR()">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M6.5 1V9M6.5 9L4 6.5M6.5 9L9 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M1 11H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        Download QR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DELETE MODAL ═══ -->
+<div class="modal-backdrop" *ngIf="showDeleteModal">
+  <div class="modal modal-sm">
+    <div class="modal-header" style="border-bottom:none; padding-bottom:0;">
+      <div></div>
+      <button class="modal-close" (click)="closeDeleteModal()">×</button>
+    </div>
+    <div class="delete-body">
+      <div class="delete-icon">⚠️</div>
+      <div class="delete-title">Delete this form?</div>
+      <p class="delete-desc"><strong>{{ formToDelete?.title }}</strong> will be permanently removed. The public link stops working immediately. Existing candidate records are not affected.</p>
+    </div>
+    <div class="modal-footer" style="justify-content:center; gap:12px;">
+      <button class="btn-secondary" (click)="closeDeleteModal()">Keep it</button>
+      <button class="btn-danger" (click)="confirmDelete()">Delete Form</button>
+    </div>
+  </div>
+</div>
+<!-- --- PREVIEW MODAL --- -->
+<div class="modal-backdrop" *ngIf="showPreviewModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">{{ previewTemplateName }} Template Preview</div>
+        <div class="modal-subtitle">Fields included in this application template</div>
+      </div>
+      <button class="modal-close" (click)="closePreviewModal()">�</button>
+    </div>
+    <div class="modal-body" style="padding-top: 10px;">
+      <div class="preview-field-list">
+        <div class="preview-field-item" *ngFor="let field of previewFields" [class.optional]="field.optional">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ field.name }}
+          <span *ngIf="field.optional" style="margin-left: auto; font-size: 0.75rem;">(Optional)</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-primary" (click)="closePreviewModal()">Done</button>
+    </div>
+  </div>
+</div>

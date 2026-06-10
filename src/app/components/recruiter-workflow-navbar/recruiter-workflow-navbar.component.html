@@ -36,6 +36,11 @@
             id="recruiter-job-matching-link" class="recruiter-workflow-navbar-dashboard-link thq-body-small button">
             Job Matching
           </a>
+
+          <a *ngIf="showCandidates" routerLink="/collection-forms" routerLinkActive="active-link"
+            id="recruiter-collection-forms-link" class="recruiter-workflow-navbar-dashboard-link thq-body-small button">
+            Forms
+          </a>
         </nav>
       </div>
       <div data-thq="thq-dropdown" class="recruiter-workflow-navbar-thq-dropdown list-item">
@@ -158,6 +163,16 @@
                     fill="currentColor"></path>
                 </svg>
                 <span id="matching-button">Job Matching</span>
+              </a>
+
+              <a *ngIf="showCandidates" routerLink="/collection-forms"
+                class="mobile-nav-link recruiter-workflow-navbar-jobs-for-container">
+                <svg id="forms-icon" width="22" height="22" viewBox="0 0 24 24"
+                  class="recruiter-workflow-navbar-briefcase-icon">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+                    fill="currentColor"></path>
+                </svg>
+                <span id="forms-button">Forms</span>
               </a>
 
               <div id="profile-popup-container" class="recruiter-workflow-navbar-container19">

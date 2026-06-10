@@ -2741,4 +2741,18 @@ select.input {
   border-radius: 6px;
   border-left: 3px solid #05356c;
   line-height: 1.4;
-}
+}/* RATING FILTERS CSS */
+.filter-divider { border: 0; border-top: 1px solid var(--border); margin: 16px 0; grid-column: 1 / -1; }
+.filter-section-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; grid-column: 1 / -1; }
+.checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.dynamic-filter-section { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; }
+.add-criterion-controls { display: flex; gap: 8px; align-items: center; }
+.inline-select { flex: 1; min-width: 120px; }
+.inline-select.small { flex: 0.5; min-width: 80px; }
+.btn-add-criterion { padding: 8px 12px; background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s ease; }
+.btn-add-criterion:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-color: var(--border-hover, #ccc); background: var(--surface-hover); color: var(--text-primary); }
+.btn-add-criterion:active { transform: translateY(0) scale(1.0); box-shadow: none; }
+.active-criteria-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.active-criterion-chip { display: flex; align-items: center; gap: 6px; background: rgba(37, 99, 235, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 16px; font-size: 12px; font-weight: 500; border: 1px solid rgba(37, 99, 235, 0.2); }
+.btn-remove-criterion { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; display: flex; align-items: center; opacity: 0.7; }
+.btn-remove-criterion:hover { opacity: 1; }

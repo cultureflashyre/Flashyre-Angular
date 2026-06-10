@@ -1,0 +1,215 @@
+<div class="apply-page-wrapper">
+  <!-- Gradient background blobs -->
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+
+  <div class="apply-card-container">
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading application form...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container card-panel" *ngIf="errorMessage && !formDetails && !isLoading">
+      <div class="error-icon">⚠️</div>
+      <h2>Application Unavailable</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Success Screen (In-place popup card) -->
+    <div class="success-container card-panel" *ngIf="submitSuccess">
+      <div class="success-checkmark">
+        <div class="check-icon"></div>
+      </div>
+      <h2>Application Submitted!</h2>
+      <p>Thank you for applying. We have received your details and our team will review your application shortly.</p>
+      <div class="company-subtext" *ngIf="formDetails">
+        <span>{{ formDetails.company_name || 'Flashyre Platform' }}</span>
+      </div>
+    </div>
+
+    <!-- Main Application Form -->
+    <div class="form-container card-panel" *ngIf="formDetails && !submitSuccess && !isLoading">
+      <!-- Branded Form Header -->
+      <div class="form-header">
+        <div class="company-logo" *ngIf="formDetails.logo_url" [style.backgroundImage]="'url(' + formDetails.logo_url + ')'"></div>
+        <div class="company-logo-placeholder" *ngIf="!formDetails.logo_url">🏢</div>
+        <div class="header-details">
+          <p class="company-subtitle">{{ formDetails.company_name || 'Flashyre Platform' }}</p>
+          <h1>{{ formDetails.title }}</h1>
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Application Form -->
+      <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Honeypot field (hidden from humans, bot bait) -->
+        <div class="honeypot-field" aria-hidden="true" tabindex="-1">
+          <label for="website">Website</label>
+          <input type="text" id="website" formControlName="website" autocomplete="off" tabindex="-1">
+        </div>
+
+        <div class="form-body">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="name">Full Name <span class="required">*</span></label>
+            <input type="text" id="name" formControlName="name" placeholder="Enter your full name" maxlength="30"
+                   [class.is-invalid]="applyForm.get('name')?.invalid && applyForm.get('name')?.touched">
+            
+            <div class="validation-error" *ngIf="applyForm.get('name')?.invalid && applyForm.get('name')?.touched">
+              <span *ngIf="applyForm.get('name')?.errors?.['required']">Full Name is required.</span>
+              <span *ngIf="applyForm.get('name')?.errors?.['pattern']">Name can contain letters and spaces only.</span>
+              <span *ngIf="applyForm.get('name')?.errors?.['maxlength']">Name cannot exceed 30 characters.</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <input type="email" id="email" formControlName="email" placeholder="email@example.com"
+                   [class.is-invalid]="applyForm.get('email')?.invalid && applyForm.get('email')?.touched">
+            
+            <div class="validation-error" *ngIf="applyForm.get('email')?.invalid && applyForm.get('email')?.touched">
+              <span *ngIf="applyForm.get('email')?.errors?.['required']">Email is required.</span>
+              <span *ngIf="applyForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="form-group">
+            <label for="phone_number">Phone Number <span class="required">*</span></label>
+            <input type="tel" id="phone_number" formControlName="phone_number" placeholder="Enter 10-digit number" maxlength="10"
+                   [class.is-invalid]="applyForm.get('phone_number')?.invalid && applyForm.get('phone_number')?.touched">
+            
+            <div class="validation-error" *ngIf="applyForm.get('phone_number')?.invalid && applyForm.get('phone_number')?.touched">
+              <span *ngIf="applyForm.get('phone_number')?.errors?.['required']">Phone number is required.</span>
+              <span *ngIf="applyForm.get('phone_number')?.errors?.['pattern']">Only numbers are allowed, exactly 10 digits.</span>
+            </div>
+          </div>
+
+          <!-- Gender Dropdown -->
+          <div class="form-group">
+            <label for="gender">Gender <span class="required">*</span></label>
+            <select id="gender" formControlName="gender" [class.is-invalid]="applyForm.get('gender')?.invalid && applyForm.get('gender')?.touched">
+              <option value="" disabled selected>-- Select Gender --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Others">Others</option>
+            </select>
+            
+            <div class="validation-error" *ngIf="applyForm.get('gender')?.invalid && applyForm.get('gender')?.touched">
+              <span>Please select your gender.</span>
+            </div>
+          </div>
+
+          <!-- Template Specific Fields: Campus -->
+          <ng-container *ngIf="formDetails.template_type === 'campus'">
+            <div class="form-group">
+              <label for="latest_university">Latest University <span class="required">*</span></label>
+              <input type="text" id="latest_university" formControlName="latest_university" placeholder="Enter university name" maxlength="30"
+                     [class.is-invalid]="applyForm.get('latest_university')?.invalid && applyForm.get('latest_university')?.touched">
+              <div class="validation-error" *ngIf="applyForm.get('latest_university')?.invalid && applyForm.get('latest_university')?.touched">
+                <span *ngIf="applyForm.get('latest_university')?.errors?.['required']">University is required.</span>
+                <span *ngIf="applyForm.get('latest_university')?.errors?.['pattern']">Only letters and spaces are allowed.</span>
+                <span *ngIf="applyForm.get('latest_university')?.errors?.['maxlength']">Cannot exceed 30 characters.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="year_of_graduation">Year of Graduation <span class="required">*</span></label>
+              <input type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" id="year_of_graduation" formControlName="year_of_graduation" placeholder="e.g. 2024"
+                     [class.is-invalid]="applyForm.get('year_of_graduation')?.invalid && applyForm.get('year_of_graduation')?.touched">
+              <div class="validation-error" *ngIf="applyForm.get('year_of_graduation')?.invalid && applyForm.get('year_of_graduation')?.touched">
+                <span *ngIf="applyForm.get('year_of_graduation')?.errors?.['required']">Year of Graduation is required.</span>
+                <span *ngIf="applyForm.get('year_of_graduation')?.errors?.['pattern']">Enter a valid 4-digit year.</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Template Specific Fields: Experienced -->
+          <ng-container *ngIf="formDetails.template_type === 'experienced'">
+            <div class="form-group">
+              <label for="latest_company">Latest Company <span class="required">*</span></label>
+              <input type="text" id="latest_company" formControlName="latest_company" placeholder="Enter company name" maxlength="30"
+                     [class.is-invalid]="applyForm.get('latest_company')?.invalid && applyForm.get('latest_company')?.touched">
+              <div class="validation-error" *ngIf="applyForm.get('latest_company')?.invalid && applyForm.get('latest_company')?.touched">
+                <span *ngIf="applyForm.get('latest_company')?.errors?.['required']">Company name is required.</span>
+                <span *ngIf="applyForm.get('latest_company')?.errors?.['pattern']">Only letters, numbers and spaces are allowed.</span>
+                <span *ngIf="applyForm.get('latest_company')?.errors?.['maxlength']">Cannot exceed 30 characters.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="current_ctc">Current CTC <span class="required">*</span></label>
+              <select id="current_ctc" formControlName="current_ctc" [class.is-invalid]="applyForm.get('current_ctc')?.invalid && applyForm.get('current_ctc')?.touched">
+                <option value="" disabled selected>-- Select CTC --</option>
+                <option value="Fresher">Fresher</option>
+                <option value="1 - 2 LPA">1 - 2 LPA</option>
+                <option value="3 - 5 LPA">3 - 5 LPA</option>
+                <option value="6 - 8 LPA">6 - 8 LPA</option>
+                <option value="9 - 12 LPA">9 - 12 LPA</option>
+                <option value="12+ LPA">12+ LPA</option>
+              </select>
+              <div class="validation-error" *ngIf="applyForm.get('current_ctc')?.invalid && applyForm.get('current_ctc')?.touched">
+                <span *ngIf="applyForm.get('current_ctc')?.errors?.['required']">Current CTC is required.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="notice_period">Notice Period <span class="required">*</span></label>
+              <select id="notice_period" formControlName="notice_period" [class.is-invalid]="applyForm.get('notice_period')?.invalid && applyForm.get('notice_period')?.touched">
+                <option value="" disabled selected>-- Select Notice Period --</option>
+                <option value="Immediate">Immediate</option>
+                <option value="15 Days">15 Days</option>
+                <option value="30 Days">30 Days</option>
+                <option value="60 Days">60 Days</option>
+                <option value="90 Days">90 Days</option>
+              </select>
+              <div class="validation-error" *ngIf="applyForm.get('notice_period')?.invalid && applyForm.get('notice_period')?.touched">
+                <span>Please select your notice period.</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Resume File Upload -->
+          <div class="form-group">
+            <label>Resume Upload <span class="required" *ngIf="formDetails.require_resume">*</span></label>
+            <div class="upload-dropzone" [class.has-file]="selectedFile" [class.has-error]="fileError">
+              <input type="file" id="resume" (change)="onFileSelected($event)" accept=".pdf,.docx,.doc">
+              <div class="dropzone-content">
+                <span class="upload-icon">{{ selectedFile ? '📄' : '📤' }}</span>
+                <p class="upload-text" *ngIf="!selectedFile">
+                  <strong>Click to upload</strong> or drag and drop
+                </p>
+                <p class="file-info" *ngIf="selectedFile">
+                  {{ selectedFile.name }} ({{ (selectedFile.size / 1024 / 1024) | number:'1.1-2' }} MB)
+                </p>
+                <p class="upload-subtext" *ngIf="!selectedFile">PDF, DOCX, or DOC (Max 5MB)</p>
+              </div>
+            </div>
+            
+            <div class="validation-error" *ngIf="fileError">
+              <span>{{ fileError }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submission Error Message -->
+        <div class="submission-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit" [disabled]="applyForm.invalid || isSubmitting || (formDetails.require_resume && !selectedFile) || fileError">
+            <span class="spinner-small" *ngIf="isSubmitting"></span>
+            {{ isSubmitting ? 'Submitting Application...' : 'Submit Application' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

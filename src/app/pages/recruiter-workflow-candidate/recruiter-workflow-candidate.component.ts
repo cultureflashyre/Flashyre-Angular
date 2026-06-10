@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule, FormArray, FormControl } from '@angular/forms';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
@@ -139,6 +139,17 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   isFilterPanelVisible = false;
   filterForm!: FormGroup;
 
+  // --- Rating Filters ---
+  allRatingCriteria: any[] = [];
+  filteredRatingCriteria: any[] = [];
+  selectedFilterCategory: string = '';
+  filterOverallRating: string = '';
+  filterUnrated: boolean = false;
+  
+  selectedFilterCriterionKey: string = '';
+  selectedFilterScore: string = '';
+  activeCriteriaFilters: { key: string, label: string, minScore: number }[] = [];
+
   // --- Skills ---
   skills: string[] = [];
 
@@ -200,6 +211,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   selectedState: string = '';
   selectedPlaceId: string = '';
 
+  formIdFilter: string | null = null;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -207,7 +220,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private candidateService: RecruiterWorkflowCandidateService,
     private adbRequirementService: AdbRequirementService,
-    private pollingService: PollingService // Inject Polling Service
+    private pollingService: PollingService, // Inject Polling Service
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
@@ -224,11 +239,41 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     this.isRecruiterUser = localStorage.getItem('userType') === 'recruiter';
 
-    // Load both datasets
-    this.loadCandidates();
+    // Subscribe to query parameters to detect if form_id is passed as a filter
+    this.subscriptions.add(
+      this.route.queryParams.subscribe(params => {
+        this.formIdFilter = params['form_id'] || null;
+        this.loadCandidates();
+      })
+    );
+
     this.loadRegisteredUsers();
 
     this.setupLocationAutocomplete();
+
+    // Fetch all rating criteria for the filter dropdown
+    this.candidateService.getRatingCriteria().subscribe({
+      next: (res: any) => {
+        this.allRatingCriteria = res;
+        this.onFilterCategoryChange();
+      },
+      error: (err) => console.error("Failed to load rating criteria", err)
+    });
+  }
+
+  onFilterCategoryChange(): void {
+    if (this.selectedFilterCategory) {
+      this.filteredRatingCriteria = this.allRatingCriteria.filter(c => c.category === this.selectedFilterCategory);
+    } else {
+      // filter out duplicates by key if any across categories for the "All" view
+      const unique = new Map();
+      this.allRatingCriteria.forEach((c: any) => unique.set(c.criterion_key, c));
+      this.filteredRatingCriteria = Array.from(unique.values());
+    }
+    // reset selection if the selected key is no longer in the filtered list
+    if (this.selectedFilterCriterionKey && !this.filteredRatingCriteria.find(c => c.criterion_key === this.selectedFilterCriterionKey)) {
+        this.selectedFilterCriterionKey = '';
+    }
   }
 
   private getUserIdFromValue(user: any): string {
@@ -306,7 +351,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   loadCandidates(page: number = 1): void {
     this.isPageLoading = true;
     this.currentPage = page;
-    this.candidateService.getCandidates(page).subscribe({
+    this.candidateService.getCandidates(page, true, this.formIdFilter).subscribe({
       next: (response: any) => {
         // Handle paginated response
         const data = response.results || response;
@@ -405,6 +450,35 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       });
     }
 
+    // --- RATING FILTERS ---
+    if (this.filterUnrated) {
+      candidates = candidates.filter(c => {
+         const score = isSourced ? c.latest_rating_score : c.sourced_data?.latest_rating_score;
+         return !score;
+      });
+    } else {
+      if (this.filterOverallRating) {
+        const target = Number(this.filterOverallRating);
+        candidates = candidates.filter(c => {
+          const score = isSourced ? c.latest_rating_score : c.sourced_data?.latest_rating_score;
+          return score && score >= target;
+        });
+      }
+
+      if (this.activeCriteriaFilters.length > 0) {
+        candidates = candidates.filter(c => {
+          const breakdown = isSourced ? c.latest_rating_breakdown : c.sourced_data?.latest_rating_breakdown;
+          if (!breakdown) return false;
+          
+          // Must meet ALL applied active criteria filters
+          return this.activeCriteriaFilters.every(filter => {
+             const val = breakdown[filter.key];
+             return val !== undefined && val !== null && Number(val) >= filter.minScore;
+          });
+        });
+      }
+    }
+
     // --- SORTING ---
     if (this.currentSort === 'a-z') {
       candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
@@ -432,8 +506,59 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   clearFilters(): void {
     this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '', phone: '' });
+    this.filterOverallRating = '';
+    this.filterUnrated = false;
+    this.activeCriteriaFilters = [];
+    this.selectedFilterCriterionKey = '';
+    this.selectedFilterScore = '';
+    if (this.formIdFilter) {
+      this.formIdFilter = null;
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { form_id: null },
+        queryParamsHandling: 'merge'
+      });
+    }
     this.applyFiltersAndSort();
     this.isFilterPanelVisible = false;
+  }
+
+  // --- RATING FILTER METHODS ---
+  onRatingFilterChange(): void {
+    this.applyFiltersAndSort();
+  }
+
+  onCriterionSelectChange(): void {
+    if (this.selectedFilterCriterionKey && this.selectedFilterScore) {
+      this.addCriterionFilter();
+    }
+  }
+
+  addCriterionFilter(): void {
+    if (!this.selectedFilterCriterionKey || !this.selectedFilterScore) return;
+    
+    const criterion = this.allRatingCriteria.find(c => c.criterion_key === this.selectedFilterCriterionKey);
+    if (!criterion) return;
+    
+    // Remove existing filter for same key if exists to replace it
+    this.activeCriteriaFilters = this.activeCriteriaFilters.filter(f => f.key !== this.selectedFilterCriterionKey);
+    
+    this.activeCriteriaFilters.push({
+      key: this.selectedFilterCriterionKey,
+      label: criterion.criterion_label,
+      minScore: Number(this.selectedFilterScore)
+    });
+    
+    // Reset inputs
+    this.selectedFilterCriterionKey = '';
+    this.selectedFilterScore = '';
+    
+    this.applyFiltersAndSort();
+  }
+  
+  removeCriterionFilter(key: string): void {
+    this.activeCriteriaFilters = this.activeCriteriaFilters.filter(f => f.key !== key);
+    this.applyFiltersAndSort();
   }
 
   sortCandidates(event: Event): void {

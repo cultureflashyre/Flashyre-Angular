@@ -262,6 +262,20 @@ export const routes: Routes = [
     data: { roles: ['admin', 'recruiter'] }
   },
   {
+    path: 'collection-forms',
+    loadComponent: () =>
+      import('./pages/collection-forms/collection-forms.component')
+        .then((m) => m.CollectionFormsComponent),
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] }
+  },
+  {
+    path: 'apply/:formId',
+    loadComponent: () =>
+      import('./pages/public-apply/public-apply.component')
+        .then((m) => m.PublicApplyComponent)
+  },
+  {
     path: 'recruiter-workflow-requirement',
     loadComponent: () =>
       import('./pages/recruiter-workflow-requirement/recruiter-workflow-requirement.component')

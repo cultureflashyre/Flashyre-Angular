@@ -27,6 +27,9 @@ export interface Candidate {
   recruiter_name?: string;
   source?: string;
   latest_rating_score?: number | null;
+  latest_rating_breakdown?: { [key: string]: number } | null;
+  source_form?: number | string | null;
+  source_form_title?: string;
 }
 
 // --- VERIFY THIS INTERFACE ---
@@ -44,17 +47,18 @@ export interface RegisteredUser {
 
 // Add this interface above RegisteredUser
 export interface SourcedData {
-  work_experience: string;
-  skills: string;
-  current_location: string;
-  preferred_location: string;
-  current_ctc: string;
-  total_experience: number;
-  relevant_experience: number;
-  source: string;
-  resume: string | null;
   id?: number;
+  work_experience?: number;
+  skills?: string;
+  current_location?: string;
+  preferred_location?: any;
+  current_ctc?: string;
+  total_experience?: number;
+  relevant_experience?: number;
+  source?: string;
+  resume?: string;
   latest_rating_score?: number | null;
+  latest_rating_breakdown?: { [key: string]: number } | null;
 }
 
 // Update RegisteredUser
@@ -129,10 +133,13 @@ export class RecruiterWorkflowCandidateService {
     return this.http.get<PollStatusResponse>(`${this.apiUrl}api/resume-status/${stagingId}/?t=${timestamp}`);
   }
 
-  getCandidates(page: number = 1, paginate: boolean = true): Observable<any> {
-    const url = paginate 
+  getCandidates(page: number = 1, paginate: boolean = true, formId?: string | null): Observable<any> {
+    let url = paginate 
       ? `${this.apiUrl}${this.endpoint}?page=${page}`
       : `${this.apiUrl}${this.endpoint}?paginate=false`;
+    if (formId) {
+      url += `&form_id=${formId}`;
+    }
     return this.http.get<any>(url);
   }
 
