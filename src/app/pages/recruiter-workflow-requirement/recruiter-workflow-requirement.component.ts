@@ -12,6 +12,7 @@ import { AlertMessageComponent } from '../../components/alert-message/alert-mess
 import { debounceTime, distinctUntilChanged, switchMap, tap, finalize, takeWhile } from 'rxjs/operators';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
+import { SuperAdminService } from '../../services/super-admin.service';
 
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 // ❌ POLLING SERVICE REMOVED TO FIX NULLINJECTORERROR
@@ -242,7 +243,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     private adbService: AdbRequirementService,
     private fb: FormBuilder,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private superAdminService: SuperAdminService
     // ❌ POLLING SERVICE INJECTION REMOVED HERE
   ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
@@ -2100,6 +2102,32 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     if (currentItem.phone && allPhones.indexOf(currentItem.phone) !== allPhones.lastIndexOf(currentItem.phone)) {
       errors.phone = 'Duplicate Phone in list';
     }
+  }
+
+  isExportingRequirements: boolean = false;
+
+  exportRequirementsData(): void {
+    if (!this.isSuperUser) return;
+    this.isExportingRequirements = true;
+    this.superAdminService.exportRequirements().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'requirements_export.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExportingRequirements = false;
+        this.triggerAlert('Export completed successfully.', ['OK']);
+      },
+      error: (err) => {
+        console.error('Export error:', err);
+        this.isExportingRequirements = false;
+        this.triggerAlert('Failed to export requirements data.', ['OK']);
+      }
+    });
   }
 
 }

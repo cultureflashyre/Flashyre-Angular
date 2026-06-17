@@ -154,6 +154,15 @@
         <div id="filter-sort-download-zip-container"
           class="recruiter-workflow-candidate-filter-sort-download-zip-container">
 
+          <!-- Export Button (Super Admin Only) -->
+          <button *ngIf="isSuperUser && activeTab === 'sourced'" (click)="exportCandidatesData()" id="export-button"
+            type="button" class="recruiter-workflow-candidate-filtered-button1 button" [disabled]="isExportingCandidates"
+            style="background-color: #28a745; margin-right: 10px;">
+            <span class="recruiter-workflow-candidate-start-process-text1" style="color: white;">
+              {{ isExportingCandidates ? 'Exporting...' : 'Export All Data' }}
+            </span>
+          </button>
+
           <!-- Delete Button (Sourced Tab Bulk Delete) -->
           <button *ngIf="isSuperUser && activeTab === 'sourced'" (click)="deleteSelected()" id="filtered-button"
             type="button" class="recruiter-workflow-candidate-filtered-button1 button" [disabled]="isDeleting">

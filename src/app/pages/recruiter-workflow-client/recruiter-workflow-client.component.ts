@@ -17,6 +17,7 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
 import { AdbClientService } from '../../services/adb-client.service'; // Adjust path as needed
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
+import { SuperAdminService } from '../../services/super-admin.service';
 import { Subject, Subscription, Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -106,7 +107,8 @@ export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy
     private meta: Meta,
     private fb: FormBuilder,
     private clientService: AdbClientService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private superAdminService: SuperAdminService
   ) {
     this.title.setTitle('Recruiter-Workflow-Client - Flashyre');
     
@@ -856,6 +858,32 @@ ngAfterViewInit(): void {
     setTimeout(() => {
         this.activeField = null;
     }, 200);
+  }
+
+  isExportingClients: boolean = false;
+
+  exportClientsData(): void {
+    if (!this.isSuperUser) return;
+    this.isExportingClients = true;
+    this.superAdminService.exportClients().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'clients_export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExportingClients = false;
+        this.showSuccessToast('Export completed successfully.');
+      },
+      error: (err) => {
+        console.error('Export error:', err);
+        this.isExportingClients = false;
+        this.showErrorToast('Failed to export clients data.');
+      }
+    });
   }
 
 }

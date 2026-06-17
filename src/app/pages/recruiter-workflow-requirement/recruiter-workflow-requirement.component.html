@@ -134,6 +134,16 @@
             </div>
             <div id="filter-sort-download-zip-container"
               class="recruiter-workflow-requirement-filter-sort-download-zip-container">
+
+              <!-- Export Button (Super Admin Only) -->
+              <button *ngIf="isSuperUser" (click)="exportRequirementsData()" id="export-button"
+                type="button" class="recruiter-workflow-requirement-filtered-button1 button" [disabled]="isExportingRequirements"
+                style="background-color: #28a745; margin-right: 10px;">
+                <span class="recruiter-workflow-requirement-start-process-text1" style="color: white;">
+                  {{ isExportingRequirements ? 'Exporting...' : 'Export All Data' }}
+                </span>
+              </button>
+
               <div class="bulk-status-container" *ngIf="isAnySelected" style="margin-right: 15px;">
                 <select class="bulk-status-select" [(ngModel)]="bulkStatusSelected"
                   (change)="onBulkStatusChange($event)">

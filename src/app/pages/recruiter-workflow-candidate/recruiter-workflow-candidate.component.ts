@@ -14,6 +14,7 @@ import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { PollingService } from '../../services/polling.service'; // Import Polling Service
+import { SuperAdminService } from '../../services/super-admin.service';
 
 // Custom Validators
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -221,6 +222,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     private candidateService: RecruiterWorkflowCandidateService,
     private adbRequirementService: AdbRequirementService,
     private pollingService: PollingService, // Inject Polling Service
+    private superAdminService: SuperAdminService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -1820,6 +1822,31 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     } else {
       this.candidateRatings = [];
     }
+  }
+  isExportingCandidates: boolean = false;
+
+  exportCandidatesData(): void {
+    if (!this.isSuperUser) return;
+    this.isExportingCandidates = true;
+    this.superAdminService.exportCandidates().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'candidates_export.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExportingCandidates = false;
+        this.showAlert('Export completed successfully.', ['Close']);
+      },
+      error: (err) => {
+        console.error('Export error:', err);
+        this.isExportingCandidates = false;
+        this.showAlert('Failed to export candidate data.', ['Close']);
+      }
+    });
   }
 
   onRatingCategoryChange(category: string): void {

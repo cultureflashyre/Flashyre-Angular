@@ -514,6 +514,21 @@
             id="filter-sort-download-zip-container"
             class="recruiter-workflow-client-filter-sort-download-zip-container"
           >
+              <!-- Export Button (Super Admin Only) -->
+              <button
+                *ngIf="isSuperUser"
+                id="export-button"
+                type="button"
+                (click)="exportClientsData()"
+                class="recruiter-workflow-client-filtered-button1 button"
+                [disabled]="isExportingClients"
+                style="background-color: #28a745; margin-right: 10px;"
+              >
+                <span class="recruiter-workflow-client-start-process-text1" style="color: white;">
+                  {{ isExportingClients ? 'Exporting...' : 'Export All Data' }}
+                </span>
+              </button>
+
             <button
                 *ngIf="isSuperUser"
                 id="filtered-button"

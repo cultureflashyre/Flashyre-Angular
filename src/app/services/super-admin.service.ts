@@ -39,4 +39,16 @@ export class SuperAdminService {
     // Note: client_name filter was removed as it's not a direct filter in the new logic
     return params;
   }
+
+  exportCandidates(): Observable<Blob> {
+    return this.http.get(this.apiUrl + 'export-candidates/', { responseType: 'blob' });
+  }
+
+  exportRequirements(): Observable<Blob> {
+    return this.http.get(this.apiUrl + 'export-requirements/', { responseType: 'blob' });
+  }
+
+  exportClients(): Observable<Blob> {
+    return this.http.get(this.apiUrl + 'export-clients/', { responseType: 'blob' });
+  }
 }
