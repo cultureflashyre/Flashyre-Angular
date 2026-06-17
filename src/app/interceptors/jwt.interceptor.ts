@@ -52,12 +52,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
   // Determine which service to use based on the request URL
   const authService = req.url.includes('/corporate/') ? corporateAuthService : candidateAuthService;
-  let token = authService.getJWTToken();
-
-  if (token && isTokenExpired(token)) {
-    authService.clearTokens();
-    token = null;
-  }
+  const token = authService.getJWTToken();
 
   // Attach Device ID to all requests
   let authReq = req.clone({
@@ -66,6 +61,12 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     }
   });
 
+  // If we have a token but it's expired, proactively refresh it
+  // instead of clearing tokens (which would kill the refresh flow)
+  if (token && isTokenExpired(token)) {
+    return handleTokenRefresh(authReq, next, authService, router);
+  }
+
   if (token) {
     authReq = addToken(authReq, token);
   }
@@ -73,7 +74,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError(error => {
       if (error instanceof HttpErrorResponse && error.status === 401 && !authReq.url.includes('api/auth/login/')) {
-        return handle401Error(authReq, next, authService, router);
+        return handleTokenRefresh(authReq, next, authService, router);
       }
       return throwError(() => error);
     })
@@ -81,7 +82,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 };
 
 // --- Token Refresh Logic Helper ---
-function handle401Error(
+function handleTokenRefresh(
   request: HttpRequest<any>,
   next: HttpHandlerFn,
   authService: AuthService | CorporateAuthService,

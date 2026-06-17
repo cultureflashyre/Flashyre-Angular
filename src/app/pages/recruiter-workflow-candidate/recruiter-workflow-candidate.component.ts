@@ -145,7 +145,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   selectedFilterCategory: string = '';
   filterOverallRating: string = '';
   filterUnrated: boolean = false;
-  
+
   selectedFilterCriterionKey: string = '';
   selectedFilterScore: string = '';
   activeCriteriaFilters: { key: string, label: string, minScore: number }[] = [];
@@ -272,7 +272,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     }
     // reset selection if the selected key is no longer in the filtered list
     if (this.selectedFilterCriterionKey && !this.filteredRatingCriteria.find(c => c.criterion_key === this.selectedFilterCriterionKey)) {
-        this.selectedFilterCriterionKey = '';
+      this.selectedFilterCriterionKey = '';
     }
   }
 
@@ -453,8 +453,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     // --- RATING FILTERS ---
     if (this.filterUnrated) {
       candidates = candidates.filter(c => {
-         const score = isSourced ? c.latest_rating_score : c.sourced_data?.latest_rating_score;
-         return !score;
+        const score = isSourced ? c.latest_rating_score : c.sourced_data?.latest_rating_score;
+        return !score;
       });
     } else {
       if (this.filterOverallRating) {
@@ -469,11 +469,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         candidates = candidates.filter(c => {
           const breakdown = isSourced ? c.latest_rating_breakdown : c.sourced_data?.latest_rating_breakdown;
           if (!breakdown) return false;
-          
+
           // Must meet ALL applied active criteria filters
           return this.activeCriteriaFilters.every(filter => {
-             const val = breakdown[filter.key];
-             return val !== undefined && val !== null && Number(val) >= filter.minScore;
+            const val = breakdown[filter.key];
+            return val !== undefined && val !== null && Number(val) >= filter.minScore;
           });
         });
       }
@@ -536,26 +536,26 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   addCriterionFilter(): void {
     if (!this.selectedFilterCriterionKey || !this.selectedFilterScore) return;
-    
+
     const criterion = this.allRatingCriteria.find(c => c.criterion_key === this.selectedFilterCriterionKey);
     if (!criterion) return;
-    
+
     // Remove existing filter for same key if exists to replace it
     this.activeCriteriaFilters = this.activeCriteriaFilters.filter(f => f.key !== this.selectedFilterCriterionKey);
-    
+
     this.activeCriteriaFilters.push({
       key: this.selectedFilterCriterionKey,
       label: criterion.criterion_label,
       minScore: Number(this.selectedFilterScore)
     });
-    
+
     // Reset inputs
     this.selectedFilterCriterionKey = '';
     this.selectedFilterScore = '';
-    
+
     this.applyFiltersAndSort();
   }
-  
+
   removeCriterionFilter(key: string): void {
     this.activeCriteriaFilters = this.activeCriteriaFilters.filter(f => f.key !== key);
     this.applyFiltersAndSort();
@@ -1101,6 +1101,17 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   preventInvalidChars(event: KeyboardEvent): void {
     if (['e', 'E', '+', '-'].includes(event.key)) {
       event.preventDefault();
+    }
+  }
+
+  enforceTwoDigits(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value && input.value.length > 2) {
+      input.value = input.value.slice(0, 2);
+      const controlName = input.getAttribute('formControlName');
+      if (controlName && this.candidateForm && this.candidateForm.get(controlName)) {
+        this.candidateForm.get(controlName)?.setValue(input.value);
+      }
     }
   }
 
@@ -1784,7 +1795,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.ratingNotes = '';
     this.criteriaScores = {};
     this.selectedRatingCategory = 'Technical-IT';
-    
+
     this.adbRequirementService.getRequirements().subscribe({
       next: (jobs: any) => {
         const allJobs = Array.isArray(jobs) ? jobs : (jobs?.results || []);
@@ -1879,7 +1890,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.candidateService.submitRating(payload).subscribe({
       next: (newRating) => {
         this.isActionLoading = false;
-        
+
         if (isSourced) {
           const cand = this.masterCandidates.find(c => c.id === this.ratingCandidate.id);
           if (cand) {
@@ -1932,7 +1943,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         next: () => {
           this.isActionLoading = false;
           this.candidateRatings = this.candidateRatings.filter(r => r.id !== ratingId);
-          
+
           const latest = this.candidateRatings[0];
           const latestScore = latest ? latest.overall_score : null;
 

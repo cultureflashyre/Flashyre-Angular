@@ -1,6 +1,7 @@
-:host { 
-  display: contents; 
+:host {
+  display: contents;
 }
+
 /* =========================================
    PROFESSIONAL INLINE PHONE INPUT STYLES
    ========================================= */
@@ -16,7 +17,8 @@
 .phone-input-wrapper .input {
   width: 100%;
   height: 48px;
-  padding: 0 45px 0 12px; /* 45px padding on right for icon */
+  padding: 0 45px 0 12px;
+  /* 45px padding on right for icon */
   border: 1px solid #A7A7A7;
   border-radius: 5px;
   background-color: #FFFFFF;
@@ -121,7 +123,8 @@
 .tab-button.active {
   color: #05356C;
   border-bottom: 3px solid #05356C;
-  margin-bottom: -2px; /* Overlap the container border */
+  margin-bottom: -2px;
+  /* Overlap the container border */
 }
 
 /* =========================================
@@ -131,28 +134,28 @@
   gap: 10px;
   flex: 0 0 auto;
   width: 100%;
-  
+
   /* Auto height allows it to expand if needed */
-  height: auto; 
-  min-height: 40px; 
-  
+  height: auto;
+  min-height: 40px;
+
   display: flex;
   align-items: center;
-  
+
   /* FORCE items apart: Recruiter Left, Date Right */
-  justify-content: space-between !important; 
-  
+  justify-content: space-between !important;
+
   padding: 8px 16px;
   border-radius: var(--dl-layout-radius-radius4);
   background-color: #F4F4F4;
-  
+
   /* Corners matching card */
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  
-  flex-wrap: wrap; 
+
+  flex-wrap: wrap;
 }
 
 /* Ensure text containers don't shrink too much */
@@ -163,7 +166,7 @@
   height: auto;
   display: flex;
   align-items: center;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 /* =========================================
@@ -171,8 +174,8 @@
    ========================================= */
 
 .recruiter-workflow-candidate-upload-file-container.is-invalid {
-  border-color: #dc3545 !important; 
-  box-shadow: 0 0 0 1px #dc3545; 
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 1px #dc3545;
 }
 
 /* FORM MODAL FIXES */
@@ -188,7 +191,7 @@
   overflow-y: auto;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .form-modal-container .recruiter-workflow-candidate-candidate-input-form {
@@ -201,7 +204,7 @@
 .recruiter-workflow-candidate-job-title-company-name-container1 {
   gap: 16px;
   width: 100%;
-  min-height: 96px; 
+  min-height: 96px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-bottom: 16px;
@@ -274,10 +277,10 @@
 .recruiter-workflow-candidate-job-title-company-name-container3 {
   gap: 16px;
   width: 100%;
-  min-height: 120px; 
+  min-height: 120px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-bottom: 24px; 
+  margin-bottom: 24px;
   position: relative;
   z-index: 100;
 }
@@ -289,7 +292,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  position: relative; 
+  position: relative;
 }
 
 .skills-input-container {
@@ -303,7 +306,7 @@
   border-radius: 5px;
   background-color: #FFFFFF;
   min-height: 48px;
-  max-height: 100px; 
+  max-height: 100px;
   overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
@@ -316,7 +319,7 @@
 
 .location-suggestions-dropdown {
   position: absolute;
-  top: calc(100% + 2px); 
+  top: calc(100% + 2px);
   left: 0;
   right: 0;
   width: 100%;
@@ -325,8 +328,8 @@
   background-color: #ffffff;
   border: 1px solid #dcdcdc;
   border-radius: 4px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  z-index: 1001; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
 }
 
 .suggestion-item {
@@ -371,7 +374,7 @@
 .recruiter-workflow-candidate-job-title-company-name-container1:last-of-type {
   gap: 16px;
   width: 100%;
-  min-height: 120px; 
+  min-height: 120px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-bottom: 16px;
@@ -421,7 +424,7 @@ select.input {
   color: #dc3545;
   font-size: 12px;
   margin-top: 4px;
-  min-height: 18px; 
+  min-height: 18px;
   display: block;
 }
 
@@ -831,7 +834,7 @@ select.input {
 }
 
 .file-icon {
-  color: #ef4444; 
+  color: #ef4444;
 }
 
 .resume-text {
@@ -848,7 +851,7 @@ select.input {
 
 .clickable-candidate-name {
   cursor: pointer;
-  color: #05356c; 
+  color: #05356c;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s;
@@ -860,7 +863,7 @@ select.input {
 }
 
 .icon-disabled {
-  color: #C0C0C0; 
+  color: #C0C0C0;
   fill: #C0C0C0;
   width: 40px;
   height: 40px;
@@ -883,7 +886,7 @@ select.input {
   background-color: rgba(9, 30, 66, 0.4);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  z-index: 990; 
+  z-index: 990;
 }
 
 .form-modal-container {
@@ -891,20 +894,20 @@ select.input {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 991; 
-  width: 80%; 
+  z-index: 991;
+  width: 80%;
   max-width: 1200px;
   height: auto;
   max-height: 90vh;
-  overflow-y: auto; 
+  overflow-y: auto;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .form-modal-container .recruiter-workflow-candidate-candidate-input-form {
-  position: static; 
-  padding: 24px 32px; 
+  position: static;
+  padding: 24px 32px;
 }
 
 .close-panel-button {
@@ -915,8 +918,8 @@ select.input {
   border: none;
   padding: 4px;
   cursor: pointer;
-  color: #6c757d; 
-  border-radius: 50%; 
+  color: #6c757d;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -924,8 +927,8 @@ select.input {
 }
 
 .close-panel-button:hover {
-  background-color: #f1f1f1; 
-  color: #333; 
+  background-color: #f1f1f1;
+  color: #333;
 }
 
 .filter-backdrop {
@@ -934,7 +937,7 @@ select.input {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(9, 30, 66, 0.2); 
+  background-color: rgba(9, 30, 66, 0.2);
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
   z-index: 90;
@@ -942,13 +945,13 @@ select.input {
 
 .filter-panel {
   position: absolute;
-  top: 110%; 
+  top: 110%;
   right: 0;
-  width: 600px; 
+  width: 600px;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   padding: 20px;
   z-index: 100;
   display: flex;
@@ -958,7 +961,7 @@ select.input {
 
 .filter-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
@@ -1039,7 +1042,7 @@ select.input {
   flex-direction: column;
   justify-content: flex-start;
 }
- 
+
 .recruiter-workflow-candidate-container11 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1063,7 +1066,7 @@ select.input {
   flex-direction: column;
   background-color: #FFFFFF;
 }
- 
+
 .recruiter-workflow-candidate-cvjd-upload-container {
   gap: 24px;
   flex: 0 0 auto;
@@ -1073,33 +1076,33 @@ select.input {
   align-items: center;
   justify-content: flex-start;
 }
- 
+
 .recruiter-workflow-candidate-add-questions-with-ai-button1,
 .recruiter-workflow-candidate-add-questions-with-ai-button2 {
   width: 200px;
   height: 40px;
   display: flex;
   padding: 0px;
-  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
+  background: linear-gradient(90deg, #E489A9, #696CE9, #7064E5, #78B7D7);
   transition: 0.3s;
   align-items: center;
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
 }
- 
+
 .recruiter-workflow-candidate-add-questions-with-ai-button1:hover,
 .recruiter-workflow-candidate-add-questions-with-ai-button2:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-add-questions-with-ai-button1:active,
 .recruiter-workflow-candidate-add-questions-with-ai-button2:active {
   transform: scale(0.9);
 }
- 
+
 .recruiter-workflow-candidate-add-questions-with-ai-text1,
 .recruiter-workflow-candidate-add-questions-with-ai-text2 {
   fill: #FFFFFF;
@@ -1135,7 +1138,7 @@ select.input {
   flex-direction: column;
   padding-bottom: var(--dl-layout-space-unit);
 }
- 
+
 .recruiter-workflow-candidate-select-filter-sort-download-zip-main-container {
   flex: 0 0 auto;
   width: 100%;
@@ -1146,7 +1149,7 @@ select.input {
   padding-right: var(--dl-layout-space-halfunit);
   justify-content: space-between;
 }
- 
+
 .recruiter-workflow-candidate-container30 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1155,7 +1158,7 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-select-all-main-container1 {
   gap: 8px;
   flex: 0 0 auto;
@@ -1164,16 +1167,16 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-select-checkbox {
   width: 20px;
   height: 20px;
 }
- 
+
 .recruiter-workflow-candidate-select-all-text {
   font-size: 16px;
 }
- 
+
 .recruiter-workflow-candidate-select-all-main-container2 {
   gap: 8px;
   flex: 0 0 auto;
@@ -1191,7 +1194,7 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-filtered-button1 {
   fill: #FFFFFF;
   color: #FFFFFF;
@@ -1203,24 +1206,24 @@ select.input {
   border-width: 1px;
   background-color: #F10400;
 }
- 
+
 .recruiter-workflow-candidate-filtered-button1:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .recruiter-workflow-candidate-filtered-button1:active {
   transform: scale(1.05);
   transition: all 0.7s;
 }
- 
+
 .recruiter-workflow-candidate-start-process-text1 {
   fill: #FFFFFF;
   color: #FFFFFF;
   font-size: 16px;
 }
- 
+
 .recruiter-workflow-candidate-filtered-container {
   gap: 24px;
   flex: 0 0 auto;
@@ -1230,7 +1233,7 @@ select.input {
   align-items: center;
   justify-content: center;
 }
- 
+
 .recruiter-workflow-candidate-filtered-button2 {
   fill: #05356c;
   color: #05356c;
@@ -1242,31 +1245,31 @@ select.input {
   border-width: 1px;
   background-color: rgb(255, 255, 255);
 }
- 
+
 .recruiter-workflow-candidate-filtered-button2:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .recruiter-workflow-candidate-filtered-button2:active {
   transform: scale(1.05);
   transition: all 0.7s;
 }
- 
+
 .recruiter-workflow-candidate-start-process-text2 {
   fill: #05356c;
   color: #05356c;
   font-size: 16px;
 }
- 
+
 .recruiter-workflow-candidate-sort-dropdown {
   cursor: pointer;
   display: inline-block;
   position: relative;
   border-radius: var(--dl-layout-radius-radius2);
 }
- 
+
 .recruiter-workflow-candidate-dropdown-toggle1 {
   fill: #05356c;
   color: #05356c;
@@ -1281,13 +1284,13 @@ select.input {
   border-radius: 4px;
   background-color: #FFFFFF;
 }
- 
+
 .recruiter-workflow-candidate-dropdown-toggle1:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .recruiter-workflow-candidate-dropdown-toggle1:active {
   transform: scale(1.05);
   transition: all 0.7s;
@@ -1307,7 +1310,7 @@ select.input {
   scroll-behavior: smooth;
   scrollbar-width: thin;
 }
- 
+
 .recruiter-workflow-candidate-container33 {
   gap: 0px;
   flex: 0 0 auto;
@@ -1317,7 +1320,7 @@ select.input {
   align-items: center;
   flex-direction: column;
 }
- 
+
 .recruiter-workflow-candidate-container34 {
   gap: var(--dl-layout-space-unit);
   flex: 0 0 auto;
@@ -1333,7 +1336,7 @@ select.input {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
- 
+
 .recruiter-workflow-candidate-container35 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1344,7 +1347,7 @@ select.input {
   align-self: center;
   align-items: flex-start;
 }
- 
+
 .recruiter-workflow-candidate-container36 {
   gap: 8px;
   flex: 0 0 auto;
@@ -1355,7 +1358,7 @@ select.input {
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .recruiter-workflow-candidate-text55 {
   display: flex;
   font-size: 22px;
@@ -1363,7 +1366,7 @@ select.input {
   align-items: center;
   font-weight: 500;
 }
- 
+
 .recruiter-workflow-candidate-container37 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1372,7 +1375,7 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-container38 {
   gap: 4px;
   flex: 0 0 auto;
@@ -1381,19 +1384,19 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-icon23 {
   fill: #747474;
   color: #747474;
   width: 16px;
   height: 16px;
 }
- 
+
 .recruiter-workflow-candidate-text56 {
   font-size: 14px;
   align-self: flex-end;
 }
- 
+
 .recruiter-workflow-candidate-container39 {
   gap: 4px;
   flex: 0 0 auto;
@@ -1402,19 +1405,19 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-icon27 {
   fill: #747474;
   color: #747474;
   width: 18px;
   height: 18px;
 }
- 
+
 .recruiter-workflow-candidate-text57 {
   font-size: 14px;
   align-self: flex-end;
 }
- 
+
 .recruiter-workflow-candidate-container40 {
   gap: 4px;
   flex: 0 0 auto;
@@ -1423,19 +1426,19 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-icon29 {
   fill: #747474;
   color: #747474;
   width: 16px;
   height: 16px;
 }
- 
+
 .recruiter-workflow-candidate-text58 {
   font-size: 14px;
   align-self: flex-end;
 }
- 
+
 .recruiter-workflow-candidate-container41 {
   gap: 8px;
   flex: 0 0 auto;
@@ -1445,7 +1448,7 @@ select.input {
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .recruiter-workflow-candidate-container42 {
   flex: 0 0 auto;
   width: 100%;
@@ -1453,19 +1456,19 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-text59 {
   fill: #747474;
   color: #747474;
   width: 20%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text60 {
   width: 80%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container43 {
   flex: 0 0 auto;
   width: 100%;
@@ -1473,19 +1476,19 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-text61 {
   fill: #747474;
   color: #747474;
   width: 20%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text62 {
   width: 80%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container44 {
   flex: 0 0 auto;
   width: 100%;
@@ -1493,14 +1496,14 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-text63 {
   fill: #747474;
   color: #747474;
   width: 20%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container45 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1511,29 +1514,29 @@ select.input {
   align-items: flex-start;
   flex-direction: row;
 }
- 
+
 .recruiter-workflow-candidate-text64 {
   width: auto;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text65 {
   fill: #05356C;
   color: rgb(5, 53, 108);
   font-size: 14px;
   transition: 0.3s;
 }
- 
+
 .recruiter-workflow-candidate-text65:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-text65:active {
   transform: scale(0.9);
 }
- 
+
 .recruiter-workflow-candidate-container46 {
   flex: 0 0 auto;
   width: 100%;
@@ -1541,14 +1544,14 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-text66 {
   fill: #747474;
   color: #747474;
   width: 20%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container47 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1559,29 +1562,29 @@ select.input {
   align-items: flex-start;
   flex-direction: row;
 }
- 
+
 .recruiter-workflow-candidate-text67 {
   width: auto;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text68 {
   fill: #05356C;
   color: rgb(5, 53, 108);
   font-size: 14px;
   transition: 0.3s;
 }
- 
+
 .recruiter-workflow-candidate-text68:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-text68:active {
   transform: scale(0.9);
 }
- 
+
 .recruiter-workflow-candidate-container48 {
   flex: 0 0 auto;
   width: 100%;
@@ -1589,14 +1592,14 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-text69 {
   fill: #747474;
   color: #747474;
   width: 20%;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container49 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1607,29 +1610,29 @@ select.input {
   align-items: flex-start;
   flex-direction: row;
 }
- 
+
 .recruiter-workflow-candidate-text70 {
   width: auto;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text71 {
   fill: #05356C;
   color: rgb(5, 53, 108);
   font-size: 14px;
   transition: 0.3s;
 }
- 
+
 .recruiter-workflow-candidate-text71:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-text71:active {
   transform: scale(0.9);
 }
- 
+
 .recruiter-workflow-candidate-container50 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1640,7 +1643,7 @@ select.input {
   align-items: center;
   flex-direction: column;
 }
- 
+
 .recruiter-workflow-candidate-container51 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1649,20 +1652,20 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-text72 {
   fill: #05356C;
   color: #05356C;
   font-size: 16px;
 }
- 
+
 .recruiter-workflow-candidate-text73 {
   fill: #05356C;
   color: #05356C;
   display: none;
   font-size: 16px;
 }
- 
+
 .recruiter-workflow-candidate-container52 {
   gap: 16px;
   flex: 0 0 auto;
@@ -1671,7 +1674,7 @@ select.input {
   display: flex;
   align-items: center;
 }
- 
+
 .recruiter-workflow-candidate-icon33 {
   fill: #F10400;
   color: #F10400;
@@ -1679,18 +1682,18 @@ select.input {
   height: 40px;
   transition: 0.3s;
 }
- 
+
 .recruiter-workflow-candidate-icon33:hover {
   color: #FAA4A3;
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-icon33:active {
   transform: scale(0.90);
 }
- 
+
 .recruiter-workflow-candidate-container53 {
   gap: 4px;
   flex: 0 0 auto;
@@ -1700,7 +1703,7 @@ select.input {
   align-items: center;
   flex-direction: column;
 }
- 
+
 .recruiter-workflow-candidate-container54 {
   gap: 0px;
   flex: 0 0 auto;
@@ -1709,15 +1712,15 @@ select.input {
   display: flex;
   justify-content: center;
 }
- 
+
 .recruiter-workflow-candidate-text74 {
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text75 {
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container55 {
   gap: 0px;
   flex: 0 0 auto;
@@ -1726,15 +1729,15 @@ select.input {
   display: flex;
   justify-content: center;
 }
- 
+
 .recruiter-workflow-candidate-text76 {
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text77 {
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-container56 {
   gap: var(--dl-layout-space-unit);
   flex: 0 0 auto;
@@ -1746,7 +1749,7 @@ select.input {
   flex-direction: column;
   padding-bottom: 4px;
 }
- 
+
 .recruiter-workflow-candidate-icon39 {
   fill: #ACACAD;
   color: #ACACAD;
@@ -1754,18 +1757,18 @@ select.input {
   height: 24px;
   transition: 0.3s;
 }
- 
+
 .recruiter-workflow-candidate-icon39:hover {
   color: #05356C;
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-icon39:active {
   transform: scale(0.9);
 }
- 
+
 .recruiter-workflow-candidate-icon44 {
   fill: #F10400;
   color: #F10400;
@@ -1773,14 +1776,14 @@ select.input {
   height: 24px;
   transition: 0.3s;
 }
- 
+
 .recruiter-workflow-candidate-icon44:hover {
   color: #F65E5C;
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .recruiter-workflow-candidate-icon44:active {
   transform: scale(0.9);
 }
@@ -1791,7 +1794,7 @@ select.input {
   width: auto;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text79 {
   fill: #747474;
   color: rgb(116, 116, 116);
@@ -1800,14 +1803,14 @@ select.input {
   font-style: normal;
   font-weight: 600;
 }
- 
+
 .recruiter-workflow-candidate-text80 {
   fill: #747474;
   color: #747474;
   width: auto;
   font-size: 14px;
 }
- 
+
 .recruiter-workflow-candidate-text81 {
   fill: #747474;
   color: #747474;
@@ -1821,7 +1824,7 @@ select.input {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.5); 
+  background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
   z-index: 9999;
   display: flex;
@@ -1846,8 +1849,13 @@ select.input {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* WORKFLOW MODAL OVERLAY */
@@ -1927,14 +1935,16 @@ select.input {
   cursor: not-allowed;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 /* RESPONSIVE */
 @media screen and (max-width: 1366px) {
   .recruiter-workflow-candidate-candidates-listing-container {
-    width: 90%; 
+    width: 90%;
     max-width: 1200px;
   }
 }
@@ -1951,7 +1961,7 @@ select.input {
   .recruiter-workflow-candidate-issued-renewal-date-container2,
   .recruiter-workflow-candidate-job-title-company-name-container3,
   .recruiter-workflow-candidate-container28 {
-    height: auto !important; 
+    height: auto !important;
     min-height: 76px;
   }
 
@@ -1978,7 +1988,7 @@ select.input {
   .recruiter-workflow-candidate-container23,
   .recruiter-workflow-candidate-container25,
   .recruiter-workflow-candidate-container26 {
-    width: 48%; 
+    width: 48%;
   }
 }
 
@@ -2053,26 +2063,26 @@ select.input {
   }
 
   .recruiter-workflow-candidate-upload-file-container {
-    flex-direction: row; 
+    flex-direction: row;
   }
-  
+
   .recruiter-workflow-candidate-upload-file-button-container {
     width: auto;
     padding: 0 16px;
   }
 
   .filter-panel {
-    width: 100%; 
+    width: 100%;
     top: 50px;
     right: 0;
-    position: fixed; 
+    position: fixed;
     height: auto;
     max-height: 80vh;
     overflow-y: auto;
   }
-  
+
   .filter-form-grid {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
 
   .form-modal-container .recruiter-workflow-candidate-candidate-input-form {
@@ -2082,12 +2092,12 @@ select.input {
 
 @media screen and (max-width: 479px) {
   .recruiter-workflow-candidate-container12 {
-    flex-direction: row; 
+    flex-direction: row;
     align-items: center;
   }
-  
+
   .recruiter-workflow-candidate-text30 {
-    font-size: 18px; 
+    font-size: 18px;
   }
 
   .recruiter-workflow-candidate-select-container1,
@@ -2099,7 +2109,7 @@ select.input {
     gap: 8px;
   }
 
-  .recruiter-workflow-candidate-container19, 
+  .recruiter-workflow-candidate-container19,
   .recruiter-workflow-candidate-container20,
   .recruiter-workflow-candidate-container22,
   .recruiter-workflow-candidate-container23,
@@ -2112,14 +2122,14 @@ select.input {
     flex-direction: column;
     height: auto;
   }
-  
+
   .recruiter-workflow-candidate-upload-file-input {
     width: 100%;
     height: 40px;
     border-radius: 5px 5px 0 0;
     border-bottom: none;
   }
-  
+
   .recruiter-workflow-candidate-upload-file-button-container {
     width: 100%;
     height: 40px;
@@ -2127,26 +2137,26 @@ select.input {
   }
 
   .recruiter-workflow-candidate-submit-cancel-buttons-container {
-    flex-direction: column-reverse; 
+    flex-direction: column-reverse;
     gap: 12px;
     height: auto;
   }
 
   .recruiter-workflow-candidate-cancel-button,
   .recruiter-workflow-candidate-submit-button {
-    width: 100%; 
-    height: 44px; 
+    width: 100%;
+    height: 44px;
   }
 
   .recruiter-workflow-candidate-container35 {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .recruiter-workflow-candidate-container36 {
     width: 100%;
   }
-  
+
   .recruiter-workflow-candidate-container45,
   .recruiter-workflow-candidate-container47,
   .recruiter-workflow-candidate-container49 {
@@ -2157,55 +2167,55 @@ select.input {
 }
 
 .recruiter-workflow-candidate-container44,
-.recruiter-workflow-candidate-container42, 
+.recruiter-workflow-candidate-container42,
 .recruiter-workflow-candidate-container43,
 .recruiter-workflow-candidate-container46,
 .recruiter-workflow-candidate-container48 {
-  align-items: flex-start !important; 
-  margin-bottom: 8px; 
-  height: auto !important; 
+  align-items: flex-start !important;
+  margin-bottom: 8px;
+  height: auto !important;
 }
 
-.recruiter-workflow-candidate-text63, 
-.recruiter-workflow-candidate-text59, 
+.recruiter-workflow-candidate-text63,
+.recruiter-workflow-candidate-text59,
 .recruiter-workflow-candidate-text61,
 .recruiter-workflow-candidate-text66,
 .recruiter-workflow-candidate-text69 {
-  width: 120px !important; 
+  width: 120px !important;
   min-width: 120px;
   flex-shrink: 0;
   padding-right: 8px;
 }
 
-.recruiter-workflow-candidate-text62, 
+.recruiter-workflow-candidate-text62,
 .recruiter-workflow-candidate-text60,
 .recruiter-workflow-candidate-text67,
 .recruiter-workflow-candidate-text70 {
   width: auto !important;
-  flex: 1; 
-  white-space: normal; 
-  word-break: break-word; 
+  flex: 1;
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.5;
 }
 
 @media screen and (max-width: 991px) {
-  
+
   .recruiter-workflow-candidate-container35 {
-    flex-direction: column; 
+    flex-direction: column;
     width: 100% !important;
     gap: 16px;
-    height: auto !important; 
+    height: auto !important;
   }
 
   .recruiter-workflow-candidate-container36 {
     width: 100% !important;
-    border-right: none; 
+    border-right: none;
     padding-right: 0;
   }
 
   .recruiter-workflow-candidate-container50 {
     width: 100% !important;
-    flex-direction: row; 
+    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     border-top: 1px solid #eee;
@@ -2213,11 +2223,11 @@ select.input {
   }
 
   .recruiter-workflow-candidate-container53 {
-    align-items: flex-start; 
+    align-items: flex-start;
   }
-  
+
   .recruiter-workflow-candidate-container56 {
-    display: none; 
+    display: none;
   }
 
   .recruiter-workflow-candidate-container50 .recruiter-workflow-candidate-container52 {
@@ -2227,7 +2237,7 @@ select.input {
 }
 
 @media screen and (max-width: 479px) {
-  
+
   .recruiter-workflow-candidate-text55 {
     font-size: 18px;
     word-break: break-word;
@@ -2245,7 +2255,7 @@ select.input {
 
   .recruiter-workflow-candidate-container51 {
     width: 100%;
-    justify-content: space-between; 
+    justify-content: space-between;
     margin-bottom: 8px;
   }
 
@@ -2257,7 +2267,7 @@ select.input {
 
   .recruiter-workflow-candidate-container34 {
     position: relative;
-    padding-bottom: 40px; 
+    padding-bottom: 40px;
   }
 }
 
@@ -2314,14 +2324,27 @@ select.input {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
 }
 
 /* =========================================
@@ -2395,8 +2418,13 @@ select.input {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .custom-modal-container.rating-modal-container {
@@ -2413,8 +2441,15 @@ select.input {
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .custom-modal-header {
@@ -2741,18 +2776,113 @@ select.input {
   border-radius: 6px;
   border-left: 3px solid #05356c;
   line-height: 1.4;
-}/* RATING FILTERS CSS */
-.filter-divider { border: 0; border-top: 1px solid var(--border); margin: 16px 0; grid-column: 1 / -1; }
-.filter-section-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; grid-column: 1 / -1; }
-.checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
-.dynamic-filter-section { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; }
-.add-criterion-controls { display: flex; gap: 8px; align-items: center; }
-.inline-select { flex: 1; min-width: 120px; }
-.inline-select.small { flex: 0.5; min-width: 80px; }
-.btn-add-criterion { padding: 8px 12px; background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s ease; }
-.btn-add-criterion:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-color: var(--border-hover, #ccc); background: var(--surface-hover); color: var(--text-primary); }
-.btn-add-criterion:active { transform: translateY(0) scale(1.0); box-shadow: none; }
-.active-criteria-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.active-criterion-chip { display: flex; align-items: center; gap: 6px; background: rgba(37, 99, 235, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 16px; font-size: 12px; font-weight: 500; border: 1px solid rgba(37, 99, 235, 0.2); }
-.btn-remove-criterion { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; display: flex; align-items: center; opacity: 0.7; }
-.btn-remove-criterion:hover { opacity: 1; }
+}
+
+/* RATING FILTERS CSS */
+.filter-divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+  grid-column: 1 / -1;
+}
+
+.filter-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  grid-column: 1 / -1;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.dynamic-filter-section {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-criterion-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.inline-select {
+  flex: 1;
+  min-width: 120px;
+}
+
+.inline-select.small {
+  flex: 0.5;
+  min-width: 80px;
+}
+
+.btn-add-criterion {
+  padding: 8px 12px;
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.btn-add-criterion:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--border-hover, #ccc);
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.btn-add-criterion:active {
+  transform: translateY(0) scale(1.0);
+  box-shadow: none;
+}
+
+.active-criteria-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.active-criterion-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.btn-remove-criterion {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+}
+
+.btn-remove-criterion:hover {
+  opacity: 1;
+}
