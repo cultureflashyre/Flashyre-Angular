@@ -293,12 +293,12 @@
                     <tbody>
                       <tr *ngFor="let candidate of displayCandidates; trackBy: trackByCandidate">
                         <!-- Checkbox -->
-                        <td>
+                        <td data-label="">
                           <input type="checkbox" class="checkbox" [(ngModel)]="candidate.selected" (ngModelChange)="updateSelectAllState()" />
                         </td>
 
                         <!-- Candidate -->
-                        <td>
+                        <td data-label="Candidate">
                           <div class="candidate">
                             <div class="candidate-avatar">{{ getInitials(candidate) }}</div>
                             <div>
@@ -315,7 +315,7 @@
                         </td>
 
                         <!-- Experience & CTC -->
-                        <td>
+                        <td data-label="Experience & CTC">
                           <div class="meta-row">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                             {{ candidate.total_experience }}y experience
@@ -327,7 +327,7 @@
                         </td>
 
                         <!-- Skills -->
-                        <td class="col-tags">
+                        <td class="col-tags" data-label="Skills">
                           <div class="tag-row">
                             <span *ngFor="let skill of getSkillsList(candidate.skills).visible" class="tag">{{ skill }}</span>
                             <span *ngIf="getSkillsList(candidate.skills).overflow > 0" class="tag">+{{ getSkillsList(candidate.skills).overflow }}</span>
@@ -335,7 +335,7 @@
                         </td>
 
                         <!-- Contact -->
-                        <td class="col-meta">
+                        <td class="col-meta" data-label="Contact">
                           <div class="meta-row">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                             {{ candidate.phone_number?.split(',')[0]?.trim() }}
@@ -347,7 +347,7 @@
                         </td>
 
                         <!-- Rating -->
-                        <td>
+                        <td data-label="Rating">
                           <button class="rating" [class.rated]="candidate.latest_rating_score" [class.unrated]="!candidate.latest_rating_score" (click)="openRatingModal(candidate)">
                             <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                             {{ candidate.latest_rating_score ? candidate.latest_rating_score : 'Rate' }}
@@ -355,12 +355,12 @@
                         </td>
 
                         <!-- Source -->
-                        <td>
+                        <td data-label="Source">
                           <span class="src-pill" [ngClass]="getSourceClass(candidate.source)">{{ candidate.source }}</span>
                         </td>
 
                         <!-- Actions -->
-                        <td>
+                        <td data-label="Actions">
                           <div class="row-actions">
                             <button class="row-action" [class.disabled]="!candidate.resume" (click)="candidate.resume && openResume(candidate.resume)" title="View Resume">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -441,10 +441,10 @@
                 <tbody>
                   <tr *ngFor="let user of displayRegisteredCandidates">
                     <!-- Empty Checkbox Column -->
-                    <td></td>
+                    <td data-label=""></td>
 
                     <!-- User Name -->
-                    <td>
+                    <td data-label="User Name">
                       <div class="candidate">
                         <div class="candidate-avatar">{{ getInitialsFromUser(user) }}</div>
                         <div>
@@ -458,7 +458,7 @@
                     </td>
 
                     <!-- Experience & CTC -->
-                    <td>
+                    <td data-label="Experience & CTC">
                       <div class="meta-row">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                         {{ user.sourced_data?.total_experience || '—' }}y
@@ -470,7 +470,7 @@
                     </td>
 
                     <!-- Skills -->
-                    <td class="col-tags">
+                    <td class="col-tags" data-label="Skills">
                       <div class="tag-row" *ngIf="user.sourced_data?.skills; else noSkills">
                         <span *ngFor="let skill of getSkillsList(user.sourced_data!.skills).visible" class="tag">{{ skill }}</span>
                         <span *ngIf="getSkillsList(user.sourced_data!.skills).overflow > 0" class="tag">+{{ getSkillsList(user.sourced_data!.skills).overflow }}</span>
@@ -479,7 +479,7 @@
                     </td>
 
                     <!-- Contact -->
-                    <td class="col-meta">
+                    <td class="col-meta" data-label="Contact">
                       <div class="meta-row">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                         {{ user.phone_number || '—' }}
@@ -491,13 +491,13 @@
                     </td>
 
                     <!-- Rating -->
-                    <td><span class="rating unrated">—</span></td>
+                    <td data-label="Rating"><span class="rating unrated">—</span></td>
 
                     <!-- Status -->
-                    <td><span class="src-pill direct">Registered</span></td>
+                    <td data-label="Status"><span class="src-pill direct">Registered</span></td>
 
                     <!-- Actions -->
-                    <td>
+                    <td data-label="Actions">
                       <div class="row-actions">
                         <button class="row-action" [class.disabled]="!user.sourced_data?.resume" (click)="user.sourced_data?.resume && openResume(user.sourced_data!.resume)" title="View Resume">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
