@@ -61,6 +61,7 @@ export class LoginCandidate implements OnInit {
       
       // Store Data
       localStorage.setItem('jwtToken', response.access);
+      localStorage.setItem('refreshToken', response.refresh);
       localStorage.setItem('user_id', response.user_id); 
       localStorage.setItem('userType', response.role);
       

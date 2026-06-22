@@ -119,6 +119,7 @@ export class LogInPage implements OnInit {
           
           // 1. STORE TOKENS AND USER ID IMMEDIATELY
           localStorage.setItem('jwtToken', response.access);
+          localStorage.setItem('refreshToken', response.refresh);
           localStorage.setItem('userType', response.role);
           
           if (response.user_id) {

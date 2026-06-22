@@ -1,9 +1,9 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule, FormArray, FormControl } from '@angular/forms';
-import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
+import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser, RatingCriteria, RatingScore, CandidateRating } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, Subject, of, Observable, Subscription, timer } from 'rxjs';
@@ -75,12 +75,12 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    RecruiterWorkflowNavbarComponent,
+    RecruiterSidebarComponent,
     RelativeDatePipe,
     AlertMessageComponent
   ]
 })
-export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
+export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewInit {
 
   // --- TAB STATE MANAGEMENT ---
   activeTab: 'sourced' | 'registered' = 'sourced';
@@ -139,6 +139,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   // --- Filter Panel ---
   isFilterPanelVisible = false;
   filterForm!: FormGroup;
+
+  // --- Search ---
+  searchQuery: string = '';
 
   // --- Rating Filters ---
   allRatingCriteria: any[] = [];
@@ -263,6 +266,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.initializeGooglePlaces();
+  }
+
   onFilterCategoryChange(): void {
     if (this.selectedFilterCategory) {
       this.filteredRatingCriteria = this.allRatingCriteria.filter(c => c.category === this.selectedFilterCategory);
@@ -300,9 +307,6 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     return assignedIds.includes(currentUserId);
   }
 
-  ngAfterViewInit(): void {
-    this.initializeGooglePlaces();
-  }
 
   ngOnDestroy(): void {
     if (this.subscriptions) {
@@ -2009,5 +2013,92 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   trackByCandidate(index: number, candidate: any): number {
     return candidate.id;
+  }
+
+  // =========================================================
+  // UI HELPER METHODS (for table layout)
+  // =========================================================
+
+  getInitials(candidate: any): string {
+    const first = candidate.first_name?.charAt(0) || '';
+    const last = candidate.last_name?.charAt(0) || '';
+    return (first + last).toUpperCase();
+  }
+
+  getInitialsFromUser(user: any): string {
+    const first = user.first_name?.charAt(0) || '';
+    const last = user.last_name?.charAt(0) || '';
+    return (first + last).toUpperCase();
+  }
+
+  getSkillsList(skills: string): { visible: string[], overflow: number } {
+    if (!skills) return { visible: [], overflow: 0 };
+    const all = skills.split(',').map(s => s.trim()).filter(Boolean);
+    return {
+      visible: all.slice(0, 3),
+      overflow: Math.max(0, all.length - 3)
+    };
+  }
+
+  getSourceClass(source: string): string {
+    if (!source) return 'direct';
+    const s = source.toLowerCase();
+    if (s.includes('linkedin')) return 'linkedin';
+    if (s.includes('naukri')) return 'naukri';
+    if (s.includes('indeed')) return 'indeed';
+    if (s.includes('referral')) return 'referral';
+    if (s.includes('direct')) return 'direct';
+    return 'external';
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  getActiveFilterChips(): { label: string, value: string, key: string }[] {
+    const chips: { label: string, value: string, key: string }[] = [];
+    if (!this.filterForm) return chips;
+    const vals = this.filterForm.value;
+    if (vals.name) chips.push({ label: 'Name', value: vals.name, key: 'name' });
+    if (vals.location) chips.push({ label: 'Location', value: vals.location, key: 'location' });
+    if (vals.skills) chips.push({ label: 'Skills', value: vals.skills, key: 'skills' });
+    if (vals.current_ctc) chips.push({ label: 'CTC', value: vals.current_ctc, key: 'current_ctc' });
+    if (vals.email) chips.push({ label: 'Email', value: vals.email, key: 'email' });
+    if (vals.phone) chips.push({ label: 'Phone', value: vals.phone, key: 'phone' });
+    if (this.filterUnrated) chips.push({ label: 'Unrated', value: 'Only', key: 'unrated' });
+    if (this.filterOverallRating) chips.push({ label: 'Min Rating', value: this.filterOverallRating + '+', key: 'rating' });
+    if (this.searchQuery) chips.push({ label: 'Search', value: this.searchQuery, key: 'search' });
+    return chips;
+  }
+
+  removeFilterChip(key: string): void {
+    if (key === 'unrated') {
+      this.filterUnrated = false;
+    } else if (key === 'rating') {
+      this.filterOverallRating = '';
+    } else if (key === 'search') {
+      this.searchQuery = '';
+    } else {
+      this.filterForm.get(key)?.setValue('');
+    }
+    this.applyFiltersAndSort();
+  }
+
+  onSearchChange(): void {
+    // Quick search: set the name filter to the search query and apply
+    if (this.filterForm) {
+      this.filterForm.get('name')?.setValue(this.searchQuery);
+      this.applyFiltersAndSort();
+    }
   }
 }

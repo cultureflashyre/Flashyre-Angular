@@ -35,9 +35,13 @@ export const authGuard: CanActivateFn = (route, state) => {
   const requiresSuperAdmin: boolean = route.data['requiresSuperAdmin'] || false;
   console.log('Expected roles for this route:', expectedRoles);
 
-  // 1. Check if the user is logged in (token exists and is not expired)
-  if (!token || isTokenExpired(token)) {
-    console.log('No token found or token is expired. User is not logged in.');
+  // 1. Check if the user is logged in (token exists)
+  // We now allow expired access tokens IF a refresh token exists, because the HTTP interceptor
+  // will seamlessly refresh the token on the first API call the new route makes.
+  const refreshToken = localStorage.getItem('refreshToken');
+  
+  if (!token || (isTokenExpired(token) && !refreshToken)) {
+    console.log('No token found, or token is expired with no refresh token. User is not logged in.');
 
     let roleToRedirect = 'candidate'; // Default redirect
     if (expectedRoles && expectedRoles.length > 0) {

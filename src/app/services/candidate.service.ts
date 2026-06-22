@@ -42,10 +42,9 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}api/auth/login/`, { email, password }).pipe(
       tap(response => {
-        if (response.token) {
-          localStorage.setItem('jwtToken', response.token);
-          // Assuming the user object might be nested, adjust as needed.
-          localStorage.setItem('userProfile', JSON.stringify({ user_id: response.user_id, ...response.user }));
+        if (response.access && response.refresh) {
+          this.saveTokens(response.access, response.refresh);
+          localStorage.setItem('userProfile', JSON.stringify({ user_id: response.user_id }));
         }
       })
     );
