@@ -9,11 +9,7 @@
 <aside class="sidebar" [class.open]="isMobileMenuOpen">
   <!-- Brand -->
   <div class="brand">
-    <div class="brand-mark">F</div>
-    <div>
-      <div class="brand-name">Flashyre</div>
-      <div class="brand-sub">Recruitment Suite</div>
-    </div>
+    <img src="assets/main-logo/logo - flashyre(1500px)-200h.png" alt="Flashyre Logo" style="height: 32px; object-fit: contain; margin-left: 8px;">
   </div>
 
   <!-- Workspace Nav -->
@@ -73,10 +69,11 @@
   <!-- User Chip -->
   <div class="sidebar-foot">
     <div class="user-chip">
-      <div class="avatar">{{ userInitials }}</div>
+      <div class="avatar" *ngIf="!profilePicUrl">{{ userInitials }}</div>
+      <img *ngIf="profilePicUrl" [src]="profilePicUrl" class="avatar" alt="Profile Picture" style="object-fit: cover;">
       <div class="user-meta">
         <div class="user-name">{{ userName }}</div>
-        <div class="user-org">{{ userType | titlecase }}</div>
+        <div class="user-org">{{ formattedUserType }}</div>
       </div>
     </div>
   </div>

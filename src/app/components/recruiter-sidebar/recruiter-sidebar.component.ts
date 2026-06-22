@@ -18,6 +18,7 @@ export class RecruiterSidebarComponent implements OnInit {
   showCandidates: boolean = false;
   userName: string = '';
   userInitials: string = '';
+  profilePicUrl: string = '';
   isMobileMenuOpen: boolean = false;
 
   constructor(private router: Router) {}
@@ -28,12 +29,41 @@ export class RecruiterSidebarComponent implements OnInit {
     this.showClients = this.userType === 'admin';
     this.showCandidates = this.userType === 'admin' || this.userType === 'recruiter';
 
-    const firstName = localStorage.getItem('firstName') || '';
-    const lastName = localStorage.getItem('lastName') || '';
+    let firstName = localStorage.getItem('firstName') || '';
+    let lastName = localStorage.getItem('lastName') || '';
+    
+    // Fallback to userProfile if individual keys are missing
+    if (!firstName && !lastName) {
+      const userProfileStr = localStorage.getItem('userProfile');
+      if (userProfileStr) {
+        try {
+          const userProfile = JSON.parse(userProfileStr);
+          firstName = userProfile.first_name || '';
+          lastName = userProfile.last_name || '';
+          
+          if (!this.profilePicUrl && userProfile.profile_picture_url) {
+            this.profilePicUrl = userProfile.profile_picture_url;
+          }
+        } catch (e) {
+          console.error("Error parsing userProfile from localStorage", e);
+        }
+      }
+    }
+
     this.userName = `${firstName} ${lastName}`.trim() || 'User';
     this.userInitials = (
       (firstName?.charAt(0) || '') + (lastName?.charAt(0) || '')
     ).toUpperCase() || 'U';
+    
+    if (!this.profilePicUrl) {
+      this.profilePicUrl = localStorage.getItem('profilePicUrl') || '';
+    }
+  }
+
+  get formattedUserType(): string {
+    if (this.userType.toLowerCase() === 'admin') return 'Administrator';
+    if (this.userType.toLowerCase() === 'superadmin') return 'Super Admin';
+    return this.userType;
   }
 
   toggleMobileMenu(): void {

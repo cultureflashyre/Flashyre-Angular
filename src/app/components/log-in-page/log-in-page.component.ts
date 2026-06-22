@@ -125,6 +125,11 @@ export class LogInPage implements OnInit {
           if (response.user_id) {
             localStorage.setItem('user_id', response.user_id);
           }
+          if (response.first_name) localStorage.setItem('firstName', response.first_name);
+          if (response.last_name) localStorage.setItem('lastName', response.last_name);
+          // Corporate login returns them under 'data'
+          if (response.data?.first_name) localStorage.setItem('firstName', response.data.first_name);
+          if (response.data?.last_name) localStorage.setItem('lastName', response.data.last_name);
 
           // 2. Store Super User Status
           if (response.is_superuser) {
