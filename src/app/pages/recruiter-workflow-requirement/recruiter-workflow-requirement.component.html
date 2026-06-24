@@ -95,12 +95,12 @@
       <!-- Main card -->
       <div class="card">
         <div class="card-head">
-          <div class="subtabs">
-            <div class="subtab" [class.active]="bulkStatusSelected === ''" (click)="bulkStatusSelected = ''; applyFiltersAndSort()">All Requirements <span class="subtab-count">{{ masterRequirements.length }}</span></div>
-            <div class="subtab" [class.active]="bulkStatusSelected === 'Active'" (click)="bulkStatusSelected = 'Active'; applyFiltersAndSort()">Active <span class="subtab-count">{{ getCount('Active') }}</span></div>
-            <div class="subtab" [class.active]="bulkStatusSelected === 'On-hold'" (click)="bulkStatusSelected = 'On-hold'; applyFiltersAndSort()">On Hold <span class="subtab-count">{{ getCount('On-hold') }}</span></div>
-            <div class="subtab" [class.active]="bulkStatusSelected === 'Hired'" (click)="bulkStatusSelected = 'Hired'; applyFiltersAndSort()">Hired <span class="subtab-count">{{ getCount('Hired') }}</span></div>
-            <div class="subtab" [class.active]="bulkStatusSelected === 'Closed'" (click)="bulkStatusSelected = 'Closed'; applyFiltersAndSort()">Closed <span class="subtab-count">{{ getCount('Closed') }}</span></div>
+          <div class="tabs">
+            <button class="tab" [class.active]="bulkStatusSelected === ''" (click)="bulkStatusSelected = ''; applyFiltersAndSort()">All Requirements <span class="tab-count">{{ masterRequirements.length }}</span></button>
+            <button class="tab" [class.active]="bulkStatusSelected === 'Active'" (click)="bulkStatusSelected = 'Active'; applyFiltersAndSort()">Active <span class="tab-count">{{ getCount('Active') }}</span></button>
+            <button class="tab" [class.active]="bulkStatusSelected === 'On-hold'" (click)="bulkStatusSelected = 'On-hold'; applyFiltersAndSort()">On Hold <span class="tab-count">{{ getCount('On-hold') }}</span></button>
+            <button class="tab" [class.active]="bulkStatusSelected === 'Hired'" (click)="bulkStatusSelected = 'Hired'; applyFiltersAndSort()">Hired <span class="tab-count">{{ getCount('Hired') }}</span></button>
+            <button class="tab" [class.active]="bulkStatusSelected === 'Closed'" (click)="bulkStatusSelected = 'Closed'; applyFiltersAndSort()">Closed <span class="tab-count">{{ getCount('Closed') }}</span></button>
           </div>
           <div class="toolbar">
             
@@ -157,14 +157,14 @@
               </select>
             </div>
 
-            <button class="btn good" (click)="exportRequirementsData()" [disabled]="isExportingRequirements">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              {{ isExportingRequirements ? 'Exporting...' : 'Export' }}
+            <button *ngIf="isSuperUser" class="btn danger" style="width: 110px; justify-content: center;" (click)="deleteSelectedRequirements()" [disabled]="!isAnySelected">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              Delete
             </button>
 
-            <button *ngIf="isSuperUser" class="btn danger" (click)="deleteSelectedRequirements()" [disabled]="!isAnySelected">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
-              Delete
+            <button class="btn good" style="width: 110px; justify-content: center;" (click)="exportRequirementsData()" [disabled]="isExportingRequirements">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              {{ isExportingRequirements ? 'Exporting...' : 'Export' }}
             </button>
           </div>
         </div>
@@ -200,10 +200,10 @@
                  </thead>
                  <tbody>
                    <tr *ngFor="let item of requirementsList; let i = index; trackBy: trackByRequirement">
-                     <td class="col-check">
+                     <td class="col-check" data-label="">
                        <input *ngIf="isSuperUser" type="checkbox" class="checkbox" [(ngModel)]="item.selected" (change)="checkIfAllSelected()" />
                      </td>
-                     <td>
+                     <td data-label="Role & Client">
                        <div class="req-id">
                          <div class="req-av">{{ (item.job_role ? item.job_role.substring(0,2) : '') | uppercase }}</div>
                          <div>
@@ -212,7 +212,7 @@
                          </div>
                        </div>
                      </td>
-                     <td>
+                     <td data-label="Experience & Salary">
                        <div class="meta-row">
                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                          {{ item.total_experience_min }}–{{ item.total_experience_max }} years
@@ -222,20 +222,20 @@
                          <strong>₹{{ item.salary_min }}–{{ item.salary_max }} LPA</strong>
                        </div>
                      </td>
-                     <td>
+                     <td data-label="Location">
                        <div class="meta-row">
                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                          {{ item.interview_location }}
                        </div>
                      </td>
-                     <td>
+                     <td data-label="Skills">
                        <div class="tag-row" *ngIf="item.skills && item.skills.length > 0; else noSkills">
                          <span *ngFor="let skill of item.skills | slice:0:3" class="tag">{{ skill }}</span>
                          <span *ngIf="item.skills.length > 3" class="tag tag-more">+{{ item.skills.length - 3 }}</span>
                        </div>
                        <ng-template #noSkills><span style="color: var(--ink-3);">—</span></ng-template>
                      </td>
-                     <td>
+                     <td data-label="Status">
                        <div class="status-wrap">
                          <div class="status-badge" [ngClass]="{
                            'status-active': item.status === 'Active' || !item.status,
@@ -252,7 +252,7 @@
                          </ul>
                        </div>
                      </td>
-                     <td>
+                     <td data-label="Actions">
                        <div class="row-actions">
                          <button class="ats-btn" (click)="navigateToAts(item.id)" title="Go to ATS">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
