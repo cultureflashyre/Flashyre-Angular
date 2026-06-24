@@ -1,1193 +1,668 @@
-<div class="recruiter-workflow-requirement-container10">
-  <div *ngIf="isLoading" class="page-loading-overlay">
-    <div class="round-loader"></div>
-    <p>Loading Requirements...</p>
-  </div>
-  <div class="recruiter-workflow-requirement-container11">
-    <recruiter-workflow-navbar rootClassName="recruiter-workflow-navbarroot-class-name3">
-      <!-- Navbar ng-templates remain the same -->
-      <ng-template #link1>
-        <div class="recruiter-workflow-requirement-fragment10">
-          <span class="recruiter-workflow-requirement-text10">Home</span>
-        </div>
-      </ng-template>
-      <ng-template #link4>
-        <div class="recruiter-workflow-requirement-fragment11">
-          <span class="recruiter-workflow-requirement-text11">Requirments</span>
-        </div>
-      </ng-template>
-      <ng-template #text1>
-        <div class="recruiter-workflow-requirement-fragment12">
-          <span class="recruiter-workflow-requirement-text12">Profile</span>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="recruiter-workflow-requirement-fragment13">
-          <span class="recruiter-workflow-requirement-text13">Preference</span>
-        </div>
-      </ng-template>
-      <ng-template #text3>
-        <div class="recruiter-workflow-requirement-fragment14">
-          <span class="recruiter-workflow-requirement-text14">Settings</span>
-        </div>
-      </ng-template>
-      <ng-template #text7>
-        <div class="recruiter-workflow-requirement-fragment15">
-          <span class="recruiter-workflow-requirement-text15">Dashboard</span>
-        </div>
-      </ng-template>
-      <ng-template #text9>
-        <div class="recruiter-workflow-requirement-fragment16">
-          <span class="recruiter-workflow-requirement-text16">
-            Notifications
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text10>
-        <div class="recruiter-workflow-requirement-fragment17">
-          <span class="recruiter-workflow-requirement-text17">Jobs Posted</span>
-        </div>
-      </ng-template>
-      <ng-template #text11>
-        <div class="recruiter-workflow-requirement-fragment18">
-          <span class="recruiter-workflow-requirement-text18">Preference</span>
-        </div>
-      </ng-template>
-      <ng-template #text12>
-        <div class="recruiter-workflow-requirement-fragment19">
-          <span class="recruiter-workflow-requirement-text19">Settings</span>
-        </div>
-      </ng-template>
-      <ng-template #text13>
-        <div class="recruiter-workflow-requirement-fragment20">
-          <span class="recruiter-workflow-requirement-text20">Logout</span>
-        </div>
-      </ng-template>
-      <ng-template #text14>
-        <div class="recruiter-workflow-requirement-fragment21">
-          <span class="recruiter-workflow-requirement-text21">2</span>
-        </div>
-      </ng-template>
-      <ng-template #text15>
-        <div class="recruiter-workflow-requirement-fragment22">
-          <span class="recruiter-workflow-requirement-text22">
-            Leslie Alexander
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text16>
-        <div class="recruiter-workflow-requirement-fragment23">
-          <span class="recruiter-workflow-requirement-text23">Google</span>
-        </div>
-      </ng-template>
-      <ng-template #text31>
-        <div class="recruiter-workflow-requirement-fragment24">
-          <span class="recruiter-workflow-requirement-text24">Logout</span>
-        </div>
-      </ng-template>
-      <ng-template #text32>
-        <div class="recruiter-workflow-requirement-fragment25">
-          <span class="recruiter-workflow-requirement-text25">
-            <span>Software Development</span>
-            <br />
-            <span>Mountain View, CA</span>
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text1411>
-        <div class="recruiter-workflow-requirement-fragment26">
-          <span class="recruiter-workflow-requirement-text29">2</span>
-        </div>
-      </ng-template>
-    </recruiter-workflow-navbar>
+<app-alert-message *ngIf="showAlert" [message]="alertMessage" [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClick($event)" (close)="closeAlert()">
+</app-alert-message>
 
-    <div class="recruiter-workflow-requirement-requirements-listing-container">
-      <div id="cv-jd-upload-container" class="recruiter-workflow-requirement-cvjd-upload-container">
-        <button id="add-questions-with-ai-button" type="button"
-          class="recruiter-workflow-requirement-add-questions-with-ai-button button" (click)="showAddForm()">
-          <span id="add-questions-with-ai-text" class="recruiter-workflow-requirement-add-questions-with-ai-text">
-            + Add Requirement
-          </span>
+<div class="app">
+  <app-recruiter-sidebar activePage="requirements"></app-recruiter-sidebar>
+
+  <main class="main">
+    <!-- LOADING OVERLAY -->
+    <div *ngIf="isLoading" class="page-loading-overlay">
+      <div class="round-loader"></div>
+      <p>Loading Requirements...</p>
+    </div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <!-- Breadcrumbs removed as requested -->
+      <div class="crumbs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span class="here">Recruiter Workspace</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Help">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <button class="icon-btn" title="Notifications">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="dot"></span>
+        </button>
+        <button class="btn primary" (click)="showAddForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Add Requirement
         </button>
       </div>
+    </div>
 
-      <!-- Main Listing Container -->
-      <!-- Main Listing Container -->
-      <div class="recruiter-workflow-requirement-recruiter-workflow-requirment-listing">
+    <!-- PAGE -->
+    <div class="page">
+      <!-- Page head -->
+      <div class="page-head">
+        <div class="head-left">
+          <div class="eyebrow">Pipeline · Recruiter view</div>
+          <h1>Job Requirements</h1>
+          <p>Manage client job postings, statuses, and ATS pipelines.</p>
+        </div>
+        <div class="head-right">
+        </div>
+      </div>
 
-        <!-- 1. SHOW CONTROLS IF ANY DATA EXISTS IN DB (Even if filtered list is empty) -->
-        <ng-container *ngIf="masterRequirements.length > 0">
-          <!-- Top Bar: Filter, Sort, Download (Static Header) -->
-          <div id="select-filter-sort-download-zip-main-container"
-            class="recruiter-workflow-requirement-select-filter-sort-download-zip-main-container">
-            <!-- ... (Keep your existing Header content exactly as it is) ... -->
-            <div class="recruiter-workflow-requirement-container28">
-              <div *ngIf="isSuperUser" id="select-all-main-container"
-                class="recruiter-workflow-requirement-select-all-main-container1">
-                <input type="checkbox" id="select-checkbox-master"
-                  class="recruiter-workflow-requirement-select-checkbox1" [(ngModel)]="isAllSelected"
-                  (change)="toggleSelectAll()" />
-                <span id="select-all-text" class="recruiter-workflow-requirement-select-all-text">
-                  Select All
-                </span>
-              </div>
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Total Requirements</div>
+            <div class="stat-value">--</div>
+            <div class="stat-delta up">Placeholder</div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Active</div>
+            <div class="stat-value">--</div>
+            <div class="stat-delta up">Placeholder</div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">On Hold</div>
+            <div class="stat-value">--</div>
+            <div class="stat-delta down">Placeholder</div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon violet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Hired / Closed</div>
+            <div class="stat-value">--</div>
+            <div class="stat-delta up">Placeholder</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main card -->
+      <div class="card">
+        <div class="card-head">
+          <div class="subtabs">
+            <div class="subtab" [class.active]="bulkStatusSelected === ''" (click)="bulkStatusSelected = ''; applyFiltersAndSort()">All Requirements <span class="subtab-count">{{ masterRequirements.length }}</span></div>
+            <div class="subtab" [class.active]="bulkStatusSelected === 'Active'" (click)="bulkStatusSelected = 'Active'; applyFiltersAndSort()">Active <span class="subtab-count">{{ getCount('Active') }}</span></div>
+            <div class="subtab" [class.active]="bulkStatusSelected === 'On-hold'" (click)="bulkStatusSelected = 'On-hold'; applyFiltersAndSort()">On Hold <span class="subtab-count">{{ getCount('On-hold') }}</span></div>
+            <div class="subtab" [class.active]="bulkStatusSelected === 'Hired'" (click)="bulkStatusSelected = 'Hired'; applyFiltersAndSort()">Hired <span class="subtab-count">{{ getCount('Hired') }}</span></div>
+            <div class="subtab" [class.active]="bulkStatusSelected === 'Closed'" (click)="bulkStatusSelected = 'Closed'; applyFiltersAndSort()">Closed <span class="subtab-count">{{ getCount('Closed') }}</span></div>
+          </div>
+          <div class="toolbar">
+            
+            <div class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Search client, role, skills..." [(ngModel)]="searchQuery" (ngModelChange)="applyFiltersAndSort()" />
             </div>
-            <div id="filter-sort-download-zip-container"
-              class="recruiter-workflow-requirement-filter-sort-download-zip-container">
-
-              <!-- Export Button (Super Admin Only) -->
-              <button *ngIf="isSuperUser" (click)="exportRequirementsData()" id="export-button"
-                type="button" class="recruiter-workflow-requirement-filtered-button1 button" [disabled]="isExportingRequirements"
-                style="background-color: #28a745; margin-right: 10px;">
-                <span class="recruiter-workflow-requirement-start-process-text1" style="color: white;">
-                  {{ isExportingRequirements ? 'Exporting...' : 'Export All Data' }}
-                </span>
+            
+            <div style="position: relative;">
+               <button class="btn" (click)="toggleFilterPanel()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filter
               </button>
 
-              <div class="bulk-status-container" *ngIf="isAnySelected" style="margin-right: 15px;">
-                <select class="bulk-status-select" [(ngModel)]="bulkStatusSelected"
-                  (change)="onBulkStatusChange($event)">
-                  <option value="" disabled selected>Change Status</option>
-                  <option *ngFor="let opt of statusOptions" [value]="opt.label">
-                    Set to {{ opt.label }}
-                  </option>
-                </select>
-              </div>
-              <button *ngIf="isSuperUser" id="filtered-button" type="button"
-                class="recruiter-workflow-requirement-filtered-button1 button" (click)="deleteSelectedRequirements()">
-                <span id="start-process-text" class="recruiter-workflow-requirement-start-process-text1">
-                  Delete
-                </span>
-              </button>
-              <div id="filtered-container" class="recruiter-workflow-requirement-filtered-container"
-                style="position: relative;">
-                <button (click)="toggleFilterPanel()" id="filtered-button" type="button"
-                  class="recruiter-workflow-requirement-filtered-button2 button">
-                  <span id="start-process-text" class="recruiter-workflow-requirement-start-process-text2">
-                    Filtered By
-                  </span>
-                </button>
-                <div *ngIf="isFilterPanelVisible" class="filter-panel">
-                  <form [formGroup]="filterForm" class="filter-form-grid">
-                    <div class="filter-group" *ngIf="userType !== 'client'">
+              <div *ngIf="isFilterPanelVisible" class="filter-panel" style="position: absolute; top: 100%; right: 0; z-index: 100; margin-top: 4px; min-width: 250px; background: white; border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: var(--shadow-2); padding: 16px;">
+                  <form [formGroup]="filterForm" class="filter-form-grid" style="display:flex; flex-direction:column; gap:10px;">
+                    <div class="field" *ngIf="userType !== 'client'">
                       <label for="filter-client">Client Name</label>
                       <input id="filter-client" type="text" formControlName="client_name"
-                        placeholder="Filter by client..." class="input">
+                        placeholder="Filter by client..." class="form-input">
                     </div>
-                    <div class="filter-group">
+                    <div class="field">
                       <label for="filter-location">Location</label>
                       <input id="filter-location" type="text" formControlName="location"
-                        placeholder="Filter by location..." class="input">
+                        placeholder="Filter by location..." class="form-input">
                     </div>
-                    <div class="filter-group">
+                    <div class="field">
                       <label for="filter-desc">Description / Skills</label>
                       <input id="filter-desc" type="text" formControlName="description" placeholder="e.g. Python, Java"
-                        class="input">
+                        class="form-input">
                     </div>
-                    <div class="filter-group">
+                    <div class="field">
                       <label for="filter-role">Role</label>
                       <input id="filter-role" type="text" formControlName="role" placeholder="Filter by role..."
-                        class="input">
+                        class="form-input">
                     </div>
-
                   </form>
-                  <div class="filter-panel-actions">
-                    <button type="button" (click)="clearFilters()" class="button clear-button">Clear</button>
-                    <button type="button" (click)="applyFiltersFromPanel()" class="button apply-button">Apply</button>
+                  <div class="filter-panel-actions" style="margin-top:10px; display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" (click)="clearFilters()" class="btn ghost">Clear</button>
+                    <button type="button" (click)="applyFiltersFromPanel()" class="btn primary">Apply</button>
                   </div>
-                </div>
-              </div>
-              <div class="recruiter-workflow-requirement-sort-dropdown list-item">
-                <select class="recruiter-workflow-requirement-dropdown-toggle1"
-                  (change)="sortRequirementsChange($event)" style="cursor: pointer; padding-right: 20px;">
-                  <option value="none" selected>Sort</option>
-                  <option value="a-z">Alphabetical (A-Z)</option>
-                  <option value="z-a">Alphabetical (Z-A)</option>
-                </select>
               </div>
             </div>
-          </div>
-        </ng-container>
 
-        <!-- 2. SHOW LIST IF MATCHES FOUND -->
-        <ng-container *ngIf="requirementsList.length > 0">
-          <div class="large-container">
-            <!-- ... (Keep your existing *ngFor loop for items exactly as it is) ... -->
-            <div class="recruiter-workflow-requirement-container31"
-              *ngFor="let item of requirementsList; let i = index; trackBy: trackByRequirement"
-              [id]="'requirement-card-' + i">
-              <!-- ... (Card Content) ... -->
-              <div class="recruiter-workflow-requirement-container32">
-                <!-- Keep all inner card content same as your original code -->
-                <div class="recruiter-workflow-requirement-container33">
-                  <div class="recruiter-workflow-requirement-container34">
-                    <div class="recruiter-workflow-requirement-container35">
-                      <input *ngIf="isSuperUser" type="checkbox" id="select-checkbox-{{i}}"
-                        class="recruiter-workflow-requirement-select-checkbox2" [(ngModel)]="item.selected"
-                        (change)="checkIfAllSelected()" />
-                    </div>
-                    <div class="recruiter-workflow-requirement-container36">
-                      <div style="display: flex; gap: 16px; align-items: flex-start; width: auto;">
-                        <span class="recruiter-workflow-requirement-text55 clickable-role"
-                          (click)="openRequirementDetails(item)" title="View Requirement Details">
-                          {{ item.job_role }}
-                        </span>
-                        <div class="status-badge-container">
-                          <div class="status-badge" [style.background-color]="getStatusColor(item.status)"
-                            [style.border-color]="getStatusColor(item.status)"
-                            (click)="toggleStatusPopover(item, $event)">
-                            <span class="status-text">{{ item.status || 'Active' }}</span>
-                            <span class="status-arrow">▼</span>
-                          </div>
-
-                          <!-- POPOVER MENU -->
-                          <ul class="status-popover" *ngIf="item.showStatusDropdown">
-                            <li *ngFor="let opt of statusOptions" (click)="updateSingleStatus(item, opt.label, $event)"
-                              [class.selected-option]="item.status === opt.label">
-                              <span class="dot" [style.background-color]="opt.color"></span>
-                              {{ opt.label }}
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div class="recruiter-workflow-requirement-container37">
-                        <div class="recruiter-workflow-requirement-container38">
-                          <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-requirement-icon22">
-                            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round">
-                              <rect x="2" y="7" rx="2" ry="2" width="20" height="14"></rect>
-                              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                            </g>
-                          </svg>
-                          <span class="recruiter-workflow-requirement-text56">
-                            {{ item.total_experience_min }} - {{ item.total_experience_max }} years
-                          </span>
-                        </div>
-                        <div class="recruiter-workflow-requirement-container39">
-                          <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-requirement-icon26">
-                            <path
-                              d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2.28A2 2 0 0 0 22 15V9a2 2 0 0 0-1-1.72V5a2 2 0 0 0-2-2zm0 2h14v2h-6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6v2H5zm8 4h7v6h-7zm3 1.5a1.5 1.5 0 0 0-1.5 1.5a1.5 1.5 0 0 0 1.5 1.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5"
-                              fill="currentColor"></path>
-                          </svg>
-                          <span class="recruiter-workflow-requirement-text57">
-                            {{ item.salary_min }} - {{ item.salary_max }}
-                          </span>
-                        </div>
-                        <div class="recruiter-workflow-requirement-container40">
-                          <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-requirement-icon28">
-                            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round">
-                              <circle r="3" cx="12" cy="10"></circle>
-                              <path
-                                d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8">
-                              </path>
-                            </g>
-                          </svg>
-                          <span class="recruiter-workflow-requirement-text58">
-                            {{ item.interview_location }}
-                          </span>
-                        </div>
-                      </div>
-                      <div class="recruiter-workflow-requirement-container41">
-                        <div class="recruiter-workflow-requirement-container42">
-                          <span class="recruiter-workflow-requirement-text59">Client</span>
-                          <span class="recruiter-workflow-requirement-text60">{{ item.client_name }}</span>
-                        </div>
-                        <div class="recruiter-workflow-requirement-container43">
-                          <span class="recruiter-workflow-requirement-text61">Sub Client</span>
-                          <span class="recruiter-workflow-requirement-text62">{{ item.sub_client_name }}</span>
-                        </div>
-                        <div class="recruiter-workflow-requirement-container44">
-                          <span class="recruiter-workflow-requirement-text63">Description</span>
-                          <div class="recruiter-workflow-requirement-container45">
-                            <span class="recruiter-workflow-requirement-text64">
-                              {{ item.isExpanded ? item.job_description : (item.job_description | slice:0:100) }}
-                              {{ !item.isExpanded && item.job_description.length > 100 ? '...' : '' }}
-                            </span>
-                            <span class="recruiter-workflow-requirement-text65"
-                              *ngIf="item.job_description.length > 100" (click)="toggleDescription(item)"
-                              style="cursor: pointer; margin-left: 5px;">
-                              {{ item.isExpanded ? '... less' : '... more' }}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div class="recruiter-workflow-requirement-container-skills"
-                          *ngIf="item.skills && item.skills.length > 0">
-                          <span class="recruiter-workflow-requirement-text63">Skills</span>
-                          <div class="recruiter-workflow-requirement-container45">
-                            <span *ngFor="let skill of item.skills" class="skill-tag-card">
-                              {{ skill }}
-                            </span>
-                          </div>
-                        </div>
-                        <div class="recruiter-workflow-requirement-container48">
-                          <!-- CHECK IF DETAILS EXIST -->
-                          <ng-container
-                            *ngIf="item.location_details && item.location_details.length > 0; else noDetailsBlock">
-                            <div class="recruiter-workflow-requirement-container49">
-                              <div class="recruiter-workflow-requirement-container50">
-                                <h1 class="recruiter-workflow-requirement-text69">Location</h1>
-                              </div>
-                              <div class="recruiter-workflow-requirement-container51">
-                                <h1 class="recruiter-workflow-requirement-text70">Spoc</h1>
-                              </div>
-                              <div class="recruiter-workflow-requirement-container52">
-                                <h1 class="recruiter-workflow-requirement-text71">Number of Vacencies</h1>
-                              </div>
-                            </div>
-                            <div class="recruiter-workflow-requirement-container53">
-                              <div class="recruiter-workflow-requirement-container54"
-                                *ngFor="let loc of item.location_details">
-                                <div class="recruiter-workflow-requirement-container55">
-                                  <span class="recruiter-workflow-requirement-text72">{{ loc.location }}</span>
-                                </div>
-                                <div class="recruiter-workflow-requirement-container56">
-                                  <span class="recruiter-workflow-requirement-text73">{{ loc.spoc_name }}</span>
-                                </div>
-                                <div class="recruiter-workflow-requirement-container57">
-                                  <span class="recruiter-workflow-requirement-text74">{{ loc.vacancies }}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </ng-container>
-
-                          <!-- TEMPLATE FOR NO DATA -->
-                          <ng-template #noDetailsBlock>
-                            <div
-                              style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; color: #747474; font-size: 14px;">
-                              No information provided in Additional Details.
-                            </div>
-                          </ng-template>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="recruiter-workflow-requirement-container58">
-                    <svg viewBox="0 0 1024 1024" class="recruiter-workflow-requirement-icon32" (click)="onEdit(item)">
-                      <path d="M761.1 288.3L687.8 215L325.1 577.6l-15.6 89l88.9-15.7z" fill="currentColor"
-                        fill-opacity=".15"></path>
-                      <path
-                        d="M880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32m-622.3-84c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9m67.4-174.4L687.8 215l73.3 73.3l-362.7 362.6l-88.9 15.7z"
-                        fill="currentColor"></path>
-                    </svg>
-                    <span class="recruiter-workflow-requirement-ats-text" (click)="navigateToAts(item.id)"
-                      title="Go to ATS" style="cursor: pointer; font-weight: 700; font-size: 14px; color: #05356C;">
-                      ATS
-                    </span>
-                    <!-- 3. NEW CREATE ASSESSMENT BUTTON -->
-                    <div *ngIf="canShowAssessmentButton(item)" class="assessment-btn-wrapper"
-                      (click)="onCreateAssessment(item)" title="Create Assessment">
-                      <!-- ICON: Clipboard with Checkmark (Represents a Test/Assessment) -->
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                        <path d="M9 14l2 2 4-4"></path>
-                      </svg>
-                      <span class="assessment-btn-text">Assessment</span>
-                    </div>
-                    <svg *ngIf="isSuperUser" viewBox="0 0 20 20" class="recruiter-workflow-requirement-icon37"
-                      (click)="deleteCardFromUi(i)">
-                      <path
-                        d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
-                        fill="currentColor"></path>
-                    </svg>
-                  </div>
-                </div>
-                <div class="recruiter-workflow-requirement-container59">
-                  <div class="recruiter-workflow-requirement-container60">
-                    <span class="recruiter-workflow-requirement-text75">Recruiter :&nbsp;</span>
-                    <span class="recruiter-workflow-requirement-text76">
-                      <ng-container *ngIf="item.created_by_details; else unassigned">
-                        {{ item.created_by_details.first_name }} {{ item.created_by_details.last_name }}
-                      </ng-container>
-                      <ng-template #unassigned>Unassigned</ng-template>
-                    </span>
-                  </div>
-                  <div class="recruiter-workflow-requirement-container61">
-                    <span class="recruiter-workflow-requirement-text77">Created at :&nbsp;</span>
-                    <span class="recruiter-workflow-requirement-text78">{{ item.created_at | date:'mediumDate' }}</span>
-                  </div>
-                  <div class="assigned-users-display"
-                    *ngIf="item.assigned_users_details && item.assigned_users_details.length > 0">
-                    <div class="user-avatar-small" *ngFor="let user of item.assigned_users_details | slice:0:3"
-                      title="{{ user.first_name }} {{ user.last_name }}">
-                      {{ user.initials || (user.first_name | slice:0:1) }}
-                    </div>
-                    <div class="user-avatar-small more-users-badge" *ngIf="item.assigned_users_details.length > 3">
-                      +{{ item.assigned_users_details.length - 3 }}
-                    </div>
-                  </div>
-                  <div class="assigned-users-display"
-                    *ngIf="!item.assigned_users_details || item.assigned_users_details.length === 0">
-                    <span style="font-size: 12px; color: #999;">Unassigned</span>
-                  </div>
-                </div>
-              </div>
-
+            <div style="position: relative; display: inline-block;">
+              <button class="btn ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px;"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                Sort
+              </button>
+              <select (change)="sortRequirementsChange($event)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                <option value="none">Sort</option>
+                <option value="a-z">A → Z</option>
+                <option value="z-a">Z → A</option>
+              </select>
             </div>
-          </div>
 
-          <!-- Pagination Controls -->
-          <div class="pagination-container" *ngIf="totalPages > 1"
-            style="display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px; border-top: 1px solid #E0E0E0; margin-top: 20px;">
-            <button (click)="fetchRequirements(currentPage - 1)" [disabled]="!prevPageUrl" class="pagination-btn"
-              style="padding: 8px 16px; border-radius: 6px; border: 1px solid #ccc; background: white; cursor: pointer; color: #333;"
-              [style.opacity]="!prevPageUrl ? '0.5' : '1'">
-              Previous
+            <button class="btn good" (click)="exportRequirementsData()" [disabled]="isExportingRequirements">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              {{ isExportingRequirements ? 'Exporting...' : 'Export' }}
             </button>
-            <span class="pagination-info" style="font-size: 14px; font-weight: 500; color: #555;">
-              Page {{ currentPage }} of {{ totalPages }}
-            </span>
-            <button (click)="fetchRequirements(currentPage + 1)" [disabled]="!nextPageUrl" class="pagination-btn"
-              style="padding: 8px 16px; border-radius: 6px; border: 1px solid #ccc; background: white; cursor: pointer; color: #333;"
-              [style.opacity]="!nextPageUrl ? '0.5' : '1'">
-              Next
+
+            <button *ngIf="isSuperUser" class="btn danger" (click)="deleteSelectedRequirements()" [disabled]="!isAnySelected">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+              Delete
             </button>
           </div>
-        </ng-container>
-
-        <!-- 3. SHOW 'NO MATCHES' IF DB HAS DATA BUT FILTER FOUND NOTHING -->
-        <ng-container *ngIf="masterRequirements.length > 0 && requirementsList.length === 0">
-          <div
-            style="text-align: center; align-self: center; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-              style="color: #6b7280; margin-bottom: 16px;">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 8px;">No Matches Found</h3>
-            <p style="color: #6b7280; margin-bottom: 24px;">No requirements match your current filter criteria.</p>
-            <button (click)="clearFilters()" type="button"
-              class="recruiter-workflow-requirement-filtered-button2 button"
-              style="width: auto; padding: 8px 20px; color: #05356c; background-color: white;">
-              Clear Filters
-            </button>
-          </div>
-        </ng-container>
-
-        <!-- 4. SHOW 'NO DATA' ONLY IF DB IS EMPTY -->
-        <div *ngIf="masterRequirements.length === 0 && !isLoading"
-          style="text-align: center; padding: 50px; font-size: 18px; color: #666; width: 100%; display: flex; justify-content: center;">
-          <span>No Data is Present</span>
         </div>
+
+        <div class="active-filters" *ngIf="getActiveFilterChips().length > 0">
+          <span class="af-label">Active filters:</span>
+          <span class="af-chip" *ngFor="let chip of getActiveFilterChips()">
+            {{ chip.label }}: <strong>{{ chip.value }}</strong>
+            <button class="x" (click)="removeFilterChip(chip.key)" style="background: none; border: none; cursor: pointer; color: var(--ink-3); margin-left: 2px;">×</button>
+          </span>
+        </div>
+
+        <div class="results-bar">
+          <div class="results-text">Showing <strong>{{ requirementsList.length }}</strong> requirements</div>
+        </div>
+
+        <ng-container *ngIf="masterRequirements.length > 0">
+           <ng-container *ngIf="requirementsList.length > 0; else noMatches">
+             <div class="table-wrapper">
+               <table class="table">
+                 <thead>
+                   <tr>
+                     <th class="col-check">
+                       <input *ngIf="isSuperUser" type="checkbox" class="checkbox" [(ngModel)]="isAllSelected" (change)="toggleSelectAll()" />
+                     </th>
+                     <th class="col-role">Role &amp; Client</th>
+                     <th class="col-meta">Experience &amp; Salary</th>
+                     <th>Location</th>
+                     <th class="col-tags">Skills</th>
+                     <th class="col-stat">Status</th>
+                     <th class="col-act"></th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let item of requirementsList; let i = index; trackBy: trackByRequirement">
+                     <td class="col-check">
+                       <input *ngIf="isSuperUser" type="checkbox" class="checkbox" [(ngModel)]="item.selected" (change)="checkIfAllSelected()" />
+                     </td>
+                     <td>
+                       <div class="req-id">
+                         <div class="req-av">{{ (item.job_role ? item.job_role.substring(0,2) : '') | uppercase }}</div>
+                         <div>
+                           <div class="req-role-name" (click)="openRequirementDetails(item)" title="View Requirement Details">{{ item.job_role }}</div>
+                           <div class="req-client">{{ item.client_name }} <span *ngIf="item.sub_client_name">· {{ item.sub_client_name }}</span></div>
+                         </div>
+                       </div>
+                     </td>
+                     <td>
+                       <div class="meta-row">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                         {{ item.total_experience_min }}–{{ item.total_experience_max }} years
+                       </div>
+                       <div class="meta-row">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                         <strong>₹{{ item.salary_min }}–{{ item.salary_max }} LPA</strong>
+                       </div>
+                     </td>
+                     <td>
+                       <div class="meta-row">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                         {{ item.interview_location }}
+                       </div>
+                     </td>
+                     <td>
+                       <div class="tag-row" *ngIf="item.skills && item.skills.length > 0; else noSkills">
+                         <span *ngFor="let skill of item.skills | slice:0:3" class="tag">{{ skill }}</span>
+                         <span *ngIf="item.skills.length > 3" class="tag tag-more">+{{ item.skills.length - 3 }}</span>
+                       </div>
+                       <ng-template #noSkills><span style="color: var(--ink-3);">—</span></ng-template>
+                     </td>
+                     <td>
+                       <div class="status-wrap">
+                         <div class="status-badge" [ngClass]="{
+                           'status-active': item.status === 'Active' || !item.status,
+                           'status-on-hold': item.status === 'On Hold',
+                           'status-closed': item.status === 'Closed',
+                           'status-hired': item.status === 'Hired'
+                         }" (click)="toggleStatusPopover(item, $event)">
+                           <span class="dot"></span>{{ item.status || 'Active' }}<span class="arrow">▼</span>
+                         </div>
+                         <ul class="status-popover" *ngIf="item.showStatusDropdown">
+                           <li *ngFor="let opt of statusOptions" (click)="updateSingleStatus(item, opt.label, $event)" [class.selected]="item.status === opt.label">
+                             <span class="opt-dot" [style.background-color]="opt.color"></span>{{ opt.label }}
+                           </li>
+                         </ul>
+                       </div>
+                     </td>
+                     <td>
+                       <div class="row-actions">
+                         <button class="ats-btn" (click)="navigateToAts(item.id)" title="Go to ATS">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                           ATS
+                         </button>
+                         <button *ngIf="canShowAssessmentButton(item)" class="row-action" (click)="onCreateAssessment(item)" title="Create assessment">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                         </button>
+                         <button class="row-action" title="Edit" (click)="onEdit(item)">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                         </button>
+                         <button *ngIf="isSuperUser" class="row-action danger" title="Delete" (click)="deleteCardFromUi(i)">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                         </button>
+                       </div>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+
+             <div class="pager" *ngIf="totalPages > 1">
+               <div class="pager-info">Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong></div>
+               <div class="pager-ctrl">
+                 <button class="pg-btn" (click)="fetchRequirements(currentPage - 1)" [disabled]="!prevPageUrl">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                   Prev
+                 </button>
+                 <button class="pg-btn" (click)="fetchRequirements(currentPage + 1)" [disabled]="!nextPageUrl">
+                   Next
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                 </button>
+               </div>
+             </div>
+           </ng-container>
+
+           <ng-template #noMatches>
+             <div class="empty">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+               <h3>No Matches Found</h3>
+               <p>No requirements match your current filter criteria.</p>
+               <button (click)="clearFilters()" class="btn" style="margin-top: 16px;">Clear Filters</button>
+             </div>
+           </ng-template>
+        </ng-container>
+
+        <!-- No Data Template -->
+        <div *ngIf="masterRequirements.length === 0 && !isLoading" class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <h3>No Job Requirements Found</h3>
+          <p>Get started by adding a new requirement.</p>
+        </div>
+
       </div>
     </div>
-  </div>
-
-  <app-alert-message *ngIf="showAlert" [message]="alertMessage" [buttons]="alertButtons"
-    (buttonClicked)="onAlertButtonClick($event)" (close)="closeAlert()">
-  </app-alert-message>
+  </main>
 </div>
 
-<!-- ============================================= -->
-<!-- === FORM MODAL OVERLAY === -->
-<!-- ============================================= -->
-<ng-container *ngIf="isFormVisible">
-  <div *ngIf="isParsing" class="parsing-overlay">
-    <div class="parsing-content">
-      <div class="ai-spinner"></div>
-      <p class="parsing-text">AI is analyzing the Job Description...</p>
-      <p class="parsing-subtext">Extracting skills, experience, and salary details.</p>
-    </div>
-  </div>
-  <div class="form-modal-backdrop" (click)="onCancel()"></div>
+<!-- ====================================================================
+     FORM MODAL
+     ==================================================================== -->
+<div class="form-overlay" [ngClass]="{'open': isFormVisible}">
+  <div class="form-card" *ngIf="isFormVisible">
 
-  <div class="form-modal-container">
-    <div class="recruiter-workflow-requirement-requirment-listing-form">
-      <div class="recruiter-workflow-requirement-container12">
-        <span class="recruiter-workflow-requirement-text30">{{ isEditMode ? 'Edit Requirement' : 'Input form' }}</span>
-        <div class="close-icon-container" (click)="onCancel()" style="cursor: pointer; padding: 5px;"
-          title="Close Form">
-          <svg width="24" height="24" viewBox="0 0 1024 1024" style="fill: #555; transition: transform 0.2s;"
-            onmouseover="this.style.fill='#000'; this.style.transform='scale(1.1)'"
-            onmouseout="this.style.fill='#555'; this.style.transform='scale(1)'">
-            <path
-              d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z">
-            </path>
-          </svg>
+    <!-- HEADER -->
+    <div class="form-header">
+      <div class="form-header-left">
+        <div class="form-eyebrow">{{ isEditMode ? 'Editing' : 'New Requirement' }}</div>
+        <h2 class="form-title">{{ isEditMode ? 'Edit Job Requirement' : 'Add Job Requirement' }}</h2>
+        <div class="form-subtitle">
+          <span class="source-pill">External · PDF / DOCX</span>
+          <span>Upload a JD or fill in manually below</span>
         </div>
       </div>
-      <div class="recruiter-workflow-requirement-container14">
-        <div id="upload-file-container" class="recruiter-workflow-requirement-upload-file-container">
-          <input type="text" id="upload-file-input" placeholder="Select PDF or Word file (Max 5MB)"
-            class="recruiter-workflow-requirement-upload-file-input input" [value]="getFileName()" readonly />
-          <input type="file" id="file-upload-input" (change)="onFileSelected($event)"
-            accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            style="display: none" />
-          <label for="file-upload-input" id="upload-file-button-container"
-            class="recruiter-workflow-requirement-upload-file-button-container" style="cursor: pointer">
-            <svg width="48" height="48" viewBox="0 0 48 48" class="recruiter-workflow-requirement-icon10">
-              <path
-                d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
-                fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-              </path>
-            </svg>
-            <span class="recruiter-workflow-requirement-text33">
-              Upload File <span style="color: #ff4d4f; font-weight: bold; margin-left: 4px;">*</span>
-            </span>
-          </label>
+      <button class="form-close-btn" (click)="onCancel()" title="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- BODY -->
+    <div class="form-body">
+
+      <!-- SECTION 1: FILE UPLOAD -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">1</span>
+          Source Document
         </div>
-        <div *ngIf="isFileMissing" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
-          Job Description file is required.
+
+        <div class="dropzone">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg>
+          </div>
+          <div class="dropzone-text">
+            <div class="name">{{ getFileName() || 'Drop a job description PDF or DOCX here' }}</div>
+            <div class="meta" [ngClass]="{'error': isFileMissing || fileUploadError}">
+              {{ fileUploadError || (isFileMissing ? 'Job Description file is required.' : 'PDF or DOCX · Max 5 MB · AI will auto-fill the form fields below') }}
+            </div>
+          </div>
+          <div class="file-status" *ngIf="getFileName()" style="display:flex;">
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Uploaded</span>
+          </div>
+          <input type="file" id="file-upload-input" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display: none" />
+          <button type="button" class="dropzone-btn" onclick="document.getElementById('file-upload-input').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            Upload File
+          </button>
         </div>
-        <div *ngIf="fileUploadError" class="error-text"
-          style="margin-top: -10px; margin-bottom: 10px; text-align: left; width: 100%;">{{ fileUploadError }}</div>
-        <span id="note-for-file" class="recruiter-workflow-requirement-note-for-file">Note: Maximum file size is 5MB.
-          Supported formats are PDF and Word documents.</span>
       </div>
-      <div class="recruiter-workflow-requirement-container15">
-        <div id="enter-manually-text-container" class="recruiter-workflow-requirement-enter-manually-text-container">
-          <span id="enter-manually-text" class="recruiter-workflow-requirement-enter-manually-text">Enter
-            Manually</span>
+
+      <!-- SECTION 2: CLIENT -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">2</span>
+          Client &amp; Role
         </div>
-        <div id="job-title-company-name-container"
-          class="recruiter-workflow-requirement-job-title-company-name-container1" *ngIf="userType !== 'client'">
-          <div id="candidate-job-title" class="recruiter-workflow-requirement-job-title-container1">
-            <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text1">Client <span
-                style="color: red;">*</span></span>
-            <select id="employment-job-title-input" class="recruiter-workflow-requirement-job-title-input1 input"
-              [(ngModel)]="clientName" (change)="onClientChange()" (ngModelChange)="isClientNameInvalid = false"
-              [ngClass]="{'input-error': isClientNameInvalid}" style="background: transparent;">
-              <option value="" disabled selected>Select Client Name</option>
+
+        <div class="form-grid-2">
+          <div class="field" *ngIf="userType !== 'client'">
+            <label>Client <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="clientName" (change)="onClientChange()" (ngModelChange)="isClientNameInvalid = false" [ngClass]="{'invalid': isClientNameInvalid}">
+              <option value="" disabled selected class="placeholder">Select Client Name</option>
               <option *ngFor="let c of clientList" [value]="c.client_name">{{ c.client_name }}</option>
             </select>
-            <span *ngIf="formErrors.client_name" class="inline-error-text">{{ formErrors.client_name }}</span>
-            <span *ngIf="isClientNameInvalid" class="error-text"
-              style="color: red; font-size: 12px; margin-top: 4px; display: block;">
-              Client Name is required.
-            </span>
+            <div class="hint" *ngIf="isClientNameInvalid" style="color:var(--bad)">Client Name is required.</div>
+            <div class="hint" *ngIf="formErrors.client_name" style="color:var(--bad)">{{ formErrors.client_name }}</div>
           </div>
-
-          <div id="candidate-company-name-container" class="recruiter-workflow-requirement-company-name-container1">
-            <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text1">Sub
-              Client</span>
-            <select id="employment-company-name-input" class="recruiter-workflow-requirement-company-name-input1 input"
-              [(ngModel)]="subClientName" style="background: transparent;">
-              <option value="" selected>Select Sub Client</option>
+          <div class="field" *ngIf="userType !== 'client'">
+            <label>Sub-Client</label>
+            <select class="form-select" [(ngModel)]="subClientName">
+              <option value="" selected class="placeholder">Select Sub Client</option>
               <option *ngFor="let sc of availableSubClients" [value]="sc">{{ sc }}</option>
             </select>
           </div>
-
         </div>
-        <div id="issued-renewal-date-container" class="recruiter-workflow-requirement-issued-renewal-date-container1">
-          <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container1">
-            <div id="container" class="recruiter-workflow-requirement-container16">
-              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text1"><span>Total
-                  Experience <span style="color: red;">*</span></span><br /></span>
-              <div id="select-container" class="recruiter-workflow-requirement-select-container1">
-                <div class="recruiter-workflow-requirement-container17">
-                  <input type="number" id="total-exp-min" placeholder="Min Experience"
-                    class="recruiter-workflow-requirement-company-name-input2 input"
-                    [ngClass]="{'input-error': errors.totalExpRange}" [(ngModel)]="experience.totalMin"
-                    (input)="validateExperience($event)" min="0" />
-                </div>
-                <span>To</span>
-                <div class="recruiter-workflow-requirement-container18">
-                  <input type="number" id="total-exp-max" placeholder="Max Experience"
-                    class="recruiter-workflow-requirement-company-name-input3 input"
-                    [ngClass]="{'input-error': errors.totalExpRange}" [(ngModel)]="experience.totalMax"
-                    (input)="validateExperience($event)" min="0" />
-                </div>
-                <span>Years</span>
-              </div>
 
-              <!-- Existing Required Error -->
-              <div *ngIf="isTotalExpInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 5px;">
-                Total Experience is required.
-              </div>
+        <div style="height: 14px"></div>
 
-              <!-- NEW ERROR MESSAGE FOR RANGE -->
-              <div *ngIf="errors.totalExpRange" class="error-text" style="margin-top: 5px;">
-                Min Total Experience cannot be greater than Max Total Experience.
-              </div>
-            </div>
-            <div *ngIf="isTotalExpInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 5px;">
-              Total Experience is required.
-            </div>
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Job Role <span class="req">*</span></label>
+            <input type="text" class="form-input" placeholder="e.g. Senior Software Engineer" [(ngModel)]="jobRole" (input)="validateJobRoleInput($event)" [ngClass]="{'invalid': isJobRoleInvalid || isJobRoleNumericOnly}" />
+            <div class="hint" *ngIf="isJobRoleInvalid" style="color:var(--bad)">Job Role is required.</div>
+            <div class="hint" *ngIf="isJobRoleNumericOnly" style="color:var(--bad)">Job Role cannot contain only numbers.</div>
+            <div class="hint" *ngIf="formErrors.job_role" style="color:var(--bad)">{{ formErrors.job_role }}</div>
           </div>
-          <div id="certification-renewal-date-input" class="recruiter-workflow-requirement-renewal-date-container">
-            <div id="certification-renewal-date-container" class="recruiter-workflow-requirement-container19">
-              <span id="certificate-renewal-date-text"
-                class="recruiter-workflow-requirement-renewal-date-text"><span>Relavant Experience <span
-                    style="color: red;">*</span></span><br /></span>
-              <div id="select-container" class="recruiter-workflow-requirement-select-container2">
-                <div class="recruiter-workflow-requirement-container20"><input type="number" id="rel-exp-min"
-                    placeholder="Min Experience" class="recruiter-workflow-requirement-company-name-input4 input"
-                    [ngClass]="{'input-error': errors.minExperience}" [(ngModel)]="experience.relevantMin"
-                    (input)="validateExperience($event)" min="0" /></div>
-                <span>To</span>
-                <div class="recruiter-workflow-requirement-container21"><input type="number" id="rel-exp-max"
-                    placeholder="Max Experience" class="recruiter-workflow-requirement-company-name-input5 input"
-                    [ngClass]="{'input-error': errors.maxExperience}" [(ngModel)]="experience.relevantMax"
-                    (input)="validateExperience($event)" min="0" /></div>
-                <span>Years</span>
-              </div>
-              <div *ngIf="isRelevantExpInvalid" class="error-text"
-                style="color: red; font-size: 12px; margin-top: 5px;">
-                Relevant Experience is required.
-              </div>
-              <div *ngIf="errors.minExperience || errors.maxExperience" style="margin-top: 5px;">
-                <span *ngIf="errors.minExperience" class="error-text">Min Relevant Experience cannot be greater than
-                  Total Min Experience.</span>
-                <span *ngIf="errors.maxExperience" class="error-text">Max Relevant Experience cannot be greater than
-                  Total Max Experience.</span>
-              </div>
-            </div>
+          <div class="field">
+            <label>Gender <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="selectedGender" [ngClass]="{'invalid': isGenderInvalid}" (change)="isGenderInvalid = false">
+              <option value="" selected class="placeholder">Select Gender</option>
+              <option *ngFor="let opt of genderOptions" [value]="opt">{{ opt }}</option>
+            </select>
+            <div class="hint" *ngIf="isGenderInvalid" style="color:var(--bad)">Gender is required.</div>
           </div>
         </div>
-        <div id="issued-renewal-date-container" class="recruiter-workflow-requirement-issued-renewal-date-container2">
-          <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container2">
-            <div id="container" class="recruiter-workflow-requirement-container22">
-              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text2"><span>Salary
-                  <span style="color: red;">*</span></span><br /></span>
-              <div id="select-container" class="recruiter-workflow-requirement-select-container3">
-                <div class="recruiter-workflow-requirement-container23"><input type="number" id="salary-min"
-                    placeholder="Min Salary" class="recruiter-workflow-requirement-company-name-input6 input"
-                    [ngClass]="{'input-error': salaryErrors.rangeError}" [(ngModel)]="salary.min"
-                    (input)="validateSalary()" min="0" /></div>
-                <span>To</span>
-                <div class="recruiter-workflow-requirement-container24"><input type="number" id="salary-max"
-                    placeholder="Max Salary" class="recruiter-workflow-requirement-company-name-input7 input"
-                    [ngClass]="{'input-error': salaryErrors.rangeError}" [(ngModel)]="salary.max"
-                    (input)="validateSalary()" min="0" /></div>
-                <span>LPA</span>
-              </div>
+      </div>
+
+      <!-- SECTION 3: EXPERIENCE -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">3</span>
+          Experience &amp; Salary
+        </div>
+
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Total Experience <span class="req">*</span></label>
+            <div class="range-row">
+              <input type="number" class="form-input" placeholder="Min" [(ngModel)]="experience.totalMin" (input)="validateExperience($event)" min="0" [ngClass]="{'invalid': errors.totalExpRange}" />
+              <span class="sep">to</span>
+              <input type="number" class="form-input" placeholder="Max" [(ngModel)]="experience.totalMax" (input)="validateExperience($event)" min="0" [ngClass]="{'invalid': errors.totalExpRange}" />
             </div>
-            <div *ngIf="salaryErrors.rangeError" style="margin-top: 5px;"><span class="error-text">Min Salary cannot be
-                greater than Max Salary.</span></div>
+            <div class="hint">Years</div>
+            <div class="hint" *ngIf="isTotalExpInvalid" style="color:var(--bad)">Total Experience is required.</div>
+            <div class="hint" *ngIf="errors.totalExpRange" style="color:var(--bad)">Min cannot be greater than Max.</div>
           </div>
-          <div class="recruiter-workflow-requirement-certificate-name-container">
-            <div class="recruiter-workflow-requirement-certifiacate-name-container">
-              <span class="recruiter-workflow-requirement-certificate-name-text">
-                Job Role <span style="color: red;">*</span>
-                <span class="recruiter-workflow-requirement-skill-star-text" style="font-size: 1em;">*</span>
-              </span>
-              <input type="text" placeholder="Enter Job Role"
-                class="recruiter-workflow-requirement-job-title-input1 input" [(ngModel)]="jobRole"
-                [ngClass]="{'input-error': isJobRoleInvalid || isJobRoleNumericOnly}"
-                (input)="validateJobRoleInput($event)" />
-              <span *ngIf="formErrors.job_role" class="inline-error-text">{{ formErrors.job_role }}</span>
-              <span *ngIf="isJobRoleInvalid" class="error-text"
-                style="color: red; font-size: 12px; margin-top: 4px; display: block;">
-                Job Role is required.
-              </span>
-              <span *ngIf="isJobRoleNumericOnly" class="error-text"
-                style="color: red; font-size: 12px; margin-top: 4px; display: block;">
-                Job Role cannot contain only numbers. Please include alphabets.
-              </span>
+          <div class="field">
+            <label>Relevant Experience <span class="req">*</span></label>
+            <div class="range-row">
+              <input type="number" class="form-input" placeholder="Min" [(ngModel)]="experience.relevantMin" (input)="validateExperience($event)" min="0" [ngClass]="{'invalid': errors.minExperience}" />
+              <span class="sep">to</span>
+              <input type="number" class="form-input" placeholder="Max" [(ngModel)]="experience.relevantMax" (input)="validateExperience($event)" min="0" [ngClass]="{'invalid': errors.maxExperience}" />
             </div>
+            <div class="hint">Years</div>
+            <div class="hint" *ngIf="isRelevantExpInvalid" style="color:var(--bad)">Relevant Experience is required.</div>
+            <div class="hint" *ngIf="errors.minExperience" style="color:var(--bad)">Min Relevant cannot be greater than Total Min.</div>
+            <div class="hint" *ngIf="errors.maxExperience" style="color:var(--bad)">Max Relevant cannot be greater than Total Max.</div>
           </div>
         </div>
 
-        <!-- NEW CONTAINER FOR ASSIGN TO AND LOCATION -->
-        <!-- Row 1: Interview Date + Interview Location -->
-        <div class="assigned-and-job-title">
+        <div style="height: 14px"></div>
 
-          <!-- 1. INTERVIEW DATE (Swapped to Left) -->
-          <div class="recruiter-workflow-requirement-company-name-container2" style="width: 49%">
-            <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text2">Interview Date
-            </span>
-            <input type="date" id="employment-company-name-input" placeholder="Enter Date"
-              class="recruiter-workflow-requirement-company-name-input8 input" [(ngModel)]="interviewDate"
-              (ngModelChange)="isInterviewDateInvalid = false" [min]="minDate" />
-            <!-- <span *ngIf="isInterviewDateInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
-      Interview Date is required.
-    </span> -->
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Salary Range <span class="req">*</span></label>
+            <div class="range-row">
+              <input type="number" class="form-input" placeholder="Min" [(ngModel)]="salary.min" (input)="validateSalary()" min="0" [ngClass]="{'invalid': salaryErrors.rangeError}" />
+              <span class="sep">to</span>
+              <input type="number" class="form-input" placeholder="Max" [(ngModel)]="salary.max" (input)="validateSalary()" min="0" [ngClass]="{'invalid': salaryErrors.rangeError}" />
+            </div>
+            <div class="hint">LPA</div>
+            <div class="hint" *ngIf="salaryErrors.rangeError" style="color:var(--bad)">Min Salary cannot be greater than Max Salary.</div>
           </div>
+          <div class="field">
+            <label>Notice Period <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="selectedNoticePeriod" [ngClass]="{'invalid': isNoticePeriodInvalid}" (change)="isNoticePeriodInvalid = false">
+              <option value="" selected class="placeholder">Select Notice Period</option>
+              <option *ngFor="let opt of noticePeriodOptions" [value]="opt">{{ opt }}</option>
+            </select>
+            <div class="hint" *ngIf="isNoticePeriodInvalid" style="color:var(--bad)">Notice Period is required.</div>
+          </div>
+        </div>
+      </div>
 
-          <!-- 2. ADVANCED INTERVIEW LOCATION (Remains on Right) -->
-          <div class="recruiter-workflow-requirement-job-title-container2" style="position:relative; width: 49%;">
-            <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text2">Interview
-              Location <span style="color: red;">*</span></span>
+      <!-- SECTION 4: INTERVIEW LOGISTICS -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">4</span>
+          Interview Logistics
+        </div>
 
-            <div class="skills-input-container">
-              <span *ngFor="let loc of interviewLocationsList; let i = index" class="skill-pill">
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Interview Date</label>
+            <input type="date" class="form-input" [(ngModel)]="interviewDate" (ngModelChange)="isInterviewDateInvalid = false" [min]="minDate" />
+          </div>
+          <div class="field" style="position: relative;">
+            <label>Interview Location <span class="req">*</span></label>
+            <div class="chip-input" [ngClass]="{'invalid': isInterviewLocationInvalid}">
+              <span class="chip-pill" *ngFor="let loc of interviewLocationsList; let i = index">
                 {{ loc }}
-                <button type="button" class="remove-skill-button" (click)="removeInterviewLocation(i)">&times;</button>
+                <button class="x" type="button" (click)="removeInterviewLocation(i)">×</button>
               </span>
-              <input #locInput type="text" class="skills-entry-input" placeholder="Search City..."
-                (input)="onInterviewLocationInput($event)" (keydown.enter)="addManualInterviewLocation($event)" />
+              <input #locInput type="text" placeholder="+ Add location (press Enter)" (input)="onInterviewLocationInput($event)" (keydown.enter)="addManualInterviewLocation($event)" />
             </div>
-            <div *ngIf="isInterviewLocationInvalid" class="error-text"
-              style="color: red; font-size: 12px; margin-top: 4px;">
-              Interview Location is required.
-            </div>
-
-            <div class="location-suggestions-dropdown"
-              *ngIf="showInterviewLocationSuggestions && interviewLocationSuggestions.length > 0">
-              <div class="suggestion-item" *ngFor="let suggestion of interviewLocationSuggestions"
-                (click)="selectInterviewLocation(suggestion, locInput)">
+            <div class="suggestions" *ngIf="showInterviewLocationSuggestions && interviewLocationSuggestions.length > 0" style="position: absolute; z-index: 50; width: 100%; top: 100%;">
+              <div class="suggestion" *ngFor="let suggestion of interviewLocationSuggestions" (click)="selectInterviewLocation(suggestion, locInput)">
                 {{ suggestion.description }}
               </div>
             </div>
+            <div class="hint" *ngIf="isInterviewLocationInvalid" style="color:var(--bad)">Interview Location is required.</div>
           </div>
         </div>
+      </div>
 
-        <!-- INTERVIEW DATE (On its own row now) -->
-        <!-- Row 2: Assign To (Swapped Here) -->
-        <div class="recruiter-workflow-requirement-job-title-company-name-container2" *ngIf="isSuperUser">
-
-          <!-- LEFT: ASSIGN TO -->
-          <div *ngIf="isSuperUser" style="width: 49%;" class="recruiter-workflow-requirement-job-title-container1">
-            <span class="recruiter-workflow-requirement-skill-text">
-              Assign To <span style="color: red;">*</span>
-            </span>
-            <div class="multi-select-container" (click)="filterUsers()">
-              <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
-                {{ user.first_name }} {{ user.last_name }}
-                <span class="remove-chip-icon" (click)="removeUser(i); $event.stopPropagation()">×</span>
-              </div>
-              <input type="text" class="multi-select-input" placeholder="Search Admins/Recruiters..."
-                [(ngModel)]="userSearchText" (input)="filterUsers()" (focus)="filterUsers()"
-                (blur)="closeUserDropdown()" [ngModelOptions]="{standalone: true}" />
-              <ul class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length > 0">
-                <li class="users-dropdown-item" *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
-                  <span>{{ user.first_name }} {{ user.last_name }}</span>
-                  <span class="dropdown-user-role">{{ user.user_type }}</span>
-                </li>
-              </ul>
-              <div class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length === 0"
-                style="padding:10px; color:#999;">No matching users found.</div>
-            </div>
-          </div>
-
-          <!-- RIGHT: CREATE ASSESSMENT -->
-          <!-- RIGHT: CREATE ASSESSMENT -->
-          <div style="width: 49%;" class="recruiter-workflow-requirement-company-name-container2">
-            <span class="recruiter-workflow-requirement-skill-text">Create Assessment</span>
-
-            <div id="select-container" class="recruiter-workflow-requirement-select-container4"
-              style="position: relative; width: 100%;">
-
-              <!-- UPDATED DIV STRUCTURE HERE -->
-              <div class="assessment-dropdown-box input" (click)="toggleAssessmentDropdown()">
-                <span class="recruiter-workflow-requirement-select-text2"
-                  [style.color]="createAssessment ? '#000' : '#888'">
-                  {{ createAssessment }}
-                </span>
-                <svg width="24" height="24" viewBox="0 0 32 32" class="recruiter-workflow-requirement-drop-down-icon2"
-                  [style.transform]="isAssessmentDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
-                  style="transition: transform 0.3s ease; margin: 0;">
-                  <path d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z" fill="currentColor"></path>
-                </svg>
-              </div>
-
-              <ul *ngIf="isAssessmentDropdownOpen" class="custom-dropdown-list">
-                <li *ngFor="let option of assessmentOptions" class="custom-dropdown-item"
-                  (click)="selectAssessmentOption(option)">
-                  {{ option }}
-                </li>
-              </ul>
-            </div>
-          </div>
+      <!-- SECTION 5: SKILLS & LOCATIONS -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">5</span>
+          Skills &amp; Locations
         </div>
 
-
-
-
-        <!-- ... rest of your form fields (Job Description, Additional Details, etc.) ... -->
-        <div class="recruiter-workflow-requirement-job-title-company-name-container2">
-          <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container3">
-            <div id="container" class="recruiter-workflow-requirement-container27">
-              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text3">Notice Period
-                <span style="color: red;">*</span></span>
-              <div id="select-container" class="recruiter-workflow-requirement-select-container4"
-                style="position: relative;">
-                <div id="certification-issued-date-dropdown" class="recruiter-workflow-requirement-form2 input"
-                  (click)="toggleNoticePeriodDropdown()" style="cursor: pointer;">
-                  <span id="select-text" class="recruiter-workflow-requirement-select-text2"
-                    [style.color]="selectedNoticePeriod ? '#000' : '#888'">{{ selectedNoticePeriod || 'Select' }}</span>
-                  <svg id="issued-date-dropdown-icon" width="24" height="24" viewBox="0 0 32 32"
-                    class="recruiter-workflow-requirement-drop-down-icon2"
-                    [style.transform]="isNoticePeriodDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
-                    style="transition: transform 0.3s ease;">
-                    <path d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z" fill="currentColor"></path>
-                  </svg>
-                </div>
-                <ul *ngIf="isNoticePeriodDropdownOpen" class="custom-dropdown-list">
-                  <li *ngFor="let option of noticePeriodOptions" class="custom-dropdown-item"
-                    (click)="selectNoticePeriod(option)">{{ option }}</li>
-                </ul>
-              </div>
-              <span *ngIf="isNoticePeriodInvalid" class="error-text"
-                style="color: red; font-size: 12px; margin-top: 4px;">
-                Notice Period is required.
-              </span>
-            </div>
-          </div>
-          <div id="certification-credentials-container" class="recruiter-workflow-requirement-credentials-container">
-            <span id="certification-credentials-text"
-              class="recruiter-workflow-requirement-credentials-text"><span>Gender <span
-                  style="color: red;">*</span></span><br /></span>
-            <div id="select-container" class="recruiter-workflow-requirement-select-container5"
-              style="position: relative;">
-              <div id="certification-credentials-dropdown" class="recruiter-workflow-requirement-form3 input"
-                (click)="toggleGenderDropdown()" style="cursor: pointer;">
-                <span id="select-text" class="recruiter-workflow-requirement-select-text3"
-                  [style.color]="selectedGender ? '#000' : '#888'">{{ selectedGender || 'Select' }}</span>
-                <svg id="credentials-dropdown-icon" width="24" height="24" viewBox="0 0 32 32"
-                  class="recruiter-workflow-requirement-drop-down-icon3" [ngClass]="{'input-error': isGenderInvalid}"
-                  [style.transform]="isGenderDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
-                  style="transition: transform 0.3s ease;">
-                  <path d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z" fill="currentColor"></path>
-                </svg>
-              </div>
-              <ul *ngIf="isGenderDropdownOpen" class="custom-dropdown-list">
-                <li *ngFor="let option of genderOptions" class="custom-dropdown-item" (click)="selectGender(option)">{{
-                  option }}</li>
-              </ul>
-            </div>
-            <span *ngIf="isGenderInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
-              Gender is required.
-            </span>
-          </div>
-
-        </div>
-        <div class="recruiter-workflow-requirement-certificate-name-container" style="margin-top: 16px;">
-          <div class="recruiter-workflow-requirement-certifiacate-name-container">
-            <span class="recruiter-workflow-requirement-certificate-name-text">
-              Mandatory Skills <span style="color: red;">*</span>
-            </span>
-
-            <div class="skills-wrapper input" (click)="skillInput.focus()">
-              <div *ngFor="let skill of skills; let i = index" class="skill-chip">
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Mandatory Skills <span class="req">*</span></label>
+            <div class="chip-input">
+              <span class="chip-pill" *ngFor="let skill of skills; let i = index">
                 {{ skill }}
-                <span class="remove-icon" (click)="removeSkill(i)">×</span>
-              </div>
-
-              <input #skillInput type="text" class="skill-input" placeholder="+ Add skill (Press Enter)"
-                (keydown.enter)="$event.preventDefault(); addSkill($event)">
+                <button class="x" type="button" (click)="removeSkill(i)">×</button>
+              </span>
+              <input #skillInput type="text" placeholder="+ Add skill (press Enter)" (keydown.enter)="$event.preventDefault(); addSkill($event)" />
             </div>
-            <span class="helper-text">AI extracted these skills. Click 'x' to remove or type to add new ones.</span>
+            <div class="hint">AI extracted these from the JD. Click × to remove or type to add.</div>
+          </div>
+          <div class="field" style="position: relative;">
+            <label>Locations</label>
+            <div class="chip-input">
+              <span class="chip-pill blue" *ngFor="let loc of locations; let i = index">
+                {{ loc.name }}
+                <button class="x" type="button" (click)="removeLocation(i)">×</button>
+              </span>
+              <input #locationChipInput type="text" placeholder="+ Add location (press Enter)" (input)="onLocationChipInput($event)" (keydown.enter)="$event.preventDefault(); addLocation($event)" />
+            </div>
+            <div class="suggestions" *ngIf="showLocationChipSuggestions && locationChipSuggestions.length > 0" style="position: absolute; z-index: 50; width: 100%; top: 100%;">
+              <div class="suggestion" *ngFor="let suggestion of locationChipSuggestions" (click)="selectLocationChip(suggestion, locationChipInput)">
+                {{ suggestion.description }}
+              </div>
+            </div>
+            <div class="hint">Enter location as "City, District, State" and press Enter.</div>
           </div>
         </div>
+      </div>
 
-        <!-- 🟢 LOCATION CHIPS (Same pattern as Skills) -->
-        <div class="recruiter-workflow-requirement-certificate-name-container" style="margin-top: 16px;">
-          <div class="recruiter-workflow-requirement-certifiacate-name-container">
-            <span class="recruiter-workflow-requirement-certificate-name-text">
-              Location
-            </span>
+      <!-- SECTION 6: ASSIGNMENT -->
+      <div class="form-section" *ngIf="isSuperUser">
+        <div class="form-section-title">
+          <span class="step-num">6</span>
+          Assignment
+        </div>
 
-            <div class="location-chips-container">
-              <div class="skills-wrapper input" (click)="locationChipInput.focus()">
-                <div *ngFor="let loc of locations; let i = index" class="skill-chip">
-                  {{ loc.name }}
-                  <span class="remove-icon" (click)="removeLocation(i)">×</span>
-                </div>
-
-                <input #locationChipInput type="text" class="skill-input"
-                  placeholder="+ Add location (e.g. Bengaluru, Bangalore Urban, Karnataka)"
-                  (input)="onLocationChipInput($event)" (keydown.enter)="$event.preventDefault(); addLocation($event)">
+        <div class="form-grid-2">
+          <div class="field" style="position: relative;">
+            <label>Assign To <span class="req">*</span></label>
+            <div class="multi-select">
+              <span class="user-chip" *ngFor="let user of selectedAssignees; let i = index">
+                <span class="av">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                {{ user.first_name }} {{ user.last_name }}
+                <button class="x" type="button" (click)="removeUser(i); $event.stopPropagation()">×</button>
+              </span>
+              <input type="text" placeholder="Search admins or recruiters…" [(ngModel)]="userSearchText" (input)="filterUsers()" (focus)="filterUsers()" (blur)="closeUserDropdown()" />
+            </div>
+            <div class="users-dd" *ngIf="isUserDropdownOpen && filteredUsers.length > 0">
+              <div class="user-row" *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
+                <span class="av">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                <span>{{ user.first_name }} {{ user.last_name }}</span>
+                <span class="role">{{ user.user_type }}</span>
               </div>
+            </div>
+            <div class="users-dd" *ngIf="isUserDropdownOpen && filteredUsers.length === 0" style="padding:10px; color:var(--ink-3); font-size:13px;">
+              No matching users found.
+            </div>
+          </div>
+          <div class="field">
+            <label>Create Assessment</label>
+            <select class="form-select" [(ngModel)]="createAssessment">
+              <option value="" selected class="placeholder">Select assessment…</option>
+              <option *ngFor="let opt of assessmentOptions" [value]="opt">{{ opt }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-              <div class="location-suggestions-dropdown"
-                *ngIf="showLocationChipSuggestions && locationChipSuggestions.length > 0">
-                <div class="suggestion-item" *ngFor="let suggestion of locationChipSuggestions"
-                  (click)="selectLocationChip(suggestion, locationChipInput)">
+      <!-- SECTION 7: JOB DESCRIPTION -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">{{ isSuperUser ? 7 : 6 }}</span>
+          Job Description <span class="req">*</span>
+        </div>
+        <div class="field">
+          <textarea class="form-textarea" rows="4" placeholder="Describe the role, responsibilities, must-haves, nice-to-haves…" [(ngModel)]="jobDescription" (input)="validateJobDescription()" (blur)="validateJobDescription()" [ngClass]="{'invalid': isJobDescriptionInvalid}"></textarea>
+          <div class="hint" *ngIf="isJobDescriptionInvalid" style="color:var(--bad)">Job Description is required.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 8: ADDITIONAL DETAILS -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span class="step-num">{{ isSuperUser ? 8 : 7 }}</span>
+          Additional Locations &amp; SPOC
+          <span style="margin-left:auto; font-weight:500; color:var(--ink-3); text-transform:none; letter-spacing:0; font-size:11.5px;">Optional · 1 per city</span>
+        </div>
+
+        <div class="detail-row-headers">
+          <span>Location</span>
+          <span>SPOC</span>
+          <span>Vacancies</span>
+          <span>SPOC Email</span>
+          <span>SPOC Phone</span>
+          <span></span>
+        </div>
+
+        <div class="add-detail-list">
+          <div class="detail-row" *ngFor="let detail of additionalDetails; let i = index">
+            <div style="position: relative;">
+              <input type="text" class="form-input" placeholder="e.g. Hyderabad, TS" [(ngModel)]="detail.location" (input)="onAdditionalLocationInput($event, i)" (blur)="closeAdditionalSuggestions()" autocomplete="off" />
+              <div class="suggestions" *ngIf="detail.showSuggestions && detail.suggestions?.length > 0" style="position: absolute; z-index: 50; width: 100%; top: 100%;">
+                <div class="suggestion" *ngFor="let suggestion of detail.suggestions" (mousedown)="selectAdditionalLocation(suggestion)">
                   {{ suggestion.description }}
                 </div>
               </div>
             </div>
-            <span class="helper-text">Enter location as "City, District, State" and press Enter. AI will auto-populate
-              from JD.</span>
-          </div>
-        </div>
-        <div id="skills-container" class="recruiter-workflow-requirement-skills-container">
-          <div id="skill-text-container" class="recruiter-workflow-requirement-skill-text-container">
-            <span id="skill-text" class="recruiter-workflow-requirement-skill-text">Job Description<span
-                style="color: red;">*</span></span>
-            <span id="skill-star-text" class="recruiter-workflow-requirement-skill-star-text"></span>
-          </div>
-          <textarea id="job-description-input" placeholder="Enter Job Description"
-            class="recruiter-workflow-requirement-job-title-input3 input"
-            [ngClass]="{'input-error': isJobDescriptionInvalid}" [(ngModel)]="jobDescription"
-            (input)="validateJobDescription()" (blur)="validateJobDescription()"
-            style="height: 100px; padding-top: 10px; white-space: pre-wrap; word-wrap: break-word; resize: none;"></textarea>
-          <div *ngIf="isJobDescriptionInvalid" style="margin-top: 5px;"><span class="error-text">Job Description is
-              required.</span></div>
-        </div>
-        <div id="interview-process-container" class="recruiter-workflow-requirement-interview-process-container">
-          <span id="interview-process-text" class="recruiter-workflow-requirement-interview-process-text">Additional
-            Details</span>
-          <div id="different-stages-container" class="recruiter-workflow-requirement-different-stages-container">
-            <div *ngFor="let detail of additionalDetails; let i = index" id="different-stage-container"
-              class="recruiter-workflow-requirement-different-stage-container">
-
-              <!-- 1. LOCATION WRAPPER (Fixed Width & Positioning) -->
-              <div class="location-wrapper">
-                <input type="text" [id]="'location-input-' + i" placeholder="Location"
-                  class="recruiter-workflow-requirement-date-input1 input" [(ngModel)]="detail.location"
-                  (input)="onAdditionalLocationInput($event, i)" (blur)="closeAdditionalSuggestions()"
-                  autocomplete="off" />
-              </div>
-
-              <!-- 2. SPOC -->
-              <input type="text" [id]="'spoc-input-' + i" placeholder="Spoc"
-                class="recruiter-workflow-requirement-date-input2 input" [(ngModel)]="detail.spoc"
-                (input)="validateDetailSpoc(i, $event)" maxlength="15" />
-              <!-- 3. VACANCIES -->
-              <input type="text" [id]="'vacancies-input-' + i" placeholder="Vacancies"
-                class="recruiter-workflow-requirement-date-input3 input" [(ngModel)]="detail.vacancies"
-                (input)="validateDetailVacancies(i, $event)" />
-
-              <!-- 4. EMAIL -->
-              <div class="email-container">
-                <input type="email" placeholder="Spoc Email" class="recruiter-workflow-requirement-date-input4 input"
-                  [(ngModel)]="detail.email" (input)="validateAdditionalDetails(i)" />
-                <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
-                  <span *ngIf="additionalDetailsErrors[i]?.email">{{ additionalDetailsErrors[i].email }}</span>
-                </div>
-              </div>
-
-              <!-- 5. PHONE -->
-              <div class="phone-container">
-                <input type="text" placeholder="Spoc Phone" class="recruiter-workflow-requirement-date-input5 input"
-                  [(ngModel)]="detail.phone" (input)="validateAdditionalDetails(i)" maxlength="10" />
-                <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
-                  <span *ngIf="additionalDetailsErrors[i]?.phone">{{ additionalDetailsErrors[i].phone }}</span>
-                </div>
-              </div>
-
-              <!-- REMOVE ICON -->
-              <svg id="remove-icon" width="24" height="24" viewBox="0 0 24 24"
-                class="recruiter-workflow-requirement-remove-icon" (click)="removeDetail(i)" style="cursor: pointer;">
-                <path d="M19 13H5v-2h14z" fill="currentColor"></path>
-              </svg>
+            <input type="text" class="form-input" placeholder="SPOC name" [(ngModel)]="detail.spoc" />
+            <input type="number" class="form-input" placeholder="0" [(ngModel)]="detail.vacancies" min="0" />
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <input type="email" class="form-input" placeholder="spoc@company.com" [(ngModel)]="detail.email" (input)="validateAdditionalDetails(i)" [ngClass]="{'invalid': additionalDetailsErrors[i]?.email}" />
+              <div class="hint" *ngIf="additionalDetailsErrors[i]?.email" style="color:var(--bad); font-size: 10px;">{{ additionalDetailsErrors[i]?.email }}</div>
             </div>
-          </div>
-          <div id="add-section-container" class="recruiter-workflow-requirement-add-section-container">
-            <span id="add-section-text" class="recruiter-workflow-requirement-add-section-text button"
-              (click)="addDetail()" style="cursor: pointer;">+ Add Location</span>
-            <span id="remove-section-text" class="recruiter-workflow-requirement-remove-section-text button"
-              style="cursor: pointer;">- Remove Section</span>
-          </div>
-        </div>
-      </div>
-      <div id="submit-cancel-buttons-container" class="recruiter-workflow-requirement-submit-cancel-buttons-container">
-        <button id="cancel-button" type="button" class="recruiter-workflow-requirement-cancel-button button"
-          (click)="onCancel()">
-          <span id="cancel-text" class="recruiter-workflow-requirement-cancel-text">Cancel</span>
-        </button>
-        <button id="submit-button" type="button" class="recruiter-workflow-requirement-submit-button button"
-          (click)="onSubmit()">
-          <span id="submit-text" class="recruiter-workflow-requirement-submit-text">Submit</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</ng-container>
-<!-- ELEGANT REQUIREMENT DETAILS MODAL -->
-<ng-container *ngIf="showDetailsModal && selectedReqDetails">
-  <div class="elegant-modal-backdrop" (click)="closeDetailsModal()">
-    <div class="elegant-modal-content" (click)="$event.stopPropagation()">
-
-      <!-- 1. HEADER: Identity & Actions -->
-      <div class="elegant-header">
-        <div class="req-identity">
-          <div class="req-avatar">
-            <!-- First letter of Job Role -->
-            {{ selectedReqDetails.job_role.charAt(0) | uppercase }}
-          </div>
-          <div class="identity-text">
-            <h2>{{ selectedReqDetails.job_role }}</h2>
-            <p>{{ selectedReqDetails.client_name }}
-              <span *ngIf="selectedReqDetails.sub_client_name"> • {{ selectedReqDetails.sub_client_name }}</span>
-            </p>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <input type="tel" class="form-input" placeholder="10-digit phone" [(ngModel)]="detail.phone" (input)="validateAdditionalDetails(i)" [ngClass]="{'invalid': additionalDetailsErrors[i]?.phone}" />
+              <div class="hint" *ngIf="additionalDetailsErrors[i]?.phone" style="color:var(--bad); font-size: 10px;">{{ additionalDetailsErrors[i]?.phone }}</div>
+            </div>
+            <button type="button" class="remove-detail-btn" title="Remove row" (click)="removeDetail(i)">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            </button>
           </div>
         </div>
 
-        <div class="header-actions">
-          <!-- Edit Button (Checks existing permissions logic inside onEdit) -->
-          <button class="action-icon-btn" (click)="editRequirementFromModal(selectedReqDetails)"
-            title="Edit Requirement">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
-
-          <!-- Download PDF Button -->
-          <button class="action-icon-btn" (click)="downloadCardAsPdf(requirementsList.indexOf(selectedReqDetails))"
-            title="Download PDF">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </button>
-
-          <!-- Close Button -->
-          <button class="action-icon-btn" (click)="closeDetailsModal()" title="Close">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+        <div class="add-row-btns">
+          <button type="button" class="link-btn" (click)="addDetail()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add location
           </button>
         </div>
-      </div>
-
-      <!-- 2. BODY: Scrollable Info -->
-      <div class="elegant-body">
-
-        <!-- Section: Key Stats -->
-        <div class="info-section">
-          <h4 class="section-title">Requirement Overview</h4>
-          <div class="info-grid-3">
-            <div class="info-item">
-              <span class="info-label">Total Experience</span>
-              <span class="info-value">{{ selectedReqDetails.total_experience_min }} - {{
-                selectedReqDetails.total_experience_max }} Years</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Relevant Experience</span>
-              <span class="info-value">{{ selectedReqDetails.relevant_experience_min }} - {{
-                selectedReqDetails.relevant_experience_max }} Years</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Salary Range</span>
-              <span class="info-value">{{ selectedReqDetails.salary_min }} - {{ selectedReqDetails.salary_max }}
-                LPA</span>
-            </div>
-            <div class="info-item" style="margin-top: 15px;">
-              <span class="info-label">Notice Period</span>
-              <span class="info-value" style="color: #d97706;">{{ selectedReqDetails.notice_period }}</span>
-            </div>
-            <div class="info-item" style="margin-top: 15px;">
-              <span class="info-label">Gender Preference</span>
-              <span class="info-value">{{ selectedReqDetails.gender }}</span>
-            </div>
-            <div class="info-item" style="margin-top: 15px;">
-              <span class="info-label">Current Status</span>
-              <span class="info-value" [style.color]="getStatusColor(selectedReqDetails.status)"
-                style="font-weight: 700;">
-                {{ selectedReqDetails.status }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Interview Details -->
-        <div class="info-section">
-          <h4 class="section-title">Interview Details</h4>
-          <div class="info-grid-3">
-            <div class="info-item">
-              <span class="info-label">Interview Location</span>
-              <span class="info-value">{{ selectedReqDetails.interview_location }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Interview Date</span>
-              <span class="info-value">{{ selectedReqDetails.interview_date | date:'mediumDate' }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="info-section" *ngIf="selectedReqDetails.skills && selectedReqDetails.skills.length > 0">
-          <h4 class="section-title">Skills & Expertise</h4>
-          <div class="skills-wrapper-display">
-            <span *ngFor="let skill of selectedReqDetails.skills" class="skill-tag-modal">
-              {{ skill }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Section: Job Description -->
-        <div class="info-section">
-          <h4 class="section-title">Job Description</h4>
-          <div class="description-box">
-            {{ selectedReqDetails.job_description }}
-          </div>
-        </div>
-
-        <!-- Section: Detailed Locations & Vacancies -->
-        <div class="info-section"
-          *ngIf="selectedReqDetails.location_details && selectedReqDetails.location_details.length > 0">
-          <h4 class="section-title">Location & Vacancy Breakdown</h4>
-          <div class="vacancy-grid">
-            <div *ngFor="let loc of selectedReqDetails.location_details" class="vacancy-card">
-              <div class="vac-location">{{ loc.location }}</div>
-              <div class="vac-detail">
-                <span>Vacancies:</span>
-                <strong>{{ loc.vacancies }}</strong>
-              </div>
-              <div class="vac-detail">
-                <span>SPOC:</span>
-                <span>{{ loc.spoc_name }}</span>
-              </div>
-              <div class="vac-detail" *ngIf="loc.email">
-                <span>Email:</span>
-                <span style="font-size: 11px;">{{ loc.email }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Attachments -->
-        <div class="info-section" *ngIf="selectedReqDetails.file_attachment">
-          <h4 class="section-title">Attachments</h4>
-          <div class="file-attachment-card" (click)="openFile(selectedReqDetails.file_attachment)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            <div style="display:flex; flex-direction:column;">
-              <span style="font-size: 13px; font-weight: 600; color: #374151;">Attached Document</span>
-              <span style="font-size: 11px; color: #05356c;">Click to View</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Team -->
-        <div class="info-section">
-          <h4 class="section-title">Recruitment Team</h4>
-
-          <div style="margin-bottom: 15px;">
-            <span class="info-label">Created By:</span>
-            <span class="info-value" style="margin-left: 5px;">
-              {{ selectedReqDetails.created_by_details?.first_name }} {{
-              selectedReqDetails.created_by_details?.last_name }}
-            </span>
-            <span style="font-size: 12px; color: #9ca3af; margin-left: 5px;">
-              on {{ selectedReqDetails.created_at | date:'mediumDate' }}
-            </span>
-          </div>
-
-          <div
-            *ngIf="selectedReqDetails.assigned_users_details && selectedReqDetails.assigned_users_details.length > 0">
-            <span class="info-label" style="display:block; margin-bottom:8px;">Assigned To:</span>
-            <div class="users-wrapper">
-              <div class="user-chip" *ngFor="let user of selectedReqDetails.assigned_users_details">
-                <div class="chip-avatar">
-                  {{ (user.first_name | slice:0:1) || 'U' }}
-                </div>
-                {{ user.first_name }} {{ user.last_name }}
-              </div>
-            </div>
-          </div>
-          <div
-            *ngIf="!selectedReqDetails.assigned_users_details || selectedReqDetails.assigned_users_details.length === 0">
-            <span style="font-size: 13px; color: #999; font-style: italic;">No specific users assigned.</span>
-          </div>
-        </div>
-
       </div>
 
     </div>
+
+    <!-- FOOTER -->
+    <div class="form-footer">
+      <div class="left">
+        <span class="dot"></span>
+        All changes auto-saved
+      </div>
+      <div class="right">
+        <button type="button" class="btn ghost" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn primary" (click)="onSubmit()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          {{ isEditMode ? 'Save Changes' : 'Save Requirement' }}
+        </button>
+      </div>
+    </div>
+
   </div>
-</ng-container>
-<!-- FLOATING DROPDOWN (Global Position) -->
-<div class="location-suggestions-dropdown fixed-dropdown"
-  *ngIf="additionalLocationSuggestions.length > 0 && activeDetailIndex !== null" [style.top.px]="dropdownTop"
-  [style.left.px]="dropdownLeft" [style.width.px]="dropdownWidth">
-  <div class="suggestion-item" *ngFor="let suggestion of additionalLocationSuggestions"
-    (mousedown)="selectAdditionalLocation(suggestion)">
-    {{ suggestion.description }}
+</div>
+
+<div class="parsing-overlay" [ngClass]="{'open': isParsing}">
+  <div class="parsing-content">
+    <div class="ai-spinner"></div>
+    <p class="parsing-text">AI is analyzing the Job Description…</p>
+    <p class="parsing-subtext">Extracting role, skills, salary &amp; location details.</p>
   </div>
 </div>

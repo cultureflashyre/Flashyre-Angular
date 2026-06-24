@@ -14,7 +14,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { SuperAdminService } from '../../services/super-admin.service';
 
-import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
+import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 // ❌ POLLING SERVICE REMOVED TO FIX NULLINJECTORERROR
 
 @Component({
@@ -25,7 +25,7 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
   imports: [
     CommonModule,
     RouterModule,
-    RecruiterWorkflowNavbarComponent,
+    RecruiterSidebarComponent,
     FormsModule,
     AlertMessageComponent,
     ReactiveFormsModule
@@ -133,6 +133,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   filterForm!: FormGroup;
   isFilterPanelVisible: boolean = false;
   currentSort: string = 'none';
+  searchQuery: string = '';
   selectedFile: File | null = null;
   fileUploadError: string | null = null;
   existingFileUrl: string | null = null;
@@ -584,6 +585,25 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       ctc: [''],
       role: ['']
     });
+  }
+
+  getCount(status: string): number {
+    return this.masterRequirements.filter(item => item.status === status).length;
+  }
+
+  getActiveFilterChips(): any[] {
+    const chips: any[] = [];
+    const fValues = this.filterForm.value;
+    if (fValues.client_name) chips.push({ key: 'client_name', label: 'Client', value: fValues.client_name });
+    if (fValues.location) chips.push({ key: 'location', label: 'Location', value: fValues.location });
+    if (fValues.description) chips.push({ key: 'description', label: 'Skills', value: fValues.description });
+    if (fValues.role) chips.push({ key: 'role', label: 'Role', value: fValues.role });
+    return chips;
+  }
+
+  removeFilterChip(key: string): void {
+    this.filterForm.get(key)?.setValue('');
+    this.applyFiltersAndSort();
   }
 
   // ==========================================
@@ -1881,7 +1901,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   }
 
   clearFilters(): void {
-    this.filterForm.reset({ client_name: '', location: '', description: '', ctc: '' });
+    this.filterForm.reset({ client_name: '', location: '', description: '', ctc: '', role: '' });
+    this.searchQuery = '';
+    this.bulkStatusSelected = '';
     this.applyFiltersAndSort();
     this.isFilterPanelVisible = false;
   }
@@ -1895,6 +1917,21 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   applyFiltersAndSort(): void {
     let data = [...this.masterRequirements]; // Start with full list
     const filters = this.filterForm.value;
+
+    // Filter by Tab (Bulk Status)
+    if (this.bulkStatusSelected) {
+      data = data.filter(item => item.status === this.bulkStatusSelected);
+    }
+
+    // Filter by Search Query
+    if (this.searchQuery) {
+      const q = this.searchQuery.toLowerCase();
+      data = data.filter(item => 
+        (item.job_role && item.job_role.toLowerCase().includes(q)) ||
+        (item.client_name && item.client_name.toLowerCase().includes(q)) ||
+        (item.job_description && item.job_description.toLowerCase().includes(q))
+      );
+    }
 
     // Filter by Client Name (SAFE VERSION)
     if (filters.client_name) {
