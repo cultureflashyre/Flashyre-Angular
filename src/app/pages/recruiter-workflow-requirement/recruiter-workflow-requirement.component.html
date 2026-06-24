@@ -324,7 +324,7 @@
         <h2 class="form-title">{{ isEditMode ? 'Edit Job Requirement' : 'Add Job Requirement' }}</h2>
         <div class="form-subtitle">
           <span class="source-pill">External · PDF / DOCX</span>
-          <span>Upload a JD or fill in manually below</span>
+          <span>Upload a JD</span>
         </div>
       </div>
       <button class="form-close-btn" (click)="onCancel()" title="Close">
@@ -593,7 +593,6 @@
         <div class="form-section-title">
           <span class="step-num">{{ isSuperUser ? 8 : 7 }}</span>
           Additional Locations &amp; SPOC
-          <span style="margin-left:auto; font-weight:500; color:var(--ink-3); text-transform:none; letter-spacing:0; font-size:11.5px;">Optional · 1 per city</span>
         </div>
 
         <div class="detail-row-headers">
@@ -644,8 +643,6 @@
     <!-- FOOTER -->
     <div class="form-footer">
       <div class="left">
-        <span class="dot"></span>
-        All changes auto-saved
       </div>
       <div class="right">
         <button type="button" class="btn ghost" (click)="onCancel()">Cancel</button>
