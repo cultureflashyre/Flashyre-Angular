@@ -516,7 +516,11 @@
   .form-close-btn:hover { background: var(--surface-sunk); color: var(--ink); }
 
   /* Body */
-  .form-
+  .form-body {
+    padding: 24px 28px;
+    overflow-y: auto;
+    flex: 1;
+  }
 
   /* Sections */
   .form-section { margin-bottom: 24px; }
