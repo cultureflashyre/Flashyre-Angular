@@ -162,6 +162,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   isNoticePeriodInvalid: boolean = false;
   isGenderInvalid: boolean = false;
 
+  statisticsData: any = null;
+
   // --- Pagination Properties ---
   currentPage: number = 1;
   totalCount: number = 0;
@@ -810,14 +812,22 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   ngOnInit() {
     this.fetchRequirements(); // Fetch the data as soon as page loads
+    this.fetchStatistics();
     this.fetchAvailableUsers();
     this.fetchClientList();
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     this.userType = localStorage.getItem('userType') || '';
     this.currentUserId = localStorage.getItem('user_id');
     this.setupLocationAutocomplete();
-    // isLoading is already true by default
-    this.fetchRequirements();
+  }
+
+  fetchStatistics() {
+    this.adbService.getStatistics().subscribe({
+      next: (data) => {
+        this.statisticsData = data;
+      },
+      error: (err) => console.error('Error fetching statistics', err)
+    });
   }
 
   getStatusColor(status: string): string {
@@ -1856,6 +1866,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   fetchRequirements(page: number = 1) {
     this.isLoading = true;
     this.currentPage = page;
+    
+    // Also refresh statistics when fetching requirements
+    this.fetchStatistics();
 
     this.adbService.getRequirements(page).pipe(
       finalize(() => {
@@ -2165,6 +2178,20 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         this.triggerAlert('Failed to export requirements data.', ['OK']);
       }
     });
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
 }

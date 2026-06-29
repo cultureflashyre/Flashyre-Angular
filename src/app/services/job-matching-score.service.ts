@@ -22,6 +22,7 @@ export interface JobMatchingScore {
     state: string;
     overall_score: number;
     score_breakdown: ScoreBreakdown;
+    latest_rating_score?: number;
 }
 
 @Injectable({
@@ -32,7 +33,11 @@ export class JobMatchingScoreService {
 
     constructor(private http: HttpClient) { }
 
-    getMatchingScores(jobId: number, page: number = 1): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}api/job-matching-score/?requirement_id=${jobId}&page=${page}`);
+    getMatchingScores(jobId: number, page: number = 1, search: string = ''): Observable<any> {
+        let url = `${this.apiUrl}api/job-matching-score/?requirement_id=${jobId}&page=${page}`;
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`;
+        }
+        return this.http.get<any>(url);
     }
 }

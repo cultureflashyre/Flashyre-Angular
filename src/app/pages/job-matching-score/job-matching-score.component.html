@@ -1,214 +1,541 @@
-<div class="job-matching-container">
-    <recruiter-workflow-navbar rootClassName="recruiter-workflow-navbarroot-class-name"></recruiter-workflow-navbar>
+<div class="app">
+  <app-recruiter-sidebar></app-recruiter-sidebar>
 
-    <div class="main-content">
-        <div class="header-section">
-            <h1 class="page-title">Job Matching Scores</h1>
-            <p class="page-subtitle">Ranked candidates based on semantic skills, experience, and location fit using AI
-            </p>
+  <main class="main">
+    <!-- LOADING OVERLAY -->
+    <div *ngIf="isLoading" class="page-loading-overlay">
+      <div class="round-loader"></div>
+      <p>Calculating AI semantic matching scores...</p>
+    </div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="crumbs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="here">Recruiter Workspace</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Help">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <button class="icon-btn" title="Notifications">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="dot"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE -->
+    <div class="page">
+      <!-- Page Header -->
+      <div class="page-head">
+        <div class="head-left">
+          <div class="eyebrow">Insights · AI Analysis</div>
+          <h1>Job Matching Scores</h1>
+          <p>Ranked candidates based on semantic skills, experience, and location fit using AI.</p>
         </div>
+      </div>
 
-        <!-- Dropdown Selector -->
-        <div class="selector-container">
-            <label for="jobSelect">Select Requirement:</label>
-            <select id="jobSelect" [(ngModel)]="selectedJobId" (change)="onJobSelect()">
-                <option [ngValue]="null" disabled selected>-- Choose a Job --</option>
-                <option *ngFor="let job of availableJobs" [value]="job.id">
-                    {{ job.job_role }} ({{ job.client_name }})
-                </option>
-            </select>
+      <!-- Job Selector -->
+      <div class="job-selector">
+        <div class="job-selector-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
-
-        <!-- Loading State -->
-        <div *ngIf="isLoading" class="loading-state">
-            <div class="spinner"></div>
-            <p>Calculating AI semantic matching scores...</p>
+        <div class="job-selector-body">
+          <div class="job-selector-label">Select Requirement</div>
+          <select id="jobSelect" [(ngModel)]="selectedJobId" (change)="onJobSelect()">
+            <option [ngValue]="null" disabled selected>-- Choose a Job Requirement --</option>
+            <option *ngFor="let job of availableJobs" [ngValue]="job.id">
+              {{ job.job_role }} ({{ job.client_name }})
+            </option>
+          </select>
         </div>
+        <div class="job-selector-meta" *ngIf="selectedJobId && !isLoading">
+          <div class="meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <span>{{ allCandidatesScores.length }} candidates</span>
+          </div>
+        </div>
+      </div>
 
-        <!-- Candidates List -->
-        <div *ngIf="!isLoading && candidatesScores.length > 0" class="candidates-list">
-            <table class="matching-table">
+      <!-- Stats (visible only when a job is selected and has results) -->
+      <div class="stats" *ngIf="selectedJobId && allCandidatesScores.length > 0 && !isLoading">
+        <div class="stat">
+          <div class="stat-icon violet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Total Matched</div>
+            <div class="stat-value">{{ allCandidatesScores.length }}</div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Strong Match 80%+</div>
+            <div class="stat-value">{{ strongMatchCount }}</div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Moderate 50–80%</div>
+            <div class="stat-value">{{ moderateCount }}</div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Avg Match Score</div>
+            <div class="stat-value">{{ avgScore }}%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pick a Job state -->
+      <div class="pick-job" *ngIf="!selectedJobId && !isInitialLoading && !isLoading">
+        <div class="pick-job-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Select a Job Requirement</h3>
+        <p>Choose a requirement from the dropdown above to see AI-ranked candidate matching scores.</p>
+      </div>
+
+      <!-- Main Card (visible when job selected and has results) -->
+      <div class="card" *ngIf="selectedJobId && !isLoading">
+        <ng-container *ngIf="allCandidatesScores.length > 0">
+          <div class="card-head">
+            <div class="card-title-area">
+              <h3 class="card-title">Ranked Candidates</h3>
+              <p class="card-subtitle">Candidates sorted by overall AI match score</p>
+            </div>
+            <div class="toolbar">
+              <div class="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search by name, email, phone..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="results-bar">
+            <div class="results-text">Showing <strong>{{ paginatedCandidates.length }}</strong> of <strong>{{ candidatesScores.length }}</strong> candidates</div>
+          </div>
+
+          <ng-container *ngIf="candidatesScores.length > 0; else noMatches">
+            <div class="table-wrapper">
+              <table class="table">
                 <thead>
-                    <tr>
-                        <th>Candidate</th>
-                        <th>Role</th>
-                        <th>Total years of experience</th>
-                        <th>Location</th>
-                        <th>Skills</th>
-                        <th>Match Score</th>
-                    </tr>
+                  <tr>
+                    <th class="col-cand">Candidate</th>
+                    <th class="col-role">Role & Experience</th>
+                    <th class="col-loc">Location</th>
+                    <th class="col-skill">Skill Match</th>
+                    <th class="col-score">Match Score</th>
+                    <th class="col-rate">Rating</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let candidate of candidatesScores; let i = index">
-                        <td>
-                            <div class="candidate-name">{{ candidate.name }}</div>
-                        </td>
-                        <td>
-                            <div class="role-text">{{ candidate.work_experience || 'Not specified' }}</div>
-                        </td>
-                        <td>
-                            <div class="exp-text">{{ candidate.total_experience }} Yrs</div>
-                        </td>
-                        <td>
-                            <div class="location-text">
-                                {{ candidate.preferred_location || candidate.current_location || 'Not Specified' }}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="skills-preview" [title]="candidate.skills">{{ candidate.skills }}</div>
-                        </td>
+                  <tr *ngFor="let candidate of paginatedCandidates; let i = index">
+                    <!-- Candidate -->
+                    <td data-label="Candidate">
+                      <div class="cand-id">
+                        <div class="cand-av" [ngClass]="getAvatarColor(i)">{{ getInitials(candidate.name) }}</div>
+                        <div>
+                          <div class="cand-name" (click)="openProfileModal(candidate)">{{ candidate.name }}</div>
+                          <div class="cand-sub">{{ candidate.email || '—' }}</div>
+                          <div class="cand-sub" *ngIf="candidate.phone_number">{{ candidate.phone_number }}</div>
+                        </div>
+                      </div>
+                    </td>
 
-                        <!-- Score Column with Ring and Tooltip -->
-                        <td class="score-cell">
-                            <div class="score-container" (click)="openDetailsModal(candidate)"
-                                (mouseenter)="showTooltip(candidate.candidate_id || i)" (mouseleave)="hideTooltip()">
+                    <!-- Role & Experience -->
+                    <td data-label="Role & Experience">
+                      <div class="meta-row">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        {{ candidate.total_experience }}y experience
+                      </div>
+                      <div class="meta-row" *ngIf="candidate.work_experience">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        {{ candidate.work_experience | slice:0:40 }}{{ candidate.work_experience.length > 40 ? '...' : '' }}
+                      </div>
+                    </td>
 
-                                <!-- SVG Ring -->
-                                <div class="score-ring">
-                                    <svg viewBox="0 0 36 36">
-                                        <path class="circle-bg"
-                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                        <path class="circle"
-                                            [attr.stroke-dasharray]="getStrokeDashArray(candidate.score)"
-                                            [attr.stroke]="getScoreStrokeColor(candidate.score)"
-                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    </svg>
-                                    <div class="score-text" [ngClass]="getScoreColorClass(candidate.score)">
-                                        {{ candidate.score | number:'1.0-0' }}
-                                    </div>
-                                </div>
+                    <!-- Location -->
+                    <td data-label="Location">
+                      <div class="meta-row">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        {{ candidate.preferred_location || candidate.current_location || 'Not Specified' }}
+                      </div>
+                    </td>
 
-                                <!-- Tooltip Breakdown -->
-                                <div class="score-tooltip" *ngIf="activeTooltipId === (candidate.candidate_id || i)">
-                                    <div class="tooltip-header">Score Breakdown</div>
-                                    <div class="tooltip-row">
-                                        <span>Skills Match</span>
-                                        <span>{{ candidate.breakdown?.skills_match | number:'1.0-0' }}%</span>
-                                    </div>
-                                    <div class="tooltip-row">
-                                        <span>Experience Fit</span>
-                                        <span>{{ candidate.breakdown?.experience_meaning | number:'1.0-0' }}%</span>
-                                    </div>
-                                    <div class="tooltip-row">
-                                        <span>Years Required</span>
-                                        <span>{{ candidate.breakdown?.years_of_experience | number:'1.0-0' }}%</span>
-                                    </div>
-                                    <div class="tooltip-row">
-                                        <span>Location Match</span>
-                                        <span>{{ candidate.breakdown?.location_match | number:'1.0-0' }}%</span>
-                                    </div>
-                                    <div class="tooltip-total">
-                                        <span>Overall Fit</span>
-                                        <span>{{ candidate.score | number:'1.0-0' }}%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    <!-- Skill Match Pills -->
+                    <td data-label="Skills">
+                      <div class="skill-pills">
+                        <span *ngFor="let skill of (candidate.matched_skills || []) | slice:0:2" class="skill-pill match">{{ skill }}</span>
+                        <span *ngFor="let skill of (candidate.partial_skills || []) | slice:0:1" class="skill-pill partial">{{ skill }}</span>
+                        <span *ngFor="let skill of (candidate.missing_skills || []) | slice:0:1" class="skill-pill miss">{{ skill }}</span>
+                        <span *ngIf="getTotalSkillCount(candidate) > 4" class="skill-pill extra">+{{ getTotalSkillCount(candidate) - 4 }}</span>
+                      </div>
+                    </td>
+
+                    <!-- Score Ring -->
+                    <td class="score-cell" data-label="Score">
+                      <div class="score-wrap" (click)="openDetailsModal(candidate)">
+                        <div class="score-ring">
+                          <svg viewBox="0 0 36 36">
+                            <circle class="ring-track" cx="18" cy="18" r="15.9155" />
+                            <circle class="ring-fill" [ngClass]="getScoreBandClass(candidate.score)"
+                                    cx="18" cy="18" r="15.9155"
+                                    [attr.stroke-dasharray]="getRingDashArray(candidate.score)"
+                                    stroke-dashoffset="0" />
+                          </svg>
+                          <div class="score-text" [ngClass]="getScoreBandClass(candidate.score)">
+                            {{ candidate.score | number:'1.0-0' }}
+                          </div>
+                        </div>
+                        <div class="score-band" [ngClass]="getScoreBandClass(candidate.score)">
+                          {{ getScoreBandText(candidate.score) }}
+                        </div>
+
+                        <!-- Hover Tooltip -->
+                        <div class="score-tip">
+                          <div class="tip-head">Score Breakdown</div>
+                          <div class="tip-row">
+                            <span class="tip-label">Skills Match</span>
+                            <div class="tip-bar"><div class="tip-bar-fill fill-blue" [style.width.%]="candidate.breakdown?.skills_match"></div></div>
+                            <span class="tip-val">{{ candidate.breakdown?.skills_match | number:'1.0-0' }}%</span>
+                          </div>
+                          <div class="tip-row">
+                            <span class="tip-label">Exp. Context</span>
+                            <div class="tip-bar"><div class="tip-bar-fill fill-violet" [style.width.%]="candidate.breakdown?.experience_meaning"></div></div>
+                            <span class="tip-val">{{ candidate.breakdown?.experience_meaning | number:'1.0-0' }}%</span>
+                          </div>
+                          <div class="tip-row">
+                            <span class="tip-label">Years Exp.</span>
+                            <div class="tip-bar"><div class="tip-bar-fill fill-amber" [style.width.%]="candidate.breakdown?.years_of_experience"></div></div>
+                            <span class="tip-val">{{ candidate.breakdown?.years_of_experience | number:'1.0-0' }}%</span>
+                          </div>
+                          <div class="tip-row">
+                            <span class="tip-label">Location</span>
+                            <div class="tip-bar"><div class="tip-bar-fill fill-green" [style.width.%]="candidate.breakdown?.location_match"></div></div>
+                            <span class="tip-val">{{ candidate.breakdown?.location_match | number:'1.0-0' }}%</span>
+                          </div>
+                          <div class="tip-total">
+                            <span>Overall Fit</span>
+                            <span>{{ candidate.score | number:'1.0-0' }}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Rating -->
+                    <td data-label="Rating">
+                      <div *ngIf="candidate.latest_rating_score" class="rating-badge rated">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        {{ candidate.latest_rating_score }}
+                      </div>
+                      <div *ngIf="!candidate.latest_rating_score" class="rating-badge unrated">—</div>
+                    </td>
+                  </tr>
                 </tbody>
-            </table>
+              </table>
+            </div>
 
             <!-- Pagination -->
-            <div class="pagination" *ngIf="totalPages > 1">
-                <button [disabled]="!prevPageUrl" (click)="loadScores(currentPage - 1)">Previous</button>
-                <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-                <button [disabled]="!nextPageUrl" (click)="loadScores(currentPage + 1)">Next</button>
-            </div>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="!isLoading && selectedJobId && candidatesScores.length === 0" class="empty-state">
-            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <h3>No matches found</h3>
-            <p>We couldn't find any candidates that match this requirement.</p>
-        </div>
-    </div>
-
-    <!-- Detailed Score Breakdown Modal -->
-    <div class="modal-overlay" *ngIf="selectedCandidateDetails" (click)="closeDetailsModal()">
-        <div class="modal-content" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-                <div>
-                    <h2>{{ selectedCandidateDetails.name }} - AI Score Analysis</h2>
-                    <p>Detailed breakdown of exactly how this candidate matches the job description.</p>
-                </div>
-                <button class="close-btn" (click)="closeDetailsModal()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+            <div class="pagination" *ngIf="displayTotalPages > 1">
+              <span class="pagination-info">Page {{ displayPage }} of {{ displayTotalPages }}</span>
+              <div class="pagination-controls">
+                <button class="page-btn" (click)="goToPage(displayPage - 1)" [disabled]="displayPage <= 1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                  Prev
                 </button>
+                <ng-container *ngFor="let p of getPageNumbers()">
+                  <button class="page-btn" [class.active-page]="p === displayPage" (click)="goToPage(p)">{{ p }}</button>
+                </ng-container>
+                <button class="page-btn" (click)="goToPage(displayPage + 1)" [disabled]="displayPage >= displayTotalPages">
+                  Next
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
             </div>
+          </ng-container>
 
-            <div class="modal-body">
-                <!-- Final Score Banner -->
-                <div class="final-score-banner">
-                    <div class="banner-label">Overall AI Evaluation Match</div>
-                    <div class="banner-value" [ngClass]="getScoreColorClass(selectedCandidateDetails.score)">
-                        {{ selectedCandidateDetails.score | number:'1.0-0' }}%
-                    </div>
-                </div>
-
-                <!-- Skills Parameter -->
-                <div class="breakdown-item">
-                    <div class="item-header">
-                        <span class="item-title">Technical Skills Match</span>
-                        <span class="item-score">{{ selectedCandidateDetails.breakdown?.skills_match | number:'1.0-0'
-                            }}%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill bg-blue-500"
-                            [style.width.%]="selectedCandidateDetails.breakdown?.skills_match"></div>
-                    </div>
-                    <p class="item-desc">{{ getSkillsText(selectedCandidateDetails.breakdown?.skills_match) }}</p>
-                </div>
-
-                <!-- Experience Context Parameter -->
-                <div class="breakdown-item">
-                    <div class="item-header">
-                        <span class="item-title">Experience Context Relevance</span>
-                        <span class="item-score">{{ selectedCandidateDetails.breakdown?.experience_meaning |
-                            number:'1.0-0' }}%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill bg-purple-500"
-                            [style.width.%]="selectedCandidateDetails.breakdown?.experience_meaning"></div>
-                    </div>
-                    <p class="item-desc">{{
-                        getExperienceMeaningText(selectedCandidateDetails.breakdown?.experience_meaning) }}</p>
-                </div>
-
-                <!-- Years of Experience Parameter -->
-                <div class="breakdown-item">
-                    <div class="item-header">
-                        <span class="item-title">Years of Experience Requirement</span>
-                        <span class="item-score">{{ selectedCandidateDetails.breakdown?.years_of_experience |
-                            number:'1.0-0' }}%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill bg-orange-500"
-                            [style.width.%]="selectedCandidateDetails.breakdown?.years_of_experience"></div>
-                    </div>
-                    <p class="item-desc">{{ getExperienceText(selectedCandidateDetails.breakdown?.years_of_experience)
-                        }}</p>
-                </div>
-
-                <!-- Location Match Parameter -->
-                <div class="breakdown-item">
-                    <div class="item-header">
-                        <span class="item-title">Geographic Location Proximity</span>
-                        <span class="item-score">{{ selectedCandidateDetails.breakdown?.location_match | number:'1.0-0'
-                            }}%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill bg-teal-500"
-                            [style.width.%]="selectedCandidateDetails.breakdown?.location_match"></div>
-                    </div>
-                    <p class="item-desc">{{ getLocationText(selectedCandidateDetails.breakdown?.location_match) }}</p>
-                </div>
+          <!-- No Matches (from search) -->
+          <ng-template #noMatches>
+            <div class="empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <h3>No Matches Found</h3>
+              <p>No candidates match your search "{{ searchQuery }}". Try a different term.</p>
+              <button class="btn" (click)="searchQuery = ''; onSearchChange()">Clear Search</button>
             </div>
+          </ng-template>
+        </ng-container>
+
+        <!-- Empty State (no candidates at all) -->
+        <div *ngIf="allCandidatesScores.length === 0" class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <h3>No Matches Found</h3>
+          <p>We couldn't find any candidates that match this requirement.</p>
         </div>
+      </div>
     </div>
+  </main>
+</div>
+
+<!-- ====================================================================
+     DETAILED SCORE MODAL
+     ==================================================================== -->
+<div class="modal-overlay" *ngIf="selectedCandidateDetails" (click)="closeDetailsModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-head">
+      <div class="modal-head-av" [ngClass]="getAvatarColor(0)">
+        {{ getInitials(selectedCandidateDetails.name) }}
+      </div>
+      <div class="modal-head-info">
+        <h2>{{ selectedCandidateDetails.name }}</h2>
+        <div class="modal-sub">
+          Matching {{ selectedJobTitle }}
+          <span *ngIf="selectedClientName"> · {{ selectedClientName }}</span>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeDetailsModal()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Final Score Banner -->
+      <div class="final-banner" [ngClass]="getScoreBandClass(selectedCandidateDetails.score)">
+        <div class="final-banner-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="final-banner-text">
+          <div class="final-banner-label">Overall Match</div>
+          <div class="final-banner-score">{{ selectedCandidateDetails.score | number:'1.0-0' }}%</div>
+        </div>
+        <div class="final-banner-band">{{ getScoreBandText(selectedCandidateDetails.score) }}</div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="bd-section-title">Score Breakdown</div>
+
+      <!-- Skills -->
+      <div class="bd-item">
+        <div class="bd-item-head">
+          <div class="bd-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <span class="bd-label">Technical Skills Match</span>
+          <span class="bd-val blue">{{ selectedCandidateDetails.breakdown?.skills_match | number:'1.0-0' }}%</span>
+        </div>
+        <div class="bd-bar"><div class="bd-bar-fill blue" [style.width.%]="selectedCandidateDetails.breakdown?.skills_match"></div></div>
+        <p class="bd-desc">{{ getSkillsText(selectedCandidateDetails.breakdown?.skills_match) }}</p>
+      </div>
+
+      <!-- Experience Context -->
+      <div class="bd-item">
+        <div class="bd-item-head">
+          <div class="bd-icon violet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <span class="bd-label">Experience Context Relevance</span>
+          <span class="bd-val violet">{{ selectedCandidateDetails.breakdown?.experience_meaning | number:'1.0-0' }}%</span>
+        </div>
+        <div class="bd-bar"><div class="bd-bar-fill violet" [style.width.%]="selectedCandidateDetails.breakdown?.experience_meaning"></div></div>
+        <p class="bd-desc">{{ getExperienceMeaningText(selectedCandidateDetails.breakdown?.experience_meaning) }}</p>
+      </div>
+
+      <!-- Years of Experience -->
+      <div class="bd-item">
+        <div class="bd-item-head">
+          <div class="bd-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="bd-label">Years of Experience</span>
+          <span class="bd-val amber">{{ selectedCandidateDetails.breakdown?.years_of_experience | number:'1.0-0' }}%</span>
+        </div>
+        <div class="bd-bar"><div class="bd-bar-fill amber" [style.width.%]="selectedCandidateDetails.breakdown?.years_of_experience"></div></div>
+        <p class="bd-desc">{{ getExperienceText(selectedCandidateDetails.breakdown?.years_of_experience) }}</p>
+      </div>
+
+      <!-- Location -->
+      <div class="bd-item">
+        <div class="bd-item-head">
+          <div class="bd-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span class="bd-label">Geographic Location</span>
+          <span class="bd-val green">{{ selectedCandidateDetails.breakdown?.location_match | number:'1.0-0' }}%</span>
+        </div>
+        <div class="bd-bar"><div class="bd-bar-fill green" [style.width.%]="selectedCandidateDetails.breakdown?.location_match"></div></div>
+        <p class="bd-desc">{{ getLocationText(selectedCandidateDetails.breakdown?.location_match) }}</p>
+      </div>
+
+      <!-- Skills Deep Dive -->
+      <div class="skills-deep" *ngIf="selectedCandidateDetails.matched_skills?.length || selectedCandidateDetails.partial_skills?.length || selectedCandidateDetails.missing_skills?.length">
+        <div class="bd-section-title">Skills Analysis</div>
+
+        <div class="skills-group" *ngIf="selectedCandidateDetails.matched_skills?.length">
+          <div class="skills-group-title">
+            <span>Matched Skills</span>
+            <span class="count">{{ selectedCandidateDetails.matched_skills.length }}</span>
+          </div>
+          <div class="pills">
+            <span *ngFor="let skill of selectedCandidateDetails.matched_skills" class="skill-pill match">{{ skill }}</span>
+          </div>
+        </div>
+
+        <div class="skills-group" *ngIf="selectedCandidateDetails.partial_skills?.length">
+          <div class="skills-group-title">
+            <span>Partial Match</span>
+            <span class="count">{{ selectedCandidateDetails.partial_skills.length }}</span>
+          </div>
+          <div class="pills">
+            <span *ngFor="let skill of selectedCandidateDetails.partial_skills" class="skill-pill partial">{{ skill }}</span>
+          </div>
+        </div>
+
+        <div class="skills-group" *ngIf="selectedCandidateDetails.missing_skills?.length">
+          <div class="skills-group-title">
+            <span>Missing Skills</span>
+            <span class="count">{{ selectedCandidateDetails.missing_skills.length }}</span>
+          </div>
+          <div class="pills">
+            <span *ngFor="let skill of selectedCandidateDetails.missing_skills" class="skill-pill miss">{{ skill }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     CANDIDATE PROFILE DETAILS MODAL (Elegant)
+     ==================================================================== -->
+<ng-container *ngIf="showProfileModal && selectedProfileDetails">
+  <div class="elegant-modal-backdrop" (click)="closeProfileModal()">
+    <div class="elegant-modal-content" (click)="$event.stopPropagation()">
+      <div class="elegant-header">
+        <div class="candidate-identity">
+          <div class="candidate-avatar">
+            {{ selectedProfileDetails.first_name?.charAt(0) | uppercase }}{{ selectedProfileDetails.last_name?.charAt(0) | uppercase }}
+          </div>
+          <div class="identity-text">
+            <h2>{{ selectedProfileDetails.first_name }} {{ selectedProfileDetails.last_name }}</h2>
+            <p>{{ selectedProfileDetails.work_experience }}</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="action-icon-btn" (click)="closeProfileModal()" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="elegant-body">
+        <div class="info-section">
+          <h4 class="section-title">Contact Information</h4>
+          <div class="info-grid-3">
+            <div class="info-item">
+              <span class="info-label">Phone</span>
+              <span class="info-value">{{ selectedProfileDetails.phone_number || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ selectedProfileDetails.email || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Location</span>
+              <span class="info-value">{{ formatLocationList(selectedProfileDetails.current_location) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-section">
+          <h4 class="section-title">Professional Overview</h4>
+          <div class="info-grid-3">
+            <div class="info-item">
+              <span class="info-label">Total Experience</span>
+              <span class="info-value">{{ selectedProfileDetails.total_experience || 0 }} Yrs</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Relevant Experience</span>
+              <span class="info-value">{{ selectedProfileDetails.relevant_experience || 0 }} Yrs</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Notice Period</span>
+              <span class="info-value" style="color: #d97706;">{{ selectedProfileDetails.notice_period || 'N/A' }}</span>
+            </div>
+          </div>
+          <div class="info-grid-3" style="margin-top: 20px;">
+            <div class="info-item">
+              <span class="info-label">Current CTC</span>
+              <span class="info-value">{{ selectedProfileDetails.current_ctc || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Expected CTC</span>
+              <span class="info-value">
+                <ng-container *ngIf="selectedProfileDetails.expected_ctc_min != null && selectedProfileDetails.expected_ctc_max != null; else noExpectedCtc">
+                  {{ selectedProfileDetails.expected_ctc_min === selectedProfileDetails.expected_ctc_max ? selectedProfileDetails.expected_ctc_min : selectedProfileDetails.expected_ctc_min + " - " + selectedProfileDetails.expected_ctc_max }} LPA
+                </ng-container>
+                <ng-template #noExpectedCtc>N/A</ng-template>
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Preferred Location</span>
+              <span class="info-value">{{ formatLocationList(selectedProfileDetails.preferred_location) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-section" *ngIf="selectedProfileDetails.skills">
+          <h4 class="section-title">Skills &amp; Expertise</h4>
+          <div class="skills-wrapper">
+            <span *ngFor="let skill of selectedProfileDetails.skills.split(',')" class="skill-tag">{{ skill.trim() }}</span>
+          </div>
+        </div>
+        <div class="info-section">
+          <h4 class="section-title">Documents &amp; Source</h4>
+          <div class="info-grid-2">
+            <div class="info-item">
+              <span class="info-label" style="margin-bottom: 8px;">Resume</span>
+              <div *ngIf="selectedProfileDetails.resume; else noResume" class="resume-card" (click)="openResume(selectedProfileDetails.resume)">
+                <div class="resume-info">
+                  <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <span class="resume-text">View Resume</span>
+                </div>
+                <span class="view-link">Open &rarr;</span>
+              </div>
+              <ng-template #noResume>
+                <div class="resume-card" style="cursor: default; opacity: 0.7; background: #f9fafb;">
+                  <span class="resume-text" style="font-weight: 400; color: #999;">No Resume Attached</span>
+                </div>
+              </ng-template>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Recruiter &amp; Source</span>
+              <div style="margin-top: 5px;">
+                <div style="font-weight: 600; color: #374151;">{{ selectedProfileDetails.recruiter_name || 'N/A' }}</div>
+                <div style="font-size: 13px; color: #05356c; margin-top: 4px; font-weight: 500;">
+                  via {{ selectedProfileDetails.source || 'N/A' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -56,8 +56,11 @@
           </div>
           <div>
             <div class="stat-label">Total Requirements</div>
-            <div class="stat-value">--</div>
-            <div class="stat-delta up">Placeholder</div>
+            <div class="stat-value">{{ statisticsData?.total_requirements || (statisticsData?.total_requirements === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.total_delta > 0, 'down': statisticsData?.total_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.total_delta > 0 ? '+' : '' }}{{ statisticsData.total_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
         <div class="stat">
@@ -66,8 +69,11 @@
           </div>
           <div>
             <div class="stat-label">Active</div>
-            <div class="stat-value">--</div>
-            <div class="stat-delta up">Placeholder</div>
+            <div class="stat-value">{{ statisticsData?.active || (statisticsData?.active === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.active_delta > 0, 'down': statisticsData?.active_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.active_delta > 0 ? '+' : '' }}{{ statisticsData.active_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
         <div class="stat">
@@ -76,8 +82,11 @@
           </div>
           <div>
             <div class="stat-label">On Hold</div>
-            <div class="stat-value">--</div>
-            <div class="stat-delta down">Placeholder</div>
+            <div class="stat-value">{{ statisticsData?.on_hold || (statisticsData?.on_hold === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.on_hold_delta > 0, 'down': statisticsData?.on_hold_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.on_hold_delta > 0 ? '+' : '' }}{{ statisticsData.on_hold_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
         <div class="stat">
@@ -86,8 +95,11 @@
           </div>
           <div>
             <div class="stat-label">Hired / Closed</div>
-            <div class="stat-value">--</div>
-            <div class="stat-delta up">Placeholder</div>
+            <div class="stat-value">{{ statisticsData?.hired_closed || (statisticsData?.hired_closed === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.hired_closed_delta > 0, 'down': statisticsData?.hired_closed_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.hired_closed_delta > 0 ? '+' : '' }}{{ statisticsData.hired_closed_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
       </div>
@@ -194,6 +206,7 @@
                      <th class="col-meta">Experience &amp; Salary</th>
                      <th>Location</th>
                      <th class="col-tags">Skills</th>
+                     <th class="col-assign">Assigned</th>
                      <th class="col-stat">Status</th>
                      <th class="col-act"></th>
                    </tr>
@@ -209,6 +222,9 @@
                          <div>
                            <div class="req-role-name" (click)="openRequirementDetails(item)" title="View Requirement Details">{{ item.job_role }}</div>
                            <div class="req-client">{{ item.client_name }} <span *ngIf="item.sub_client_name">· {{ item.sub_client_name }}</span></div>
+                           <div class="req-uploaded-by" *ngIf="item.created_by_details" style="font-size: 11px; color: var(--ink-3); margin-top: 2px;">
+                             Uploaded by: {{ item.created_by_details.first_name }} {{ item.created_by_details.last_name }}
+                           </div>
                          </div>
                        </div>
                      </td>
@@ -234,6 +250,12 @@
                          <span *ngIf="item.skills.length > 3" class="tag tag-more">+{{ item.skills.length - 3 }}</span>
                        </div>
                        <ng-template #noSkills><span style="color: var(--ink-3);">—</span></ng-template>
+                     </td>
+                     <td data-label="Assigned">
+                       <div class="tag-row" *ngIf="item.assigned_users_details && item.assigned_users_details.length > 0; else noAssignees">
+                         <span *ngFor="let user of item.assigned_users_details" class="tag">{{ user.first_name }} {{ user.last_name }}</span>
+                       </div>
+                       <ng-template #noAssignees><span style="color: var(--ink-3);">—</span></ng-template>
                      </td>
                      <td data-label="Status">
                        <div class="status-wrap">
@@ -272,20 +294,22 @@
                    </tr>
                  </tbody>
                </table>
-             </div>
-
-             <div class="pager" *ngIf="totalPages > 1">
-               <div class="pager-info">Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong></div>
-               <div class="pager-ctrl">
-                 <button class="pg-btn" (click)="fetchRequirements(currentPage - 1)" [disabled]="!prevPageUrl">
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                   Prev
-                 </button>
-                 <button class="pg-btn" (click)="fetchRequirements(currentPage + 1)" [disabled]="!nextPageUrl">
-                   Next
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                 </button>
-               </div>
+                  <div class="pagination" *ngIf="totalPages > 1">
+                <span class="pagination-info">Page {{ currentPage }} of {{ totalPages }}</span>
+                <div class="pagination-controls">
+                  <button class="page-btn" (click)="fetchRequirements(currentPage - 1)" [disabled]="!prevPageUrl">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                    Prev
+                  </button>
+                  <ng-container *ngFor="let p of getPageNumbers()">
+                    <button class="page-btn" [class.active-page]="p === currentPage" (click)="fetchRequirements(p)">{{ p }}</button>
+                  </ng-container>
+                  <button class="page-btn" (click)="fetchRequirements(currentPage + 1)" [disabled]="!nextPageUrl">
+                    Next
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
+                </div>
+              </div>
              </div>
            </ng-container>
 

@@ -30,6 +30,14 @@ export class AdbRequirementService {
   getRequirements(page: number = 1): Observable<any> {
     return this.http.get(`${this.apiUrl}?page=${page}`);
   }
+  
+  getActiveRequirementsList(): Observable<any> {
+    return this.http.get(`${this.apiUrl}active_list/`);
+  }
+  
+  getStatistics(): Observable<any> {
+    return this.http.get(`${this.apiUrl}statistics/`);
+  }
   getRequirement(id: number | string): Observable<any> {
     return this.http.get(`${this.apiUrl}${id}/`);
   }
