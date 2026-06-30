@@ -404,35 +404,46 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   selectAdditionalLocation(prediction: google.maps.places.AutocompletePrediction): void {
     if (this.activeDetailIndex === null) return;
 
-    const locationName = prediction.description; // Full location string name
-
-    // Update the specific row using the stored index
-    if (this.additionalDetails[this.activeDetailIndex]) {
-      this.additionalDetails[this.activeDetailIndex].location = locationName;
-
-      // Extract place_id from the prediction for structured location data
+    const currentIndex = this.activeDetailIndex;
+    const item = this.additionalDetails[currentIndex];
+    if (item) {
+      item.location = prediction.description;
       if (prediction.place_id) {
-        this.additionalDetails[this.activeDetailIndex].place_id = prediction.place_id;
-
-        // Use PlacesService to get address_components for city/state
+        item.place_id = prediction.place_id;
         const placesService = new google.maps.places.PlacesService(
           document.createElement('div')
         );
-        const currentIndex = this.activeDetailIndex; // Capture it for the async callback
-
         placesService.getDetails(
-          { placeId: prediction.place_id, fields: ['address_components'] },
+          { placeId: prediction.place_id, fields: ['address_components', 'geometry'] },
           (place, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
               this.ngZone.run(() => {
-                for (const component of place!.address_components!) {
-                  if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
-                    this.additionalDetails[currentIndex].city = component.long_name;
-                  }
-                  if (component.types.includes('administrative_area_level_1')) {
-                    this.additionalDetails[currentIndex].state = component.long_name;
+                let area = '';
+                let city = '';
+                let district = '';
+                let state = '';
+
+                for (const component of place.address_components!) {
+                  if (component.types.includes('sublocality') || component.types.includes('neighborhood')) {
+                    if (!area) area = component.long_name;
+                  } else if (component.types.includes('locality')) {
+                    city = component.long_name;
+                  } else if (component.types.includes('administrative_area_level_3') && !district) {
+                    district = component.long_name;
+                  } else if (component.types.includes('administrative_area_level_2') && !district) {
+                    district = component.long_name;
+                  } else if (component.types.includes('administrative_area_level_1')) {
+                    state = component.long_name;
                   }
                 }
+
+                if (!city) city = prediction.structured_formatting?.main_text || '';
+
+                const formattedLocation = [area, city, district, state].filter(Boolean).join(', ');
+                item.location = formattedLocation || prediction.description;
+                item.city = city;
+                item.district = district;
+                item.state = state;
               });
             }
           }
@@ -2115,6 +2126,17 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // Regex patterns
   emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   phoneRegex = /^[0-9]{10}$/; // Simple 10 digit validation
+
+  validateSpocPhone(index: number, event: any) {
+    const input = event.target as HTMLInputElement;
+    let cleanValue = input.value.replace(/[^0-9]/g, '');
+    if (cleanValue.length > 10) {
+      cleanValue = cleanValue.slice(0, 10);
+    }
+    input.value = cleanValue;
+    this.additionalDetails[index].phone = cleanValue;
+    this.validateAdditionalDetails(index);
+  }
 
   validateAdditionalDetails(index: number) {
     // Initialize error object for this index if not exists

@@ -216,6 +216,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   selectedPlaceId: string = '';
 
   formIdFilter: string | null = null;
+  statisticsData: any = null;
 
   constructor(
     private title: Title,
@@ -375,6 +376,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         this.isPageLoading = false;
       }
     });
+    this.fetchStatistics();
+  }
+
+  fetchStatistics(): void {
+    this.candidateService.getStatistics().subscribe({
+      next: (res: any) => {
+        this.statisticsData = res;
+      },
+      error: (err) => console.error("Failed to load candidate statistics", err)
+    });
   }
 
   // =========================================================
@@ -448,12 +459,15 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       }
     }
 
-    // CTC Filter (Exact Match retained as CTC is a dropdown)
+    // CTC Filter (Numerical comparison: Candidate CTC <= Filter CTC)
     if (filterValues.current_ctc) {
-      candidates = candidates.filter(c => {
-        const val = isSourced ? c.current_ctc : (c.sourced_data?.current_ctc || '');
-        return val === filterValues.current_ctc;
-      });
+      const maxCtc = Number(filterValues.current_ctc);
+      if (!isNaN(maxCtc)) {
+        candidates = candidates.filter(c => {
+          const val = Number(isSourced ? c.current_ctc : (c.sourced_data?.current_ctc || 0));
+          return !isNaN(val) && val <= maxCtc;
+        });
+      }
     }
 
     // --- RATING FILTERS ---
@@ -1000,7 +1014,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       relevant_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
       expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
       expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
-      current_ctc: ['', Validators.required],
+      current_ctc: [null, [Validators.required, Validators.min(0)]],
       preferred_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],
@@ -1470,7 +1484,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       relevant_experience: data.relevant_experience || data.relevant_experience_years,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
-      current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
+      current_ctc: data.current_ctc,
       notice_period: this.matchDropdown(data.notice_period, this.noticePeriodChoices),
       gender: this.matchDropdown(data.gender, this.genderChoices),
     });
@@ -1541,7 +1555,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       relevant_experience: data.relevant_experience,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
-      current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
+      current_ctc: data.current_ctc,
       notice_period: this.matchDropdown(data.notice_period, this.noticePeriodChoices),
       gender: this.matchDropdown(data.gender, this.genderChoices),
     });

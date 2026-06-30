@@ -52,8 +52,11 @@
           </div>
           <div>
             <div class="stat-label">Total Candidates</div>
-            <div class="stat-value">248</div>
-            <div class="stat-delta up">↑ 12 this week</div>
+            <div class="stat-value">{{ statisticsData?.total_candidates || (statisticsData?.total_candidates === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.total_delta >= 0, 'down': statisticsData?.total_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.total_delta >= 0 ? '↑' : '↓' }} {{ statisticsData.total_delta < 0 ? -statisticsData.total_delta : statisticsData.total_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
         <div class="stat">
@@ -62,18 +65,24 @@
           </div>
           <div>
             <div class="stat-label">Active Users</div>
-            <div class="stat-value">86</div>
-            <div class="stat-delta up">↑ 4 this week</div>
+            <div class="stat-value">{{ statisticsData?.active_users || (statisticsData?.active_users === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.active_delta >= 0, 'down': statisticsData?.active_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.active_delta >= 0 ? '↑' : '↓' }} {{ statisticsData.active_delta < 0 ? -statisticsData.active_delta : statisticsData.active_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
         <div class="stat">
           <div class="stat-icon violet">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/><path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5Z"/><path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1Z"/></svg>
           </div>
           <div>
             <div class="stat-label">AI Parsed</div>
-            <div class="stat-value">142</div>
-            <div class="stat-delta up">↑ 8 this week</div>
+            <div class="stat-value">{{ statisticsData?.ai_parsed || (statisticsData?.ai_parsed === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.ai_parsed_delta >= 0, 'down': statisticsData?.ai_parsed_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.ai_parsed_delta >= 0 ? '↑' : '↓' }} {{ statisticsData.ai_parsed_delta < 0 ? -statisticsData.ai_parsed_delta : statisticsData.ai_parsed_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
         <div class="stat">
@@ -82,8 +91,11 @@
           </div>
           <div>
             <div class="stat-label">Rated 4.0+</div>
-            <div class="stat-value">37</div>
-            <div class="stat-delta up">↑ 3 this week</div>
+            <div class="stat-value">{{ statisticsData?.rated_4_plus || (statisticsData?.rated_4_plus === 0 ? 0 : '--') }}</div>
+            <div class="stat-delta" [ngClass]="{'up': statisticsData?.rated_delta >= 0, 'down': statisticsData?.rated_delta < 0}" *ngIf="statisticsData">
+              {{ statisticsData.rated_delta >= 0 ? '↑' : '↓' }} {{ statisticsData.rated_delta < 0 ? -statisticsData.rated_delta : statisticsData.rated_delta }} this week
+            </div>
+            <div class="stat-delta up" *ngIf="!statisticsData">...</div>
           </div>
         </div>
       </div>
@@ -142,11 +154,8 @@
                     <input id="filter-skills" type="text" formControlName="skills" placeholder="e.g., java, python" class="input">
                   </div>
                   <div class="filter-group">
-                    <label for="filter-ctc">Current CTC</label>
-                    <select id="filter-ctc" formControlName="current_ctc" class="input">
-                      <option value="">All CTCs</option>
-                      <option *ngFor="let ctc of ctcChoices" [value]="ctc">{{ ctc }}</option>
-                    </select>
+                    <label for="filter-ctc">Max Current CTC (LPA)</label>
+                    <input id="filter-ctc" type="number" formControlName="current_ctc" placeholder="Filter by max CTC..." class="input" min="0" step="0.01" />
                   </div>
                   <div class="filter-group">
                     <label for="filter-email">Email</label>
@@ -304,7 +313,7 @@
                                   Form
                                 </span>
                               </div>
-                              <div class="candidate-id">{{ candidate.phone_number?.split(',')[0]?.trim() }}</div>
+                              <div class="candidate-id">Uploaded By: {{ candidate.recruiter_name || 'N/A' }}</div>
                             </div>
                           </div>
                         </td>
@@ -317,7 +326,7 @@
                           </div>
                           <div class="meta-row">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                            {{ candidate.current_ctc || '—' }}
+                            {{ candidate.current_ctc ? (candidate.current_ctc + (candidate.current_ctc.toString().includes('LPA') || candidate.current_ctc === 'Fresher' ? '' : ' LPA')) : '—' }}
                           </div>
                         </td>
 
@@ -447,7 +456,7 @@
                             {{ user.first_name }} {{ user.last_name }}
                             <span class="status-badge">Active</span>
                           </div>
-                          <div class="candidate-id">{{ user.phone_number || '—' }}</div>
+                          <div class="candidate-id">Uploaded By: {{ user.sourced_data?.recruiter_name || 'Self-Registered' }}</div>
                         </div>
                       </div>
                     </td>
@@ -460,7 +469,7 @@
                       </div>
                       <div class="meta-row">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        {{ user.sourced_data?.current_ctc || '—' }}
+                        {{ user.sourced_data?.current_ctc ? (user.sourced_data.current_ctc + (user.sourced_data.current_ctc.toString().includes('LPA') || user.sourced_data.current_ctc === 'Fresher' ? '' : ' LPA')) : '—' }}
                       </div>
                     </td>
 
@@ -564,353 +573,300 @@
 </div>
 
 <!-- FORM MODAL OVERLAY -->
-<ng-container *ngIf="formVisible">
-  <div *ngIf="isParsingResume" class="parsing-overlay">
-    <div class="parsing-content">
-      <div class="ai-spinner"></div>
-      <p class="parsing-text">AI is analyzing the Resume...</p>
-      <p class="parsing-subtext">Extracting skills, experience, and contact details.</p>
+<div class="form-overlay" [ngClass]="{'open': formVisible}">
+  <div *ngIf="isParsingResume" class="parsing-overlay" style="z-index: 300; position: fixed; inset: 0; background: rgba(15,23,42,.7); display: flex; align-items: center; justify-content: center;">
+    <div class="parsing-content" style="text-align: center; color: white;">
+      <div class="ai-spinner" style="width: 56px; height: 56px; border: 3px solid rgba(255,255,255,.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px;"></div>
+      <p class="parsing-text" style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">AI is analyzing the Resume...</p>
+      <p class="parsing-subtext" style="font-size: 14px; opacity: 0.8;">Extracting skills, experience, and contact details.</p>
     </div>
   </div>
-  <div class="form-modal-backdrop" (click)="onCancel()"></div>
-  <div class="form-modal-container" (click)="$event.stopPropagation()">
-    <div class="recruiter-workflow-candidate-candidate-input-form">
-      <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" style="width: 100%;">
-        <div class="recruiter-workflow-candidate-container12"><span class="recruiter-workflow-candidate-text30">{{
-            editingCandidateId ? 'Edit Candidate' : 'Input form' }}</span>
-          <div class="recruiter-workflow-candidate-container13">
-            <h1 class="source-label active">{{ formSource }}</h1>
-          </div><button type="button" class="close-panel-button" (click)="onCancel()"><svg width="24" height="24"
-              viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-              <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg></button>
-        </div>
-        <div class="recruiter-workflow-candidate-container14">
-          <div id="upload-file-container" class="recruiter-workflow-candidate-upload-file-container"><input type="file"
-              #fileInput (change)="onFileSelected($event)" style="display: none;" accept=".pdf,.doc,.docx" /><input
-              type="text" id="upload-file-input" placeholder="Select file"
-              class="recruiter-workflow-candidate-upload-file-input input" readonly [value]="selectedFileName" />
-            <div (click)="fileInput.click()" id="upload-file-button-container"
-              class="recruiter-workflow-candidate-upload-file-button-container"><svg width="48" height="48"
-                viewBox="0 0 48 48" class="recruiter-workflow-candidate-icon10">
-                <path
-                  d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
-                  fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                </path>
-              </svg><span class="recruiter-workflow-candidate-text33">Upload File <span
-                  style="color: #ff4d4f; margin-left: 4px; font-weight: bold;">*</span></span></div>
-            <div *ngIf="isParsingResume" class="parsing-loader"
-              style="margin-left: 15px; display: flex; align-items: center; color: #1890ff;">
-              <span style="margin-left: 8px; font-weight: 500;">Analyzing with AI...</span>
-            </div>
-          </div>
-          <div class="validation-error" *ngIf="showFileError">Resume file is required.</div><span id="note-for-file"
-            class="recruiter-workflow-candidate-note-for-file">PDF or DOCX only, max 5MB.</span>
-        </div>
-        <div class="recruiter-workflow-candidate-container15">
-          <div id="enter-manually-text-container" class="recruiter-workflow-candidate-enter-manually-text-container">
-            <span id="enter-manually-text" class="recruiter-workflow-candidate-enter-manually-text">Enter
-              Manually</span>
-          </div>
-          <div class="recruiter-workflow-candidate-job-title-company-name-container1">
-            <div class="recruiter-workflow-candidate-job-title-container1">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-job-title-text1">Candidate First Name</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
-              </div><input type="text" formControlName="first_name" placeholder="Enter First Name"
-                class="recruiter-workflow-candidate-job-title-input1 input" maxlength="50"
-                [class.is-invalid]="f['first_name'].invalid && f['first_name'].touched" />
-              <div class="validation-error" *ngIf="f['first_name'].invalid && f['first_name'].touched"><span
-                  *ngIf="f['first_name'].errors?.['required']">First Name is required.</span><span
-                  *ngIf="f['first_name'].errors?.['pattern']">Letters only.</span><span
-                  *ngIf="f['first_name'].errors?.['maxlength']">Max 15 characters allowed.</span></div>
-            </div>
-            <div class="recruiter-workflow-candidate-company-name-container1">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-company-name-text1">Candidate Last Name</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
-              </div><input type="text" formControlName="last_name" placeholder="Enter Last Name"
-                class="recruiter-workflow-candidate-company-name-input1 input" maxlength="50"
-                [class.is-invalid]="f['last_name'].invalid && f['last_name'].touched" />
-              <div class="validation-error" *ngIf="f['last_name'].invalid && f['last_name'].touched"><span
-                  *ngIf="f['last_name'].errors?.['required']">Last Name is required.</span><span
-                  *ngIf="f['last_name'].errors?.['pattern']">Letters only.</span><span
-                  *ngIf="f['last_name'].errors?.['maxlength']">Max 15 characters allowed.</span></div>
-            </div>
-          </div>
 
-          <!-- UPDATED PHONE NUMBERS SECTION -->
-          <div class="recruiter-workflow-candidate-job-title-company-name-container2">
-            <div class="recruiter-workflow-candidate-job-title-container2" style="min-width: 100%;">
-              <div style="display: flex; flex-direction: row;">
-                <span class="recruiter-workflow-candidate-job-title-text2">Phone Number(s)</span>
-                <span class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+  <div class="form-card" (click)="$event.stopPropagation()">
+    <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" style="width: 100%; display: flex; flex-direction: column; height: 100%;">
+      
+      <!-- HEADER -->
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-eyebrow">{{ editingCandidateId ? 'Edit Candidate' : 'Add Candidate' }}</div>
+          <h2 class="form-title">{{ editingCandidateId ? 'Edit Candidate Profile' : 'Input form' }}</h2>
+          <div class="form-subtitle">
+            <span class="source-pill" *ngIf="selectedFileName">{{ formSource }} · {{ selectedFileName }}</span>
+            <span *ngIf="!selectedFileName">Add candidate details manually or auto-parse Resume</span>
+          </div>
+        </div>
+        <button type="button" class="form-close-btn" (click)="onCancel()" title="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- BODY -->
+      <div class="form-body">
+        
+        <!-- SECTION 1: RESUME UPLOAD -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="step-num">1</span>
+            Resume Document
+          </div>
+          <div class="dropzone">
+            <div class="dropzone-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg>
+            </div>
+            <div class="dropzone-text">
+              <div class="name">{{ selectedFileName || 'Drop candidate resume PDF or DOCX here' }}</div>
+              <div class="meta" [ngClass]="{'error': showFileError}">
+                {{ showFileError ? 'Resume file is required.' : 'PDF or DOCX · Max 5 MB · AI will auto-fill the form fields below' }}
               </div>
+            </div>
+            <div class="file-status" *ngIf="selectedFileName" style="display:flex;">
+              <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span>Uploaded</span>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" style="display: none" />
+            <button type="button" class="dropzone-btn" (click)="fileInput.click()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              Upload File
+            </button>
+          </div>
+        </div>
 
-              <!-- Dynamic List Container -->
-              <div class="phone-numbers-list" style="margin-top: 4px;">
+        <!-- SECTION 2: BASIC DETAILS -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="step-num">2</span>
+            Basic Information
+          </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" class="form-input" formControlName="first_name" placeholder="Enter First Name" maxlength="50" [class.invalid]="f['first_name'].invalid && f['first_name'].touched" />
+              <div class="hint" *ngIf="f['first_name'].invalid && f['first_name'].touched" style="color:var(--bad)">
+                <span *ngIf="f['first_name'].errors?.['required']">First Name is required.</span>
+                <span *ngIf="f['first_name'].errors?.['pattern']">Letters only.</span>
+                <span *ngIf="f['first_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" class="form-input" formControlName="last_name" placeholder="Enter Last Name" maxlength="50" [class.invalid]="f['last_name'].invalid && f['last_name'].touched" />
+              <div class="hint" *ngIf="f['last_name'].invalid && f['last_name'].touched" style="color:var(--bad)">
+                <span *ngIf="f['last_name'].errors?.['required']">Last Name is required.</span>
+                <span *ngIf="f['last_name'].errors?.['pattern']">Letters only.</span>
+                <span *ngIf="f['last_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <div *ngFor="let phoneControl of phoneNumbersArray.controls; let i = index; let isLast = last"
-                  class="phone-input-wrapper">
-
-                  <!-- Input Field -->
-                  <input type="text" [formControl]="phoneControl" placeholder="Enter 10-digit Number" class="input"
-                    maxlength="10" [class.is-invalid]="phoneControl.invalid && phoneControl.touched" />
-
-                  <!-- Icons Container (Positioned Absolute Right) -->
-                  <div class="phone-action-icons">
-
-                    <!-- DELETE/REMOVE ICON (Show only if there is more than 1 number) -->
-                    <button *ngIf="phoneNumbersArray.length > 1" type="button" (click)="removePhoneNumber(i)"
-                      class="inline-icon-btn delete" title="Remove Number">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                      </svg>
+        <!-- SECTION 3: CONTACT INFORMATION -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="step-num">3</span>
+            Contact Details
+          </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Phone Number(s) <span class="req">*</span></label>
+              <div class="phone-numbers-list">
+                <div *ngFor="let phoneControl of phoneNumbersArray.controls; let i = index; let isLast = last" class="phone-input-wrapper" style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                  <input type="text" [formControl]="phoneControl" placeholder="Enter 10-digit Number" class="form-input" maxlength="10" [class.invalid]="phoneControl.invalid && phoneControl.touched" style="flex: 1;" />
+                  <div class="phone-action-icons" style="display: flex; gap: 4px;">
+                    <button *ngIf="phoneNumbersArray.length > 1" type="button" (click)="removePhoneNumber(i)" class="inline-icon-btn delete" title="Remove Number" style="height: 38px; width: 38px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: white; cursor: pointer; color: var(--bad); display: grid; place-items: center;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                     </button>
-
-                    <!-- ADD/PLUS ICON (Show only on the last row) -->
-                    <button *ngIf="isLast" type="button" (click)="addPhoneNumber()" class="inline-icon-btn add"
-                      title="Add Another Number">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
+                    <button *ngIf="isLast" type="button" (click)="addPhoneNumber()" class="inline-icon-btn add" title="Add Another Number" style="height: 38px; width: 38px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: white; cursor: pointer; color: var(--good); display: grid; place-items: center;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </button>
-
                   </div>
                 </div>
               </div>
-
-              <!-- Validation Errors (Placed below the inputs) -->
-              <!-- 1. Duplicate Error (Client-side check) -->
-              <div class="validation-error" *ngIf="phoneNumbersArray.errors?.['duplicate']" style="margin-top: 4px;">
-                <span>Duplicate phone numbers detected in the form.</span>
-              </div>
-
-              <!-- 2. Server Side Error (Backend DB check) -->
-              <div class="validation-error" *ngIf="phoneNumbersArray.errors?.['serverError']" style="margin-top: 4px;">
-                <span>{{ phoneNumbersArray.errors?.['serverError'] }}</span>
-              </div>
-
-              <!-- 3. Individual Field Errors (Pattern/Required) -->
+              <div class="hint" *ngIf="phoneNumbersArray.errors?.['duplicate']" style="color:var(--bad)">Duplicate phone numbers detected in the form.</div>
+              <div class="hint" *ngIf="phoneNumbersArray.errors?.['serverError']" style="color:var(--bad)">{{ phoneNumbersArray.errors?.['serverError'] }}</div>
               <ng-container *ngFor="let ctrl of phoneNumbersArray.controls; let i = index">
-                <div class="validation-error" *ngIf="ctrl.invalid && ctrl.touched" style="margin-top: 2px;">
+                <div class="hint" *ngIf="ctrl.invalid && ctrl.touched" style="color:var(--bad)">
                   <span *ngIf="ctrl.errors?.['required']">Phone {{i+1}} is required.</span>
                   <span *ngIf="ctrl.errors?.['invalidPhone']">Phone {{i+1}} must be 10 digits.</span>
                 </div>
               </ng-container>
             </div>
-
-            <!-- Email Field -->
-            <div class="recruiter-workflow-candidate-company-name-container2">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-company-name-text2">Email Id</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+            <div class="field">
+              <label>Email Id <span class="req">*</span></label>
+              <input type="email" formControlName="email" placeholder="Enter Email" class="form-input" [class.invalid]="f['email'].invalid && f['email'].touched" />
+              <div class="hint" *ngIf="f['email'].invalid && f['email'].touched" style="color:var(--bad)">
+                <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+                <span *ngIf="f['email'].errors?.['email']">Enter a valid email.</span>
               </div>
-              <input type="email" formControlName="email" placeholder="Enter Email"
-                class="recruiter-workflow-candidate-company-name-input2 input" style="width: 100%;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: EXPERIENCE & SALARY -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="step-num">4</span>
+            Experience &amp; Salary
+          </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Total Experience <span class="req">*</span></label>
+              <input type="number" formControlName="total_experience" placeholder="Exp (e.g. 2.5)" class="form-input" min="0" max="99" step="0.1" (keydown)="preventInvalidChars($event)" [class.invalid]="candidateForm.get('total_experience')?.invalid && candidateForm.get('total_experience')?.touched" />
+              <div class="hint" *ngIf="candidateForm.get('total_experience')?.invalid && candidateForm.get('total_experience')?.touched" style="color:var(--bad)">
+                <span *ngIf="candidateForm.get('total_experience')?.errors?.['required']">Total Experience is required.</span>
+                <span *ngIf="candidateForm.get('total_experience')?.errors?.['max']">Experience cannot exceed 99 years.</span>
+                <span *ngIf="candidateForm.get('total_experience')?.errors?.['min']">Experience cannot be negative.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Relevant Experience <span class="req">*</span></label>
+              <input type="number" formControlName="relevant_experience" placeholder="Rel Exp (e.g. 1.5)" class="form-input" min="0" max="99" step="0.1" (keydown)="preventInvalidChars($event)" [class.invalid]="candidateForm.get('relevant_experience')?.invalid && candidateForm.get('relevant_experience')?.touched" />
+              <div class="hint" *ngIf="candidateForm.get('relevant_experience')?.invalid && candidateForm.get('relevant_experience')?.touched" style="color:var(--bad)">
+                <span *ngIf="candidateForm.get('relevant_experience')?.errors?.['required']">Relevant Experience is required.</span>
+                <span *ngIf="candidateForm.get('relevant_experience')?.errors?.['minGreaterThanMax']">Max experience must be greater than Min experience.</span>
+                <span *ngIf="candidateForm.get('relevant_experience')?.errors?.['relevantExceedsTotal']">Relevant experience cannot be greater than Total experience.</span>
+              </div>
             </div>
           </div>
 
-          <div class="recruiter-workflow-candidate-issued-renewal-date-container1">
-            <div class="recruiter-workflow-candidate-issued-date-container1">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-issuing-date-text1">Total Experience (Years)</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+          <div style="height: 14px"></div>
+
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Current CTC <span class="req">*</span></label>
+              <input type="number" formControlName="current_ctc" placeholder="Current CTC (e.g., 6.5)" class="form-input" min="0" step="0.01" (keydown)="preventInvalidChars($event)" [class.invalid]="f['current_ctc'].invalid && f['current_ctc'].touched" />
+              <div class="hint">LPA</div>
+              <div class="hint" *ngIf="f['current_ctc'].invalid && f['current_ctc'].touched" style="color:var(--bad)">
+                <span *ngIf="f['current_ctc'].errors?.['required']">Current CTC is required.</span>
+                <span *ngIf="f['current_ctc'].errors?.['min']">Current CTC must be greater than or equal to 0.</span>
               </div>
-              <div class="recruiter-workflow-candidate-select-container1"><input type="number"
-                  formControlName="total_experience" placeholder="Exp (e.g. 2.5)"
-                  class="recruiter-workflow-candidate-company-name-input3 input" min="0" max="99" step="0.1"
-                  (keydown)="preventInvalidChars($event)"
-                  [class.is-invalid]="candidateForm.get('total_experience')?.invalid && candidateForm.get('total_experience')?.touched"
-                  style="width: 100%;" /> </div>
-              <div class="validation-error"
-                *ngIf="candidateForm.get('total_experience_min')?.hasError('max') || candidateForm.get('total_experience_max')?.hasError('max')">
-                Experience cannot exceed 99 years.</div>
-              <div class="validation-error"
-                *ngIf="candidateForm.get('total_experience_min')?.hasError('min') || candidateForm.get('total_experience_max')?.hasError('min')">
-                Experience cannot be negative.</div>
-              <div class="validation-error"
-                *ngIf="candidateForm.get('total_experience_max')?.hasError('minGreaterThanMax')">Max experience must be
-                greater than Min experience.</div>
             </div>
-            <div class="recruiter-workflow-candidate-renewal-date-container">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-renewal-date-text">Relevant Experience (Years)</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+            <div class="field">
+              <label>Expected CTC Range <span class="req">*</span></label>
+              <div class="range-row">
+                <input type="number" formControlName="expected_ctc_min" placeholder="Min" class="form-input" min="0" (keydown)="preventInvalidChars($event)" />
+                <span class="sep">to</span>
+                <input type="number" formControlName="expected_ctc_max" placeholder="Max" class="form-input" min="0" (keydown)="preventInvalidChars($event)" />
               </div>
-              <div class="recruiter-workflow-candidate-select-container2"><input type="number"
-                  formControlName="relevant_experience" placeholder="Rel Exp (e.g. 1.5)"
-                  class="recruiter-workflow-candidate-company-name-input5 input" min="0" max="99" step="0.1"
-                  (keydown)="preventInvalidChars($event)"
-                  [class.is-invalid]="candidateForm.get('relevant_experience')?.invalid && candidateForm.get('relevant_experience')?.touched"
-                  style="width: 100%;" /></div>
-              <div class="validation-error"
-                *ngIf="candidateForm.get('relevant_experience_max')?.hasError('minGreaterThanMax')">Max experience must
-                be greater than Min experience.</div>
-              <div class="validation-error"
-                *ngIf="candidateForm.get('relevant_experience_max')?.hasError('relevantExceedsTotal')">Relevant
-                experience cannot be greater than Total experience.</div>
+              <div class="hint">LPA</div>
+              <div class="hint" *ngIf="(f['expected_ctc_min'].invalid && f['expected_ctc_min'].touched) || (f['expected_ctc_max'].invalid && f['expected_ctc_max'].touched)" style="color:var(--bad)">Expected CTC is required.</div>
             </div>
           </div>
-          <div class="recruiter-workflow-candidate-issued-renewal-date-container2">
-            <div class="recruiter-workflow-candidate-certificate-name-container">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-certificate-name-text">Current CTC</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
-              </div><select formControlName="current_ctc" class="input"
-                style="width: 100%; height: 48px; border-color: #A7A7A7; background-color: #FFFFFF;">
-                <option value="" disabled style="color: #A7A7A7;">Select</option>
-                <option *ngFor="let ctc of ctcChoices" [value]="ctc">{{ ctc }}</option>
+        </div>
+
+        <!-- SECTION 5: ROLE & SKILLS -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="step-num">5</span>
+            Role &amp; Skills
+          </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Role <span class="req">*</span></label>
+              <input type="text" formControlName="work_experience" placeholder="Enter Role" class="form-input" (input)="allowAlphanumericOnly($event)" [class.invalid]="f['work_experience'].invalid && f['work_experience'].touched" />
+              <div class="hint" *ngIf="f['work_experience'].invalid && f['work_experience'].touched" style="color:var(--bad)">
+                <span *ngIf="f['work_experience'].errors?.['required']">Role is required.</span>
+                <span *ngIf="f['work_experience'].errors?.['maxlength']">Max 30 characters allowed.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Skills <span class="req">*</span></label>
+              <div class="chip-input scrollable-chips">
+                <span class="chip-pill" *ngFor="let skill of skills; let i = index">
+                  {{ skill }}
+                  <button class="x" type="button" (click)="removeSkill(i)">×</button>
+                </span>
+                <input type="text" placeholder="+ Add skill (press Enter)" (input)="allowAlphabetsOnly($event)" (keydown.enter)="$event.preventDefault(); addSkill($event)" />
+              </div>
+              <input type="hidden" formControlName="skills">
+              <div class="hint" *ngIf="f['skills'].invalid && f['skills'].touched" style="color:var(--bad)">Skills are required.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 6: PREFERENCES -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="step-num">6</span>
+            Preferences &amp; Demographics
+          </div>
+          <div class="form-grid-2">
+            <div class="field" style="position: relative;">
+              <label>Preferred Location <span class="req">*</span></label>
+              <div class="chip-input" [class.invalid]="f['preferred_location'].invalid && f['preferred_location'].touched">
+                <span class="chip-pill blue" *ngFor="let loc of preferredLocationsList; let i = index">
+                  {{ loc.name || loc }}
+                  <button class="x" type="button" (click)="removeLocation('preferred', i)">×</button>
+                </span>
+                <input #prefInput type="text" placeholder="+ Add preferred location" (input)="onPreferredLocationInput($event)" (keydown.enter)="$event.preventDefault(); addManualLocation($event, 'preferred')" />
+              </div>
+              <div class="suggestions" *ngIf="showPreferredSuggestions && preferredSuggestions.length > 0" style="position: absolute; z-index: 50; width: 100%; top: 100%;">
+                <div class="suggestion" *ngFor="let suggestion of preferredSuggestions" (click)="selectPreferredLocation(suggestion, prefInput)">
+                  {{ suggestion.description }}
+                </div>
+              </div>
+              <input type="hidden" formControlName="preferred_location">
+              <div class="hint" *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched" style="color:var(--bad)">Preferred Location is required.</div>
+              <div class="hint">Enter location and press Enter.</div>
+            </div>
+            <div class="field" style="position: relative;">
+              <label>Current Location <span class="req">*</span></label>
+              <div class="chip-input" [class.invalid]="f['current_location'].invalid && f['current_location'].touched">
+                <span class="chip-pill blue" *ngFor="let loc of currentLocationsList; let i = index">
+                  {{ loc.name || loc }}
+                  <button class="x" type="button" (click)="removeLocation('current', i)">×</button>
+                </span>
+                <input #currInput type="text" placeholder="+ Add current location" (input)="onCurrentLocationInput($event)" (keydown.enter)="$event.preventDefault(); addManualLocation($event, 'current')" />
+              </div>
+              <div class="suggestions" *ngIf="showCurrentSuggestions && currentSuggestions.length > 0" style="position: absolute; z-index: 50; width: 100%; top: 100%;">
+                <div class="suggestion" *ngFor="let suggestion of currentSuggestions" (click)="selectCurrentLocation(suggestion, currInput)">
+                  {{ suggestion.description }}
+                </div>
+              </div>
+              <input type="hidden" formControlName="current_location">
+              <div class="hint" *ngIf="f['current_location'].invalid && f['current_location'].touched" style="color:var(--bad)">Current Location is required.</div>
+              <div class="hint">Enter location and press Enter.</div>
+            </div>
+          </div>
+
+          <div style="height: 14px"></div>
+
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Notice Period <span class="req">*</span></label>
+              <select formControlName="notice_period" class="form-select" [class.invalid]="f['notice_period'].invalid && f['notice_period'].touched">
+                <option value="" disabled class="placeholder">Select Notice Period</option>
+                <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
               </select>
+              <div class="hint" *ngIf="f['notice_period'].invalid && f['notice_period'].touched" style="color:var(--bad)">Notice Period is required.</div>
             </div>
-            <div class="recruiter-workflow-candidate-issued-date-container2">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-issuing-date-text2">Expected CTC</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
-              </div>
-              <div class="recruiter-workflow-candidate-select-container3"><input type="number"
-                  formControlName="expected_ctc_min" placeholder="Min Salary"
-                  class="recruiter-workflow-candidate-company-name-input7 input" min="0"
-                  (keydown)="preventInvalidChars($event)" /><span>To</span><input type="number"
-                  formControlName="expected_ctc_max" placeholder="Max Salary"
-                  class="recruiter-workflow-candidate-company-name-input8 input" min="0"
-                  (keydown)="preventInvalidChars($event)" /><span>LPA</span></div>
-            </div>
-          </div>
-          <div class="recruiter-workflow-candidate-job-title-company-name-container3" style="position: relative; z-index: 50;">
-            <div class="recruiter-workflow-candidate-job-title-container3" style="position: relative; z-index: 51;">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
-              </div>
-              <div style="position: relative;">
-                <div class="skills-input-container" style="min-width: 100%;"
-                  [class.is-invalid]="f['preferred_location'].invalid && f['preferred_location'].touched"><span
-                    *ngFor="let loc of preferredLocationsList; let i = index" class="skill-pill">{{ loc.name || loc
-                    }}<button type="button" class="remove-skill-button"
-                      (click)="removeLocation('preferred', i)">&times;</button></span><input #prefInput type="text"
-                    class="skills-entry-input" placeholder="+ Add location (e.g. Bengaluru, Bangalore Urban, Karnataka)"
-                    (input)="onPreferredLocationInput($event)" (keydown.enter)="addManualLocation($event, 'preferred')" />
-                </div>
-                <div class="location-suggestions-dropdown"
-                  *ngIf="showPreferredSuggestions && preferredSuggestions.length > 0">
-                  <div class="suggestion-item" *ngFor="let suggestion of preferredSuggestions"
-                    (click)="selectPreferredLocation(suggestion, prefInput)">{{ suggestion.description }}</div>
-                </div>
-              </div><input type="hidden" formControlName="preferred_location">
-              <div class="validation-error" *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched">
-                <span *ngIf="f['preferred_location'].errors?.['required']">Preferred Location is required.</span><span
-                  *ngIf="f['preferred_location'].errors?.['pattern']">Invalid location format.</span>
-              </div><span class="helper-text"
-                style="color: #666; font-size: 13px; margin-top: 4px; display: block;">Enter
-                location as "City, District, State" and press Enter.</span>
-            </div>
-            <div class="recruiter-workflow-candidate-job-title-container4" style="position: relative; z-index: 50;">
-              <div style="display: flex; flex-direction: row;"><span
-                  class="recruiter-workflow-candidate-job-title-text4">Current Location</span><span
-                  class="recruiter-workflow-candidate-skill-star-text1"
-                  style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
-              </div>
-              <div style="position: relative;">
-                <div class="skills-input-container" style="min-width: 100%;"
-                  [class.is-invalid]="f['current_location'].invalid && f['current_location'].touched"><span
-                    *ngFor="let loc of currentLocationsList; let i = index" class="skill-pill">{{ loc.name || loc
-                    }}<button type="button" class="remove-skill-button"
-                      (click)="removeLocation('current', i)">&times;</button></span><input #currInput type="text"
-                    class="skills-entry-input" placeholder="+ Add location (e.g. Bengaluru, Bangalore Urban, Karnataka)"
-                    (input)="onCurrentLocationInput($event)" (keydown.enter)="addManualLocation($event, 'current')" />
-                </div>
-                <div class="location-suggestions-dropdown"
-                  *ngIf="showCurrentSuggestions && currentSuggestions.length > 0">
-                  <div class="suggestion-item" *ngFor="let suggestion of currentSuggestions"
-                    (click)="selectCurrentLocation(suggestion, currInput)">{{ suggestion.description }}</div>
-                </div>
-              </div><input type="hidden" formControlName="current_location">
-              <div class="validation-error" *ngIf="f['current_location'].invalid && f['current_location'].touched"><span
-                  *ngIf="f['current_location'].errors?.['required']">Current Location is required.</span><span
-                  *ngIf="f['current_location'].errors?.['pattern']">Invalid location format.</span></div><span
-                class="helper-text" style="color: #666; font-size: 13px; margin-top: 4px; display: block;">Enter
-                location as "City, District, State" and press Enter.</span>
+            <div class="field">
+              <label>Gender <span class="req">*</span></label>
+              <select formControlName="gender" class="form-select" [class.invalid]="f['gender'].invalid && f['gender'].touched">
+                <option value="" disabled class="placeholder">Select Gender</option>
+                <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
+              </select>
+              <div class="hint" *ngIf="f['gender'].invalid && f['gender'].touched" style="color:var(--bad)">Gender is required.</div>
             </div>
           </div>
         </div>
-        <div class="recruiter-workflow-candidate-container28">
-          <div class="recruiter-workflow-candidate-issued-date-container3">
-            <div style="display: flex; flex-direction: row;"><span
-                class="recruiter-workflow-candidate-issuing-date-text3">Notice Period</span><span
-                class="recruiter-workflow-candidate-skill-star-text1"
-                style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span></div>
-            <select formControlName="notice_period" class="input"
-              style="width: 100%; height: 48px; border-color: #A7A7A7; background-color: #FFFFFF;">
-              <option value="" disabled style="color: #A7A7A7;">Select</option>
-              <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
-            </select>
-          </div>
-          <div class="recruiter-workflow-candidate-credentials-container">
-            <div style="display: flex; flex-direction: row;"><span class="recruiter-workflow-candidate-credentials-text"
-                style="width: auto;">Gender</span><span class="recruiter-workflow-candidate-skill-star-text1"
-                style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span></div>
-            <select formControlName="gender" class="input"
-              style="width: 100%; height: 48px; border-color: #A7A7A7; background-color: #FFFFFF;">
-              <option value="" disabled style="color: #A7A7A7;">Select Gender</option>
-              <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
-            </select>
-          </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="form-footer">
+        <div class="left"></div>
+        <div class="right">
+          <button type="button" class="btn ghost" (click)="onCancel()">Cancel</button>
+          <button type="submit" class="btn primary" [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {{ isSubmitting ? 'Submitting...' : (editingCandidateId ? 'Update' : 'Submit') }}
+          </button>
         </div>
-        <div class="recruiter-workflow-candidate-job-title-company-name-container1"
-          style="margin-bottom: 16px; justify-content: space-between;">
-          <div class="recruiter-workflow-candidate-job-title-container1">
-            <div style="display: flex; flex-direction: row; height: auto; width: 100%;"><span
-                class="recruiter-workflow-candidate-job-title-text1" style="width: auto;">Role
-                (work_experience)</span><span class="recruiter-workflow-candidate-skill-star-text1"
-                style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span></div>
-            <input type="text" formControlName="work_experience" placeholder="Enter Role"
-              class="recruiter-workflow-candidate-job-title-input1 input" (input)="allowAlphanumericOnly($event)"
-              [class.is-invalid]="f['work_experience'].invalid && f['work_experience'].touched" />
-            <div class="validation-error" *ngIf="f['work_experience'].invalid && f['work_experience'].touched"><span
-                *ngIf="f['work_experience'].errors?.['required']">Please enter the Role.</span><span
-                *ngIf="f['work_experience'].errors?.['maxlength']">Max 30 characters allowed.</span></div>
-          </div>
-          <div class="recruiter-workflow-candidate-company-name-container1">
-            <div style="display: flex; flex-direction: row; height: auto; width: 100%;"><span
-                class="recruiter-workflow-candidate-company-name-text1" style="width: auto;">Skills</span><span
-                class="recruiter-workflow-candidate-skill-star-text1"
-                style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span></div>
-            <div class="skills-input-container scrollable-skills-container" style="min-width: 100%;"><span
-                *ngFor="let skill of skills; let i = index" class="skill-pill">{{ skill }}<button type="button"
-                  class="remove-skill-button" (click)="removeSkill(i)">&times;</button></span><input type="text"
-                class="skills-entry-input" placeholder="Type a skill and press Enter"
-                (input)="allowAlphabetsOnly($event)" (keydown.enter)="addSkill($event)"></div><input type="hidden"
-              formControlName="skills">
-          </div>
-        </div>
-        <div class="recruiter-workflow-candidate-submit-cancel-buttons-container"><button type="button"
-            (click)="onCancel()" class="recruiter-workflow-candidate-cancel-button button"><span
-              class="recruiter-workflow-candidate-cancel-text">Cancel</span></button><button type="submit"
-            class="recruiter-workflow-candidate-submit-button button" [disabled]="isSubmitting"><span
-              class="recruiter-workflow-candidate-submit-text">{{ isSubmitting ? 'Submitting...' : (editingCandidateId ?
-              'Update' : 'Submit') }}</span></button></div>
-      </form>
-    </div>
+      </div>
+
+    </form>
   </div>
-</ng-container>
+</div>
 
 <!-- CANDIDATE DETAILS MODAL -->
 <ng-container *ngIf="showDetailsModal && selectedCandidateDetails">
@@ -963,7 +919,7 @@
           </div>
           <div class="info-grid-3" style="margin-top: 20px;">
             <div class="info-item"><span class="info-label">Current CTC</span><span class="info-value">{{
-                selectedCandidateDetails.current_ctc }}</span></div>
+                selectedCandidateDetails.current_ctc ? (selectedCandidateDetails.current_ctc + (selectedCandidateDetails.current_ctc.toString().includes('LPA') || selectedCandidateDetails.current_ctc === 'Fresher' ? '' : ' LPA')) : '—' }}</span></div>
             <div class="info-item"><span class="info-label">Expected CTC</span><span class="info-value">{{
                 selectedCandidateDetails.expected_ctc_min === selectedCandidateDetails.expected_ctc_max ?
                 selectedCandidateDetails.expected_ctc_min : selectedCandidateDetails.expected_ctc_min + " - " +

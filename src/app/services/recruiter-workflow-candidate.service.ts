@@ -202,4 +202,8 @@ export class RecruiterWorkflowCandidateService {
   deleteRating(ratingId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}api/candidate-ratings/${ratingId}/`);
   }
+
+  getStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}api/candidates/statistics/`);
+  }
 }
