@@ -738,6 +738,7 @@
               <div class="hint" *ngIf="f['current_ctc'].invalid && f['current_ctc'].touched" style="color:var(--bad)">
                 <span *ngIf="f['current_ctc'].errors?.['required']">Current CTC is required.</span>
                 <span *ngIf="f['current_ctc'].errors?.['min']">Current CTC must be greater than or equal to 0.</span>
+                <span *ngIf="f['current_ctc'].errors?.['pattern']">Current CTC can have up to 2 decimal points only (e.g., 7.5 or 7.55).</span>
               </div>
             </div>
             <div class="field">

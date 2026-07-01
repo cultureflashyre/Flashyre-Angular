@@ -51,12 +51,6 @@
             </option>
           </select>
         </div>
-        <div class="job-selector-meta" *ngIf="selectedJobId && !isLoading">
-          <div class="meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            <span>{{ allCandidatesScores.length }} candidates</span>
-          </div>
-        </div>
       </div>
 
       <!-- Stats (visible only when a job is selected and has results) -->
@@ -109,6 +103,21 @@
       </div>
 
       <!-- Main Card (visible when job selected and has results) -->
+      <!-- Un-analyzable Candidates Alert -->
+      <div *ngIf="selectedJobId && skippedCandidates.length > 0 && !isLoading" style="margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px; background: #fffbeb; border: 1px solid #fde68a; padding: 16px; border-radius: 8px;">
+        <svg style="flex-shrink: 0; color: #d97706; margin-top: 2px;" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div style="flex: 1;">
+          <div style="font-weight: 600; color: #92400e; margin-bottom: 4px;">{{ skippedCandidates.length }} candidate(s) could not be analyzed</div>
+          <div style="font-size: 14px; color: #b45309; margin-bottom: 8px;">Their resumes were either unreadable or missing, preventing the AI from extracting text to calculate a semantic match score.</div>
+          <div style="font-size: 13px; color: #92400e; background: #fef3c7; padding: 8px; border-radius: 4px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">Skipped Candidates:</div>
+            <ul style="margin: 0; padding-left: 16px;">
+              <li *ngFor="let c of skippedCandidates">{{ c.name }} <span *ngIf="c.email">({{ c.email }})</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div class="card" *ngIf="selectedJobId && !isLoading">
         <ng-container *ngIf="allCandidatesScores.length > 0">
           <div class="card-head">

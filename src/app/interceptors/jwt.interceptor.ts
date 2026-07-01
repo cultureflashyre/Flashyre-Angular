@@ -123,14 +123,6 @@ function handleTokenRefresh(
     console.log(`[JWT Interceptor] Calling API to refresh token. Using refresh token: ${!!refreshToken}`);
 
     return authService.refreshToken().pipe(
-      switchMap((tokenResponse: any) => {
-        console.log(`[JWT Interceptor] Refresh token API success!`);
-        isRefreshing = false;
-        const newAccessToken = tokenResponse.access;
-        refreshTokenSubject.next(newAccessToken);
-        authService.saveTokens(newAccessToken, tokenResponse.refresh || authService.getRefreshToken());
-        return next(addToken(request, newAccessToken));
-      }),
       catchError(err => {
         console.error(`[JWT Interceptor] Refresh token API failed!`, err);
         isRefreshing = false;
@@ -146,6 +138,14 @@ function handleTokenRefresh(
         authService.clearTokens();
         router.navigate(['/login']);
         return throwError(() => err);
+      }),
+      switchMap((tokenResponse: any) => {
+        console.log(`[JWT Interceptor] Refresh token API success!`);
+        isRefreshing = false;
+        const newAccessToken = tokenResponse.access;
+        refreshTokenSubject.next(newAccessToken);
+        authService.saveTokens(newAccessToken, tokenResponse.refresh || authService.getRefreshToken());
+        return next(addToken(request, newAccessToken));
       })
     );
   } else {

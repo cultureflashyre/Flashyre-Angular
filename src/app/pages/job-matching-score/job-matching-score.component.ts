@@ -21,6 +21,7 @@ export class JobMatchingScoreComponent implements OnInit {
   allCandidatesScores: any[] = []; // Full list from backend
   candidatesScores: any[] = []; // Filtered list
   paginatedCandidates: any[] = []; // Sliced list for display
+  skippedCandidates: any[] = []; // Candidates missing embeddings
 
   isLoading = false;
   isInitialLoading = true;
@@ -94,6 +95,7 @@ export class JobMatchingScoreComponent implements OnInit {
       next: (res: any) => {
         const data = res.results || res;
         this.allCandidatesScores = Array.isArray(data) ? data : (data.candidates || []);
+        this.skippedCandidates = data.skipped_candidates || [];
         
         // Clean up location strings
         this.allCandidatesScores.forEach((c: any) => {

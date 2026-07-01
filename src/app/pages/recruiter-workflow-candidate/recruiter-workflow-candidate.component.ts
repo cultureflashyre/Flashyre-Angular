@@ -1014,7 +1014,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       relevant_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
       expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
       expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
-      current_ctc: [null, [Validators.required, Validators.min(0)]],
+      current_ctc: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       preferred_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],

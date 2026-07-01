@@ -876,9 +876,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // 2. Recruiter User Type
     if (this.userType === 'recruiter') {
-      const isAssigned = this.isAssignedToRequirement(item);
-      const isEnabledByAdmin = item.create_assessment === 'Yes';
-      return isAssigned && isEnabledByAdmin;
+      return this.isAssignedToRequirement(item);
     }
 
     // 3. Admin/SuperUser (Optional: usually they can see everything)
@@ -1949,12 +1947,16 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Filter by Search Query
     if (this.searchQuery) {
-      const q = this.searchQuery.toLowerCase();
-      data = data.filter(item => 
-        (item.job_role && item.job_role.toLowerCase().includes(q)) ||
-        (item.client_name && item.client_name.toLowerCase().includes(q)) ||
-        (item.job_description && item.job_description.toLowerCase().includes(q))
-      );
+      const terms = this.searchQuery.toLowerCase().split(/[\s,]+/).filter(t => t.trim().length > 0);
+      data = data.filter(item => {
+        return terms.every(term => 
+          (item.job_role && item.job_role.toLowerCase().includes(term)) ||
+          (item.client_name && item.client_name.toLowerCase().includes(term)) ||
+          (item.job_description && item.job_description.toLowerCase().includes(term)) ||
+          (item.skills && Array.isArray(item.skills) && item.skills.some((s: string) => s.toLowerCase().includes(term))) ||
+          (item.skills && typeof item.skills === 'string' && item.skills.toLowerCase().includes(term))
+        );
+      });
     }
 
     // Filter by Client Name (SAFE VERSION)
@@ -1975,10 +1977,14 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Filter by Job Description/Skills (SAFE VERSION)
     if (filters.description) {
-      const term = filters.description.toLowerCase();
-      data = data.filter(item =>
-        item.job_description && item.job_description.toLowerCase().includes(term)
-      );
+      const terms = filters.description.toLowerCase().split(/[\s,]+/).filter((t: string) => t.trim().length > 0);
+      data = data.filter(item => {
+        return terms.every((term: string) => 
+          (item.job_description && item.job_description.toLowerCase().includes(term)) ||
+          (item.skills && Array.isArray(item.skills) && item.skills.some((s: string) => s.toLowerCase().includes(term))) ||
+          (item.skills && typeof item.skills === 'string' && item.skills.toLowerCase().includes(term))
+        );
+      });
     }
 
     // Filter by Role (Already safe, remains the same)
