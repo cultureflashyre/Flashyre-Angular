@@ -59,6 +59,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     'login-corporate/',
     'login-forgot-password/',
     'login-reset-password/',
+    'api/captcha/',
   ];
   const isAuthRequest = authEndpoints.some(endpoint => req.url.includes(endpoint));
 

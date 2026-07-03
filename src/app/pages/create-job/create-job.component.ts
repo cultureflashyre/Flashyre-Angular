@@ -1236,8 +1236,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
   private mapRequirementToForm(req: any): void {
     const role = req.job_role || '';
-    const company_name = req.client_name || 'Flashyre';
-
     const locationArray = this.cleanLocationValue(req.location);
 
     const total_experience_min = req.total_experience_min || 0;
@@ -1247,9 +1245,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const min_budget = req.salary_min || null;
     const max_budget = req.salary_max || null;
     const notice_period = this._normalizeNoticePeriod(req.notice_period);
-    const skills = Array.isArray(req.skills) ? req.skills : [];
+    const skills = this.normalizeSkillNames(req.skills);
     const job_description = req.job_description || '';
-    const job_description_url = req.file_attachment || '';
+    const job_description_url = this.getSafeJobDescriptionUrl(req.file_attachment);
 
     this.jobForm.patchValue({
       role,
@@ -1289,16 +1287,22 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
    */
   private initialDraftSave(token: string): void {
     const formValues = this.jobForm.getRawValue();
+    const normalizedSkills = this.normalizeSkillNames(formValues.skills);
     const jobDetails: any = {
       ...formValues,
+      min_budget: formValues.min_budget ?? 0,
+      max_budget: formValues.max_budget ?? 0,
       location: Array.isArray(formValues.location) ? formValues.location.join(', ') : '',
+      job_description_url: this.getSafeJobDescriptionUrl(formValues.job_description_url),
       skills: {
-        primary: (formValues.skills || []).map((s: string) => ({ skill: s, skill_confidence: 1.0, type_confidence: 1.0 })),
+        primary: normalizedSkills.map((s: string) => ({ skill: s, skill_confidence: 1.0, type_confidence: 1.0 })),
         secondary: []
       },
       status: 'draft',
-      company_name: formValues.role ? this.jobForm.get('company_name')?.value || 'Flashyre' : 'Flashyre'
+      company_name: this.getCompanyNameForSave()
     };
+
+    console.log("🚀 Payload being sent to saveJobPost:", jobDetails);
 
     this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
       next: (response) => {
@@ -1314,9 +1318,63 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       error: (err) => {
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
-        console.error('Initial draft save failed:', err);
+        console.error('Initial draft save failed:', err, err?.error);
+        this.showErrorPopup(err.message || 'Validation failed when saving job details.');
       }
     });
+  }
+
+  private normalizeSkillNames(rawSkills: unknown): string[] {
+    if (!Array.isArray(rawSkills)) {
+      return [];
+    }
+
+    return rawSkills
+      .map((skill) => {
+        if (typeof skill === 'string') {
+          return skill.trim();
+        }
+
+        if (skill && typeof skill === 'object' && 'skill' in skill) {
+          const nestedSkill = (skill as { skill?: unknown }).skill;
+          return typeof nestedSkill === 'string' ? nestedSkill.trim() : '';
+        }
+
+        return '';
+      })
+      .filter((skillName): skillName is string => !!skillName);
+  }
+
+  private getSafeJobDescriptionUrl(rawUrl: unknown): string {
+    if (typeof rawUrl !== 'string') {
+      return '';
+    }
+
+    const normalizedUrl = rawUrl.trim();
+
+    // The backend JobPost.job_description_url field is capped at 200 chars.
+    return normalizedUrl.length <= 200 ? normalizedUrl : '';
+  }
+
+  private getCompanyNameForSave(): string {
+    const userProfileString = localStorage.getItem('userProfile');
+    if (!userProfileString) {
+      return 'Flashyre';
+    }
+
+    try {
+      const userProfile = JSON.parse(userProfileString);
+      if (typeof userProfile.company_name === 'string' && userProfile.company_name.trim()) {
+        return userProfile.company_name.trim();
+      }
+      if (typeof userProfile.latest_company_name === 'string' && userProfile.latest_company_name.trim()) {
+        return userProfile.latest_company_name.trim();
+      }
+    } catch (e) {
+      console.error('Failed to parse userProfile from localStorage', e);
+    }
+
+    return 'Flashyre';
   }
 
   resetForm(): void {

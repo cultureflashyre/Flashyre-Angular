@@ -92,9 +92,16 @@
                 </div>
               }
             </div>
+            <app-captcha (captchaData)="onCaptchaData($event)"></app-captcha>
+            @if (isLocked) {
+              <div class="lockout-warning">
+                Too many failed attempts. Try again in: {{ formattedLockoutTime }}
+              </div>
+            }
             <button
               id="login-button-container"
               type="submit"
+              [disabled]="loginForm.invalid || isLocked"
               class="log-in-page-login-button button"
               >
               <span id="login-text">

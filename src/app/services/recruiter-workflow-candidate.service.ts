@@ -206,4 +206,10 @@ export class RecruiterWorkflowCandidateService {
   getStatistics(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}api/candidates/statistics/`);
   }
+
+  getSignedUrl(filePath: string): Observable<{ signed_url: string, expires_in: number }> {
+    return this.http.get<{ signed_url: string, expires_in: number }>(
+      `${this.apiUrl}api/files/signed-url/?file_path=${encodeURIComponent(filePath)}`
+    );
+  }
 }

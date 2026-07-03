@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/candidate.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 @Component({
     selector: 'log-in-page',
@@ -21,9 +22,11 @@ import { CommonModule } from '@angular/common'
       AlertMessageComponent, NgClass, 
       NgTemplateOutlet, FormsModule, 
       ReactiveFormsModule, RouterLink,
-    GoogleSigninButtonModule ,]
+      GoogleSigninButtonModule,
+      CaptchaComponent,
+    ]
 })
-export class LogInPage implements OnInit {
+export class LogInPage implements OnInit, OnDestroy {
   @ContentChild('text11') text11: TemplateRef<any>;
   @ContentChild('text4') text4: TemplateRef<any>;
   @ContentChild('text1') text1: TemplateRef<any>;
@@ -47,6 +50,15 @@ export class LogInPage implements OnInit {
   showLoginSuccessAlert = false;
   loginSuccessMessage = '';
 
+  captchaId: string = '';
+  captchaAnswer: string = '';
+
+  isLocked: boolean = false;
+  lockoutTimeRemaining: number = 0;
+  lockoutTimerInterval: any = null;
+
+  @ViewChild(CaptchaComponent) captchaComponent!: CaptchaComponent;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -59,6 +71,17 @@ export class LogInPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)]]
     });
+  }
+
+  onCaptchaData(data: { captchaId: string, captchaAnswer: string }) {
+    this.captchaId = data.captchaId;
+    this.captchaAnswer = data.captchaAnswer;
+  }
+
+  ngOnDestroy() {
+    if (this.lockoutTimerInterval) {
+      clearInterval(this.lockoutTimerInterval);
+    }
   }
 
   ngOnInit() {
@@ -107,10 +130,16 @@ export class LogInPage implements OnInit {
       return;
     }
 
+    if (!this.captchaId || !this.captchaAnswer) {
+      this.errorMessage = 'Please solve the security check';
+      this.cdr.detectChanges();
+      return;
+    }
+
     const { email, password } = this.loginForm.value;
     const loginObservable = this.userType === 'corporate'
-      ? this.corporateAuthService.loginCorporate(email, password)
-      : this.authService.login(email, password);
+      ? this.corporateAuthService.loginCorporate(email, password, this.captchaId, this.captchaAnswer)
+      : this.authService.login(email, password, this.captchaId, this.captchaAnswer);
 
     loginObservable.subscribe({
       next: (response: any) => {
@@ -178,11 +207,23 @@ export class LogInPage implements OnInit {
 
         } else {
           this.errorMessage = response.error || 'Invalid Email or Password';
+          if (this.captchaComponent) {
+            this.captchaComponent.loadNewCaptcha();
+          }
           this.cdr.detectChanges();
         }
       },
       error: (err) => {
-        this.errorMessage = 'Invalid Email or Password';
+        if (err.status === 423) {
+          this.isLocked = true;
+          // Extract retry after or default to 1800 (30 min)
+          const retryAfter = parseInt(err.headers?.get('X-Retry-After') || '1800', 10);
+          this.startLockoutTimer(retryAfter);
+        }
+        this.errorMessage = err.error?.error || 'Invalid Email or Password';
+        if (this.captchaComponent) {
+          this.captchaComponent.loadNewCaptcha();
+        }
         this.cdr.detectChanges();
       }
     });
@@ -209,6 +250,31 @@ export class LogInPage implements OnInit {
 
   onAlertClose() {
     this.showLoginSuccessAlert = false;
+  }
+
+  startLockoutTimer(seconds: number) {
+    if (this.lockoutTimerInterval) {
+      clearInterval(this.lockoutTimerInterval);
+    }
+    
+    this.lockoutTimeRemaining = seconds;
+    this.isLocked = true;
+    
+    this.lockoutTimerInterval = setInterval(() => {
+      this.lockoutTimeRemaining--;
+      if (this.lockoutTimeRemaining <= 0) {
+        this.isLocked = false;
+        this.errorMessage = '';
+        clearInterval(this.lockoutTimerInterval);
+      }
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  get formattedLockoutTime(): string {
+    const minutes = Math.floor(this.lockoutTimeRemaining / 60);
+    const seconds = this.lockoutTimeRemaining % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
   togglePasswordVisibility() {

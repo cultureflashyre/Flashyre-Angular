@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
 import { ThumbnailService } from '../../services/thumbnail.service';
 import { NgClass, NgTemplateOutlet } from '@angular/common';  // Import ThumbnailService
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';  // Import Thumbnai
     templateUrl: './signup-corporate1.component.html',
     styleUrls: ['./signup-corporate1.component.css'],
     standalone: true,
-    imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, RouterLink]
+    imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, RouterLink, CaptchaComponent]
 })
 export class SignupCorporate1 implements OnInit {
 
@@ -48,6 +49,11 @@ export class SignupCorporate1 implements OnInit {
   passwordButtonText: string = 'Show';
   confirmPasswordButtonText: string = 'Show';
 
+  captchaId: string = '';
+  captchaAnswer: string = '';
+
+  @ViewChild(CaptchaComponent) captchaComponent!: CaptchaComponent;
+
   constructor(
     private fb: FormBuilder,
     private corporateAuthService: CorporateAuthService,
@@ -57,6 +63,11 @@ export class SignupCorporate1 implements OnInit {
     private userProfileService: UserProfileService,
     private thumbnailService: ThumbnailService  // Inject ThumbnailService
   ) {  }
+
+  onCaptchaData(data: { captchaId: string, captchaAnswer: string }) {
+    this.captchaId = data.captchaId;
+    this.captchaAnswer = data.captchaAnswer;
+  }
 
   ngOnInit() {
     this.signupForm = this.fb.group(
@@ -159,6 +170,10 @@ export class SignupCorporate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
+      if (!this.captchaId || !this.captchaAnswer) {
+        this.errorMessage = 'Please solve the security check';
+        return;
+      }
       this.spinner.show(); // show spinner as in candidate signup
 
       const firstName = this.signupForm.get('first_name').value;
@@ -173,6 +188,8 @@ export class SignupCorporate1 implements OnInit {
       // Add explicit user_type for corporate (recruiter)
       formData.user_type = 'recruiter';
       formData.initials = initials;  // Add initials here
+      formData.captcha_id = this.captchaId;
+      formData.captcha_answer = this.captchaAnswer;
 
       // Make POST request to same candidate signup API path (e.g., 'signup-candidate/' or unified backend path)
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe({
@@ -201,6 +218,11 @@ export class SignupCorporate1 implements OnInit {
         },
         error: (error) => {
           this.spinner.hide(); // hide spinner on error
+          
+          if (this.captchaComponent) {
+            this.captchaComponent.loadNewCaptcha();
+          }
+
           if (error.status === 400 && error.error.email) {
             this.errorMessage = 'Email already exists!';
           } else if (error.status === 400 && error.error.phone_number) {

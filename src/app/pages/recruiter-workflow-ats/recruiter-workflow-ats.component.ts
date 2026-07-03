@@ -559,7 +559,20 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   openResume(url: string) {
     if (url) {
-      window.open(url, '_blank');
+      // If it's a GCS file or path, dynamically fetch a fresh signed URL first
+      if (url.includes('storage.googleapis.com') || url.startsWith('resumes/') || url.startsWith('staging_resumes/') || url.includes('/media/')) {
+        this.candidateService.getSignedUrl(url).subscribe({
+          next: (res) => {
+            window.open(res.signed_url, '_blank');
+          },
+          error: (err) => {
+            // Fallback to original URL
+            window.open(url, '_blank');
+          }
+        });
+      } else {
+        window.open(url, '_blank');
+      }
     } else {
       this.alertMessage = "No resume available for this candidate.";
       this.alertButtons = ['OK'];

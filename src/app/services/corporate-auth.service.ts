@@ -39,8 +39,13 @@ export class CorporateAuthService {
     private socialAuthService: SocialAuthService,
 ) {}
 
-loginCorporate(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/login/`, { email, password }).pipe(
+  loginCorporate(email: string, password: string, captchaId?: string, captchaAnswer?: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/login/`, { 
+      email, 
+      password,
+      captcha_id: captchaId,
+      captcha_answer: captchaAnswer
+    }).pipe(
       tap((response: AuthResponse) => {
         if (response.access && response.refresh) {
           this.saveTokens(response.access, response.refresh);

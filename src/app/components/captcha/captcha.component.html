@@ -1,0 +1,25 @@
+<div class="captcha-wrapper">
+  <div class="captcha-display">
+    <div class="captcha-question-box">
+      <span class="captcha-label">Security Check:</span>
+      <span class="captcha-question" *ngIf="!isLoading">{{ question }}</span>
+      <span class="captcha-loading" *ngIf="isLoading">Generating...</span>
+    </div>
+    <button type="button" class="captcha-refresh-btn" (click)="loadNewCaptcha()" title="Refresh challenge" [disabled]="isLoading">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+      </svg>
+    </button>
+  </div>
+  <div class="captcha-input-box">
+    <input 
+      type="text" 
+      class="captcha-input" 
+      placeholder="Answer" 
+      [(ngModel)]="userAnswer" 
+      (input)="onInputChange()"
+      required
+      autocomplete="off"
+    />
+  </div>
+</div>

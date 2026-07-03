@@ -39,8 +39,13 @@ export class AuthService {
    * @param password The candidate's password.
    * @returns An Observable with the server's response, including the token.
    */
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}api/auth/login/`, { email, password }).pipe(
+  login(email: string, password: string, captchaId?: string, captchaAnswer?: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}api/auth/login/`, { 
+      email, 
+      password,
+      captcha_id: captchaId,
+      captcha_answer: captchaAnswer
+    }).pipe(
       tap(response => {
         if (response.access && response.refresh) {
           this.saveTokens(response.access, response.refresh);

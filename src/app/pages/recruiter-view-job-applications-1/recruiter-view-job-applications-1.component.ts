@@ -680,7 +680,15 @@ private _generateAssessmentPdf(data: any): void {
 
   openCV(url: string): void {
     if (url) {
-      window.open(url, '_blank');
+      if (url.includes('storage.googleapis.com') || url.startsWith('resumes/') || url.startsWith('staging_resumes/') || url.includes('/media/')) {
+        const apiUrl = environment.apiUrl;
+        this.http.get<{ signed_url: string }>(`${apiUrl}api/files/signed-url/?file_path=${encodeURIComponent(url)}`).subscribe({
+          next: (res) => window.open(res.signed_url, '_blank'),
+          error: (err) => window.open(url, '_blank')
+        });
+      } else {
+        window.open(url, '_blank');
+      }
     } else {
       alert('No CV available for this candidate.');
     }
@@ -697,17 +705,19 @@ private _generateAssessmentPdf(data: any): void {
       return;
     }
     
-    let fullUrl: string;
-
-    // Check if the URL is absolute. If so, use it directly.
-    if (url.startsWith('http')) {
-      fullUrl = url;
+    if (url.includes('storage.googleapis.com') || url.startsWith('jd_files/') || url.includes('/media/')) {
+      const apiUrl = environment.apiUrl;
+      this.http.get<{ signed_url: string }>(`${apiUrl}api/files/signed-url/?file_path=${encodeURIComponent(url)}`).subscribe({
+        next: (res) => window.open(res.signed_url, '_blank'),
+        error: (err) => {
+          let fullUrl = url.startsWith('http') ? url : `${apiUrl}media/${url}`;
+          window.open(fullUrl, '_blank');
+        }
+      });
     } else {
-      // If it's a relative path, construct the full URL.
-      fullUrl = `${this.apiUrl}media/${url}`;
+      let fullUrl = url.startsWith('http') ? url : `${environment.apiUrl}media/${url}`;
+      window.open(fullUrl, '_blank');
     }
-    
-    window.open(fullUrl, '_blank');
   }
   // --- MODIFICATION END ---
 

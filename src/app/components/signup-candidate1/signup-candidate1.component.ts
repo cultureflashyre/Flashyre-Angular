@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -16,6 +16,7 @@ import { CommonModule, NgClass } from '@angular/common';
 
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 @Component({
     selector: 'signup-candidate1',
@@ -28,6 +29,7 @@ import { AlertMessageComponent } from '../alert-message/alert-message.component'
         NgClass,
         RouterLink, AlertMessageComponent,
         GoogleSigninButtonModule, CommonModule,
+        CaptchaComponent
     ],
 })
 export class SignupCandidate1 implements OnInit {
@@ -56,6 +58,11 @@ export class SignupCandidate1 implements OnInit {
   successMessage: string = '';
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
+
+  captchaId: string = '';
+  captchaAnswer: string = '';
+
+  @ViewChild(CaptchaComponent) captchaComponent!: CaptchaComponent;
 
   // A NEW, SEPARATE FORM for the Google popup
   phonePopupForm: FormGroup;
@@ -230,6 +237,11 @@ export class SignupCandidate1 implements OnInit {
     this.showRoleSelection = true;
   }
 
+  onCaptchaData(data: { captchaId: string, captchaAnswer: string }) {
+    this.captchaId = data.captchaId;
+    this.captchaAnswer = data.captchaAnswer;
+  }
+
   cancelRoleSelection(): void {
     this.router.navigate(['/login']);
   }
@@ -378,6 +390,10 @@ export class SignupCandidate1 implements OnInit {
         !this.signupForm.hasError('mismatch');
 
     if (isManualFormValid) {
+      if (!this.captchaId || !this.captchaAnswer) {
+        this.errorMessage = 'Please solve the security check';
+        return;
+      }
       this.spinner.show(); // Show spinner only when request starts
 
       console.log("Form is valid. Proceeding with API call.");
@@ -394,7 +410,9 @@ export class SignupCandidate1 implements OnInit {
         email: this.signupForm.get('email').value,
         password: this.signupForm.get('password').value,
         user_type: userType, // The only change inside this object
-        initials: initials  // Include initials here
+        initials: initials,  // Include initials here
+        captcha_id: this.captchaId,
+        captcha_answer: this.captchaAnswer
       };
 
       console.log("cANDIDATE sIGNUP FORM: ", formData);
@@ -430,6 +448,10 @@ export class SignupCandidate1 implements OnInit {
         (error) => {
           console.log('Error response:', error);
           this.successMessage = '';
+          
+          if (this.captchaComponent) {
+            this.captchaComponent.loadNewCaptcha();
+          }
 
           // Hide overlay on error
           this.spinner.hide();
