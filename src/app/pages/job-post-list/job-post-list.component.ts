@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms'
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 import { MoreFiltersAndPreferenceComponent } from 'src/app/components/more-filters-and-preference-component/more-filters-and-preference-component.component';
 import { RecruiterProfile } from 'src/app/components/recruiter-profile/recruiter-profile.component';
+import { RecruiterSidebarComponent } from 'src/app/components/recruiter-sidebar/recruiter-sidebar.component';
 
 // Define the type for job statuses
 type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
@@ -27,7 +28,7 @@ type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
   selector: 'job-post-list',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    AlertMessageComponent, MoreFiltersAndPreferenceComponent, RecruiterProfile,
+    AlertMessageComponent, MoreFiltersAndPreferenceComponent, RecruiterProfile, RecruiterSidebarComponent
   ],
   templateUrl: 'job-post-list.component.html',
   styleUrls: ['job-post-list.component.css'],
@@ -150,11 +151,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.updateFilterPosition();
-    }, 100);
-  }
+  ngAfterViewInit(): void {}
 
   fetchAllJobs(apiPage = 1): void {
     if (apiPage === 1) {
@@ -190,6 +187,20 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
       return false;
     }
     return src.startsWith('http') || src.startsWith('data:image');
+  }
+
+  getTabJobCount(tab: string): number {
+    if (!this.masterPostedJobs) return 0;
+    switch (tab) {
+      case 'live':
+        return this.masterPostedJobs.filter(job => job.status === 'final').length;
+      case 'draft-pause':
+        return this.masterPostedJobs.filter(job => job.status === 'draft' || job.status === 'pause').length;
+      case 'deleted':
+        return this.masterPostedJobs.filter(job => job.status === 'deleted').length;
+      default:
+        return 0;
+    }
   }
 
   selectTab(tabName: 'live' | 'draft-pause' | 'deleted'): void {
@@ -344,9 +355,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
       next: (response) => {
         console.log('Recruiter preference saved successfully!', response);
         this.showSuccessPopup('Preference saved!');
-        this.initialFilterTab = 'preferences'; 
         this.showMoreFilters = false; 
-        setTimeout(() => this.openFiltersPopup('preferences'), 10);
       },
       error: (error) => {
         console.error('Error saving recruiter preference:', error);
@@ -379,28 +388,24 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     const pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
     const max = document.documentElement.scrollHeight;
     if (pos >= max - 100) { this.loadNextPage(); }
-    if (this.showMoreFilters) { this.updateFilterPosition(); }
   }
 
-  @HostListener('window:resize', ['$event'])
-  onWindowResize(): void {
-    if (this.showMoreFilters) { this.updateFilterPosition(); }
+  toggleFilters(): void {
+    this.showMoreFilters = !this.showMoreFilters;
   }
 
-  openFiltersPopup(initialTab: 'filters' | 'preferences'): void {
-    this.initialFilterTab = initialTab;
-    this.showMoreFilters = true;
-    this.updateFilterPosition();
+  clearAllFilters(): void {
+    this.resetMoreFilters();
+    this.searchJobTitle = '';
+    this.searchLocation = '';
+    this.searchExperience = '';
+    this.runFilterPipeline();
+    this.showMoreFilters = false;
   }
 
-  updateFilterPosition(): void {
-    if (this.filterIcon && this.filterIcon.nativeElement) {
-      const rect = this.filterIcon.nativeElement.getBoundingClientRect();
-      this.filterPosition = {
-        top: rect.bottom + window.scrollY + 10,
-        left: rect.left + window.scrollX + (rect.width / 2) - 450 
-      };
-    }
+  applyFiltersFromPanel(): void {
+    this.runFilterPipeline();
+    this.showMoreFilters = false;
   }
 
   getStatusCount(status: 'final' | 'draft' | 'pause' | 'deleted'): number {

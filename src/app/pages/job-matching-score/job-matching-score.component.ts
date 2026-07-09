@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { JobMatchingScoreService } from '../../services/job-matching-score.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
+import { RecruiterWorkflowCandidateService } from '../../services/recruiter-workflow-candidate.service';
 
 @Component({
   standalone: true,
@@ -47,9 +48,16 @@ export class JobMatchingScoreComponent implements OnInit {
   showProfileModal = false;
   selectedProfileDetails: any = null;
 
+  // Rating History Modal
+  showRatingHistoryModal = false;
+  selectedCandidateForRating: any = null;
+  ratingHistory: any[] = [];
+  isLoadingRatings = false;
+
   constructor(
     private jobScoreService: JobMatchingScoreService,
-    private adbRequirementService: AdbRequirementService
+    private adbRequirementService: AdbRequirementService,
+    private candidateService: RecruiterWorkflowCandidateService
   ) {}
 
   ngOnInit() {
@@ -315,5 +323,34 @@ export class JobMatchingScoreComponent implements OnInit {
     if (score >= 30) return 'Candidate distance is within a 50-100km radius (Consider remote or relocation).';
     if (score > 0) return 'Candidate is over 100km away (Relocation likely required).';
     return 'No overlapping location data found or extreme distance.';
+  }
+
+  // --- Rating History Modal Methods ---
+
+  openRatingHistoryModal(candidate: any) {
+    if (!candidate || !candidate.candidate_id) return;
+    this.selectedCandidateForRating = candidate;
+    this.showRatingHistoryModal = true;
+    this.isLoadingRatings = true;
+    this.ratingHistory = [];
+    document.body.style.overflow = 'hidden';
+
+    this.candidateService.getCandidateRatings(candidate.candidate_id).subscribe({
+      next: (ratings: any[]) => {
+        this.ratingHistory = ratings || [];
+        this.isLoadingRatings = false;
+      },
+      error: (err) => {
+        console.error('Error fetching candidate rating history:', err);
+        this.isLoadingRatings = false;
+      }
+    });
+  }
+
+  closeRatingHistoryModal() {
+    this.showRatingHistoryModal = false;
+    this.selectedCandidateForRating = null;
+    this.ratingHistory = [];
+    document.body.style.overflow = '';
   }
 }

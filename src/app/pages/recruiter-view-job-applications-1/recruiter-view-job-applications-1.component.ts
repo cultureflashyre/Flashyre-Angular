@@ -14,8 +14,7 @@ import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
-import { NavbarForRecruiterView } from 'src/app/components/navbar-for-recruiter-view/navbar-for-recruiter-view.component';
-import { RecruiterFlowLargeCard } from 'src/app/components/recruiter-flow-large-card/recruiter-flow-large-card.component';
+import { RecruiterSidebarComponent } from 'src/app/components/recruiter-sidebar/recruiter-sidebar.component';
 
 // --- MODIFICATION START ---
 // Import jsPDF and the autoTable plugin for PDF generation.
@@ -27,7 +26,7 @@ import autoTable from 'jspdf-autotable';
   selector: 'recruiter-view-job-applications1',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    AlertMessageComponent, NavbarForRecruiterView, RecruiterFlowLargeCard,
+    AlertMessageComponent, RecruiterSidebarComponent,
     ReactiveFormsModule,
   ],
   templateUrl: './recruiter-view-job-applications-1.component.html',

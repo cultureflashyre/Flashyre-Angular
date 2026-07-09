@@ -246,7 +246,7 @@
 
                     <!-- Rating -->
                     <td data-label="Rating">
-                      <div *ngIf="candidate.latest_rating_score" class="rating-badge rated">
+                      <div *ngIf="candidate.latest_rating_score" class="rating-badge rated clickable-badge" (click)="openRatingHistoryModal(candidate)">
                         <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                         {{ candidate.latest_rating_score }}
                       </div>
@@ -544,6 +544,96 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- ====================================================================
+     RATING HISTORY MODAL (Elegant & Beautiful)
+     ==================================================================== -->
+<ng-container *ngIf="showRatingHistoryModal && selectedCandidateForRating">
+  <div class="elegant-modal-backdrop" (click)="closeRatingHistoryModal()">
+    <div class="elegant-modal-content" (click)="$event.stopPropagation()" style="width: 650px;">
+      
+      <!-- Header -->
+      <div class="elegant-header">
+        <div class="candidate-identity">
+          <div class="candidate-avatar" style="background: linear-gradient(135deg, #d97706, #f59e0b); display: grid; place-items: center; color: white;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-top: 1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="identity-text">
+            <h2>Rating History</h2>
+            <p>Evaluation records for {{ selectedCandidateForRating.name }}</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="action-icon-btn" (click)="closeRatingHistoryModal()" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="elegant-body">
+        
+        <!-- Loading State -->
+        <div *ngIf="isLoadingRatings" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 0; gap: 12px;">
+          <div class="round-loader" style="width: 32px; height: 32px;"></div>
+          <p style="color: var(--ink-3); font-size: 13.5px; margin: 0;">Loading evaluation history...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingRatings && ratingHistory.length === 0" style="text-align: center; padding: 40px 20px; color: var(--ink-3);">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 8px;">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p style="margin: 0; font-size: 14px;">No rating history found for this candidate.</p>
+        </div>
+
+        <!-- History Timeline -->
+        <div *ngIf="!isLoadingRatings && ratingHistory.length > 0" class="rating-history-timeline">
+          <div *ngFor="let rating of ratingHistory" class="rating-history-item">
+            
+            <div class="rating-history-meta">
+              <div>
+                <span class="rating-history-by">Rated by {{ rating.rated_by_name }}</span>
+                <div class="rating-history-job" *ngIf="rating.job_title && rating.job_title !== 'N/A'">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                  <span>{{ rating.job_title }}</span>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                <div class="rating-history-score">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>{{ rating.overall_score }}</span>
+                </div>
+                <span class="rating-history-date">{{ rating.created_at | date:'MMM d, y, h:mm a' }}</span>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div *ngIf="rating.notes" class="rating-history-notes">
+              "{{ rating.notes }}"
+            </div>
+
+            <!-- Categories / Individual Scores -->
+            <div *ngIf="rating.scores && rating.scores.length > 0" class="rating-history-scores">
+              <div *ngFor="let score of rating.scores" class="score-crit-item">
+                <span class="score-crit-label">
+                  <span class="score-crit-dot" [ngClass]="'score-' + score.score"></span>
+                  {{ score.criterion_label }}
+                </span>
+                <span class="score-crit-val">{{ score.score_label }} ({{ score.score }})</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
