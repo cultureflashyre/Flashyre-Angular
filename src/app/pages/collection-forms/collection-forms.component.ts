@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import DOMPurify from 'dompurify';
 import { CollectionFormService, CollectionForm } from '../../services/collection-form.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
@@ -18,6 +19,10 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
   filteredForms: CollectionForm[] = [];
   jobRequirements: any[] = [];
   isLoading = false;
+  isSubmitting = false;
+  isDeleting = false;
+  togglingFormId: string | null = null;
+  submitCooldown = false;
   
   searchQuery = '';
   currentFilter = 'all';
@@ -68,7 +73,11 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.createFormGroup = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
+      title: ['', [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-Z0-9\s\-_.&()]+$/)
+      ]],
       job_post: [null],
       company_name: ['', [Validators.maxLength(100)]],
       logo_url: ['', [Validators.pattern(/https?:\/\/.+/)]],
@@ -147,14 +156,17 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.createFormGroup.invalid) {
+    if (this.createFormGroup.invalid || this.isSubmitting || this.submitCooldown) {
       return;
     }
     const val = this.createFormGroup.value;
+    const sanitizedTitle = DOMPurify.sanitize(val.title?.trim() || '');
+    const sanitizedCompany = val.company_name ? DOMPurify.sanitize(val.company_name.trim()) : null;
+
     const payload: CollectionForm = {
-      title: val.title,
+      title: sanitizedTitle,
       job_post: val.job_post ? Number(val.job_post) : null,
-      company_name: val.company_name || null,
+      company_name: sanitizedCompany,
       logo_url: val.logo_url || null,
       require_resume: !!val.require_resume,
       template_type: val.template_type,
@@ -163,22 +175,27 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
       max_submissions: val.max_submissions ? Number(val.max_submissions) : null
     };
 
-    this.isLoading = true;
+    this.isSubmitting = true;
     this.collectionFormService.createForm(payload).subscribe({
       next: () => {
-        this.isLoading = false;
+        this.isSubmitting = false;
         this.closeCreateModal();
         this.loadForms();
+        this.submitCooldown = true;
+        setTimeout(() => {
+          this.submitCooldown = false;
+        }, 3000);
       },
       error: (err) => {
         console.error('Failed to create form', err);
-        this.isLoading = false;
+        this.isSubmitting = false;
       }
     });
   }
 
   toggleActive(form: CollectionForm): void {
-    if (!form.unique_id) return;
+    if (!form.unique_id || this.togglingFormId) return;
+    this.togglingFormId = form.unique_id;
     const newStatus = !form.is_active;
     this.collectionFormService.updateForm(form.unique_id, { is_active: newStatus }).subscribe({
       next: (updated) => {
@@ -187,9 +204,11 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
           this.forms[index] = updated;
           this.filterForms();
         }
+        this.togglingFormId = null;
       },
       error: (err) => {
         console.error('Failed to toggle active status', err);
+        this.togglingFormId = null;
       }
     });
   }
@@ -205,14 +224,17 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
   }
 
   confirmDelete(): void {
-    if (!this.formToDelete || !this.formToDelete.unique_id) return;
+    if (!this.formToDelete || !this.formToDelete.unique_id || this.isDeleting) return;
+    this.isDeleting = true;
     this.collectionFormService.deleteForm(this.formToDelete.unique_id).subscribe({
       next: () => {
+        this.isDeleting = false;
         this.closeDeleteModal();
         this.loadForms();
       },
       error: (err) => {
         console.error('Failed to delete form', err);
+        this.isDeleting = false;
         this.closeDeleteModal();
       }
     });

@@ -176,6 +176,8 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.showJdDropdown = !this.showJdDropdown;
   }
 
+
+
   /**
    * Initiates the process of downloading the assessment questions as a PDF.
    */
@@ -527,7 +529,7 @@ private _generateAssessmentPdf(data: any): void {
       this.http.get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`).subscribe(
           (data: any) => {
             this.job = data;
-            const rawDesc = this.job?.description || '';
+            const rawDesc = this.job?.description || this.job?.job_description || (this.job?.job_description_url ? `<p>Attached Job Description Document: <a href="${this.job.job_description_url}" target="_blank" rel="noopener noreferrer">View Document</a></p>` : '');
             const sanitizedDesc = this.sanitizeJobDescription(rawDesc);
             this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(sanitizedDesc);
             this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
@@ -693,32 +695,51 @@ private _generateAssessmentPdf(data: any): void {
     }
   }
 
-  // --- MODIFICATION START ---
-  /**
-   * Opens the job description URL in a new tab.
-   * @param url The relative URL of the job description file.
-   */
-  openJD(url: string): void {
-    if (!url) {
-      alert('No Job Description document available for this job.');
-      return;
-    }
-    
-    if (url.includes('storage.googleapis.com') || url.startsWith('jd_files/') || url.includes('/media/')) {
-      const apiUrl = environment.apiUrl;
-      this.http.get<{ signed_url: string }>(`${apiUrl}api/files/signed-url/?file_path=${encodeURIComponent(url)}`).subscribe({
-        next: (res) => window.open(res.signed_url, '_blank'),
-        error: (err) => {
-          let fullUrl = url.startsWith('http') ? url : `${apiUrl}media/${url}`;
-          window.open(fullUrl, '_blank');
-        }
-      });
+  openJD(url?: string): void {
+    this.showJdDropdown = false;
+    const targetUrl = url || this.job?.job_description_url;
+    if (targetUrl) {
+      if (targetUrl.includes('storage.googleapis.com') || targetUrl.startsWith('jd_files/') || targetUrl.includes('/media/') || targetUrl.includes('job_descriptions/')) {
+        const apiUrl = environment.apiUrl;
+        this.http.get<{ signed_url: string }>(`${apiUrl}api/files/signed-url/?file_path=${encodeURIComponent(targetUrl)}`).subscribe({
+          next: (res) => window.open(res.signed_url, '_blank'),
+          error: () => {
+            let fullUrl = targetUrl.startsWith('http') ? targetUrl : `${apiUrl}media/${targetUrl}`;
+            window.open(fullUrl, '_blank');
+          }
+        });
+      } else {
+        let fullUrl = targetUrl.startsWith('http') ? targetUrl : `${environment.apiUrl}media/${targetUrl}`;
+        window.open(fullUrl, '_blank');
+      }
+    } else if (this.job?.description || this.job?.job_description) {
+      const descWindow = window.open('', '_blank');
+      if (descWindow) {
+        descWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>${this.job?.title || 'Job Description'}</title>
+              <style>
+                body { font-family: system-ui, -apple-system, sans-serif; padding: 32px; line-height: 1.6; color: #1e293b; max-width: 800px; margin: 0 auto; }
+                h1 { font-size: 24px; margin-bottom: 8px; }
+                .sub { color: #64748b; margin-bottom: 24px; font-size: 14px; }
+              </style>
+            </head>
+            <body>
+              <h1>${this.job?.title || 'Job Description'}</h1>
+              <div class="sub">${this.job?.company_name || ''} · ${this.job?.location || ''}</div>
+              <hr style="border: none; border-top: 1px solid #e2e8f0; margin-bottom: 24px;">
+              <div>${this.job?.description || this.job?.job_description || 'No job description provided.'}</div>
+            </body>
+          </html>
+        `);
+        descWindow.document.close();
+      }
     } else {
-      let fullUrl = url.startsWith('http') ? url : `${environment.apiUrl}media/${url}`;
-      window.open(fullUrl, '_blank');
+      alert('No Job Description document or text available for this job.');
     }
   }
-  // --- MODIFICATION END ---
 
   navigateToRecruiterHome() {
     this.router.navigate(['/job-post-list']);
@@ -1027,7 +1048,7 @@ private _generateAssessmentPdf(data: any): void {
     const tempDiv = this.document.createElement('div');
     tempDiv.innerHTML = cleaned;
 
-    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN', 'A'];
 
     const cleanNode = (element: HTMLElement) => {
       const children = Array.from(element.childNodes);
@@ -1047,10 +1068,15 @@ private _generateAssessmentPdf(data: any): void {
           }
           parent?.removeChild(element);
         } else {
-          // Remove attributes (like style="font-family: Symbol") which causes issues
+          // Preserve href and target for links, remove generic styles/attributes
+          const isLink = tagName === 'A';
+          const href = isLink ? element.getAttribute('href') : null;
+          const target = isLink ? element.getAttribute('target') : null;
           while (element.attributes.length > 0) {
             element.removeAttribute(element.attributes[0].name);
           }
+          if (href) element.setAttribute('href', href);
+          if (target) element.setAttribute('target', target || '_blank');
         }
       }
     };

@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { ApprovalNotificationService } from '../../services/approval-notification.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-recruiter-sidebar',
@@ -9,25 +11,35 @@ import { RouterModule, Router } from '@angular/router';
   templateUrl: './recruiter-sidebar.component.html',
   styleUrls: ['./recruiter-sidebar.component.css'],
 })
-export class RecruiterSidebarComponent implements OnInit {
+export class RecruiterSidebarComponent implements OnInit, OnDestroy {
   @Input() activePage: string = '';
 
   isSuperUser: boolean = false;
   userType: string = '';
   showClients: boolean = false;
   showCandidates: boolean = false;
+  showImport: boolean = false;
   userName: string = '';
   userInitials: string = '';
   profilePicUrl: string = '';
   isMobileMenuOpen: boolean = false;
 
-  constructor(private router: Router) {}
+  pendingApprovalCount: number = 0;
+  approvedReportsCount: number = 0;
+  private pendingSub: Subscription | null = null;
+  private approvedSub: Subscription | null = null;
+
+  constructor(
+    private router: Router,
+    private notificationService: ApprovalNotificationService
+  ) {}
 
   ngOnInit(): void {
-    this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     this.userType = localStorage.getItem('userType') || '';
+    this.isSuperUser = localStorage.getItem('isSuperUser') === 'true' || this.userType.toLowerCase() === 'admin';
     this.showClients = this.userType === 'admin';
     this.showCandidates = this.userType === 'admin' || this.userType === 'recruiter';
+    this.showImport = this.userType === 'admin' || this.userType === 'recruiter' || this.isSuperUser;
 
     let firstName = localStorage.getItem('firstName') || '';
     let lastName = localStorage.getItem('lastName') || '';
@@ -58,6 +70,15 @@ export class RecruiterSidebarComponent implements OnInit {
     if (!this.profilePicUrl) {
       this.profilePicUrl = localStorage.getItem('profilePicUrl') || '';
     }
+
+    // Subscribe to real-time notification badge counts
+    this.pendingSub = this.notificationService.pendingCount.subscribe(count => {
+      this.pendingApprovalCount = count;
+    });
+
+    this.approvedSub = this.notificationService.approvedReportsCount.subscribe(count => {
+      this.approvedReportsCount = count;
+    });
   }
 
   get formattedUserType(): string {
@@ -71,8 +92,20 @@ export class RecruiterSidebarComponent implements OnInit {
   }
 
   onLogout(): void {
+    this.notificationService.stopListening();
     localStorage.clear();
     sessionStorage.clear();
     this.router.navigate(['/login']);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pendingSub) {
+      this.pendingSub.unsubscribe();
+      this.pendingSub = null;
+    }
+    if (this.approvedSub) {
+      this.approvedSub.unsubscribe();
+      this.approvedSub = null;
+    }
   }
 }

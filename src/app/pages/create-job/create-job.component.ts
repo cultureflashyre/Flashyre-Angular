@@ -136,7 +136,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       notice_period: ['', [this.requiredNonEmptyStringValidator()]],
       skills: [[], [Validators.required]],
       job_description: ['', [Validators.maxLength(5000), Validators.required]],
-      job_description_url: ['', [Validators.maxLength(200)]],
+      job_description_url: [''],
       unique_id: ['']
     }, { validators: this.rangeValidator });
     
@@ -305,6 +305,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   }
 
   private loadJobPostForEditing(uniqueId: string): void {
+    this.currentJobUniqueId = uniqueId;
+    this.isEditMode = true;
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in.');
@@ -1247,7 +1249,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const notice_period = this._normalizeNoticePeriod(req.notice_period);
     const skills = this.normalizeSkillNames(req.skills);
     const job_description = req.job_description || '';
-    const job_description_url = this.getSafeJobDescriptionUrl(req.file_attachment);
+    const job_description_url = this.getSafeJobDescriptionUrl(req.file_attachment || req.job_description_url || req.file_url);
 
     this.jobForm.patchValue({
       role,
@@ -1349,11 +1351,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     if (typeof rawUrl !== 'string') {
       return '';
     }
-
-    const normalizedUrl = rawUrl.trim();
-
-    // The backend JobPost.job_description_url field is capped at 200 chars.
-    return normalizedUrl.length <= 200 ? normalizedUrl : '';
+    return rawUrl.trim();
   }
 
   private getCompanyNameForSave(): string {
@@ -1618,58 +1616,89 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
 
   onSubmitAttempt(): void {
       this.jobForm.markAllAsTouched();
-      this.checkEmpty('editor');
-  
-      if (this.jobForm.invalid) {
+      this.checkEmpty('editor');      if (this.jobForm.invalid) {
         const errorMessages: string[] = [];
         const controls = this.jobForm.controls;
   
-        // --- MODIFICATION START ---
-        // This map is now comprehensive and includes all required fields.
         const fieldNames: { [key: string]: string } = {
           role: 'Role',
-          location: 'Location',
+          location: 'Location(s)',
           job_type: 'Job Type',
           workplace_type: 'Workplace Type',
+          total_experience_min: 'Total Experience Min',
+          total_experience_max: 'Total Experience Max',
+          relevant_experience_min: 'Relevant Experience Min',
+          relevant_experience_max: 'Relevant Experience Max',
           budget_type: 'Budget Type',
           min_budget: 'Min Budget',
           max_budget: 'Max Budget',
           notice_period: 'Notice Period',
           skills: 'Skills',
           job_description: 'Job Description',
+          job_description_url: 'Job Description File URL'
         };
-        // --- MODIFICATION END ---
   
-        for (const key of Object.keys(fieldNames)) {
+        for (const key of Object.keys(controls)) {
           const control = controls[key];
           if (control && control.invalid) {
+            const fieldLabel = fieldNames[key] || key;
             if (control.hasError('required')) {
-              // A special check for the location array to ensure it's not just empty.
               if (key === 'location' && (!control.value || control.value.length === 0)) {
-                errorMessages.push(`• ${fieldNames[key]} is a required field.`);
+                errorMessages.push(`• ${fieldLabel} is a required field.`);
               } else if (key !== 'location') {
-                errorMessages.push(`• ${fieldNames[key]} is a required field.`);
+                errorMessages.push(`• ${fieldLabel} is a required field.`);
               }
             }
+            if (control.hasError('maxlength')) {
+              const maxLen = control.getError('maxlength')?.requiredLength;
+              errorMessages.push(`• ${fieldLabel} cannot exceed ${maxLen} characters.`);
+            }
+            if (control.hasError('minlength')) {
+              const minLen = control.getError('minlength')?.requiredLength;
+              errorMessages.push(`• ${fieldLabel} must be at least ${minLen} characters.`);
+            }
+            if (control.hasError('min')) {
+              const minVal = control.getError('min')?.min;
+              errorMessages.push(`• ${fieldLabel} cannot be less than ${minVal}.`);
+            }
+            if (control.hasError('max')) {
+              const maxVal = control.getError('max')?.max;
+              errorMessages.push(`• ${fieldLabel} cannot be greater than ${maxVal}.`);
+            }
             if (control.hasError('forbiddenString')) {
-              errorMessages.push(`• ${fieldNames[key]} cannot be 'Unknown Role'.`);
+              errorMessages.push(`• ${fieldLabel} cannot be 'Unknown Role'.`);
             }
             if (control.hasError('forbiddenLocation')) {
-              errorMessages.push(`• ${fieldNames[key]} cannot be 'Not Specified'.`);
+              errorMessages.push(`• ${fieldLabel} cannot be 'Not Specified'.`);
             }
             if (control.hasError('invalidNumber')) {
-                errorMessages.push(`• Please enter a valid number for ${fieldNames[key]}.`);
+              errorMessages.push(`• Please enter a valid number for ${fieldLabel}.`);
             }
           }
         }
 
         if (this.jobForm.hasError('invalidBudgetRange')) {
-            errorMessages.push('• Min Budget cannot be greater than Max Budget.');
+          errorMessages.push('• Min Budget cannot be greater than Max Budget.');
+        }
+        if (this.jobForm.hasError('invalidTotalExperience')) {
+          errorMessages.push('• Total Experience Min cannot be greater than Max.');
+        }
+        if (this.jobForm.hasError('invalidRelevantExperience')) {
+          errorMessages.push('• Relevant Experience Min cannot be greater than Max.');
+        }
+        if (this.jobForm.hasError('relevantExceedsTotal')) {
+          errorMessages.push('• Relevant Experience cannot exceed Total Experience.');
         }
   
         if (errorMessages.length === 0) {
           errorMessages.push('• Please fill all required fields correctly before proceeding.');
         }
+
+        console.warn('Form validation failed. Details:', {
+          errors: errorMessages,
+          invalidControls: Object.keys(controls).filter(k => controls[k].invalid).map(k => ({ key: k, errors: controls[k].errors, value: controls[k].value })),
+          formErrors: this.jobForm.errors
+        });
   
         this.openAlert("Please fix the following issues:\n\n" + errorMessages.join('\n'), ['OK']);
   
@@ -1679,7 +1708,7 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
             if (!element) {
               if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
               else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
-              else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
+              else if (firstInvalidControl === 'location') element = this.locationInput?.nativeElement;
             }
             element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -1707,8 +1736,7 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
     tempDiv.innerHTML = formattedContent;
 
     // Define tags that are allowed (Basic formatting + Structure)
-    // We map 'STRONG' to 'B' and 'EM' to 'I' visually, but keeping them is fine.
-    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN', 'A'];
 
     const cleanNode = (element: HTMLElement) => {
       // Process children first (Depth-First Traversal)
@@ -1732,11 +1760,15 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
           }
           parent?.removeChild(element);
         } else {
-          // If tag IS allowed, strip all attributes (style="...", class="...")
-          // This removes external formatting conflicts but keeps bold/italic/lists.
+          // Preserve href and target for links, remove generic styles/attributes
+          const isLink = tagName === 'A';
+          const href = isLink ? element.getAttribute('href') : null;
+          const target = isLink ? element.getAttribute('target') : null;
           while (element.attributes.length > 0) {
             element.removeAttribute(element.attributes[0].name);
           }
+          if (href) element.setAttribute('href', href);
+          if (target) element.setAttribute('target', target || '_blank');
         }
       }
     };

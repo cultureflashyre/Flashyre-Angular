@@ -9,17 +9,19 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from '../../../environments/environment';
 import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
-interface DropdownItem {
+export interface LookupReference {
   id: number;
   name: string;
-  [key: string]: any;
+  category: string;
+  description?: string;
+  metadata?: any;
 }
 
 interface ReferenceData {
-  colleges: DropdownItem[];
-  education_levels: DropdownItem[];
-  courses: DropdownItem[];
-  specializations: DropdownItem[];
+  colleges: LookupReference[];
+  education_levels: LookupReference[];
+  courses: LookupReference[];
+  specializations: LookupReference[];
 }
 
 @Component({
@@ -45,13 +47,14 @@ export class ProfileEducationComponent implements OnInit, OnDestroy {
   @ViewChildren('educationFormInstance') educationFormInstances: QueryList<ElementRef>;
 
   educationForms: FormGroup[] = [];
-  universities: DropdownItem[] = [];
-  educationLevels: DropdownItem[] = [];
-  courses: DropdownItem[] = [];
-  specializations: DropdownItem[] = [];
+  universities: LookupReference[] = [];
+  educationLevels: LookupReference[] = [];
+  courses: LookupReference[] = [];
+  specializations: LookupReference[] = [];
   todayDate: string = new Date().toISOString().split('T')[0];
   isLoading: boolean = false;
   errorMessage: string | null = null;
+
 
   showRemoveConfirmation = false;
   formToRemoveIndex: number | null = null;
@@ -224,7 +227,7 @@ export class ProfileEducationComponent implements OnInit, OnDestroy {
     this.sessionToken = undefined; // VERY IMPORTANT: Reset token after selection for cost saving.
   }
 
-  private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | '' {
+  private getDropdownIdByName(dropdownList: LookupReference[], name: string): number | '' {
     if (!name) return '';
     const item = dropdownList.find(d => d.name.toLowerCase() === name.toLowerCase());
     return item ? item.id : '';

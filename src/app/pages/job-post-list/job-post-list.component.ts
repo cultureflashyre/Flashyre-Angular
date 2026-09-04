@@ -20,6 +20,7 @@ import { AlertMessageComponent } from 'src/app/components/alert-message/alert-me
 import { MoreFiltersAndPreferenceComponent } from 'src/app/components/more-filters-and-preference-component/more-filters-and-preference-component.component';
 import { RecruiterProfile } from 'src/app/components/recruiter-profile/recruiter-profile.component';
 import { RecruiterSidebarComponent } from 'src/app/components/recruiter-sidebar/recruiter-sidebar.component';
+import { NotificationBellComponent } from 'src/app/components/notification-bell/notification-bell.component';
 
 // Define the type for job statuses
 type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
@@ -28,7 +29,8 @@ type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
   selector: 'job-post-list',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    AlertMessageComponent, MoreFiltersAndPreferenceComponent, RecruiterProfile, RecruiterSidebarComponent
+    AlertMessageComponent, MoreFiltersAndPreferenceComponent, RecruiterProfile, RecruiterSidebarComponent,
+    NotificationBellComponent
   ],
   templateUrl: 'job-post-list.component.html',
   styleUrls: ['job-post-list.component.css'],
@@ -422,15 +424,18 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
         next: () => {
             const jobInMaster = this.masterPostedJobs.find(j => j.unique_id === job.unique_id);
             if (jobInMaster) {
-                jobInMaster.status = newStatus as 'pause' | 'final' | 'deleted';
+                jobInMaster.status = newStatus as 'pause' | 'final' | 'deleted' | 'draft';
             }
             this.runFilterPipeline();
-            this.showSuccessPopup('Job status updated successfully!');
+            const message = (newStatus === 'draft' || newStatus === 'final') && job.status === 'deleted'
+              ? 'Job activated to draft successfully!'
+              : 'Job status updated successfully!';
+            this.showSuccessPopup(message);
         },
         error: (err) => {
             console.error('Failed to update job status:', err);
             this.showErrorPopup('Failed to update job status.');
-            if (event) {
+            if (event && event.target && (event.target as HTMLInputElement).type === 'checkbox') {
                 const input = event.target as HTMLInputElement;
                 input.checked = !input.checked;
             }
@@ -525,11 +530,16 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
         case 'delete':
           this.handleStatusChangeConfirmed(context.job!, 'deleted', context.event!);
           break;
+        case 'activate':
+          this.handleStatusChangeConfirmed(context.job!, 'draft', context.event!);
+          break;
       }
     } else {
-      if (context.action === 'changeStatus' && context.event) {
+      if ((context.action === 'changeStatus' || context.action === 'activate') && context.event) {
           const input = context.event.target as HTMLInputElement;
-          input.checked = !input.checked;
+          if (input && input.type === 'checkbox') {
+            input.checked = !input.checked;
+          }
       }
     }
     this.actionContext = null;
@@ -548,5 +558,13 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   onDeleteAttempt(job: JobPost, event: Event) {
     this.actionContext = { action: 'delete', job, event };
     this.openAlert('Are you sure you want to delete this job?', ['Cancel', 'Delete']);
+  }
+
+  onActivateAttempt(job: JobPost, event: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+    this.actionContext = { action: 'activate', job, newStatus: 'draft', event };
+    this.openAlert('Are you sure you want to activate this job to draft for review?', ['No', 'Yes']);
   }
 }

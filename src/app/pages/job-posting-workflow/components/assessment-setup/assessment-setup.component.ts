@@ -296,7 +296,7 @@ export class AssessmentSetupComponent implements OnInit, OnDestroy, AfterViewIni
             }),
             switchMap(assessmentDetails => {
                 if (assessmentDetails) {
-                    this.currentAssessmentId = assessmentDetails.assessment_uuid;
+                    this.currentAssessmentId = assessmentDetails.assessment_unique_id;
                     this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
                     this.applyAssessmentDetails(assessmentDetails);
                 }

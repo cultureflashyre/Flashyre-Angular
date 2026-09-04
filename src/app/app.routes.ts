@@ -314,8 +314,9 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/recruiter-workflow-bulk-import/recruiter-workflow-bulk-import.component')
       .then(m => m.RecruiterWorkflowBulkImportComponent),
     canActivate: [authGuard],
-    data: { roles: ['admin'] }
+    data: { roles: ['admin', 'recruiter'] }
   },
+
   {
     path: 'job-matching-score',
     loadComponent: () => import('./pages/job-matching-score/job-matching-score.component')

@@ -22,10 +22,7 @@
         <button class="icon-btn" title="Help">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
-        <button class="icon-btn" title="Notifications">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="dot"></span>
-        </button>
+        <app-notification-bell></app-notification-bell>
         <button class="btn primary" (click)="openSourceModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Candidate
@@ -275,7 +272,46 @@
         <!-- TAB 1: SOURCED DATABASE TABLE                -->
         <!-- ============================================ -->
         <ng-container *ngIf="activeTab === 'sourced'">
-          <ng-container *ngIf="!isPageLoading">
+          <ng-container *ngIf="isSourcedLoading">
+            <div class="table-wrapper">
+              <table class="table skeleton-table">
+                <thead>
+                  <tr>
+                    <th class="col-check"><div class="skeleton-box sm"></div></th>
+                    <th class="col-name"><div class="skeleton-box md"></div></th>
+                    <th><div class="skeleton-box md"></div></th>
+                    <th class="col-tags"><div class="skeleton-box lg"></div></th>
+                    <th class="col-meta"><div class="skeleton-box md"></div></th>
+                    <th><div class="skeleton-box sm"></div></th>
+                    <th class="col-src"><div class="skeleton-box sm"></div></th>
+                    <th class="col-act"><div class="skeleton-box sm"></div></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let i of [1,2,3,4,5]">
+                    <td><div class="skeleton-box sm"></div></td>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="skeleton-avatar"></div>
+                        <div>
+                          <div class="skeleton-box md" style="margin-bottom:6px;"></div>
+                          <div class="skeleton-box sm"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><div class="skeleton-box md"></div></td>
+                    <td><div class="skeleton-box lg"></div></td>
+                    <td><div class="skeleton-box md"></div></td>
+                    <td><div class="skeleton-box sm"></div></td>
+                    <td><div class="skeleton-box sm"></div></td>
+                    <td><div class="skeleton-box sm"></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!isSourcedLoading">
             <ng-container *ngIf="masterCandidates.length > 0; else noData">
               <ng-container *ngIf="displayCandidates.length > 0; else noMatches">
                 <div class="table-wrapper">
@@ -366,7 +402,7 @@
                         <!-- Actions -->
                         <td data-label="Actions">
                           <div class="row-actions">
-                            <button class="row-action" [class.disabled]="!candidate.resume" (click)="candidate.resume && openResume(candidate.resume)" title="View Resume">
+                            <button class="row-action" [class.disabled]="!candidate.resume && !candidate.resume_url" (click)="(candidate.resume || candidate.resume_url) && openResume(candidate.resume || candidate.resume_url)" title="View Resume">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                             </button>
                             <button class="row-action" (click)="startEdit(candidate)" title="Edit">
@@ -414,7 +450,7 @@
 
             <!-- No Data Template -->
             <ng-template #noData>
-              <div class="empty">
+              <div class="empty" *ngIf="hasSourcedLoaded && !isSourcedLoading">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
                 <h3>No Candidate Profiles Found</h3>
                 <p>Get started by adding a new candidate profile.</p>
@@ -427,100 +463,141 @@
         <!-- TAB 2: REGISTERED USERS TABLE                -->
         <!-- ============================================ -->
         <ng-container *ngIf="activeTab === 'registered'">
-          <ng-container *ngIf="displayRegisteredCandidates.length > 0; else noRegisteredData">
+          <ng-container *ngIf="isRegisteredLoading">
             <div class="table-wrapper">
-              <table class="table">
+              <table class="table skeleton-table">
                 <thead>
                   <tr>
                     <th class="col-check"></th>
-                    <th class="col-name">User</th>
-                    <th>Experience &amp; CTC</th>
-                    <th class="col-tags">Skills</th>
-                    <th class="col-meta">Contact</th>
-                    <th>Rating</th>
-                    <th class="col-src">Status</th>
-                    <th class="col-act">Actions</th>
+                    <th class="col-name"><div class="skeleton-box md"></div></th>
+                    <th><div class="skeleton-box md"></div></th>
+                    <th class="col-tags"><div class="skeleton-box lg"></div></th>
+                    <th class="col-meta"><div class="skeleton-box md"></div></th>
+                    <th><div class="skeleton-box sm"></div></th>
+                    <th class="col-src"><div class="skeleton-box sm"></div></th>
+                    <th class="col-act"><div class="skeleton-box sm"></div></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let user of displayRegisteredCandidates">
-                    <!-- Empty Checkbox Column -->
-                    <td data-label=""></td>
-
-                    <!-- User Name -->
-                    <td data-label="User Name">
-                      <div class="candidate">
-                        <div class="candidate-avatar">{{ getInitialsFromUser(user) }}</div>
+                  <tr *ngFor="let i of [1,2,3,4,5]">
+                    <td></td>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="skeleton-avatar"></div>
                         <div>
-                          <div class="candidate-name">
-                            {{ user.first_name }} {{ user.last_name }}
-                            <span class="status-badge">Active</span>
-                          </div>
-                          <div class="candidate-id">Uploaded By: {{ user.sourced_data?.recruiter_name || 'Self-Registered' }}</div>
+                          <div class="skeleton-box md" style="margin-bottom:6px;"></div>
+                          <div class="skeleton-box sm"></div>
                         </div>
                       </div>
                     </td>
-
-                    <!-- Experience & CTC -->
-                    <td data-label="Experience & CTC">
-                      <div class="meta-row">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                        {{ user.sourced_data?.total_experience || '—' }}y
-                      </div>
-                      <div class="meta-row">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        {{ user.sourced_data?.current_ctc ? (user.sourced_data.current_ctc + (user.sourced_data.current_ctc.toString().includes('LPA') || user.sourced_data.current_ctc === 'Fresher' ? '' : ' LPA')) : '—' }}
-                      </div>
-                    </td>
-
-                    <!-- Skills -->
-                    <td class="col-tags" data-label="Skills">
-                      <div class="tag-row" *ngIf="user.sourced_data?.skills; else noSkills">
-                        <span *ngFor="let skill of getSkillsList(user.sourced_data!.skills).visible" class="tag">{{ skill }}</span>
-                        <span *ngIf="getSkillsList(user.sourced_data!.skills).overflow > 0" class="tag">+{{ getSkillsList(user.sourced_data!.skills).overflow }}</span>
-                      </div>
-                      <ng-template #noSkills><span style="color: var(--ink-3);">—</span></ng-template>
-                    </td>
-
-                    <!-- Contact -->
-                    <td class="col-meta" data-label="Contact">
-                      <div class="meta-row">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        {{ user.phone_number || '—' }}
-                      </div>
-                      <div class="meta-row">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                        {{ user.email || '—' }}
-                      </div>
-                    </td>
-
-                    <!-- Rating -->
-                    <td data-label="Rating"><span class="rating unrated">—</span></td>
-
-                    <!-- Status -->
-                    <td data-label="Status"><span class="src-pill direct">Registered</span></td>
-
-                    <!-- Actions -->
-                    <td data-label="Actions">
-                      <div class="row-actions">
-                        <button class="row-action" [class.disabled]="!user.sourced_data?.resume" (click)="user.sourced_data?.resume && openResume(user.sourced_data!.resume)" title="View Resume">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                        </button>
-                      </div>
-                    </td>
+                    <td><div class="skeleton-box md"></div></td>
+                    <td><div class="skeleton-box lg"></div></td>
+                    <td><div class="skeleton-box md"></div></td>
+                    <td><div class="skeleton-box sm"></div></td>
+                    <td><div class="skeleton-box sm"></div></td>
+                    <td><div class="skeleton-box sm"></div></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </ng-container>
 
-          <ng-template #noRegisteredData>
-            <div class="empty">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <h3>No Registered Users Found</h3>
-              <p>There are currently no users registered as Candidates in the system.</p>
-            </div>
-          </ng-template>
+          <ng-container *ngIf="!isRegisteredLoading">
+            <ng-container *ngIf="displayRegisteredCandidates.length > 0; else noRegisteredData">
+              <div class="table-wrapper">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="col-check"></th>
+                      <th class="col-name">User</th>
+                      <th>Experience &amp; CTC</th>
+                      <th class="col-tags">Skills</th>
+                      <th class="col-meta">Contact</th>
+                      <th>Rating</th>
+                      <th class="col-src">Status</th>
+                      <th class="col-act">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of displayRegisteredCandidates">
+                      <!-- Empty Checkbox Column -->
+                      <td data-label=""></td>
+
+                      <!-- User Name -->
+                      <td data-label="User Name">
+                        <div class="candidate">
+                          <div class="candidate-avatar">{{ getInitialsFromUser(user) }}</div>
+                          <div>
+                            <div class="candidate-name">
+                              {{ user.first_name }} {{ user.last_name }}
+                              <span class="status-badge">Active</span>
+                            </div>
+                            <div class="candidate-id">Uploaded By: {{ user.sourced_data?.recruiter_name || 'Self-Registered' }}</div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <!-- Experience & CTC -->
+                      <td data-label="Experience & CTC">
+                        <div class="meta-row">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                          {{ user.sourced_data?.total_experience || '—' }}y
+                        </div>
+                        <div class="meta-row">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                          {{ user.sourced_data?.current_ctc ? (user.sourced_data.current_ctc + (user.sourced_data.current_ctc.toString().includes('LPA') || user.sourced_data.current_ctc === 'Fresher' ? '' : ' LPA')) : '—' }}
+                        </div>
+                      </td>
+
+                      <!-- Skills -->
+                      <td class="col-tags" data-label="Skills">
+                        <div class="tag-row" *ngIf="user.sourced_data?.skills; else noSkills">
+                          <span *ngFor="let skill of getSkillsList(user.sourced_data!.skills).visible" class="tag">{{ skill }}</span>
+                          <span *ngIf="getSkillsList(user.sourced_data!.skills).overflow > 0" class="tag">+{{ getSkillsList(user.sourced_data!.skills).overflow }}</span>
+                        </div>
+                        <ng-template #noSkills><span style="color: var(--ink-3);">—</span></ng-template>
+                      </td>
+
+                      <!-- Contact -->
+                      <td class="col-meta" data-label="Contact">
+                        <div class="meta-row">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                          {{ user.phone_number || '—' }}
+                        </div>
+                        <div class="meta-row">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                          {{ user.email || '—' }}
+                        </div>
+                      </td>
+
+                      <!-- Rating -->
+                      <td data-label="Rating"><span class="rating unrated">—</span></td>
+
+                      <!-- Status -->
+                      <td data-label="Status"><span class="src-pill direct">Registered</span></td>
+
+                      <!-- Actions -->
+                      <td data-label="Actions">
+                        <div class="row-actions">
+                          <button class="row-action" [class.disabled]="!user.sourced_data?.resume && !user.sourced_data?.resume_url" (click)="(user.sourced_data?.resume || user.sourced_data?.resume_url) && openResume(user.sourced_data?.resume || user.sourced_data?.resume_url)" title="View Resume">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-container>
+
+            <ng-template #noRegisteredData>
+              <div class="empty" *ngIf="hasRegisteredLoaded && !isRegisteredLoading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <h3>No Registered Users Found</h3>
+                <p>There are currently no users registered as Candidates in the system.</p>
+              </div>
+            </ng-template>
+          </ng-container>
         </ng-container>
 
       </div><!-- end .card -->
@@ -938,13 +1015,13 @@
           <h4 class="section-title">Documents &amp; Source</h4>
           <div class="info-grid-2">
             <div class="info-item"><span class="info-label" style="margin-bottom: 8px;">Resume</span>
-              <div *ngIf="selectedCandidateDetails.resume; else noResume" class="resume-card"
-                (click)="openResume(selectedCandidateDetails.resume)">
+              <div *ngIf="selectedCandidateDetails.resume || selectedCandidateDetails.resume_url; else noResume" class="resume-card"
+                (click)="openResume(selectedCandidateDetails.resume || selectedCandidateDetails.resume_url)">
                 <div class="resume-info"><svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
                     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg><span class="resume-text">View Resume</span></div><span class="view-link">Open &rarr;</span>
+                  </svg><span class="resume-text">{{ selectedCandidateDetails.resume_filename || 'View Resume' }}</span></div><span class="view-link">Open &rarr;</span>
               </div><ng-template #noResume>
                 <div class="resume-card" style="cursor: default; opacity: 0.7; background: #f9fafb;"><span
                     class="resume-text" style="font-weight: 400; color: #999;">No Resume Attached</span></div>
@@ -957,6 +1034,51 @@
                 <div style="font-size: 13px; color: #05356c; margin-top: 4px; font-weight: 500;">via {{
                   selectedCandidateDetails.source }}</div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMPORTED TRACKER DETAILS (BULK IMPORT METADATA) -->
+        <div class="info-section" *ngIf="selectedCandidateDetails.import_metadata && hasImportMetadata(selectedCandidateDetails.import_metadata)">
+          <h4 class="section-title">Imported Tracker Details</h4>
+          <div class="info-grid-3">
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.client">
+              <span class="info-label">Client</span>
+              <span class="info-value">{{ selectedCandidateDetails.import_metadata.client }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.sub_client">
+              <span class="info-label">Sub Client</span>
+              <span class="info-value">{{ selectedCandidateDetails.import_metadata.sub_client }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.spoc">
+              <span class="info-label">SPOC</span>
+              <span class="info-value">{{ selectedCandidateDetails.import_metadata.spoc }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.status">
+              <span class="info-label">Tracker Status</span>
+              <span class="info-value" style="color: #2563eb; font-weight: 600;">{{ selectedCandidateDetails.import_metadata.status }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.sheet_name">
+              <span class="info-label">Sheet Name</span>
+              <span class="info-value">{{ selectedCandidateDetails.import_metadata.sheet_name }} (Row {{ selectedCandidateDetails.import_metadata.row_number }})</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.recruiter">
+              <span class="info-label">Recruiter</span>
+              <span class="info-value">{{ selectedCandidateDetails.import_metadata.recruiter }}</span>
+            </div>
+          </div>
+          <div class="info-grid-2" style="margin-top: 16px;" *ngIf="selectedCandidateDetails.import_metadata.l1_feedback || selectedCandidateDetails.import_metadata.l2_feedback || selectedCandidateDetails.import_metadata.comments">
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.l1_feedback">
+              <span class="info-label">L1 Feedback</span>
+              <span class="info-value" style="font-size: 13px;">{{ selectedCandidateDetails.import_metadata.l1_feedback }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.l2_feedback">
+              <span class="info-label">L2 Feedback</span>
+              <span class="info-value" style="font-size: 13px;">{{ selectedCandidateDetails.import_metadata.l2_feedback }}</span>
+            </div>
+            <div class="info-item" style="grid-column: 1 / -1;" *ngIf="selectedCandidateDetails.import_metadata.comments">
+              <span class="info-label">Tracker Comments</span>
+              <span class="info-value" style="font-size: 13px;">{{ selectedCandidateDetails.import_metadata.comments }}</span>
             </div>
           </div>
         </div>

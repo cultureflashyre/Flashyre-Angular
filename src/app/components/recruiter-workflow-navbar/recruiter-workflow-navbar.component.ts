@@ -7,11 +7,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
   selector: 'recruiter-workflow-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationBellComponent],
   templateUrl: './recruiter-workflow-navbar.component.html',
   styleUrls: ['./recruiter-workflow-navbar.component.css'],
 })
@@ -24,6 +25,7 @@ export class RecruiterWorkflowNavbarComponent implements OnInit {
   // Visibility Flags
   showClients: boolean = false;
   showCandidates: boolean = false;
+  showImport: boolean = false;
 
   // Existing Inputs/ContentChild
   @ContentChild('text32') text32: TemplateRef<any> | null = null;
@@ -69,7 +71,9 @@ export class RecruiterWorkflowNavbarComponent implements OnInit {
     // Rule: "If the user type is client do now show Clients and Candidates".
     // So Candidates is visible to Admin and Recruiter.
     this.showCandidates = this.userType === 'admin' || this.userType === 'recruiter';
+    this.showImport = this.userType === 'admin' || this.userType === 'recruiter' || this.isSuperUser;
   }
+
 
   onLogout() {
     localStorage.clear();

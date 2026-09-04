@@ -95,7 +95,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       notice_period: ['', [Validators.required]],
       skills: [[], [Validators.required]],
       job_description: ['', [Validators.maxLength(5000), Validators.required]],
-      job_description_url: ['', [Validators.maxLength(200)]],
+      job_description_url: [''],
       unique_id: ['']
     }, { validators: this.rangeValidator });
     this.loader = new Loader({

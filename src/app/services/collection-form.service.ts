@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface CollectionForm {
@@ -32,6 +33,7 @@ export interface PublicFormDetails {
   require_resume: boolean;
   is_active: boolean;
   template_type?: 'standard' | 'campus' | 'experienced' | 'walkin';
+  created_by_phone?: string;
   form_token: string;
 }
 
@@ -44,11 +46,15 @@ export class CollectionFormService {
   constructor(private http: HttpClient) { }
 
   getForms(): Observable<CollectionForm[]> {
-    return this.http.get<CollectionForm[]>(`${this.apiUrl}api/collection-forms/`);
+    return this.http.get<CollectionForm[]>(`${this.apiUrl}api/collection-forms/`).pipe(
+      retry({ count: 2, delay: 1000 })
+    );
   }
 
   getForm(uniqueId: string): Observable<CollectionForm> {
-    return this.http.get<CollectionForm>(`${this.apiUrl}api/collection-forms/${uniqueId}/`);
+    return this.http.get<CollectionForm>(`${this.apiUrl}api/collection-forms/${uniqueId}/`).pipe(
+      retry({ count: 2, delay: 1000 })
+    );
   }
 
   createForm(form: CollectionForm): Observable<CollectionForm> {

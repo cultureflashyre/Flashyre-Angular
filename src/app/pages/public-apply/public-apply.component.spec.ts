@@ -31,6 +31,7 @@ describe('PublicApplyComponent', () => {
       logo_url: '',
       require_resume: true,
       is_active: true,
+      created_by_phone: '9876543210',
       form_token: 'test-token-123'
     }));
 
@@ -58,6 +59,11 @@ describe('PublicApplyComponent', () => {
     expect(mockFormService.getPublicFormDetails).toHaveBeenCalledWith('test-form-uuid');
     expect(component.formDetails).toBeDefined();
     expect(component.formDetails?.title).toBe('Test Position');
+    expect(component.formDetails?.created_by_phone).toBe('9876543210');
+  });
+
+  it('should generate correct WhatsApp link with prefilled job title', () => {
+    expect(component.whatsappLink).toContain('https://wa.me/919876543210?text=Hi%20with%20Test%20Position');
   });
 
   it('should validate form fields correctly', () => {
@@ -95,5 +101,20 @@ describe('PublicApplyComponent', () => {
     
     expect(mockFormService.submitPublicForm).toHaveBeenCalled();
     expect(component.submitSuccess).toBeTrue();
+
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Application Submitted!');
+    expect(compiled.textContent).toContain('9876543210');
+    expect(compiled.textContent).toContain('Test Position');
+  });
+
+  it('should render the company logo in the header with correct asset path', () => {
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const logoImg = compiled.querySelector('#flashyre-logo') as HTMLImageElement;
+    expect(logoImg).toBeTruthy();
+    expect(logoImg.getAttribute('src')).toContain('/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png');
+    expect(logoImg.getAttribute('alt')).toBe('Flashyre Logo');
   });
 });

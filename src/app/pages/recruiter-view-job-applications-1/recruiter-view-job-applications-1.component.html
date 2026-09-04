@@ -109,17 +109,16 @@
             <div class="jd-dropdown-menu" *ngIf="showJdDropdown">
               <button 
                 class="dropdown-item"
-                (click)="openJD(job.job_description_url)"
-                [disabled]="!job?.job_description_url"
-                [title]="job?.job_description_url ? 'View Job Description' : 'No Job Description File available'">
+                (click)="openJD(job?.job_description_url)"
+                [disabled]="!job?.job_description_url && !job?.description && !job?.job_description"
+                [title]="(job?.job_description_url || job?.description || job?.job_description) ? 'View Job Description' : 'No Job Description available'">
                 View JD
               </button>
               <button 
                 class="dropdown-item"
                 (click)="downloadAssessment()" 
-                [disabled]="isDownloading || !job?.has_assessment"
-                [title]="job?.has_assessment ? 'Download assessment questions as PDF' : 'No assessment has been created for this job'"
-              >
+                [disabled]="isDownloading"
+                [title]="'Download assessment questions as PDF'">
                 {{ isDownloading ? 'Downloading...' : 'Download Assessment' }}
               </button>
             </div>

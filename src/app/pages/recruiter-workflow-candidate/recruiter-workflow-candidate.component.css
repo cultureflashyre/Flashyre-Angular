@@ -2317,3 +2317,32 @@
   background: var(--good);
 }
 .form-footer .right { display: flex; gap: 8px; }
+
+/* ============== SKELETON SHIMMER LOADERS ============== */
+.skeleton-box {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 4px;
+  height: 16px;
+  display: inline-block;
+}
+
+.skeleton-box.sm { width: 50px; }
+.skeleton-box.md { width: 120px; }
+.skeleton-box.lg { width: 180px; }
+
+.skeleton-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

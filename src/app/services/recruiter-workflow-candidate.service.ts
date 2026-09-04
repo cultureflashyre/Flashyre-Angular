@@ -23,6 +23,8 @@ export interface Candidate {
   created_at?: string;
   selected?: boolean;
   resume?: string;
+  resume_url?: string;
+  resume_filename?: string;
   user?: number;
   recruiter_name?: string;
   source?: string;
@@ -30,6 +32,22 @@ export interface Candidate {
   latest_rating_breakdown?: { [key: string]: number } | null;
   source_form?: number | string | null;
   source_form_title?: string;
+  import_metadata?: {
+    client?: string;
+    sub_client?: string;
+    spoc?: string;
+    recruiter?: string;
+    status?: string;
+    sheet_name?: string;
+    row_number?: number;
+    l1_date?: string;
+    l1_feedback?: string;
+    l2_date?: string;
+    l2_feedback?: string;
+    comments?: string;
+    batch_id?: string;
+    [key: string]: any;
+  } | null;
 }
 
 // --- VERIFY THIS INTERFACE ---
@@ -57,6 +75,8 @@ export interface SourcedData {
   relevant_experience?: number;
   source?: string;
   resume?: string;
+  resume_url?: string;
+  resume_filename?: string;
   latest_rating_score?: number | null;
   latest_rating_breakdown?: { [key: string]: number } | null;
 }

@@ -1,67 +1,1372 @@
-<div class="bulk-import-container">
-  
-  <div *ngIf="isUploading" class="page-loading-overlay">
-    <div class="round-loader"></div>
-    <p>Processing Excel File...</p>
-    <span style="font-size: 12px; color: #666; margin-top: 5px;">This may take a few seconds.</span>
-  </div>
+<app-alert-message *ngIf="showAlert" [message]="alertMessage" [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClick($event)" (close)="closeAlert()">
+</app-alert-message>
 
-  <recruiter-workflow-navbar></recruiter-workflow-navbar>
+<div class="app">
+  <!-- SIDEBAR -->
+  <app-recruiter-sidebar activePage="import"></app-recruiter-sidebar>
 
-  <div class="content-area">
-    <div class="header-section">
-      <h2>Bulk Candidate Import</h2>
-      <p>Upload your recruitment tracker (Excel) to dump candidates into the database.</p>
+  <!-- MAIN VIEW -->
+  <main class="main">
+    <!-- LOADING OVERLAY -->
+    <div *ngIf="isLoading || isReconciling" class="page-loading-overlay">
+      <div class="round-loader"></div>
+      <p>{{ isReconciling ? 'Running Sweeper Reconciliation...' : 'Loading Batches...' }}</p>
     </div>
 
-    <div class="upload-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
-      <div class="icon-wrapper">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#05356C" stroke-width="1.5">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="12" y1="18" x2="12" y2="12"></line>
-          <line x1="9" y1="15" x2="15" y2="15"></line>
-        </svg>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="crumbs">
+        <span>Workspace</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="here">Bulk Ingestion & AI Matcher</span>
       </div>
-      
-      <div *ngIf="!selectedFile; else fileSelected">
-        <h3>Drag & Drop Excel File</h3>
-        <p>Supported format: .xlsx, .xls</p>
-        <button class="btn-select" (click)="fileInput.click()">Browse File</button>
-        <input #fileInput type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls" hidden>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Help">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <app-notification-bell></app-notification-bell>
+        <button class="btn good" (click)="reconcileBatches()" title="Reconcile stalled batches">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Sync Sweeper
+        </button>
+        <button class="btn primary" (click)="setTab('upload')">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          New Ingestion
+        </button>
       </div>
+    </div>
 
-      <ng-template #fileSelected>
-        <div class="selected-file-info">
-          <h3 style="color: #05356C;">{{ selectedFile?.name }}</h3>
-          <p>{{ (selectedFile?.size || 0) / 1024 | number:'1.0-2' }} KB</p>
-          <button class="btn-change" (click)="selectedFile = null; uploadResult = null">Remove / Change</button>
+    <!-- PAGE CONTAINER -->
+    <div class="page">
+      <!-- Page Head -->
+      <div class="page-head">
+        <div class="head-left">
+          <div class="eyebrow">Enterprise Pipeline · Dual Ingestion & AI Matching</div>
+          <h1 class="page-title">Bulk Ingestion & AI Resume Matcher</h1>
+          <p class="page-sub">Stream candidate trackers (.xlsx, .csv) and bulk resume packages (.zip) with 5-priority AI matching and automatic vector embeddings.</p>
         </div>
-      </ng-template>
-    </div>
-
-    <div class="actions-row" *ngIf="selectedFile && !uploadResult">
-      <button class="btn-primary" (click)="uploadFile()">
-        Start Import Process
-      </button>
-    </div>
-
-    <div class="report-card" *ngIf="uploadResult" [ngClass]="{'success-card': uploadResult.success}">
-      <div class="report-header">
-        <h3>{{ uploadResult.message }}</h3>
-      </div>
-      <div class="report-stats" *ngIf="uploadResult.stats">
-        <div class="stat-item">
-          <span class="stat-label">Created</span>
-          <span class="stat-value success-text">{{ uploadResult.stats.created }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Skipped (Duplicate)</span>
-          <span class="stat-value warn-text">{{ uploadResult.stats.skipped }}</span>
+        <div class="head-right">
+          <button class="btn" (click)="loadBatchHistory(); loadResumeBatches(); loadUnmatchedResumes();" title="Refresh All">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh Data
+          </button>
+          <button class="btn" (click)="navigateToCandidates()" title="View Candidate Database">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Candidates Hub
+          </button>
         </div>
       </div>
-      <button class="btn-select" style="margin-top: 15px;" (click)="selectedFile = null; uploadResult = null">Import Another File</button>
+
+      <!-- Stats Strip -->
+      <div class="stats">
+        <!-- Stat 1: Total Batches -->
+        <div class="stat">
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Total Ingestion Batches</div>
+            <div class="stat-value">{{ totalBatchesCount }}</div>
+            <div class="stat-delta up">Trackers & Zip Archives</div>
+          </div>
+        </div>
+
+        <!-- Stat 2: Ingested Candidates -->
+        <div class="stat">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Imported Candidates</div>
+            <div class="stat-value">{{ totalImportedCandidates }}</div>
+            <div class="stat-delta up">Tracker rows synced</div>
+          </div>
+        </div>
+
+        <!-- Stat 3: Matched Resumes -->
+        <div class="stat">
+          <div class="stat-icon violet">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">AI Matched Resumes</div>
+            <div class="stat-value">{{ totalMatchedResumes }}</div>
+            <div class="stat-delta up">Enriched & embedded</div>
+          </div>
+        </div>
+
+        <!-- Stat 4: Unmatched Resumes -->
+        <div class="stat" (click)="setTab('unmatched')" style="cursor: pointer;">
+          <div class="stat-icon" [ngClass]="totalUnmatchedResumesCount > 0 ? 'amber' : 'green'">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Unmatched Resumes</div>
+            <div class="stat-value">{{ totalUnmatchedResumesCount }}</div>
+            <div class="stat-delta" [ngClass]="totalUnmatchedResumesCount > 0 ? 'down' : 'up'">
+              {{ totalUnmatchedResumesCount > 0 ? 'Action Required · Click to Resolve' : 'All resumes linked' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TABBED CARD -->
+      <div class="card">
+        <!-- Card Head with Tabs & Toolbar -->
+        <div class="card-head">
+          <div class="tabs">
+            <button class="tab" [class.active]="activeTab === 'history'" (click)="setTab('history')">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Ingestion History
+              <span class="tab-count">{{ totalBatchesCount }}</span>
+            </button>
+            <button class="tab" [class.active]="activeTab === 'upload'" (click)="setTab('upload')">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              New Dual Ingestion
+            </button>
+            <button class="tab" [class.active]="activeTab === 'live'" (click)="setTab('live')">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Live Monitor
+              <span class="tab-count" *ngIf="activeProcessingCount > 0">{{ activeProcessingCount }}</span>
+            </button>
+            <button class="tab" [class.active]="activeTab === 'unmatched'" (click)="setTab('unmatched')">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
+              Unmatched Resumes
+              <span class="tab-count" *ngIf="totalUnmatchedResumesCount > 0">{{ totalUnmatchedResumesCount }}</span>
+            </button>
+            <button class="tab" [class.active]="activeTab === 'reports'" (click)="setTab('reports')">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Export Reports
+            </button>
+            <button class="tab tab-approvals" [class.active]="activeTab === 'approvals'" (click)="setTab('approvals')">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+              {{ isSuperAdmin ? 'Approval Requests' : 'My Report Requests' }}
+              <span class="tab-count tab-badge-pulse" *ngIf="isSuperAdmin && pendingApprovalCount > 0">{{ pendingApprovalCount }}</span>
+              <span class="tab-count tab-badge-pulse green-badge" *ngIf="!isSuperAdmin && myApprovedReportCount > 0" title="Approved reports ready to download">{{ myApprovedReportCount }}</span>
+              <span class="tab-count" *ngIf="!isSuperAdmin && myApprovedReportCount === 0 && myPendingApprovalCount > 0" title="Pending approval">{{ myPendingApprovalCount }}</span>
+            </button>
+          </div>
+
+          <!-- Toolbar Search & Filter for History Tab -->
+          <div class="toolbar" *ngIf="activeTab === 'history'">
+            <div class="search">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" [(ngModel)]="searchQuery" placeholder="Search by file name..." />
+            </div>
+            <select class="form-select-sm" [(ngModel)]="statusFilter" (change)="loadBatchHistory(); loadResumeBatches();">
+              <option value="">All Statuses</option>
+              <option value="PROCESSING">Processing</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="COMPLETED_WITH_ERRORS">Completed With Errors</option>
+              <option value="FAILED">Failed</option>
+            </select>
+          </div>
+
+          <!-- Toolbar Filter for Approvals Tab -->
+          <div class="toolbar" *ngIf="activeTab === 'approvals'">
+            <select class="form-select-sm" [(ngModel)]="approvalStatusFilter" (change)="onApprovalStatusFilterChange()">
+              <option value="">All Requests</option>
+              <option value="PENDING">Pending Only</option>
+              <option value="APPROVED">Approved</option>
+              <option value="REJECTED">Rejected</option>
+              <option value="EXPIRED">Expired</option>
+            </select>
+          </div>
+        </div>
+
+
+        <!-- ==================================================================== -->
+        <!-- TAB 1: ALL BATCHES HISTORY -->
+        <!-- ==================================================================== -->
+        <div *ngIf="activeTab === 'history'" class="tab-pane">
+          <!-- Sub-tab switcher for Trackers vs Resumes -->
+          <div class="sub-tab-strip">
+            <button class="sub-tab-btn" [class.active]="historySubTab === 'trackers'" (click)="setHistorySubTab('trackers')">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Candidate Trackers (.xlsx, .csv) ({{ recentTrackerBatches.length }})
+            </button>
+            <button class="sub-tab-btn" [class.active]="historySubTab === 'resumes'" (click)="setHistorySubTab('resumes')">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/></svg>
+              Resume Zip Archives (.zip) ({{ recentResumeBatches.length }})
+            </button>
+          </div>
+
+          <!-- 1A: TRACKERS TABLE -->
+          <div *ngIf="historySubTab === 'trackers'" class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>File Details</th>
+                  <th>Status</th>
+                  <th>Total Rows</th>
+                  <th>Successful</th>
+                  <th>Failed / Skipped</th>
+                  <th>Progress</th>
+                  <th>Uploaded By & Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of filteredTrackerBatches" (click)="selectHistoryBatch(b)" class="clickable-row">
+                  <td>
+                    <div class="file-name-cell">
+                      <span class="file-badge">{{ getFileExtension(b.file_name) }}</span>
+                      <div>
+                        <div class="file-title">{{ getDisplayFileName(b.file_name) }}</div>
+                        <div class="file-meta">{{ formatFileSize(b.file_size) }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="chip-status" [ngClass]="{
+                      'good': b.status === 'COMPLETED',
+                      'warn': b.status === 'COMPLETED_WITH_ERRORS',
+                      'blue': b.status === 'PROCESSING' || b.status === 'PENDING',
+                      'bad': b.status === 'FAILED'
+                    }">{{ b.status }}</span>
+                  </td>
+                  <td class="num-cell">{{ b.total_rows }}</td>
+                  <td class="num-cell good-text"><strong>{{ b.success_rows }}</strong></td>
+                  <td class="num-cell" [class.warn-text]="b.failed_rows > 0">{{ b.failed_rows }}</td>
+                  <td>
+                    <div class="tbl-progress-bar">
+                      <div class="tbl-progress-fill" [style.width.%]="getProgressPercentage(b)"></div>
+                    </div>
+                    <div class="tbl-progress-text">{{ getProgressPercentage(b) }}%</div>
+                  </td>
+                  <td class="user-time-cell">
+                    <div class="user-avatar-inline">
+                      <span class="avatar-circle-sm" [title]="b.uploaded_by_name || 'System / Auto'">{{ b.uploaded_by_initials || 'SY' }}</span>
+                      <span class="user-name-inline" [title]="b.uploaded_by_name || 'System / Auto'">{{ b.uploaded_by_name || 'System / Auto' }}</span>
+                    </div>
+                    <div class="time-sub">{{ b.created_at | date:'d MMM y, h:mm a' }}</div>
+                  </td>
+                  <td class="actions-cell">
+                    <button class="btn-xs" (click)="$event.stopPropagation(); selectHistoryBatch(b)">
+                      Inspect
+                    </button>
+                    <button *ngIf="canDeleteBatch(b)" class="btn-xs btn-danger-ghost" (click)="deleteTrackerBatchItem(b, $event)" title="Delete batch">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredTrackerBatches.length === 0">
+                  <td colspan="8" class="empty-table-msg">
+                    No tracker batches found matching your search.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 1B: RESUME BATCHES TABLE -->
+          <div *ngIf="historySubTab === 'resumes'" class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Archive Details</th>
+                  <th>Status</th>
+                  <th>Total Documents</th>
+                  <th>AI Matched</th>
+                  <th>Unmatched</th>
+                  <th>Progress</th>
+                  <th>Uploaded By & Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rb of filteredResumeBatches" (click)="selectResumeHistoryBatch(rb)" class="clickable-row">
+                  <td>
+                    <div class="file-name-cell">
+                      <span class="file-badge zip-badge">ZIP</span>
+                      <div>
+                        <div class="file-title">{{ getDisplayFileName(rb.zip_file_name) }}</div>
+                        <div class="file-meta">{{ formatFileSize(rb.file_size) }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="chip-status" [ngClass]="{
+                      'good': rb.status === 'COMPLETED',
+                      'warn': rb.status === 'COMPLETED_WITH_ERRORS',
+                      'blue': rb.status === 'PROCESSING' || rb.status === 'PENDING',
+                      'bad': rb.status === 'FAILED'
+                    }">{{ rb.status }}</span>
+                  </td>
+                  <td class="num-cell">{{ rb.total_files }}</td>
+                  <td class="num-cell good-text"><strong>{{ rb.matched_files }}</strong></td>
+                  <td class="num-cell" [class.warn-text]="rb.unmatched_files > 0">
+                    <strong>{{ rb.unmatched_files }}</strong>
+                  </td>
+                  <td>
+                    <div class="tbl-progress-bar">
+                      <div class="tbl-progress-fill purple-fill" [style.width.%]="getResumeProgressPercentage(rb)"></div>
+                    </div>
+                    <div class="tbl-progress-text">{{ getResumeProgressPercentage(rb) }}%</div>
+                  </td>
+                  <td class="user-time-cell">
+                    <div class="user-avatar-inline">
+                      <span class="avatar-circle-sm purple-avatar" [title]="rb.uploaded_by_name || 'System / Auto'">{{ rb.uploaded_by_initials || 'SY' }}</span>
+                      <span class="user-name-inline" [title]="rb.uploaded_by_name || 'System / Auto'">{{ rb.uploaded_by_name || 'System / Auto' }}</span>
+                    </div>
+                    <div class="time-sub">{{ rb.created_at | date:'d MMM y, h:mm a' }}</div>
+                  </td>
+                  <td class="actions-cell">
+                    <button class="btn-xs" (click)="$event.stopPropagation(); selectResumeHistoryBatch(rb)">
+                      Inspect
+                    </button>
+                    <button *ngIf="canDeleteBatch(rb)" class="btn-xs btn-danger-ghost" (click)="deleteResumeBatchItem(rb, $event)" title="Delete batch">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredResumeBatches.length === 0">
+                  <td colspan="8" class="empty-table-msg">
+                    No resume archives found matching your criteria.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- ==================================================================== -->
+        <!-- TAB 2: DUAL-DROPZONE INGESTION HUB -->
+        <!-- ==================================================================== -->
+        <div *ngIf="activeTab === 'upload'" class="tab-pane">
+          <div class="dual-dropzone-container">
+            <div class="dual-intro">
+              <h2>Dual-Source Ingestion & AI Matching</h2>
+              <p>Upload your tracker spreadsheet and resume zip archive together or individually. The AI engine parses candidate documents and compares phone, email, and name to enrich profiles and generate vector embeddings.</p>
+            </div>
+
+            <!-- DUAL DROPZONES GRID -->
+            <div class="dropzones-grid">
+              <!-- DROPZONE 1: TRACKER SPREADSHEET -->
+              <div class="dropzone-card" [class.has-file]="selectedTrackerFile !== null"
+                (drop)="onTrackerDrop($event)" (dragover)="onDragOver($event)">
+                <div class="dropzone-header">
+                  <div class="dropzone-badge tracker-badge">1. Candidate Tracker</div>
+                  <span class="ext-badge">.xlsx · .csv</span>
+                </div>
+
+                <div *ngIf="!selectedTrackerFile" class="dropzone-body">
+                  <div class="drop-icon blue-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                  </div>
+                  <h3>Select Candidate Spreadsheet</h3>
+                  <p>Drag and drop multi-sheet Excel or CSV file here</p>
+                  <label class="btn select-btn">
+                    <input type="file" (change)="onTrackerFileSelected($event)" accept=".xlsx,.xls,.csv" hidden />
+                    Browse Spreadsheet
+                  </label>
+                  <div class="drop-hint">Max file size 50MB</div>
+                </div>
+
+                <div *ngIf="selectedTrackerFile" class="selected-file-view">
+                  <div class="file-icon-box blue-box">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="file-details">
+                    <div class="file-name-lg">{{ selectedTrackerFile.name }}</div>
+                    <div class="file-size-lg">{{ formatFileSize(selectedTrackerFile.size) }}</div>
+                  </div>
+                  <button class="remove-btn" (click)="removeTrackerFile()" title="Remove file">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+
+                <div *ngIf="trackerUploadErrorMsg" class="upload-error-banner">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  {{ trackerUploadErrorMsg }}
+                </div>
+              </div>
+
+              <!-- DROPZONE 2: RESUME ARCHIVE OR MULTIPLE FILES -->
+              <div class="dropzone-card" [class.has-file]="hasResumeFiles"
+                (drop)="onZipDrop($event)" (dragover)="onDragOver($event)">
+                <div class="dropzone-header">
+                  <div class="dropzone-badge resume-badge">2. Resumes Archive or Documents</div>
+                  <span class="ext-badge">.zip · .pdf · .docx · .doc</span>
+                </div>
+
+                <div *ngIf="!hasResumeFiles" class="dropzone-body">
+                  <div class="drop-icon purple-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                  </div>
+                  <h3>Select Resumes Archive or Documents</h3>
+                  <p>Drag and drop a .zip archive or select multiple PDF / DOCX files</p>
+                  <label class="btn select-btn">
+                    <input type="file" (change)="onZipFileSelected($event)" accept=".zip,.pdf,.docx,.doc" multiple hidden />
+                    Browse Resumes (.zip / .pdf / .docx)
+                  </label>
+                  <div class="drop-hint">Max total upload size 200MB</div>
+                </div>
+
+                <div *ngIf="hasResumeFiles" class="selected-file-view">
+                  <div class="file-icon-box purple-box">
+                    <svg *ngIf="isSingleZip" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    <svg *ngIf="!isSingleZip" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  </div>
+                  <div class="file-details">
+                    <div class="file-name-lg">
+                      <span *ngIf="isSingleZip">{{ selectedResumeFiles[0].name }}</span>
+                      <span *ngIf="!isSingleZip">{{ selectedResumeFiles.length }} Resume Documents Selected</span>
+                    </div>
+                    <div class="file-size-lg">
+                      {{ formatFileSize(totalResumeFilesSize) }}
+                      <span *ngIf="!isSingleZip" class="files-summary-pill">· {{ resumeFilesSummary }}</span>
+                    </div>
+                  </div>
+                  <button class="remove-btn" (click)="removeZipFile()" title="Remove files">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+
+                <div *ngIf="resumeUploadErrorMsg" class="upload-error-banner">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  {{ resumeUploadErrorMsg }}
+                </div>
+              </div>
+            </div>
+
+            <!-- COMBINED INGESTION ACTIONS -->
+            <div class="action-footer">
+              <div class="action-summary">
+                <div *ngIf="selectedTrackerFile && hasResumeFiles" class="summary-tag good">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  Dual Ingestion Ready: Tracker + {{ isSingleZip ? 'Zip Archive' : selectedResumeFiles.length + ' Resumes' }}
+                </div>
+                <div *ngIf="selectedTrackerFile && !hasResumeFiles" class="summary-tag blue">
+                  Single Ingestion: Candidate Tracker (.xlsx)
+                </div>
+                <div *ngIf="!selectedTrackerFile && hasResumeFiles" class="summary-tag purple">
+                  Single Ingestion: {{ isSingleZip ? 'Resumes Package (.zip)' : selectedResumeFiles.length + ' Resume Documents' }}
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button class="btn primary btn-lg"
+                  [disabled]="(!selectedTrackerFile && !hasResumeFiles) || isUploadingTracker || isUploadingResumes || isPreviewingHeaders"
+                  (click)="startCombinedIngestion()">
+                  <span *ngIf="isUploadingTracker || isUploadingResumes || isPreviewingHeaders" class="btn-spinner"></span>
+                  <svg *ngIf="!isUploadingTracker && !isUploadingResumes && !isPreviewingHeaders" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  {{ isPreviewingHeaders ? 'Analyzing Headers...' : (isUploadingTracker ? 'Uploading Tracker...' : (isUploadingResumes ? 'Uploading Resumes...' : 'Start Ingestion & AI Matching')) }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================== -->
+        <!-- TAB 3: LIVE MONITOR & DIAGNOSTICS -->
+        <!-- ==================================================================== -->
+        <div *ngIf="activeTab === 'live'" class="tab-pane">
+          <!-- LIVE TRACKER VIEW -->
+          <div *ngIf="currentTrackerBatch" class="live-monitor-section">
+            <div class="live-header">
+              <div>
+                <div class="eyebrow">Spreadsheet Ingestion Monitor</div>
+                <h2>{{ getDisplayFileName(currentTrackerBatch.file_name) }}</h2>
+                <div class="file-meta">{{ formatFileSize(currentTrackerBatch.file_size) }} · {{ currentTrackerBatch.created_at | date:'medium' }}</div>
+              </div>
+              <div>
+                <span class="chip-status" [ngClass]="{
+                  'good': currentTrackerBatch.status === 'COMPLETED',
+                  'warn': currentTrackerBatch.status === 'COMPLETED_WITH_ERRORS',
+                  'blue': currentTrackerBatch.status === 'PROCESSING' || currentTrackerBatch.status === 'PENDING',
+                  'bad': currentTrackerBatch.status === 'FAILED'
+                }">{{ currentTrackerBatch.status }}</span>
+              </div>
+            </div>
+
+            <!-- Big Progress Bar -->
+            <div class="progress-card">
+              <div class="progress-labels">
+                <span class="current-step">Current Sheet: <strong>{{ currentTrackerBatch.current_sheet_name || 'All Sheets' }}</strong> (Row {{ currentTrackerBatch.last_processed_row }})</span>
+                <span class="progress-pct">{{ getProgressPercentage(currentTrackerBatch) }}%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="getProgressPercentage(currentTrackerBatch)"></div>
+              </div>
+            </div>
+
+            <!-- Counters Grid -->
+            <div class="monitor-counters-grid">
+              <div class="counter-box">
+                <div class="cnt-label">Total Rows</div>
+                <div class="cnt-val">{{ currentTrackerBatch.total_rows }}</div>
+              </div>
+              <div class="counter-box good-box">
+                <div class="cnt-label">Ingested Profiles</div>
+                <div class="cnt-val">{{ currentTrackerBatch.success_rows }}</div>
+              </div>
+              <div class="counter-box warn-box">
+                <div class="cnt-label">Validation Errors</div>
+                <div class="cnt-val">{{ currentTrackerBatch.failed_rows }}</div>
+              </div>
+            </div>
+
+            <!-- ERROR LOGS SUB-SECTION -->
+            <div *ngIf="currentTrackerBatch.failed_rows > 0" class="error-logs-container">
+              <div class="error-logs-head">
+                <h3>Error Diagnostics ({{ currentTrackerBatch.failed_rows }} rows)</h3>
+                <div class="sheet-filter-wrap">
+                  <select class="form-select-sm" [(ngModel)]="selectedSheetFilter" (change)="onSheetFilterChange()">
+                    <option value="">All Processed Sheets</option>
+                    <option *ngFor="let s of currentTrackerBatch.processed_sheets" [value]="s">{{ s }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table class="data-table error-table">
+                  <thead>
+                    <tr>
+                      <th>Sheet</th>
+                      <th>Row</th>
+                      <th>Error Description</th>
+                      <th>Raw Extracted Payload</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let err of errorLogs">
+                      <td><span class="sheet-chip">{{ err.sheet_name }}</span></td>
+                      <td class="num-cell">#{{ err.row_number }}</td>
+                      <td class="err-msg-cell">{{ err.error_message }}</td>
+                      <td>
+                        <button class="btn-xs" (click)="openRawDataModal(err.raw_data)">
+                          View JSON
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- LIVE RESUME BATCH VIEW -->
+          <div *ngIf="currentResumeBatch" class="live-monitor-section" style="margin-top: 2rem;">
+            <div class="live-header">
+              <div>
+                <div class="eyebrow">Resume Archive AI Matcher</div>
+                <h2>{{ getDisplayFileName(currentResumeBatch.zip_file_name) }}</h2>
+                <div class="file-meta">{{ formatFileSize(currentResumeBatch.file_size) }} · {{ currentResumeBatch.created_at | date:'medium' }}</div>
+              </div>
+              <div>
+                <span class="chip-status" [ngClass]="{
+                  'good': currentResumeBatch.status === 'COMPLETED',
+                  'warn': currentResumeBatch.status === 'COMPLETED_WITH_ERRORS',
+                  'blue': currentResumeBatch.status === 'PROCESSING' || currentResumeBatch.status === 'PENDING',
+                  'bad': currentResumeBatch.status === 'FAILED'
+                }">{{ currentResumeBatch.status }}</span>
+              </div>
+            </div>
+
+            <div class="progress-card">
+              <div class="progress-labels">
+                <span class="current-step">Matching Progress</span>
+                <span class="progress-pct">{{ getResumeProgressPercentage(currentResumeBatch) }}%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill purple-fill" [style.width.%]="getResumeProgressPercentage(currentResumeBatch)"></div>
+              </div>
+            </div>
+
+            <div class="monitor-counters-grid">
+              <div class="counter-box">
+                <div class="cnt-label">Total Documents</div>
+                <div class="cnt-val">{{ currentResumeBatch.total_files }}</div>
+              </div>
+              <div class="counter-box good-box">
+                <div class="cnt-label">AI Matched & Enriched</div>
+                <div class="cnt-val">{{ currentResumeBatch.matched_files }}</div>
+              </div>
+              <div class="counter-box warn-box">
+                <div class="cnt-label">Unmatched / Pending</div>
+                <div class="cnt-val">{{ currentResumeBatch.unmatched_files }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!currentTrackerBatch && !currentResumeBatch" class="no-batch-monitor">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <h3>No Active Batch Selected</h3>
+            <p>Select a batch from Ingestion History or initiate a New Dual Ingestion.</p>
+          </div>
+        </div>
+
+        <!-- ==================================================================== -->
+        <!-- TAB 4: UNMATCHED RESUMES RESOLVER -->
+        <!-- ==================================================================== -->
+        <div *ngIf="activeTab === 'unmatched'" class="tab-pane">
+          <div class="resolver-head">
+            <div>
+              <h2>Unmatched Resumes Resolver</h2>
+              <p>Resumes where automated 5-priority matching was ambiguous or not found. Inspect AI parsed data and manually attach to any candidate.</p>
+            </div>
+            <div class="resolver-filters">
+              <select class="form-select-sm" [(ngModel)]="selectedUnmatchedBatchFilter" (change)="loadUnmatchedResumes()">
+                <option value="">All Resume Batches</option>
+                <option *ngFor="let rb of recentResumeBatches" [value]="rb.id">{{ getDisplayFileName(rb.zip_file_name) }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="unmatched-cards-grid">
+            <div *ngFor="let un of unmatchedResumes" class="unmatched-card">
+              <div class="unmatched-card-head">
+                <div class="file-badge pdf-badge">PDF</div>
+                <div class="unmatched-file-name" [title]="getDisplayFileName(un.original_filename)">{{ getDisplayFileName(un.original_filename) }}</div>
+              </div>
+
+              <!-- AI Parsed Snapshot -->
+              <div class="ai-snapshot">
+                <div class="ai-meta-row">
+                  <span class="ai-meta-label">Parsed Name:</span>
+                  <span class="ai-meta-val">{{ un.ai_parsed_data?.first_name }} {{ un.ai_parsed_data?.last_name || '' }}</span>
+                </div>
+                <div class="ai-meta-row" *ngIf="un.ai_parsed_data?.phone_number">
+                  <span class="ai-meta-label">Phone:</span>
+                  <span class="ai-meta-val">{{ un.ai_parsed_data?.phone_number }}</span>
+                </div>
+                <div class="ai-meta-row" *ngIf="un.ai_parsed_data?.email">
+                  <span class="ai-meta-label">Email:</span>
+                  <span class="ai-meta-val">{{ un.ai_parsed_data?.email }}</span>
+                </div>
+                <div class="ai-meta-row" *ngIf="un.ai_parsed_data?.skills">
+                  <span class="ai-meta-label">Skills:</span>
+                  <span class="ai-skills-tag">{{ un.ai_parsed_data?.skills }}</span>
+                </div>
+              </div>
+
+              <!-- Diagnostics -->
+              <div class="unmatched-diagnostics">
+                <span class="diag-chip warn">{{ un.match_attempts?.priority_result || 'NO_MATCH' }}</span>
+              </div>
+
+              <!-- Action -->
+              <div class="unmatched-card-footer">
+                <a *ngIf="un.gcs_url" [href]="un.gcs_url" target="_blank" class="btn-xs">Download</a>
+                <button class="btn-xs primary resolve-action-btn" (click)="openResolveModal(un)">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  Resolve & Attach
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="unmatchedResumes.length === 0 && !isLoadingUnmatched" class="all-resolved-view">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" class="good-svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <h3>All Resumes Successfully Matched!</h3>
+              <p>No unmatched resumes pending resolution in the system.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================== -->
+        <!-- TAB 5: DYNAMIC REPORT GENERATOR & EXPORTER -->
+        <!-- ==================================================================== -->
+        <div *ngIf="activeTab === 'reports'" class="tab-pane">
+          <div class="report-builder-container">
+            <!-- Header Intro -->
+            <div class="report-header">
+              <div class="report-header-left">
+                <h2>Custom Candidate Report Generator</h2>
+                <p>Generate bank-statement style candidate export reports. Filter by time-range presets or custom dates, pick exact columns, and download instantly in XLSX or CSV format.</p>
+              </div>
+              <div class="report-format-toggle">
+                <label class="format-card" [class.active]="reportFormat === 'xlsx'">
+                  <input type="radio" name="reportFormat" value="xlsx" [(ngModel)]="reportFormat" hidden />
+                  <div class="format-icon excel-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+                  </div>
+                  <div>
+                    <div class="format-title">Excel (.xlsx)</div>
+                    <div class="format-desc">Styled workbook with auto-width columns</div>
+                  </div>
+                </label>
+
+                <label class="format-card" [class.active]="reportFormat === 'csv'">
+                  <input type="radio" name="reportFormat" value="csv" [(ngModel)]="reportFormat" hidden />
+                  <div class="format-icon csv-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                  </div>
+                  <div>
+                    <div class="format-title">CSV (.csv)</div>
+                    <div class="format-desc">UTF-8 BOM comma-separated spreadsheet</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Messages / Banners -->
+            <div *ngIf="reportSuccessMsg" class="report-banner success-banner">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>{{ reportSuccessMsg }}</span>
+              <button class="banner-close" (click)="reportSuccessMsg = null">✕</button>
+            </div>
+
+            <div *ngIf="reportErrorMsg" class="report-banner error-banner">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>{{ reportErrorMsg }}</span>
+              <button class="banner-close" (click)="reportErrorMsg = null">✕</button>
+            </div>
+
+            <!-- SECTION 1: TIME RANGE SELECTION (Bank-statement style) -->
+            <div class="report-section-card">
+              <div class="section-card-head">
+                <div class="section-title-wrap">
+                  <div class="step-num">1</div>
+                  <div>
+                    <h3>Time Range Statement</h3>
+                    <p class="section-sub">Select a quick preset or customize the exact date range for candidate records.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Range Pills -->
+              <div class="preset-pills-row">
+                <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'last_7_days'" (click)="onDatePresetChange('last_7_days')">
+                  Last 7 Days
+                </button>
+                <ng-container *ngIf="!isRecruiterRole">
+                  <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'last_30_days'" (click)="onDatePresetChange('last_30_days')">
+                    Last 30 Days
+                  </button>
+                  <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'this_month'" (click)="onDatePresetChange('this_month')">
+                    This Month
+                  </button>
+                  <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'last_month'" (click)="onDatePresetChange('last_month')">
+                    Last Month
+                  </button>
+                  <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'last_3_months'" (click)="onDatePresetChange('last_3_months')">
+                    Last 3 Months
+                  </button>
+                  <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'last_6_months'" (click)="onDatePresetChange('last_6_months')">
+                    Last 6 Months
+                  </button>
+                </ng-container>
+                <button type="button" class="preset-pill" [class.active]="reportDatePreset === 'custom'" (click)="onDatePresetChange('custom')">
+                  Custom Range
+                </button>
+              </div>
+
+              <!-- Date Picker Inputs -->
+              <div class="date-inputs-grid">
+                <div class="form-group">
+                  <label class="form-label">From Date</label>
+                  <input
+                    type="date"
+                    class="form-input"
+                    [(ngModel)]="reportDateFrom"
+                    [min]="isRecruiterRole ? minRecruiterDate : null"
+                    [max]="reportDateTo ? (reportDateTo < todayDateStr ? reportDateTo : todayDateStr) : todayDateStr"
+                    (change)="onCustomDateInput()"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">To Date</label>
+                  <input
+                    type="date"
+                    class="form-input"
+                    [(ngModel)]="reportDateTo"
+                    [min]="reportDateFrom ? (isRecruiterRole && reportDateFrom < minRecruiterDate ? minRecruiterDate : reportDateFrom) : (isRecruiterRole ? minRecruiterDate : null)"
+                    [max]="todayDateStr"
+                    (change)="onCustomDateInput()"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Filter by Specific Batch (Optional)</label>
+                  <select class="form-select" [(ngModel)]="reportBatchFilter">
+                    <option value="">All Upload Batches</option>
+                    <option *ngFor="let b of recentTrackerBatches" [value]="b.id">
+                      {{ getDisplayFileName(b.file_name) }} ({{ b.created_at | date:'shortDate' }})
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Source Filter (Optional)</label>
+                  <select class="form-select" [(ngModel)]="reportSourceFilter">
+                    <option value="">All Sources</option>
+                    <option value="External">External (Spreadsheet / Bulk)</option>
+                    <option value="recruiter_submitted">Recruiter Submitted</option>
+                    <option value="self_registered">Self Registered</option>
+                  </select>
+                </div>
+                <div class="date-range-hint" *ngIf="isRecruiterRole">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <span>Recruiter access: selectable dates are restricted to the last 7 days ({{ minRecruiterDate }} to {{ todayDateStr }}). Future dates cannot be selected.</span>
+                </div>
+                <div class="date-range-hint" *ngIf="!isRecruiterRole">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <span>Future dates cannot be selected.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 2: DYNAMIC COLUMN SELECTOR -->
+            <div class="report-section-card">
+              <div class="section-card-head">
+                <div class="section-title-wrap">
+                  <div class="step-num">2</div>
+                  <div>
+                    <h3>Customize Report Columns</h3>
+                    <p class="section-sub">Choose which data attributes to include in the exported report.</p>
+                  </div>
+                </div>
+
+                <div class="column-actions-wrap">
+                  <span class="selected-count-badge">
+                    <strong>{{ selectedReportFields.length }}</strong> of {{ availableReportFields.length }} Columns Selected
+                  </span>
+                  <button type="button" class="btn-sm-ghost" (click)="selectAllReportFields()">Select All</button>
+                  <button type="button" class="btn-sm-ghost" (click)="deselectAllReportFields()">Deselect All</button>
+                </div>
+              </div>
+
+              <!-- Loading Skeleton -->
+              <div *ngIf="isLoadingReportFields" class="columns-loading">
+                <div class="round-loader-sm"></div>
+                <span>Loading available columns schema...</span>
+              </div>
+
+              <!-- Categories & Checkboxes Grid -->
+              <div *ngIf="!isLoadingReportFields" class="categories-grid">
+                <div *ngFor="let cat of reportCategories" class="category-box">
+                  <div class="category-box-head">
+                    <span class="category-name">{{ cat }}</span>
+                    <button type="button" class="cat-toggle-btn" (click)="toggleCategoryFields(cat)">
+                      {{ isCategoryFullySelected(cat) ? 'Deselect Category' : 'Select Category' }}
+                    </button>
+                  </div>
+
+                  <div class="fields-chips-wrap">
+                    <label *ngFor="let field of getFieldsByCategory(cat)" class="field-chip" [class.checked]="isFieldSelected(field.key)">
+                      <input type="checkbox" [checked]="isFieldSelected(field.key)" (change)="toggleReportField(field.key)" />
+                      <span class="chip-label">{{ field.label }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 3: GENERATE & DOWNLOAD ACTION BAR -->
+            <div class="report-action-bar">
+              <div class="action-summary">
+                <div class="summary-title">Ready to Export</div>
+                <div class="summary-sub">
+                  Format: <strong>{{ reportFormat.toUpperCase() }}</strong> ·
+                  Date Range: <strong>{{ reportDateFrom || 'Start' }}</strong> to <strong>{{ reportDateTo || 'Today' }}</strong> ·
+                  Columns: <strong>{{ selectedReportFields.length }} selected</strong>
+                </div>
+              </div>
+
+              <button class="btn primary btn-lg" [disabled]="isGeneratingReport || selectedReportFields.length === 0" (click)="generateAndDownloadReport()">
+                <span *ngIf="isGeneratingReport" class="btn-spinner"></span>
+                <svg *ngIf="!isGeneratingReport" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>{{ isGeneratingReport ? 'Generating Report...' : 'Download Statement Report' }}</span>
+              </button>
+            </div>
+
+            <!-- SECTION 4: RECRUITER'S RECENT APPROVAL REQUESTS -->
+            <div class="my-approval-requests-section" *ngIf="myApprovalRequests.length > 0">
+              <div class="section-title-wrap">
+                <div class="sec-title-group">
+                  <h4 class="section-title">My Approval Requests (Exports &gt; 50 candidates)</h4>
+                  <span class="sec-subtitle">Track Super Admin approvals and download generated reports</span>
+                </div>
+                <button type="button" class="btn-sm-ghost" (click)="loadMyApprovalRequests()">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                  Refresh
+                </button>
+              </div>
+
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Submitted Date</th>
+                      <th>Candidates</th>
+                      <th>Format</th>
+                      <th>Approval Status</th>
+                      <th>Reviewed By (Super Admin)</th>
+                      <th style="text-align: right;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let req of myApprovalRequests">
+                      <td>
+                        <div class="date-cell">{{ req.created_at | date:'medium' }}</div>
+                      </td>
+                      <td>
+                        <span class="badge-count-pill">{{ req.candidate_count }}</span>
+                      </td>
+                      <td>
+                        <span class="format-badge">{{ (req.report_params?.format || 'XLSX') | uppercase }}</span>
+                      </td>
+                      <td>
+                        <span class="status-pill status-{{ req.status.toLowerCase() }}">
+                          {{ req.status }}
+                        </span>
+                      </td>
+                      <td>
+                        <div *ngIf="req.reviewed_by_name" class="reviewer-badge-wrap">
+                          <span class="reviewer-shield">🛡️</span>
+                          <span class="reviewer-name">{{ req.reviewed_by_name }}</span>
+                          <span class="review-date" *ngIf="req.reviewed_at">· {{ req.reviewed_at | date:'short' }}</span>
+                        </div>
+                        <span *ngIf="!req.reviewed_by_name" class="text-muted">—</span>
+                      </td>
+                      <td style="text-align: right;">
+                        <button
+                          *ngIf="req.status === 'APPROVED'"
+                          class="btn-sm btn-download"
+                          (click)="downloadApprovedReportFile(req)"
+                          title="Download approved statement"
+                        >
+                          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          Download Report
+                        </button>
+                        <span *ngIf="req.status === 'PENDING'" class="status-note pending">⏳ Awaiting Super Admin</span>
+                        <span *ngIf="req.status === 'REJECTED'" class="status-note rejected">✕ Denied</span>
+                        <span *ngIf="req.status === 'EXPIRED'" class="status-note expired">⌛ Expired (24h)</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================== -->
+        <!-- TAB 6: SUPER ADMIN APPROVAL REQUESTS (REAL-TIME EVENT DRIVEN) -->
+        <!-- ==================================================================== -->
+        <div *ngIf="activeTab === 'approvals'" class="tab-pane">
+          <!-- Super Admin Header Strip -->
+          <div *ngIf="isSuperAdmin" class="approval-header-strip">
+            <div>
+              <div class="eyebrow" style="color: #6366f1;">Super Admin Governance · Large Data Exports</div>
+              <h3 class="pane-title">Recruiter Report Approval Requests</h3>
+              <p class="pane-sub">
+                Real-time review queue for recruiter exports exceeding {{ lastApprovalThreshold }} candidates.
+                Approving automatically triggers fresh candidate data generation and notifies the recruiter instantly.
+              </p>
+            </div>
+            <button class="btn" (click)="loadApprovalRequests(approvalPage)">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Refresh Queue
+            </button>
+          </div>
+
+          <!-- Recruiter Header Strip -->
+          <div *ngIf="!isSuperAdmin" class="approval-header-strip">
+            <div>
+              <div class="eyebrow" style="color: #10b981;">Candidate Reports · Approval & Download Hub</div>
+              <h3 class="pane-title">My Candidate Report Requests</h3>
+              <p class="pane-sub">
+                Track the approval status of your requested candidate exports exceeding {{ lastApprovalThreshold }} candidates.
+                Once approved by Super Admin, your fresh report will be available here for instant download.
+              </p>
+            </div>
+            <button class="btn" (click)="loadMyApprovalRequests()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Refresh Requests
+            </button>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- VIEW 1: SUPER ADMIN APPROVALS QUEUE TABLE      -->
+          <!-- ============================================== -->
+          <ng-container *ngIf="isSuperAdmin">
+            <!-- Loading State -->
+            <div *ngIf="isLoadingApprovals" class="table-loading">
+              <div class="round-loader-sm"></div>
+              <span>Loading pending approval requests...</span>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!isLoadingApprovals && approvalRequests.length === 0" class="empty-approvals-state">
+              <div class="empty-icon">🛡️</div>
+              <h4>No Approval Requests</h4>
+              <p *ngIf="!approvalStatusFilter">All recruiter candidate reports have been reviewed and processed.</p>
+              <p *ngIf="approvalStatusFilter">No requests found with status '{{ approvalStatusFilter }}'.</p>
+            </div>
+
+            <!-- Approval Requests Table -->
+            <div *ngIf="!isLoadingApprovals && approvalRequests.length > 0" class="table-wrap">
+              <table class="data-table approval-table">
+                <thead>
+                  <tr>
+                    <th>Requested By</th>
+                    <th>Candidate Count</th>
+                    <th>Date Filter Range</th>
+                    <th>Format</th>
+                    <th>Submitted At</th>
+                    <th>Status</th>
+                    <th>Reviewed By</th>
+                    <th style="text-align: right;">Governance Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let req of approvalRequests">
+                    <td>
+                      <div class="user-cell">
+                        <span class="user-avatar">{{ req.requested_by_initials || 'R' }}</span>
+                        <div>
+                          <div class="user-name">{{ req.requested_by_name || 'Recruiter' }}</div>
+                          <div class="user-sub">User ID: {{ req.requested_by_id }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge-count-lg">{{ req.candidate_count }}</span>
+                    </td>
+                    <td>
+                      <div class="date-range-cell">
+                        {{ req.report_params?.date_from ? (req.report_params?.date_from | date:'mediumDate') : 'Beginning' }}
+                        →
+                        {{ req.report_params?.date_to ? (req.report_params?.date_to | date:'mediumDate') : 'Today' }}
+                      </div>
+                    </td>
+                    <td>
+                      <span class="format-badge">{{ (req.report_params?.format || 'XLSX') | uppercase }}</span>
+                    </td>
+                    <td>
+                      <span class="text-sm text-muted">{{ req.created_at | date:'short' }}</span>
+                    </td>
+                    <td>
+                      <span class="status-pill status-{{ req.status.toLowerCase() }}">
+                        {{ req.status }}
+                      </span>
+                    </td>
+                    <td>
+                      <div *ngIf="req.reviewed_by_name" class="reviewer-badge-wrap">
+                        <span class="reviewer-shield">🛡️</span>
+                        <strong class="reviewer-name">{{ req.reviewed_by_name }}</strong>
+                        <div class="review-date">{{ req.reviewed_at | date:'short' }}</div>
+                      </div>
+                      <span *ngIf="!req.reviewed_by_name" class="text-muted">—</span>
+                    </td>
+                    <td style="text-align: right;">
+                      <div class="approval-actions" *ngIf="req.status === 'PENDING'">
+                        <button
+                          class="btn-sm btn-approve"
+                          [disabled]="isActingOnApproval"
+                          (click)="approveApprovalRequest(req)"
+                          title="Approve request and generate fresh report"
+                        >
+                          ✓ Approve
+                        </button>
+                        <button
+                          class="btn-sm btn-reject"
+                          [disabled]="isActingOnApproval"
+                          (click)="rejectApprovalRequest(req)"
+                          title="Reject request"
+                        >
+                          ✕ Reject
+                        </button>
+                      </div>
+                      <div *ngIf="req.status === 'APPROVED'">
+                        <button
+                          class="btn-sm btn-download-alt"
+                          (click)="downloadApprovedReportFile(req)"
+                          title="Download generated report"
+                        >
+                          📥 Download File
+                        </button>
+                      </div>
+                      <span *ngIf="req.status === 'REJECTED' || req.status === 'EXPIRED'" class="text-muted text-sm">
+                        Completed
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
+
+          <!-- ============================================== -->
+          <!-- VIEW 2: RECRUITER MY REPORT REQUESTS TABLE     -->
+          <!-- ============================================== -->
+          <ng-container *ngIf="!isSuperAdmin">
+            <!-- Loading State -->
+            <div *ngIf="isLoadingMyRequests" class="table-loading">
+              <div class="round-loader-sm"></div>
+              <span>Loading your report requests...</span>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!isLoadingMyRequests && filteredMyApprovalRequests.length === 0" class="empty-approvals-state">
+              <div class="empty-icon">📊</div>
+              <h4>No Report Requests Found</h4>
+              <p *ngIf="!approvalStatusFilter">
+                When you request reports with more than {{ lastApprovalThreshold }} candidates, your pending approval requests and download links will appear here.
+              </p>
+              <p *ngIf="approvalStatusFilter">No report requests with status '{{ approvalStatusFilter }}'.</p>
+              <button class="btn primary btn-sm" style="margin-top: 14px;" (click)="setTab('reports')">
+                Go to Export Reports
+              </button>
+            </div>
+
+            <!-- Recruiter Requests Table -->
+            <div *ngIf="!isLoadingMyRequests && filteredMyApprovalRequests.length > 0" class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Submitted Date</th>
+                    <th>Candidate Count</th>
+                    <th>Filter Criteria</th>
+                    <th>Format</th>
+                    <th>Approval Status</th>
+                    <th>Reviewed By</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let req of filteredMyApprovalRequests">
+                    <td>
+                      <div class="date-cell">
+                        <strong>{{ req.created_at | date:'mediumDate' }}</strong>
+                        <div class="time-sub">{{ req.created_at | date:'shortTime' }}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge-count-pill">{{ req.candidate_count }}</span>
+                    </td>
+                    <td>
+                      <div class="date-range-cell">
+                        {{ req.report_params?.date_from ? (req.report_params?.date_from | date:'mediumDate') : 'Beginning' }}
+                        →
+                        {{ req.report_params?.date_to ? (req.report_params?.date_to | date:'mediumDate') : 'Today' }}
+                      </div>
+                      <div *ngIf="req.report_params?.source_filter" class="time-sub">
+                        Source: {{ req.report_params?.source_filter }}
+                      </div>
+                    </td>
+                    <td>
+                      <span class="format-badge">{{ (req.report_params?.format || 'XLSX') | uppercase }}</span>
+                    </td>
+                    <td>
+                      <span class="status-pill status-{{ req.status.toLowerCase() }}">
+                        {{ req.status }}
+                      </span>
+                    </td>
+                    <td>
+                      <div *ngIf="req.reviewed_by_name" class="reviewer-badge-wrap">
+                        <span class="reviewer-shield">🛡️</span>
+                        <strong class="reviewer-name">{{ req.reviewed_by_name }}</strong>
+                        <div class="review-date" *ngIf="req.reviewed_at">· {{ req.reviewed_at | date:'short' }}</div>
+                      </div>
+                      <span *ngIf="!req.reviewed_by_name" class="text-muted">—</span>
+                    </td>
+                    <td style="text-align: right;">
+                      <button
+                        *ngIf="req.status === 'APPROVED'"
+                        class="btn-sm btn-download"
+                        (click)="downloadApprovedReportFile(req)"
+                        title="Download approved candidate report"
+                      >
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Report
+                      </button>
+                      <span *ngIf="req.status === 'PENDING'" class="status-note pending">⏳ Approval Pending</span>
+                      <span *ngIf="req.status === 'REJECTED'" class="status-note rejected">✕ Denied</span>
+                      <span *ngIf="req.status === 'EXPIRED'" class="status-note expired">⌛ Expired (24h)</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
 
-  </div>
+
+
+    <!-- ==================================================================== -->
+    <!-- MODAL: MANUAL RESOLVE CANDIDATE PICKER -->
+    <!-- ==================================================================== -->
+    <div *ngIf="showResolveModal" class="modal-backdrop" (click)="closeResolveModal()">
+      <div class="modal-content resolve-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>Attach Resume to Candidate Profile</h3>
+            <p>Linking: <strong>{{ getDisplayFileName(activeResolvingResume?.original_filename) }}</strong></p>
+          </div>
+          <button class="close-btn" (click)="closeResolveModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-search-box">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" [(ngModel)]="candidateSearchTerm" (input)="filterCandidates()"
+              placeholder="Search candidate by name, email, or phone..." />
+          </div>
+
+          <div class="candidate-picker-list">
+            <div *ngFor="let c of filteredCandidates" class="candidate-pick-item"
+              [class.selected]="selectedCandidateForResolve?.id === c.id"
+              (click)="selectCandidateForResolve(c)">
+              <div class="cand-avatar">{{ (c.first_name[0] || 'C') | uppercase }}</div>
+              <div class="cand-info">
+                <div class="cand-name">{{ c.first_name }} {{ c.last_name || '' }}</div>
+                <div class="cand-sub">{{ c.email || 'No email' }} · {{ c.phone_number || 'No phone' }}</div>
+              </div>
+              <div class="cand-pick-check" *ngIf="selectedCandidateForResolve?.id === c.id">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <div *ngIf="filteredCandidates.length === 0" class="no-cands-found">
+              No candidates found matching '{{ candidateSearchTerm }}'.
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn" (click)="closeResolveModal()">Cancel</button>
+          <button class="btn primary" [disabled]="!selectedCandidateForResolve || isResolving" (click)="confirmResolveUnmatched()">
+            <span *ngIf="isResolving" class="btn-spinner"></span>
+            {{ isResolving ? 'Linking & Embedding...' : 'Confirm Link & Attach Resume' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL: COLUMN MAPPING REVIEW & OVERRIDE -->
+    <!-- ==================================================================== -->
+    <div *ngIf="showMappingModal" class="modal-backdrop" (click)="closeMappingModal()">
+      <div class="modal-content mapping-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>Review Column Mapping</h3>
+            <p>Our 3-tier engine mapped your spreadsheet headers. Review and adjust mappings before ingestion.</p>
+          </div>
+          <button class="close-btn" (click)="closeMappingModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div *ngIf="missingRequiredFields.length > 0" class="mapping-alert-banner">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Required fields missing: <strong>{{ missingRequiredFields.join(', ') }}</strong>. Please assign these columns below.</span>
+          </div>
+
+          <div class="mapping-table-wrap">
+            <table class="tbl mapping-tbl">
+              <thead>
+                <tr>
+                  <th style="width: 30%;">Spreadsheet Header</th>
+                  <th style="width: 40%;">Target Candidate Field</th>
+                  <th style="width: 18%;">Matching Tier</th>
+                  <th style="width: 12%;">Confidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of previewReportItems" [class.unmapped-row]="userCustomMapping[item.column_index.toString()] === '_unmapped'">
+                  <td>
+                    <div class="raw-header-title">"{{ item.raw_header }}"</div>
+                    <div class="raw-header-sub">Column #{{ item.column_index + 1 }}</div>
+                  </td>
+                  <td>
+                    <select
+                      class="form-select-sm mapping-select"
+                      [ngModel]="userCustomMapping[item.column_index.toString()] || item.canonical"
+                      (ngModelChange)="onColumnMappingChange(item.column_index, $event)">
+                      <option value="_unmapped">— Unmapped (Store as metadata) —</option>
+                      <optgroup label="Core Profile Fields">
+                        <option *ngFor="let f of canonicalFieldsList" [value]="f.key">
+                          {{ f.label }} {{ f.required ? '*' : '' }}
+                        </option>
+                      </optgroup>
+                    </select>
+                  </td>
+                  <td>
+                    <span class="tier-badge" [ngClass]="getTierBadgeClass(item.tier)">
+                      {{ item.tier_name }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="confidence-bar-wrap">
+                      <span class="confidence-pct">{{ item.confidence }}%</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn" (click)="closeMappingModal()">Cancel</button>
+          <button class="btn primary"
+            [disabled]="missingRequiredFields.length > 0 || isUploadingTracker"
+            (click)="confirmCustomMappingAndUpload()">
+            <span *ngIf="isUploadingTracker" class="btn-spinner"></span>
+            {{ isUploadingTracker ? 'Ingesting...' : 'Confirm & Start Ingestion' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAW DATA MODAL -->
+    <div *ngIf="showRawDataModal" class="modal-backdrop" (click)="closeRawDataModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Raw Extracted JSON Payload</h3>
+          <button class="close-btn" (click)="closeRawDataModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <pre class="json-code-block">{{ formatRawDataFormatted(selectedRawDataSnippet) }}</pre>
+        </div>
+        <div class="modal-footer">
+          <button class="btn primary" (click)="closeRawDataModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL: APPROVAL PENDING NOTICE (FOR RECRUITERS) -->
+    <!-- ==================================================================== -->
+    <div *ngIf="showApprovalPendingModal" class="modal-backdrop" (click)="showApprovalPendingModal = false">
+      <div class="modal-content approval-pending-modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-icon-header">
+          <div class="approval-modal-icon">🛡️</div>
+          <h3>Super Admin Approval Required</h3>
+          <p class="modal-subtitle">
+            Your candidate export contains <strong>{{ lastApprovalCandidateCount }} candidates</strong>,
+            which exceeds the threshold limit of <strong>{{ lastApprovalThreshold }}</strong>.
+          </p>
+        </div>
+
+        <div class="modal-body-notice">
+          <div class="notice-box">
+            <div class="notice-icon">⚡</div>
+            <div class="notice-text">
+              <strong>Real-Time Super Admin Notification Sent</strong>
+              <p>An approval request has been delivered to the Super Admin team in real-time. Once approved, your fresh report will be generated and you will receive an instant notification to download the report.</p>
+            </div>
+          </div>
+          <p class="notice-hint">You can monitor the status of this request under the <em>"My Report Requests"</em> tab.</p>
+        </div>
+
+        <div class="modal-footer" style="justify-content: center; gap: 12px;">
+          <button class="btn" (click)="showApprovalPendingModal = false">
+            Close
+          </button>
+          <button class="btn primary btn-md" (click)="showApprovalPendingModal = false; setTab('approvals')">
+            View My Report Requests
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>

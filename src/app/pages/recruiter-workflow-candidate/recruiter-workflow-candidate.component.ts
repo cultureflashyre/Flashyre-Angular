@@ -65,6 +65,8 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
   return null;
 }
 
+import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
+
 @Component({
   standalone: true,
   selector: 'recruiter-workflow-candidate',
@@ -77,7 +79,8 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
     FormsModule,
     RecruiterSidebarComponent,
     RelativeDatePipe,
-    AlertMessageComponent
+    AlertMessageComponent,
+    NotificationBellComponent
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewInit {
@@ -96,6 +99,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
   // --- Loading States ---
   isPageLoading: boolean = true;
+  isSourcedLoading: boolean = true;
+  isRegisteredLoading: boolean = false;
+  hasSourcedLoaded: boolean = false;
+  hasRegisteredLoaded: boolean = false;
   isActionLoading: boolean = false;
 
   // --- Detail Modal ---
@@ -178,6 +185,36 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     { value: 'Non-Technical', label: 'Non-Technical' }
   ];
 
+  readonly DEFAULT_CRITERIA_BY_CATEGORY: { [category: string]: RatingCriteria[] } = {
+    'Technical-IT': [
+      { id: 1, category: 'Technical-IT', criterion_key: 'coding_knowledge', criterion_label: 'Coding Knowledge', label_preset: 'standard', display_order: 1, is_active: true },
+      { id: 2, category: 'Technical-IT', criterion_key: 'problem_solving', criterion_label: 'Problem Solving', label_preset: 'standard', display_order: 2, is_active: true },
+      { id: 3, category: 'Technical-IT', criterion_key: 'system_design', criterion_label: 'System Design', label_preset: 'standard', display_order: 3, is_active: true },
+      { id: 4, category: 'Technical-IT', criterion_key: 'tech_stack_familiarity', criterion_label: 'Tech Stack Familiarity', label_preset: 'standard', display_order: 4, is_active: true },
+      { id: 5, category: 'Technical-IT', criterion_key: 'communication', criterion_label: 'Communication', label_preset: 'communication', display_order: 5, is_active: true }
+    ],
+    'Technical-NonIT': [
+      { id: 6, category: 'Technical-NonIT', criterion_key: 'domain_knowledge', criterion_label: 'Domain Knowledge', label_preset: 'standard', display_order: 1, is_active: true },
+      { id: 7, category: 'Technical-NonIT', criterion_key: 'analytical_thinking', criterion_label: 'Analytical Thinking', label_preset: 'standard', display_order: 2, is_active: true },
+      { id: 8, category: 'Technical-NonIT', criterion_key: 'practical_application', criterion_label: 'Practical Application', label_preset: 'standard', display_order: 3, is_active: true },
+      { id: 9, category: 'Technical-NonIT', criterion_key: 'safety_compliance', criterion_label: 'Safety & Compliance', label_preset: 'standard', display_order: 4, is_active: true },
+      { id: 10, category: 'Technical-NonIT', criterion_key: 'communication', criterion_label: 'Communication', label_preset: 'communication', display_order: 5, is_active: true }
+    ],
+    'Non-Technical': [
+      { id: 11, category: 'Non-Technical', criterion_key: 'communication_fluency', criterion_label: 'Communication Fluency', label_preset: 'communication', display_order: 1, is_active: true },
+      { id: 12, category: 'Non-Technical', criterion_key: 'accent_neutrality', criterion_label: 'Accent Neutrality', label_preset: 'standard', display_order: 2, is_active: true },
+      { id: 13, category: 'Non-Technical', criterion_key: 'empathy_composure', criterion_label: 'Empathy & Composure', label_preset: 'standard', display_order: 3, is_active: true },
+      { id: 14, category: 'Non-Technical', criterion_key: 'grammar_vocabulary', criterion_label: 'Grammar & Vocabulary', label_preset: 'standard', display_order: 4, is_active: true },
+      { id: 15, category: 'Non-Technical', criterion_key: 'customer_orientation', criterion_label: 'Customer Orientation', label_preset: 'standard', display_order: 5, is_active: true }
+    ]
+  };
+
+  getAllDefaultCriteria(): RatingCriteria[] {
+    const list: RatingCriteria[] = [];
+    Object.values(this.DEFAULT_CRITERIA_BY_CATEGORY).forEach(arr => list.push(...arr));
+    return list;
+  }
+
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
@@ -253,17 +290,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       })
     );
 
-    this.loadRegisteredUsers();
-
     this.setupLocationAutocomplete();
 
     // Fetch all rating criteria for the filter dropdown
     this.candidateService.getRatingCriteria().subscribe({
       next: (res: any) => {
-        this.allRatingCriteria = res;
+        const criteriaList = Array.isArray(res) && res.length > 0 ? res : this.getAllDefaultCriteria();
+        this.allRatingCriteria = criteriaList;
         this.onFilterCategoryChange();
       },
-      error: (err) => console.error("Failed to load rating criteria", err)
+      error: (err) => {
+        console.error("Failed to load rating criteria, using defaults", err);
+        this.allRatingCriteria = this.getAllDefaultCriteria();
+        this.onFilterCategoryChange();
+      }
     });
   }
 
@@ -323,6 +363,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
   setActiveTab(tab: 'sourced' | 'registered'): void {
     this.activeTab = tab;
+
+    if (tab === 'registered' && !this.hasRegisteredLoaded && !this.isRegisteredLoading) {
+      this.loadRegisteredUsers();
+    }
+
     // Re-apply filters when switching tabs so view is consistent
     this.applyFiltersAndSort();
 
@@ -335,10 +380,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   }
 
   loadRegisteredUsers(): void {
-    // Only show full page loader if initial load
-    if (this.masterCandidates.length === 0 && this.registeredCandidates.length === 0) {
-      this.isPageLoading = true;
-    }
+    this.isRegisteredLoading = true;
 
     this.candidateService.getRegisteredCandidates().subscribe({
       next: (data) => {
@@ -346,17 +388,19 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         this.registeredCandidates = data.map(u => ({ ...u, selected: false }));
         // Apply default sort/filter
         this.applyFiltersAndSort();
-        this.isPageLoading = false;
+        this.isRegisteredLoading = false;
+        this.hasRegisteredLoaded = true;
       },
       error: (err) => {
         console.error("Failed to load registered users", err);
-        this.isPageLoading = false;
+        this.isRegisteredLoading = false;
+        this.hasRegisteredLoaded = true;
       }
     });
   }
 
   loadCandidates(page: number = 1): void {
-    this.isPageLoading = true;
+    this.isSourcedLoading = true;
     this.currentPage = page;
     this.candidateService.getCandidates(page, true, this.formIdFilter).subscribe({
       next: (response: any) => {
@@ -369,10 +413,14 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
         this.masterCandidates = data.map((c: any) => ({ ...c, selected: false }));
         this.applyFiltersAndSort();
+        this.isSourcedLoading = false;
+        this.hasSourcedLoaded = true;
         this.isPageLoading = false;
       },
       error: (err) => {
         console.error("Failed to load candidates.", err);
+        this.isSourcedLoading = false;
+        this.hasSourcedLoaded = true;
         this.isPageLoading = false;
       }
     });
@@ -1321,7 +1369,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       next: (response: any) => {
 
         // CASE 1: Queued (Production Mode)
-        if (response.status === 'PROCESSING' && response.staging_id) {
+        const statusUpper = (response.status || '').toUpperCase();
+        if ((statusUpper === 'PROCESSING' || statusUpper === 'PENDING') && response.staging_id) {
           this.stagingId = response.staging_id;
           this.startPollingResume(response.staging_id);
         }
@@ -1583,6 +1632,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       return locations.map(loc => loc.name || loc).join(', ');
     }
     return String(locations);
+  }
+
+  hasImportMetadata(metadata: any): boolean {
+    if (!metadata || typeof metadata !== 'object') return false;
+    return Object.keys(metadata).some(k => metadata[k] !== null && metadata[k] !== undefined && metadata[k] !== '');
   }
 
   onSubmit(): void {
@@ -1871,14 +1925,23 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.selectedRatingCategory = category;
     this.candidateService.getRatingCriteria(category).subscribe({
       next: (criteria) => {
-        this.ratingCriteria = criteria.sort((a, b) => a.display_order - b.display_order);
+        const list = Array.isArray(criteria) && criteria.length > 0
+          ? criteria
+          : (this.DEFAULT_CRITERIA_BY_CATEGORY[category] || []);
+        this.ratingCriteria = [...list].sort((a, b) => a.display_order - b.display_order);
         this.criteriaScores = {};
         this.ratingCriteria.forEach(c => {
           this.criteriaScores[c.criterion_key] = 0;
         });
       },
       error: (err) => {
-        console.error("Failed to load rating criteria", err);
+        console.error("Failed to load rating criteria, falling back to defaults", err);
+        const fallback = this.DEFAULT_CRITERIA_BY_CATEGORY[category] || [];
+        this.ratingCriteria = [...fallback].sort((a, b) => a.display_order - b.display_order);
+        this.criteriaScores = {};
+        this.ratingCriteria.forEach(c => {
+          this.criteriaScores[c.criterion_key] = 0;
+        });
       }
     });
   }

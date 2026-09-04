@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule, RouterLink } from '@angular/router';
 import { CollectionFormService, PublicFormDetails } from '../../services/collection-form.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { CollectionFormService, PublicFormDetails } from '../../services/collect
   selector: 'app-public-apply',
   templateUrl: './public-apply.component.html',
   styleUrls: ['./public-apply.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, RouterLink]
 })
 export class PublicApplyComponent implements OnInit {
   formId = '';
@@ -24,6 +24,8 @@ export class PublicApplyComponent implements OnInit {
   formLoadTimestamp = 0;
   selectedFile: File | null = null;
   fileError = '';
+
+  private submittedSuccessfully = false;
 
   constructor(
     private fb: FormBuilder,
@@ -177,6 +179,8 @@ export class PublicApplyComponent implements OnInit {
         window.screen.width + 'x' + window.screen.height,
         Intl.DateTimeFormat().resolvedOptions().timeZone,
         canvasHash,
+        (navigator as any).hardwareConcurrency?.toString() || '0',
+        (navigator as any).maxTouchPoints?.toString() || '0',
         Date.now().toString()
       ].join('|');
       return btoa(signals);
@@ -186,12 +190,16 @@ export class PublicApplyComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.submittedSuccessfully) {
+      return;
+    }
+
     if (this.applyForm.invalid || (this.formDetails?.require_resume && !this.selectedFile) || this.fileError) {
       this.applyForm.markAllAsTouched();
       return;
     }
 
-    if (!this.formDetails) return;
+    if (!this.formDetails || this.isSubmitting) return;
 
     this.isSubmitting = true;
     this.errorMessage = '';
@@ -226,13 +234,28 @@ export class PublicApplyComponent implements OnInit {
     this.formService.submitPublicForm(this.formId, formData).subscribe({
       next: () => {
         this.isSubmitting = false;
+        this.submittedSuccessfully = true;
         this.submitSuccess = true;
       },
       error: (err) => {
         console.error('Submission failed', err);
-        this.errorMessage = err.error?.error || 'Failed to submit application. Please refresh the page and try again.';
+        if (err.status === 429) {
+          const retryAfter = err.headers?.get('Retry-After') || err.headers?.get('X-Retry-After');
+          const waitMinutes = retryAfter ? Math.ceil(parseInt(retryAfter, 10) / 60) : 5;
+          this.errorMessage = err.error?.error || `You've submitted too many applications. Please try again in ${waitMinutes} minute(s).`;
+        } else {
+          this.errorMessage = err.error?.error || 'Failed to submit application. Please refresh the page and try again.';
+        }
         this.isSubmitting = false;
       }
     });
+  }
+
+  get whatsappLink(): string {
+    if (!this.formDetails?.created_by_phone) return '';
+    const cleanPhone = this.formDetails.created_by_phone.replace(/\D/g, '');
+    const phoneWithCountry = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+    const message = `Hi with ${this.formDetails.title || 'Job Application'}`;
+    return `https://wa.me/${phoneWithCountry}?text=${encodeURIComponent(message)}`;
   }
 }

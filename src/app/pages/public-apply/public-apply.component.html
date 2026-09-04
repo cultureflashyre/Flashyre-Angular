@@ -1,4 +1,13 @@
 <div class="apply-page-wrapper">
+  <!-- Top Navigation Header (Company Logo in Top-Left Corner) -->
+  <header class="public-apply-header">
+    <div class="header-brand">
+      <a routerLink="/" class="brand-link" title="Flashyre Home">
+        <img id="flashyre-logo" src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png" alt="Flashyre Logo" class="brand-logo" />
+      </a>
+    </div>
+  </header>
+
   <!-- Gradient background blobs -->
   <div class="bg-blob bg-blob-1"></div>
   <div class="bg-blob bg-blob-2"></div>
@@ -23,7 +32,22 @@
         <div class="check-icon"></div>
       </div>
       <h2>Application Submitted!</h2>
-      <p>Thank you for applying. We have received your details and our team will review your application shortly.</p>
+      <p class="success-desc">
+        Thank you for applying. Reach our team by sending <strong>Hi with {{ formDetails?.title }}</strong><span *ngIf="formDetails?.created_by_phone"> to <strong>{{ formDetails?.created_by_phone }}</strong></span>.
+      </p>
+
+      <div class="recruiter-contact-card" *ngIf="formDetails?.created_by_phone">
+        <div class="contact-info">
+          <span class="contact-icon">📞</span>
+          <a [href]="'tel:' + formDetails?.created_by_phone" class="contact-phone-link">
+            {{ formDetails?.created_by_phone }}
+          </a>
+        </div>
+        <a *ngIf="whatsappLink" [href]="whatsappLink" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+          <span>💬 Send "Hi" on WhatsApp</span>
+        </a>
+      </div>
+
       <div class="company-subtext" *ngIf="formDetails">
         <span>{{ formDetails.company_name || 'Flashyre Platform' }}</span>
       </div>

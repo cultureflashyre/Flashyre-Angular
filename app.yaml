@@ -7,13 +7,16 @@ handlers:
   - url: /(.*\.(gif|png|jpg|ico|js|css|woff2|woff|ttf|svg|eot))$
     static_files: dist/teleport-project-template-angular/browser/\1
     upload: dist/teleport-project-template-angular/browser/.*\.(gif|png|jpg|ico|js|css|woff2|woff|ttf|svg|eot)$
+    secure: always
 
   # Serve files from the 'assets' folder
   - url: /assets/(.*)
     static_files: dist/teleport-project-template-angular/browser/assets/\1
     upload: dist/teleport-project-template-angular/browser/assets/.*
+    secure: always
 
   # Catch-all handler to serve index.html for all other requests (enables Angular routing)
   - url: /.*
     static_files: dist/teleport-project-template-angular/browser/index.html
     upload: dist/teleport-project-template-angular/browser/index.html
+    secure: always

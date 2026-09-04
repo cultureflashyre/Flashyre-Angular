@@ -1,0 +1,101 @@
+<div class="bell-wrapper">
+  <!-- Bell Button -->
+  <button 
+    type="button" 
+    class="icon-btn bell-btn" 
+    (click)="toggleDropdown($event)"
+    [attr.aria-expanded]="isOpen"
+    title="Notifications"
+  >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+    <span class="bell-badge-count" *ngIf="badgeCount > 0">{{ badgeCount }}</span>
+  </button>
+
+  <!-- Dropdown Popover -->
+  <div class="bell-popover" *ngIf="isOpen" (click)="$event.stopPropagation()">
+    <div class="popover-header">
+      <div class="header-title">
+        <span>Notifications</span>
+        <span class="header-badge" *ngIf="badgeCount > 0">{{ badgeCount }} New</span>
+      </div>
+      <button type="button" class="close-popover-btn" (click)="closeDropdown()" title="Close">✕</button>
+    </div>
+
+    <!-- Popover Body -->
+    <div class="popover-body">
+      <!-- Super Admin View: Pending Approval Requests -->
+      <ng-container *ngIf="isSuperUser">
+        <div *ngIf="pendingRequests.length === 0 && pendingCount === 0" class="empty-state">
+          <span class="empty-icon">🔔</span>
+          <p class="empty-title">All caught up!</p>
+          <p class="empty-sub">No report export requests are waiting for approval.</p>
+        </div>
+
+        <div *ngIf="pendingRequests.length > 0 || pendingCount > 0" class="notif-list">
+          <div *ngFor="let req of pendingRequests" class="notif-item">
+            <div class="notif-item-icon warning">📋</div>
+            <div class="notif-item-content">
+              <div class="notif-item-title">
+                <strong>{{ req.requester_name || 'Recruiter' }}</strong> requested candidate export
+              </div>
+              <div class="notif-item-meta">
+                <span class="meta-tag">{{ req.candidate_count || '0' }} candidates</span>
+                <span class="meta-sep">•</span>
+                <span class="meta-time">{{ req.created_at | date:'shortTime' }}</span>
+              </div>
+            </div>
+            <div class="notif-item-action">
+              <button type="button" class="action-btn review" (click)="reviewRequest(req.id)">
+                Review
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Recruiter View: Approved Reports Ready to Download -->
+      <ng-container *ngIf="!isSuperUser">
+        <div *ngIf="myApprovedRequests.length === 0 && approvedCount === 0" class="empty-state">
+          <span class="empty-icon">🔔</span>
+          <p class="empty-title">No new notifications</p>
+          <p class="empty-sub">Approved report downloads will appear here in real-time.</p>
+        </div>
+
+        <div *ngIf="myApprovedRequests.length > 0 || approvedCount > 0" class="notif-list">
+          <div *ngFor="let req of myApprovedRequests" class="notif-item">
+            <div class="notif-item-icon success">✅</div>
+            <div class="notif-item-content">
+              <div class="notif-item-title">
+                <strong>Report Request Approved</strong>
+              </div>
+              <div class="notif-item-meta">
+                <span class="meta-tag approved">Ready</span>
+                <span class="meta-sep">•</span>
+                <span class="meta-time">{{ req.candidate_count || 0 }} candidates</span>
+              </div>
+            </div>
+            <div class="notif-item-action">
+              <button 
+                type="button" 
+                class="action-btn download" 
+                (click)="downloadReport(req.id, req.report_params?.format || 'xlsx', $event)"
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Popover Footer -->
+    <div class="popover-footer">
+      <button type="button" class="footer-link" (click)="goToApprovalsTab()">
+        {{ isSuperUser ? 'View all approval requests →' : 'View my report requests →' }}
+      </button>
+    </div>
+  </div>
+</div>

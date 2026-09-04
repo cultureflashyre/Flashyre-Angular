@@ -1179,9 +1179,38 @@
 input:not(:checked) + .slider { background-color: #ff4444; }
 input:checked + .slider { background-color: #28a745; }
 input:not(:checked) + .slider:before { transform: translateX(50px); }
-input:not(:checked) + .slider:after { transform: translateX(50px); content: 'Pause'; }
 input:checked + .slider:before { transform: translateX(0px); }
 input:checked + .slider:after { transform: translateX(0px); content: 'Live'; }
+
+/* Switch for Deleted Tab */
+.slider-deleted {
+  background-color: #6c757d;
+}
+.draft-text { left: 0; }
+.deleted-text { right: 0; }
+
+input:not(:checked) + .slider-deleted {
+  background-color: #e53935;
+}
+input:not(:checked) + .slider-deleted:after {
+  transform: translateX(50px);
+  content: 'Deleted';
+}
+input:checked + .slider-deleted {
+  background-color: #f59e0b;
+}
+input:checked + .slider-deleted:before {
+  transform: translateX(0px);
+}
+input:checked + .slider-deleted:after {
+  transform: translateX(0px);
+  content: 'Draft';
+}
+
+.row-action.success:hover {
+  background: var(--good-soft, #e8f5e9);
+  color: var(--good, #2e7d32);
+}
 
 /* Loading Spinners */
 .loading-spinner {

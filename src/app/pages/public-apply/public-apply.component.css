@@ -42,12 +42,52 @@
   min-height: 100vh;
   background-color: var(--bg);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  overflow: hidden;
+  justify-content: flex-start;
+  padding: 0 20px 48px;
+  overflow-x: hidden;
   font-family: var(--font-sans);
   color: var(--ink);
+}
+
+/* Top Navigation Header (Top Left Logo) */
+.public-apply-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px 0 16px;
+  position: relative;
+  z-index: 20;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  outline: none;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.brand-link:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.brand-logo {
+  height: 40px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  display: block;
 }
 
 /* Background blob animations */
@@ -93,6 +133,7 @@
   max-width: 580px;
   position: relative;
   z-index: 10;
+  margin: auto 0;
 }
 
 /* Panel Glassmorphism */
@@ -205,6 +246,82 @@
   font-size: 1.05rem;
   margin: 0 0 30px 0;
   line-height: 1.6;
+}
+
+.success-desc {
+  color: var(--ink-2) !important;
+  font-size: 1.05rem;
+  margin: 0 0 24px 0 !important;
+  line-height: 1.6;
+}
+
+.success-desc strong {
+  color: var(--ink);
+}
+
+.recruiter-contact-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin: 0 auto 30px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 420px;
+}
+
+.contact-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-2);
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.contact-icon {
+  font-size: 1.1rem;
+}
+
+.contact-phone-link {
+  color: var(--amber);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+}
+
+.contact-phone-link:hover {
+  color: var(--amber-dim);
+  text-decoration: underline;
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #25D366;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+  transition: all 0.25s ease;
+  width: 100%;
+}
+
+.btn-whatsapp:hover {
+  background-color: #1ebe5d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35);
 }
 
 .company-subtext {
@@ -471,5 +588,20 @@
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+@media (max-width: 640px) {
+  .apply-page-wrapper {
+    padding: 0 16px 32px;
+  }
+  .public-apply-header {
+    padding: 16px 0 12px;
+  }
+  .brand-logo {
+    height: 32px;
+  }
+  .card-panel {
+    padding: 24px 20px;
+  }
 }
 

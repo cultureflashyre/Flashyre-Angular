@@ -54,12 +54,10 @@ export interface PaginatedJobPostResponse {
 }
 export interface RawMCQItemFromBackend {
   mcq_item_id: number; // Primary Key of MCQItem model
-  job_mcq_id: number; // Primary Key of JobMCQ model it belongs to
   question_number: number;
   question_text: string; // The raw text including Q, options, and answer 
 }
 export interface JobMcqGroupFromBackend {
-  job_mcq_id: number; // ID of the JobMCQ object
   skill: string;
   mcq_items: RawMCQItemFromBackend[];
 }
@@ -78,7 +76,6 @@ export interface ParsedMCQItem extends RawMCQItemFromBackend {
 }
 export interface DisplayableMcqGroup {
   [skill: string]: {
-    jobMcqId: number; // PK of the JobMCQ model instance
     items: ParsedMCQItem[];
   };
 }
@@ -121,7 +118,6 @@ export interface LegacyAssessmentSaveResponse {
 }
 export interface MCQItem {
   mcq_item_id: number;      // Primary Key of the MCQItem model
-  job_mcq_id: number;       // FK to the parent JobMCQ model
   question_number: number;
   question_text: string;    // The raw text including the question, options, and answer
   difficulty?: string;
@@ -137,7 +133,7 @@ interface SelectedMcqDetail {
   };
 }
 export interface AssessmentDetailResponse {
-  assessment_uuid: string;
+  assessment_unique_id: string;
   name: string;
   is_proctored: boolean;
   has_video_recording: boolean;

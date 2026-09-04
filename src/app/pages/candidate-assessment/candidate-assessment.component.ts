@@ -152,7 +152,12 @@ export class CandidateAssessment implements AfterViewInit {
 
     // Subscribe to keep a local copy for methods like startAssessment
     this.assessments$.subscribe(data => {
-        this.currentAssessments = data.map(ass => {
+        const finalizedAssessments = (data || []).filter(ass => 
+            ass.purpose !== 'generation' && 
+            !ass.is_deleted && 
+            (ass.attempts_remaining === undefined || ass.attempts_remaining > 0)
+        );
+        this.currentAssessments = finalizedAssessments.map(ass => {
             let rawDescription = ass.assessment_description || '';
 
             let cleaned = rawDescription.replace(/[\uF0B7\uF0A7\uF0D8\uF02D]/g, ' • ');

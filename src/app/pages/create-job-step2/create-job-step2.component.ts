@@ -68,12 +68,12 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   showAiSuccessMessage: boolean = false;
 
   readonly REQUIRED_HEADERS = [
-    'question', 
-    'q_option1', 
-    'q_option2', 
-    'q_option3', 
-    'q_option4', 
-    'q_correct_answer'
+    'Question', 
+    'Option A', 
+    'Option B', 
+    'Option C', 
+    'Option D', 
+    'Correct Option'
   ];
 
 
@@ -293,10 +293,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
                     const row = jsonData[i];
                     const rowNum = i + 2; 
 
-                    const isQuestionMissing = !row['question'] || String(row['question']).trim() === '';
-                    const isOption1Missing = !row['q_option1'] || String(row['q_option1']).trim() === '';
-                    const isOption2Missing = !row['q_option2'] || String(row['q_option2']).trim() === '';
-                    const isAnswerMissing  = !row['q_correct_answer'] || String(row['q_correct_answer']).trim() === '';
+                    const getVal = (key: string) => {
+                        const actualKey = Object.keys(row).find(k => k.toLowerCase().trim() === key.toLowerCase());
+                        return actualKey ? row[actualKey] : '';
+                    };
+
+                    const isQuestionMissing = !getVal('question') || String(getVal('question')).trim() === '';
+                    const isOption1Missing = !getVal('option a') || String(getVal('option a')).trim() === '';
+                    const isOption2Missing = !getVal('option b') || String(getVal('option b')).trim() === '';
+                    const isAnswerMissing  = !getVal('correct option') || String(getVal('correct option')).trim() === '';
 
                     if (isQuestionMissing || isOption1Missing || isOption2Missing || isAnswerMissing) {
                         this.showErrorPopup(`Error in section '${sheetName}', Row ${rowNum}: Data missing (Question, Options, or Answer).`);

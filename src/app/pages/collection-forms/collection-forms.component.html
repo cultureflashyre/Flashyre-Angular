@@ -138,7 +138,7 @@
         </div>
         <div class="card-footer">
           <div class="footer-left">
-            <button class="icon-btn copy-btn" [class.copied]="copiedFormId === form.unique_id" (click)="copyLink(form)" title="Copy link">
+            <button class="icon-btn copy-btn" [class.copied]="copiedFormId === form.unique_id" (click)="copyLink(form)" title="Copy link" aria-label="Copy public link">
               <svg *ngIf="copiedFormId !== form.unique_id" width="13" height="13" viewBox="0 0 13 13" fill="none">
                 <rect x="1" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
                 <path d="M4 1h7a1 1 0 011 1v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
@@ -147,7 +147,7 @@
                 <path d="M2 6.5l3 3L11 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <button class="icon-btn qr-btn" (click)="openQRModal(form)" title="QR code">
+            <button class="icon-btn qr-btn" (click)="openQRModal(form)" title="QR code" aria-label="Show QR code">
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                 <rect x="1" y="1" width="4.5" height="4.5" rx="0.8" stroke="currentColor" stroke-width="1.2"/>
                 <rect x="7.5" y="1" width="4.5" height="4.5" rx="0.8" stroke="currentColor" stroke-width="1.2"/>
@@ -156,13 +156,13 @@
                 <rect x="8.2" y="10.1" width="1.3" height="1.3" fill="currentColor"/><rect x="10.1" y="10.1" width="1.3" height="1.3" fill="currentColor"/>
               </svg>
             </button>
-            <button class="icon-btn danger delete-btn" (click)="openDeleteModal(form)" title="Delete">
+            <button class="icon-btn danger delete-btn" (click)="openDeleteModal(form)" title="Delete" aria-label="Delete form">
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                 <path d="M1 3h11M4.5 3V2a1 1 0 011-1h2a1 1 0 011 1v1M5 5.5v5M8 5.5v5M2 3l.7 8a1 1 0 001 .9h5.6a1 1 0 001-.9L11 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
               </svg>
             </button>
             <label class="toggle" title="Toggle active">
-              <input type="checkbox" class="toggle-chk" [checked]="form.is_active" (change)="toggleActive(form)">
+              <input type="checkbox" class="toggle-chk" [checked]="form.is_active" [disabled]="togglingFormId === form.unique_id" (change)="toggleActive(form)">
               <div class="toggle-track"><div class="toggle-thumb"></div></div>
             </label>
           </div>
@@ -287,9 +287,9 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn-secondary" (click)="closeCreateModal()">Cancel</button>
-        <button type="submit" class="btn-primary" [disabled]="createFormGroup.invalid || isLoading">
-          {{ isLoading ? 'Creating...' : 'Create Form' }}
+        <button type="button" class="btn-secondary" (click)="closeCreateModal()" [disabled]="isSubmitting">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="createFormGroup.invalid || isSubmitting || submitCooldown">
+          {{ isSubmitting ? 'Creating...' : (submitCooldown ? 'Created âœ“' : 'Create Form') }}
         </button>
       </div>
     </form>
@@ -339,8 +339,10 @@
       <p class="delete-desc"><strong>{{ formToDelete?.title }}</strong> will be permanently removed. The public link stops working immediately. Existing candidate records are not affected.</p>
     </div>
     <div class="modal-footer" style="justify-content:center; gap:12px;">
-      <button class="btn-secondary" (click)="closeDeleteModal()">Keep it</button>
-      <button class="btn-danger" (click)="confirmDelete()">Delete Form</button>
+      <button class="btn-secondary" (click)="closeDeleteModal()" [disabled]="isDeleting">Keep it</button>
+      <button class="btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
+        {{ isDeleting ? 'Deleting...' : 'Delete Form' }}
+      </button>
     </div>
   </div>
 </div>
@@ -352,7 +354,7 @@
         <div class="modal-title">{{ previewTemplateName }} Template Preview</div>
         <div class="modal-subtitle">Fields included in this application template</div>
       </div>
-      <button class="modal-close" (click)="closePreviewModal()">×</button>
+      <button class="modal-close" (click)="closePreviewModal()">ï¿½</button>
     </div>
     <div class="modal-body" style="padding-top: 10px;">
       <div class="preview-field-list">

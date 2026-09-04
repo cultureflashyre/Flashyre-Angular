@@ -17,7 +17,17 @@ export const environment = {
   mcq_upload_template: 'https://storage.googleapis.com/cflashyre-dev-b2/mcq_question_upload_template/flashyre_mcq_questions_template.xlsx',
   googleMapsApiKey: 'AIzaSyCZ6jeukC7-cGmgCBGPEkAhKQO7Ruxa8AU',
   googleClientId: '970909670920-6r0aibmfor13ti355uh8avfqd4nsaiqf.apps.googleusercontent.com',
+
+  firebase: {
+    apiKey: "AIzaSyBq4HMHBQL3erNEoAWQQLIlKf5_9raCznA",
+    authDomain: "flashyre-dev-506010-343bd.firebaseapp.com",
+    projectId: "flashyre-dev-506010-343bd",
+    storageBucket: "flashyre-dev-506010-343bd.firebasestorage.app",
+    messagingSenderId: "881412327538",
+    appId: "1:881412327538:web:0350156d5257a6eb9edaeb"
+  },
 };
+
 
 /*
   * For easier debugging in development mode, you can import the following file

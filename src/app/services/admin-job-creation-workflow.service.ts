@@ -89,6 +89,7 @@ export class AdminJobCreationWorkflowService {
 
   setCurrentAssessmentId(assessmentId: string): void {
     sessionStorage.setItem(this.ASSESSMENT_ID_KEY, assessmentId);
+    this.currentAssessmentId.next(assessmentId);
   }
 
   getCurrentAssessmentId(): string | null {

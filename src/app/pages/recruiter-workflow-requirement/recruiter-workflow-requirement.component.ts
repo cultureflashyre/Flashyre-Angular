@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { SuperAdminService } from '../../services/super-admin.service';
 
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
+import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 // ❌ POLLING SERVICE REMOVED TO FIX NULLINJECTORERROR
 
 @Component({
@@ -28,7 +29,8 @@ import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/re
     RecruiterSidebarComponent,
     FormsModule,
     AlertMessageComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NotificationBellComponent
   ]
 })
 export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDestroy {
@@ -652,7 +654,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         next: (response: any) => {
 
           // CASE 1: Queued (Production Mode)
-          if (response.status === 'PROCESSING' && response.staging_id) {
+          const statusUpper = (response.status || '').toUpperCase();
+          if ((statusUpper === 'PROCESSING' || statusUpper === 'PENDING') && response.staging_id) {
             this.startPollingJD(response.staging_id);
           }
           // CASE 2: Sync Success (Local Dev Fallback)
@@ -697,11 +700,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         if (attempt >= maxAttempts) return false;
 
         // Keep polling if the status is still processing
-        return res.status === 'PENDING' || res.status === 'PROCESSING';
+        const resStatusUpper = (res.status || '').toUpperCase();
+        return resStatusUpper === 'PENDING' || resStatusUpper === 'PROCESSING';
       }, true) // 'true' ensures the final COMPLETED/FAILED emission triggers the 'next' block
     ).subscribe({
       next: (res: any) => {
-        if (res.status === 'COMPLETED' && res.data) {
+        const resStatusUpper = (res.status || '').toUpperCase();
+        if (resStatusUpper === 'COMPLETED' && res.data) {
           console.log(`[JD Parse] COMPLETED! Populating form with:`, res.data);
 
           let parsedData = res.data;
@@ -719,7 +724,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
           // Successfully obtained object, populate form!
           this.handleJDSuccess(parsedData);
 
-        } else if (res.status === 'FAILED') {
+        } else if (resStatusUpper === 'FAILED') {
           console.error(`[JD Parse] FAILED:`, res.error);
           this.isParsing = false;
           this.triggerAlert("JD Parsing failed: " + (res.error || 'Unknown error'), ['OK']);
@@ -1893,11 +1898,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
           this.nextPageUrl = response.next;
           this.prevPageUrl = response.previous;
 
-          const processedData = data.map((item: any) => ({
-            ...item,
-            selected: false,
-            isExpanded: false
-          }));
+          const processedData = data
+            .filter((item: any) => item.status !== 'draft' && item.status !== 'processing' && item.status !== 'final' && item.status !== 'pause')
+            .map((item: any) => ({
+              ...item,
+              selected: false,
+              isExpanded: false
+            }));
 
           this.masterRequirements = processedData;
           this.requirementsList = processedData;

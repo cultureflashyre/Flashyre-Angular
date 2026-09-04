@@ -12,10 +12,11 @@
             Home
           </a>
 
-          <a *ngIf="isSuperUser" routerLink="/recruiter-workflow-bulk-import" routerLinkActive="active-link"
+          <a *ngIf="showImport" routerLink="/recruiter-workflow-bulk-import" routerLinkActive="active-link"
             id="recruiter-import-link" class="recruiter-workflow-navbar-dashboard-link thq-body-small button">
             Import
           </a>
+
 
           <a routerLink="/recruiter-workflow-requirement" routerLinkActive="active-link"
             id="recruiter-requirements-link" class="recruiter-workflow-navbar-dashboard-link thq-body-small button">
@@ -43,6 +44,7 @@
           </a>
         </nav>
       </div>
+      <app-notification-bell style="margin-right: 16px; display: inline-flex; align-items: center;"></app-notification-bell>
       <div data-thq="thq-dropdown" class="recruiter-workflow-navbar-thq-dropdown list-item">
         <div data-thq="thq-dropdown-toggle" class="recruiter-workflow-navbar-dropdown-toggle1">
           <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-navbar-icon10">
@@ -112,7 +114,7 @@
                 <span id="dashboard-button">Home</span>
               </a>
 
-              <a *ngIf="isSuperUser" routerLink="/recruiter-workflow-bulk-import"
+              <a *ngIf="showImport" routerLink="/recruiter-workflow-bulk-import"
                 class="mobile-nav-link recruiter-workflow-navbar-dashboard-container">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round" class="recruiter-workflow-navbar-dashboard-icon">
@@ -122,6 +124,7 @@
                 </svg>
                 <span id="import-button">Import</span>
               </a>
+
 
               <a routerLink="/recruiter-workflow-requirement"
                 class="mobile-nav-link recruiter-workflow-navbar-jobs-for-container">

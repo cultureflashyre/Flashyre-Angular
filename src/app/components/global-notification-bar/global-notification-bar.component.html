@@ -1,0 +1,41 @@
+<!-- Super Admin Alert Bar -->
+<div class="global-bar superadmin-bar" *ngIf="showSuperAdminBar" role="alert">
+  <div class="bar-container">
+    <div class="bar-content">
+      <span class="bar-icon">🛡️</span>
+      <span class="bar-text">
+        <strong>Super Admin Action Required:</strong> You have 
+        <span class="bar-badge">{{ pendingCount }}</span> 
+        recruiter report export request{{ pendingCount > 1 ? 's' : '' }} awaiting approval.
+      </span>
+    </div>
+    <div class="bar-actions">
+      <button type="button" class="bar-btn review-btn" (click)="reviewRequests()">
+        Review Request{{ pendingCount > 1 ? 's' : '' }}
+      </button>
+      <button type="button" class="bar-close-btn" (click)="dismiss()" title="Dismiss banner">
+        ✕
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Recruiter Alert Bar -->
+<div class="global-bar recruiter-bar" *ngIf="showRecruiterBar" role="alert">
+  <div class="bar-container">
+    <div class="bar-content">
+      <span class="bar-icon">✅</span>
+      <span class="bar-text">
+        <strong>Report Ready:</strong> Your candidate report request has been approved by Super Admin.
+      </span>
+    </div>
+    <div class="bar-actions">
+      <button type="button" class="bar-btn download-btn" (click)="downloadApproved()">
+        Download Report
+      </button>
+      <button type="button" class="bar-close-btn" (click)="dismiss()" title="Dismiss banner">
+        ✕
+      </button>
+    </div>
+  </div>
+</div>

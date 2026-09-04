@@ -1,0 +1,38 @@
+<div class="toast-container" *ngIf="toasts.length > 0" aria-live="polite" aria-atomic="true">
+  <div
+    *ngFor="let toast of toasts"
+    class="toast-card toast-{{ toast.type }}"
+    role="alert"
+  >
+    <div class="toast-icon-wrapper">
+      <span *ngIf="toast.type === 'success'" class="toast-icon">✓</span>
+      <span *ngIf="toast.type === 'warning'" class="toast-icon">⚡</span>
+      <span *ngIf="toast.type === 'error'" class="toast-icon">✕</span>
+      <span *ngIf="toast.type === 'info'" class="toast-icon">ℹ</span>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-header">
+        <strong class="toast-title">{{ toast.title }}</strong>
+        <span class="toast-time">Just now</span>
+      </div>
+      <div class="toast-body">
+        {{ toast.message }}
+      </div>
+      <div *ngIf="toast.actionLabel" class="toast-action-wrapper">
+        <button class="toast-action-btn" (click)="onActionClick(toast)">
+          {{ toast.actionLabel }}
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="toast-close-btn"
+      aria-label="Close"
+      (click)="removeToast(toast.id)"
+    >
+      ×
+    </button>
+  </div>
+</div>

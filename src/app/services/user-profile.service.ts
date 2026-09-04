@@ -9,11 +9,11 @@ export interface UserProfile {
   first_name: string;
   last_name: string;
   profile_picture_url: string | null;
-  company_name: string | null;
-  job_title: string | null;
-  university: string | null;
-  education_level: string | null;
-  specialization: string | null;
+  latest_company_name: string | null;
+  latest_job_title: string | null;
+  latest_university: string | null;
+  latest_education_level: string | null;
+  latest_specialization: string | null;
   initials?: string; // Add initials as optional property
   profile_completion_score: number;
 }

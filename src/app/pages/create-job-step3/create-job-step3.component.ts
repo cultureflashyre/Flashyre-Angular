@@ -364,7 +364,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         // Apply assessment details if found
         switchMap(assessmentDetails => {
           if (assessmentDetails) {
-            this.currentAssessmentId = assessmentDetails.assessment_uuid;
+            this.currentAssessmentId = assessmentDetails.assessment_unique_id;
             this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
             this.applyAssessmentDetails(assessmentDetails);
           }
@@ -381,9 +381,12 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
                   section.totalCount = processedQuestions.length;
                   // If assessment details were applied, re-apply selections to these newly loaded questions
                   if (assessmentDetails && assessmentDetails.selected_mcqs) {
-                      const selectedMcqIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
+                      const selectedMcqIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => 
+                        q.mcq_item_details?.id || q.mcq_item_details?.mcq_item_id || q.mcq_item_id || q.id
+                      ));
                       section.questions.forEach(q => {
-                          if (selectedMcqIds.has(q.mcq_item_id)) {
+                          const qId = q.mcq_item_id || (q as any).id;
+                          if (selectedMcqIds.has(qId)) {
                               q.isSelected = true;
                           }
                       });
@@ -627,33 +630,52 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       console.log("Applying assessment details:", assessmentDetails);
 
       this.assessmentForm.patchValue({
-          assessmentName: assessmentDetails.name,
+          assessmentName: assessmentDetails.name || assessmentDetails.assessment_title,
           shuffleQuestions: assessmentDetails.shuffle_questions_overall,
           isProctored: assessmentDetails.is_proctored,
           allowPhoneAccess: assessmentDetails.allow_phone_access,
           allowVideoRecording: assessmentDetails.has_video_recording,
           difficulty: assessmentDetails.difficulty,
           timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
-          attemptsAllowed: assessmentDetails.attempts_allowed || 1 // Fallback to 1 if null
-
+          attemptsAllowed: assessmentDetails.attempts_allowed || 1
       }, { emitEvent: false });
       this.cdr.detectChanges();
 
-      if (assessmentDetails.selected_mcqs && this.uploadedSkillSections.length > 0) {
-          const selectedUploadedIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
-          this.uploadedSkillSections.forEach(section => {
-              section.questions.forEach(q => {
-                  if (selectedUploadedIds.has(q.id)) {
-                      q.isSelected = true;
-                  }
+      if (assessmentDetails.selected_mcqs) {
+          const selectedMcqIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => 
+              q.mcq_item_details?.id || q.mcq_item_details?.mcq_item_id || q.mcq_item_id || q.id
+          ));
+
+          if (this.skillSections && this.skillSections.length > 0) {
+              this.skillSections.forEach(section => {
+                  section.questions.forEach(q => {
+                      const qId = q.mcq_item_id || (q as any).id;
+                      if (selectedMcqIds.has(qId)) {
+                          q.isSelected = true;
+                      }
+                  });
+                  this.updateCountsForSection(section);
               });
-              this.updateCountsForUploadedSection(section);
-          });
+          }
+
+          if (this.uploadedSkillSections && this.uploadedSkillSections.length > 0) {
+              this.uploadedSkillSections.forEach(section => {
+                  section.questions.forEach(q => {
+                      const qId = q.id || (q as any).mcq_item_id;
+                      if (selectedMcqIds.has(qId)) {
+                          q.isSelected = true;
+                      }
+                  });
+                  this.updateCountsForUploadedSection(section);
+              });
+          }
           this.cdr.detectChanges();
       }
       
       if (assessmentDetails.selected_coding_problems && this.codingProblems.length > 0) {
-        const selectedCodingIds = new Set(assessmentDetails.selected_coding_problems.map((p: any) => p.coding_problem_details.id));
+        const selectedCodingIds = new Set(assessmentDetails.selected_coding_problems.map((p: any) => 
+            p.coding_problem_details?.id || p.coding_problem_details?.coding_id || p.id
+        ));
         
         this.codingProblems.forEach(problem => {
           if (selectedCodingIds.has(problem.id)) {
@@ -663,6 +685,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         this.onCodingProblemSelectionChange();
         this.cdr.detectChanges();
       }
+
+      this.updateSliderFill();
       this.updateCounts();
       this.cdr.detectChanges();
   }
@@ -1270,9 +1294,10 @@ onAlertButtonClicked(action: string) {
         })
       ).subscribe({
         next: (response: any) => {
-          if (response && response.assessment_uuid && !this.currentAssessmentId) {
-            this.currentAssessmentId = response.assessment_uuid;
-            this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
+          const returnedId = response?.assessment_unique_id || response?.assessment_uuid || response?.id;
+          if (returnedId) {
+            this.currentAssessmentId = returnedId;
+            this.workflowService.setCurrentAssessmentId(returnedId);
           }
           
           this.showSuccessPopup('Draft saved successfully!');
@@ -1326,9 +1351,10 @@ onAlertButtonClicked(action: string) {
         })
       ).subscribe({
         next: (response: any) => {
-          if (response && response.assessment_uuid && !this.currentAssessmentId) {
-            this.currentAssessmentId = response.assessment_uuid;
-            this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
+          const returnedId = response?.assessment_unique_id || response?.assessment_uuid || response?.id;
+          if (returnedId) {
+            this.currentAssessmentId = returnedId;
+            this.workflowService.setCurrentAssessmentId(returnedId);
           }
           
           this.showSuccessPopup('Assessment saved successfully!');

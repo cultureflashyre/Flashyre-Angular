@@ -259,7 +259,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
           next: (assessmentDetails) => {
             if (assessmentDetails) {
               console.log('Assessment details received:', assessmentDetails);
-              this.currentAssessmentId = assessmentDetails.assessment_uuid;
+              this.currentAssessmentId = assessmentDetails.assessment_unique_id;
               this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
 
               this.assessmentForm.patchValue({
@@ -419,7 +419,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
           next: (assessmentDetails) => {
             if (assessmentDetails) {
               console.log('Assessment details received:', assessmentDetails);
-              this.currentAssessmentId = assessmentDetails.assessment_uuid;
+              this.currentAssessmentId = assessmentDetails.assessment_unique_id;
               this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
 
               this.assessmentForm.patchValue({
@@ -1182,8 +1182,8 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
                 next: (response) => {
                     this.isSubmitting = false;
                     // CRITICAL: Save the new assessment ID to the workflow
-                    if (response && response.assessment_uuid) {
-                       this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
+                    if (response && response.assessment_unique_id) {
+                       this.workflowService.setCurrentAssessmentId(response.assessment_unique_id);
                     }
                     this.showSuccessPopup('Assessment saved successfully!');
                     // SOLUTION: Delay navigation to allow the user to see the message.
