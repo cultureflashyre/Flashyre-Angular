@@ -1,7 +1,25 @@
-
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 .angular/cache
+
+# Environment & Secrets
+.env
+.env.*
+*.env
+*.env.*
+
+# Deployment Configs
+app.yaml
+app.*.yaml
+*.yaml
+*.yml
+!.github/**/*.yml
+!.github/**/*.yaml
+
+# Playwright E2E Auth, Traces & Test Artifacts
+.auth/
+playwright-report/
+test-results/
 
 # compiled output
 /dist

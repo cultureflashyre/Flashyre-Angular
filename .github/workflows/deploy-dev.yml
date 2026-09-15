@@ -1,0 +1,43 @@
+name: Deploy Dev Frontend to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - dev
+      - adb_prashanth_020326
+    paths-ignore:
+      - '**.md'
+      - 'documentation/**'
+      - '.gitignore'
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: flashyre-dev-506010-343bd
+
+jobs:
+  deploy:
+    name: Build & Deploy to Firebase Hosting (Dev)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          npm install --legacy-peer-deps
+
+      - name: Build Angular Application (Dev Configuration)
+        run: |
+          npm run build -- --configuration=development
+
+      - name: Deploy to Firebase Hosting
+        run: |
+          npx firebase-tools deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project ${{ env.PROJECT_ID }}
