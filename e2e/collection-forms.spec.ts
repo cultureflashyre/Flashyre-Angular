@@ -49,16 +49,13 @@ const MOCK_COLLECTION_FORMS = [
   }
 ];
 
+import { setupAuthenticatedSession, VALID_MOCK_ADMIN_JWT } from './auth-helpers';
+
 // Helper to seed localStorage with authenticated admin session
 async function setupAuthenticatedAdminSession(page: Page) {
-  await page.addInitScript(({ jwt }) => {
-    localStorage.setItem('jwtToken', jwt);
-    localStorage.setItem('userType', 'admin');
-    localStorage.setItem('isSuperUser', 'true');
-    localStorage.setItem('userEmail', 'admin@chcs.com');
-    localStorage.setItem('refreshToken', 'valid-mock-refresh-token');
-  }, { jwt: VALID_MOCK_JWT });
+  await setupAuthenticatedSession(page, 'admin', { email: 'admin@chcs.com' });
 }
+
 
 // Setup common API route mocks
 async function setupApiMocks(page: Page, formsList = MOCK_COLLECTION_FORMS) {
@@ -221,6 +218,104 @@ test.describe('Collection Forms — Positive Tests', () => {
       await expect(page.locator('text=Frontend Engineer Application 2026')).toBeHidden();
     }
   });
+
+  test('P8: Form creation with AI/ML and Data Analyst - 2 enables button and creates form', async ({ page }) => {
+    await page.locator('.controls-bar .btn-primary').first().click();
+    await page.waitForSelector('.modal', { state: 'visible', timeout: 15000 });
+
+    // Test AI/ML
+    const titleInput = page.locator('input[formControlName="title"]');
+    await titleInput.fill('AI/ML Engineer');
+    const submitBtn = page.locator('.modal-footer button[type="submit"]').first();
+    await expect(submitBtn).toBeEnabled();
+
+    // Test Data Analyst - 2
+    await titleInput.fill('Data Analyst - 2');
+    await expect(submitBtn).toBeEnabled();
+
+    // Submit with Data Analyst - 2
+    await submitBtn.click({ force: true });
+    await page.waitForSelector('.modal', { state: 'hidden', timeout: 5000 }).catch(() => {});
+    await expect(page.locator('text=Data Analyst - 2')).toBeVisible();
+  });
+
+  test('P9: Mandatory fields display bright red asterisk (*)', async ({ page }) => {
+    await page.locator('.controls-bar .btn-primary').first().click();
+    await page.waitForSelector('.modal', { state: 'visible', timeout: 15000 });
+
+    // Verify red star on Form title
+    const titleReq = page.locator('.form-label:has-text("Form title") .req');
+    await expect(titleReq).toBeVisible();
+    await expect(titleReq).toHaveText('*');
+    const titleReqColor = await titleReq.evaluate(el => window.getComputedStyle(el).color);
+    // rgb(220, 38, 38) corresponds to #dc2626
+    expect(titleReqColor).toBe('rgb(220, 38, 38)');
+
+    // Verify red star on Template section
+    const tplReq = page.locator('.section-label:has-text("Template") .req');
+    await expect(tplReq).toBeVisible();
+    await expect(tplReq).toHaveText('*');
+    const tplReqColor = await tplReq.evaluate(el => window.getComputedStyle(el).color);
+    expect(tplReqColor).toBe('rgb(220, 38, 38)');
+
+    // Open template preview and verify mandatory field asterisk
+    await page.locator('.tpl-preview-btn').first().click({ force: true });
+    await page.waitForSelector('.preview-field-list', { state: 'visible', timeout: 5000 });
+    const previewReqs = page.locator('.preview-field-item .req');
+    const reqCount = await previewReqs.count();
+    expect(reqCount).toBeGreaterThan(0);
+    const firstPreviewColor = await previewReqs.first().evaluate(el => window.getComputedStyle(el).color);
+    expect(firstPreviewColor).toBe('rgb(220, 38, 38)');
+  });
+
+  test('P10: Candidate public apply form displays only 1 scrollbar and no nested internal scrollbars', async ({ page }) => {
+    await page.route('**/api/public-forms/**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          title: 'Full Stack Engineer Application',
+          company_name: 'Flashyre',
+          require_resume: true,
+          template_type: 'standard',
+          is_active: true
+        })
+      });
+    });
+
+    await page.goto(`${BASE_URL}/apply/11111111-2222-3333-4444-555555555551`);
+    await page.waitForSelector('.apply-page-wrapper');
+
+    const scrollMetrics = await page.evaluate(() => {
+      const html = document.documentElement;
+      const body = document.body;
+      const allElements = [html, body, ...document.querySelectorAll('*')];
+      const internalScrollables = [];
+
+      for (const el of allElements) {
+        if (el === html || el === body) continue;
+        const style = window.getComputedStyle(el);
+        const hasOverflow = el.scrollHeight > el.clientHeight;
+        if (hasOverflow && (style.overflowY === 'auto' || style.overflowY === 'scroll')) {
+          internalScrollables.push({
+            tag: el.tagName,
+            class: el.className,
+            scrollHeight: el.scrollHeight,
+            clientHeight: el.clientHeight
+          });
+        }
+      }
+
+      return {
+        hasHorizontalScrollbar: html.scrollWidth > html.clientWidth,
+        internalScrollableCount: internalScrollables.length,
+        internalScrollables
+      };
+    });
+
+    expect(scrollMetrics.hasHorizontalScrollbar).toBe(false);
+    expect(scrollMetrics.internalScrollableCount).toBe(0);
+  });
 });
 
 // ─── NEGATIVE TESTS ───────────────────────────────────────
@@ -258,6 +353,34 @@ test.describe('Collection Forms — Negative Tests', () => {
     await page.fill('input[formControlName="title"]', longTitle);
     const submitBtn = page.locator('.modal-footer button[type="submit"]').first();
     await expect(submitBtn).toBeDisabled();
+  });
+
+  test('N5: Inline error message is displayed when title is touched and cleared, and input border turns red', async ({ page }) => {
+    await page.locator('.controls-bar .btn-primary').first().click();
+    await page.waitForSelector('.modal', { state: 'visible', timeout: 15000 });
+
+    const titleInput = page.locator('input[formControlName="title"]');
+    await titleInput.focus();
+    await titleInput.fill('Temp Title');
+    await titleInput.fill('');
+    await titleInput.blur();
+
+    const errorMsg = page.locator('.field-error-message:has-text("Form title is required.")');
+    await expect(errorMsg).toBeVisible();
+    await expect(titleInput).toHaveClass(/is-invalid/);
+  });
+
+  test('N6: Inline error message is displayed for invalid characters', async ({ page }) => {
+    await page.locator('.controls-bar .btn-primary').first().click();
+    await page.waitForSelector('.modal', { state: 'visible', timeout: 15000 });
+
+    const titleInput = page.locator('input[formControlName="title"]');
+    await titleInput.fill('<script>alert(1)</script>');
+    await titleInput.blur();
+
+    const errorMsg = page.locator('.field-error-message:has-text("Form title contains invalid characters.")');
+    await expect(errorMsg).toBeVisible();
+    await expect(titleInput).toHaveClass(/is-invalid/);
   });
 });
 

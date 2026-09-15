@@ -197,26 +197,29 @@
         <div class="form-section">
           <div class="section-label">Basic details</div>
           <div class="form-group">
-            <label class="form-label">Form title <span class="req">*</span></label>
-            <input type="text" formControlName="title" class="form-input" placeholder="e.g. Frontend Developer Application">
+            <label class="form-label" for="form-title-input">Form title <span class="req">*</span></label>
+            <input id="form-title-input" type="text" formControlName="title" class="form-input" [class.is-invalid]="isFieldInvalid('title')" placeholder="e.g. Frontend Developer Application">
+            <div class="field-error-message" *ngIf="isFieldInvalid('title')">{{ getFieldError('title') }}</div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Linked job post</label>
-              <select formControlName="job_post" class="form-input">
+              <label class="form-label" for="job-post-select">Linked job post</label>
+              <select id="job-post-select" formControlName="job_post" class="form-input">
                 <option [ngValue]="null">— General Application —</option>
                 <option *ngFor="let req of jobRequirements" [ngValue]="req.id">{{ req.job_role }}</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Company name</label>
-              <input type="text" formControlName="company_name" class="form-input" placeholder="e.g. Flashyre">
+              <label class="form-label" for="company-name-input">Company name</label>
+              <input id="company-name-input" type="text" formControlName="company_name" class="form-input" [class.is-invalid]="isFieldInvalid('company_name')" placeholder="e.g. Flashyre">
+              <div class="field-error-message" *ngIf="isFieldInvalid('company_name')">{{ getFieldError('company_name') }}</div>
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Company logo URL</label>
-            <input type="text" formControlName="logo_url" class="form-input" placeholder="https://example.com/logo.png">
-            <p class="form-hint">Leave blank to use the default icon.</p>
+            <label class="form-label" for="logo-url-input">Company logo URL</label>
+            <input id="logo-url-input" type="text" formControlName="logo_url" class="form-input" [class.is-invalid]="isFieldInvalid('logo_url')" placeholder="https://example.com/logo.png">
+            <div class="field-error-message" *ngIf="isFieldInvalid('logo_url')">{{ getFieldError('logo_url') }}</div>
+            <p class="form-hint" *ngIf="!isFieldInvalid('logo_url')">Leave blank to use the default icon.</p>
           </div>
         </div>
 
@@ -235,21 +238,23 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Auto-expire at</label>
-              <input type="datetime-local" formControlName="expires_at" class="form-input">
-              <p class="form-hint">Form deactivates automatically.</p>
+              <label class="form-label" for="expires-at-input">Auto-expire at</label>
+              <input id="expires-at-input" type="datetime-local" formControlName="expires_at" class="form-input" [class.is-invalid]="isFieldInvalid('expires_at')">
+              <div class="field-error-message" *ngIf="isFieldInvalid('expires_at')">{{ getFieldError('expires_at') }}</div>
+              <p class="form-hint" *ngIf="!isFieldInvalid('expires_at')">Form deactivates automatically.</p>
             </div>
             <div class="form-group">
-              <label class="form-label">Max submissions</label>
-              <input type="number" formControlName="max_submissions" class="form-input" placeholder="Unlimited" min="1">
-              <p class="form-hint">Leave blank for no cap.</p>
+              <label class="form-label" for="max-submissions-input">Max submissions</label>
+              <input id="max-submissions-input" type="number" formControlName="max_submissions" class="form-input" [class.is-invalid]="isFieldInvalid('max_submissions')" placeholder="Unlimited" min="1">
+              <div class="field-error-message" *ngIf="isFieldInvalid('max_submissions')">{{ getFieldError('max_submissions') }}</div>
+              <p class="form-hint" *ngIf="!isFieldInvalid('max_submissions')">Leave blank for no cap.</p>
             </div>
           </div>
         </div>
 
         <div class="form-section">
           <div class="section-label">Template <span class="req" style="margin-left:4px; text-transform:none; letter-spacing:0;">*</span></div>
-          <div class="template-grid">
+          <div class="template-grid" [class.is-invalid]="isFieldInvalid('template_type')">
             <label class="tpl-card" [class.selected]="createFormGroup.get('template_type')?.value === 'standard'">
               <input type="radio" formControlName="template_type" value="standard">
               <div class="tpl-icon-box">📄</div>
@@ -283,6 +288,7 @@
               </button>
             </label>
           </div>
+          <div class="field-error-message" *ngIf="isFieldInvalid('template_type')">{{ getFieldError('template_type') }}</div>
         </div>
 
       </div>
@@ -354,7 +360,7 @@
         <div class="modal-title">{{ previewTemplateName }} Template Preview</div>
         <div class="modal-subtitle">Fields included in this application template</div>
       </div>
-      <button class="modal-close" (click)="closePreviewModal()">�</button>
+      <button class="modal-close" (click)="closePreviewModal()">×</button>
     </div>
     <div class="modal-body" style="padding-top: 10px;">
       <div class="preview-field-list">
@@ -363,6 +369,7 @@
             <path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           {{ field.name }}
+          <span *ngIf="!field.optional" class="req">*</span>
           <span *ngIf="field.optional" style="margin-left: auto; font-size: 0.75rem;">(Optional)</span>
         </div>
       </div>

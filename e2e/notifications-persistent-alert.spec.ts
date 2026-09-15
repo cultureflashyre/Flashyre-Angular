@@ -1,26 +1,12 @@
-import { test, expect } from '@playwright/test';
-import { MOCK_ADMIN_JWT, MOCK_RECRUITER_JWT } from './recruiter-workflow-bulk-import/test-fixtures';
+import { test, expect, setupAuthenticatedSession } from './test-helpers';
 
 test.describe('Persistent Notification Alerts & Idle Heartbeat Workflow', () => {
   const mockPendingRequestId = 'req-test-uuid-001';
   const mockNewPendingRequestId = 'req-test-uuid-002';
 
-  test.beforeEach(async ({ page, context }) => {
-    // Seed authenticated Super Admin state in localStorage with valid JWT for authGuard
-    await context.addInitScript((jwt) => {
-      localStorage.setItem('auth_token', jwt);
-      localStorage.setItem('jwtToken', jwt);
-      localStorage.setItem('token', jwt);
-      localStorage.setItem('refreshToken', 'mock-valid-refresh-token');
-      localStorage.setItem('isSuperUser', 'true');
-      localStorage.setItem('userType', 'admin');
-      localStorage.setItem('user_type', 'admin');
-      localStorage.setItem('user_role', 'admin');
-      localStorage.setItem('userId', '1');
-      localStorage.setItem('user_id', '1');
-      localStorage.setItem('firstName', 'Super');
-      localStorage.setItem('lastName', 'Admin');
-    }, MOCK_ADMIN_JWT);
+  test.beforeEach(async ({ page }) => {
+    // Seed authenticated Super Admin state via centralized helper
+    await setupAuthenticatedSession(page, 'admin');
 
     // Mock candidates API endpoint so page loads cleanly without 401/500
     await page.route('**/api/candidates/**', async (route) => {
@@ -201,20 +187,9 @@ test.describe('Persistent Notification Alerts & Idle Heartbeat Workflow', () => 
     }).not.toContain('Action Required!');
   });
 
-  test('Scenario 6: Recruiter idle state receives approved report persistent alert and bell dismissal', async ({ page, context }) => {
-    // Switch to Recruiter user with valid Recruiter JWT
-    await context.addInitScript((recruiterJwt) => {
-      localStorage.setItem('auth_token', recruiterJwt);
-      localStorage.setItem('jwtToken', recruiterJwt);
-      localStorage.setItem('token', recruiterJwt);
-      localStorage.setItem('refreshToken', 'mock-valid-refresh-token');
-      localStorage.setItem('isSuperUser', 'false');
-      localStorage.setItem('userType', 'recruiter');
-      localStorage.setItem('user_type', 'recruiter');
-      localStorage.setItem('user_role', 'recruiter');
-      localStorage.setItem('userId', '102');
-      localStorage.setItem('user_id', '102');
-    }, MOCK_RECRUITER_JWT);
+  test('Scenario 6: Recruiter idle state receives approved report persistent alert and bell dismissal', async ({ page }) => {
+    // Switch to Recruiter user via centralized helper
+    await setupAuthenticatedSession(page, 'recruiter');
 
     const mockApprovedReqId = 'req-approved-uuid-999';
 

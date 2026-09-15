@@ -26,8 +26,10 @@ export class RecruiterSidebarComponent implements OnInit, OnDestroy {
 
   pendingApprovalCount: number = 0;
   approvedReportsCount: number = 0;
+  unreadCount: number = 0;
   private pendingSub: Subscription | null = null;
   private approvedSub: Subscription | null = null;
+  private unreadSub: Subscription | null = null;
 
   constructor(
     private router: Router,
@@ -79,6 +81,10 @@ export class RecruiterSidebarComponent implements OnInit, OnDestroy {
     this.approvedSub = this.notificationService.approvedReportsCount.subscribe(count => {
       this.approvedReportsCount = count;
     });
+
+    this.unreadSub = this.notificationService.unreadCount.subscribe(count => {
+      this.unreadCount = count;
+    });
   }
 
   get formattedUserType(): string {
@@ -106,6 +112,10 @@ export class RecruiterSidebarComponent implements OnInit, OnDestroy {
     if (this.approvedSub) {
       this.approvedSub.unsubscribe();
       this.approvedSub = null;
+    }
+    if (this.unreadSub) {
+      this.unreadSub.unsubscribe();
+      this.unreadSub = null;
     }
   }
 }

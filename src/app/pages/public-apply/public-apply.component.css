@@ -46,7 +46,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0 20px 48px;
-  overflow-x: hidden;
+  overflow: visible;
   font-family: var(--font-sans);
   color: var(--ink);
 }
@@ -90,13 +90,22 @@
   display: block;
 }
 
+/* Background blob layer - contained to avoid nested scrollbars */
+.bg-blobs-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Background blob animations */
 .bg-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
   opacity: 0.05;
-  z-index: 1;
+  pointer-events: none;
 }
 
 .bg-blob-1 {

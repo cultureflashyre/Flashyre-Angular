@@ -169,6 +169,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
   approvalRequests: ReportApprovalRequest[] = [];
   myApprovalRequests: ReportApprovalRequest[] = [];
   pendingApprovalCount: number = 0;
+  unreadApprovalCount: number = 0;
   isLoadingApprovals: boolean = false;
   isLoadingMyRequests: boolean = false;
   isActingOnApproval: boolean = false;
@@ -180,6 +181,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
   lastApprovalThreshold: number = 50;
   private approvalNotificationSub: Subscription | null = null;
   private pendingCountSub: Subscription | null = null;
+  private unreadApprovalSub: Subscription | null = null;
 
   // User Authentication & RBAC State
   currentUserId: string | null = null;
@@ -242,6 +244,11 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     });
 
     // Real-time Approval Notifications
+    // Synchronize unread count with bell badge and sidebar Import badge
+    this.unreadApprovalSub = this.approvalNotificationService.unreadCount.subscribe(count => {
+      this.unreadApprovalCount = count;
+    });
+
     if (this.isSuperAdmin) {
       this.loadPendingCount();
       this.approvalNotificationService.startListeningForSuperAdmin();
@@ -329,6 +336,10 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
       this.pendingCountSub.unsubscribe();
       this.pendingCountSub = null;
     }
+    if (this.unreadApprovalSub) {
+      this.unreadApprovalSub.unsubscribe();
+      this.unreadApprovalSub = null;
+    }
   }
 
   // ==========================================
@@ -349,6 +360,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
         this.applyDatePreset(this.isRecruiterRole ? 'last_7_days' : 'last_30_days');
       }
     } else if (tab === 'approvals') {
+      this.approvalNotificationService.markNotificationsAsSeen();
       if (this.isSuperAdmin) {
         this.loadApprovalRequests(1);
       } else {

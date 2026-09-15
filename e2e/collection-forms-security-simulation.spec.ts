@@ -9,16 +9,13 @@ const VALID_MOCK_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjI1MzQwMjM
 
 const uniqueEmail = () => `attack_sim_${Date.now()}_${Math.random().toString(36).substring(7)}@testdomain.com`;
 
+import { setupAuthenticatedSession, VALID_MOCK_ADMIN_JWT } from './auth-helpers';
+
 // Helper to seed localStorage with authenticated admin session
 async function setupAuthenticatedAdminSession(page: Page) {
-  await page.addInitScript(({ jwt }) => {
-    localStorage.setItem('jwtToken', jwt);
-    localStorage.setItem('userType', 'admin');
-    localStorage.setItem('isSuperUser', 'true');
-    localStorage.setItem('userEmail', 'admin@chcs.com');
-    localStorage.setItem('refreshToken', 'valid-mock-refresh-token');
-  }, { jwt: VALID_MOCK_JWT });
+  await setupAuthenticatedSession(page, 'admin', { email: 'admin@chcs.com' });
 }
+
 
 // Setup common mock responses for public form
 async function setupPublicFormMock(page: Page) {

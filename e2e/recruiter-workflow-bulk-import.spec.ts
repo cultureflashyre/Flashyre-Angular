@@ -113,14 +113,11 @@ test.describe('Bulk Ingestion & AI Resume Matcher E2E Test Suite', () => {
     }
   ];
 
+import { setupAuthenticatedSession, VALID_MOCK_ADMIN_JWT } from './auth-helpers';
+
   // Helper to seed localStorage with valid Admin credentials
   async function setupAuthenticatedAdminSession(page: any) {
-    await page.addInitScript(({ jwt, userType, isSuperUser }) => {
-      localStorage.setItem('jwtToken', jwt);
-      localStorage.setItem('userType', userType);
-      localStorage.setItem('isSuperUser', isSuperUser);
-      localStorage.setItem('refreshToken', 'valid-mock-refresh-token');
-    }, { jwt: VALID_MOCK_JWT, userType: 'admin', isSuperUser: 'true' });
+    await setupAuthenticatedSession(page, 'admin');
   }
 
   // =========================================================================
@@ -537,11 +534,7 @@ test.describe('Bulk Ingestion & AI Resume Matcher E2E Test Suite', () => {
     });
 
     test('NEG-7: AuthGuard redirects candidate role to /candidate-home due to role mismatch', async ({ page }) => {
-      await page.addInitScript(({ jwt }) => {
-        localStorage.setItem('jwtToken', jwt);
-        localStorage.setItem('userType', 'candidate');
-        localStorage.setItem('refreshToken', 'valid-refresh-token');
-      }, { jwt: VALID_MOCK_JWT });
+      await setupAuthenticatedSession(page, 'candidate');
 
       await page.goto('/recruiter-workflow-bulk-import');
       await expect(page).toHaveURL(/.*candidate-home.*/);

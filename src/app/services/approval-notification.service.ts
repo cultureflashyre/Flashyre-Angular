@@ -55,6 +55,18 @@ export class ApprovalNotificationService implements OnDestroy {
   private db: Firestore | null = null;
   private isFirebaseReady: boolean = false;
 
+  // Time window constant (5 days) and storage key prefix
+  public readonly MAX_NOTIFICATION_DAYS = 5;
+  private readonly STORAGE_KEY_LAST_SEEN_PREFIX = 'flashyre_notif_last_seen_';
+
+  // Unread badge count observable (cleared on exit)
+  private unreadCount$ = new BehaviorSubject<number>(0);
+  public unreadCount: Observable<number> = this.unreadCount$.asObservable();
+
+  // Total recent count in last 5 days (for See More calculation)
+  private totalRecentCount$ = new BehaviorSubject<number>(0);
+  public totalRecentCount: Observable<number> = this.totalRecentCount$.asObservable();
+
   // Real-time pending count observable for Super Admin badges
   private pendingCount$ = new BehaviorSubject<number>(0);
   public pendingCount: Observable<number> = this.pendingCount$.asObservable();
@@ -63,7 +75,7 @@ export class ApprovalNotificationService implements OnDestroy {
   private approvedReportsCount$ = new BehaviorSubject<number>(0);
   public approvedReportsCount: Observable<number> = this.approvedReportsCount$.asObservable();
 
-  // Active approval request items for dropdown preview
+  // Active approval request items for dropdown preview (capped at 5 recent)
   private pendingRequests$ = new BehaviorSubject<any[]>([]);
   public pendingRequests: Observable<any[]> = this.pendingRequests$.asObservable();
 
@@ -94,6 +106,11 @@ export class ApprovalNotificationService implements OnDestroy {
   private isInitialSuperAdminLoad: boolean = true;
   private isInitialRecruiterLoad: boolean = true;
 
+  // Firebase diagnostics & health tracking
+  private lastSnapshotTime: Date | null = null;
+  private lastFirebaseError: any = null;
+  private lastSnapshotDocCount: number = 0;
+
   // Background polling heartbeat & Idle awareness
   private heartbeatSub: Subscription | null = null;
   private visibilityListener: (() => void) | null = null;
@@ -106,6 +123,58 @@ export class ApprovalNotificationService implements OnDestroy {
   ) {
     this.initFirebase();
     this.setupTitleFlashListeners();
+    this.registerGlobalDebugHelper();
+  }
+
+  /**
+   * Registers `window.checkFirebaseStatus()` so developers and testers can check
+   * Firebase connectivity instantly from the browser DevTools Console (F12).
+   */
+  private registerGlobalDebugHelper(): void {
+    if (typeof window !== 'undefined') {
+      (window as any).checkFirebaseStatus = () => this.checkFirebaseStatus();
+      (window as any).checkFirebase = () => this.checkFirebaseStatus();
+    }
+  }
+
+  /**
+   * Returns a complete diagnostic summary and prints a styled table to the console.
+   */
+  public checkFirebaseStatus(): any {
+    const fbConfig = (environment as any).firebase || {};
+    const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
+                    (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
+    const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
+
+    const statusObj = {
+      'Firebase Initialized': this.isFirebaseReady ? 'YES' : 'NO',
+      'Target Project ID': fbConfig.projectId || 'Missing',
+      'Auth Domain': fbConfig.authDomain || 'Missing',
+      'Firestore Database': this.db ? 'Active Instance' : 'Missing / Inactive',
+      'User Role Mode': isSuper ? 'Super Admin' : (userId ? `Recruiter (ID: ${userId})` : 'Anonymous / Not Logged In'),
+      'Super Admin Listener': this.isSuperAdminListening ? 'Listening (onSnapshot active)' : 'Inactive',
+      'Recruiter Listener': this.currentListeningRecruiterId ? `Listening (User: ${this.currentListeningRecruiterId})` : 'Inactive',
+      'Real-time Snapshots Received': this.lastSnapshotTime ? `Yes, ${this.lastSnapshotDocCount} docs at ${this.lastSnapshotTime.toLocaleTimeString()}` : 'No snapshots received yet',
+      'Pending Requests (Total)': this.pendingCount$.getValue(),
+      'Approved Reports (Total)': this.approvedReportsCount$.getValue(),
+      'Unread Badge Count': this.unreadCount$.getValue(),
+      'Total Recent in 5 Days': this.totalRecentCount$.getValue(),
+      'Last Seen Timestamp': this.getLastSeenTimestamp().toLocaleTimeString(),
+      '15s Polling Heartbeat': this.heartbeatSub ? 'Running' : 'Stopped',
+      'Last Error': this.lastFirebaseError ? (this.lastFirebaseError.message || String(this.lastFirebaseError)) : 'None (Healthy)'
+    };
+
+    console.group('%c[FLASHYRE FIREBASE FIRESTORE DIAGNOSTIC REPORT]', 'color: #FFA000; font-size: 13px; font-weight: bold;');
+    console.table(statusObj);
+    if (this.lastFirebaseError) {
+      console.error('[Firebase Firestore] Last Error Details:', this.lastFirebaseError);
+      console.warn('[Firebase Firestore] If permission-denied or service-disabled, verify Firestore API in GCP and Firestore Security Rules.');
+    } else if (this.lastSnapshotTime) {
+      console.log('%c[Firebase Firestore] Real-time connection is healthy and receiving push updates.', 'color: #4CAF50; font-weight: bold;');
+    }
+    console.groupEnd();
+
+    return statusObj;
   }
 
   private setupTitleFlashListeners(): void {
@@ -133,16 +202,17 @@ export class ApprovalNotificationService implements OnDestroy {
     try {
       const fbConfig = (environment as any).firebase;
       if (!fbConfig || !fbConfig.projectId) {
-        console.warn('ApprovalNotificationService: Firebase configuration missing in environment.');
+        console.warn('%c[Firebase Firestore] Firebase configuration missing in environment.', 'color: #FF5722; font-weight: bold;');
         return;
       }
 
       this.app = getApps().length > 0 ? getApp() : initializeApp(fbConfig);
       this.db = getFirestore(this.app);
       this.isFirebaseReady = true;
-      console.log('ApprovalNotificationService: Firebase Firestore client initialized successfully.');
-    } catch (err) {
-      console.warn('ApprovalNotificationService: Could not initialize Firebase:', err);
+      console.log(`%c[Firebase Firestore] Client initialized successfully with project: ${fbConfig.projectId}`, 'color: #4CAF50; font-weight: bold;');
+    } catch (err: any) {
+      this.lastFirebaseError = err;
+      console.error('%c[Firebase Firestore] Could not initialize Firebase:', 'color: #F44336; font-weight: bold;', err);
       this.isFirebaseReady = false;
     }
   }
@@ -204,32 +274,80 @@ export class ApprovalNotificationService implements OnDestroy {
   }
 
   /**
-   * Marks current active pending/approved requests as acknowledged/seen by user.
-   * Persists the latest request ID in localStorage and broadcasts dismissal signal
-   * to dismiss persistent toast alerts and top-level notification bars.
+   * Evaluates if a notification timestamp is within the last 5 days.
    */
-  public markNotificationsAsSeen(): void {
+  public isWithinLast5Days(dateString?: string): boolean {
+    if (!dateString) return true;
+    try {
+      const itemTime = new Date(dateString).getTime();
+      if (isNaN(itemTime)) return true;
+      const fiveDaysAgo = Date.now() - (this.MAX_NOTIFICATION_DAYS * 24 * 60 * 60 * 1000);
+      return itemTime >= fiveDaysAgo;
+    } catch {
+      return true;
+    }
+  }
+
+  /**
+   * Retrieves the timestamp of when the user last closed/viewed the notification dropdown.
+   */
+  public getLastSeenTimestamp(): Date {
+    if (typeof localStorage === 'undefined') return new Date(0);
+    const userId = localStorage.getItem('user_id') || localStorage.getItem('userId') || 'anon';
     const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
                     (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
+    const key = `${this.STORAGE_KEY_LAST_SEEN_PREFIX}${isSuper ? 'admin' : userId}`;
+    const stored = localStorage.getItem(key);
+    return stored ? new Date(stored) : new Date(0);
+  }
 
-    if (isSuper) {
-      const pendingList = this.pendingRequests$.getValue();
-      const reqId = this.latestPendingRequestId ||
-        (pendingList && pendingList.length > 0 ? (pendingList[0].id || pendingList[0].request_id) : null);
-      if (reqId) {
-        this.latestPendingRequestId = String(reqId);
-        localStorage.setItem(this.STORAGE_KEY_PENDING, String(reqId));
-      }
-    } else {
-      const approvedList = this.myApprovedRequests$.getValue();
-      const reqId = this.latestApprovedRequestId ||
-        (approvedList && approvedList.length > 0 ? (approvedList[0].id || approvedList[0].request_id) : null);
-      if (reqId) {
-        this.latestApprovedRequestId = String(reqId);
-        localStorage.setItem(this.STORAGE_KEY_APPROVED, String(reqId));
+  /**
+   * Checks if an individual notification item is unread (created after lastSeenTimestamp).
+   */
+  public isItemUnread(item: any): boolean {
+    if (!item) return false;
+    const itemTimeStr = item.created_at || item.updated_at;
+    if (!itemTimeStr) return false;
+    const itemTime = new Date(itemTimeStr).getTime();
+    if (isNaN(itemTime)) return false;
+    const lastSeenTime = this.getLastSeenTimestamp().getTime();
+    return itemTime > lastSeenTime;
+  }
+
+  /**
+   * Marks current active pending/approved requests as acknowledged/seen by user.
+   * Updates lastSeenTimestamp in localStorage and resets unreadCount to 0,
+   * causing the bell badge count to disappear (Facebook/Instagram pattern).
+   */
+  public markNotificationsAsSeen(): void {
+    if (typeof localStorage !== 'undefined') {
+      const userId = localStorage.getItem('user_id') || localStorage.getItem('userId') || 'anon';
+      const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
+                      (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
+      const key = `${this.STORAGE_KEY_LAST_SEEN_PREFIX}${isSuper ? 'admin' : userId}`;
+      localStorage.setItem(key, new Date().toISOString());
+
+      if (isSuper) {
+        const pendingList = this.pendingRequests$.getValue();
+        const reqId = this.latestPendingRequestId ||
+          (pendingList && pendingList.length > 0 ? (pendingList[0].id || pendingList[0].request_id) : null);
+        if (reqId) {
+          this.latestPendingRequestId = String(reqId);
+          localStorage.setItem(this.STORAGE_KEY_PENDING, String(reqId));
+        }
+      } else {
+        const approvedList = this.myApprovedRequests$.getValue();
+        const reqId = this.latestApprovedRequestId ||
+          (approvedList && approvedList.length > 0 ? (approvedList[0].id || approvedList[0].request_id) : null);
+        if (reqId) {
+          this.latestApprovedRequestId = String(reqId);
+          localStorage.setItem(this.STORAGE_KEY_APPROVED, String(reqId));
+        }
       }
     }
 
+    // Immediately clear unread badge count
+    this.unreadCount$.next(0);
     this.hasUnacknowledgedAlert$.next(false);
     this.alertsDismissed$.next();
   }
@@ -254,7 +372,6 @@ export class ApprovalNotificationService implements OnDestroy {
       bulkService.getApprovalRequests('PENDING', 1).subscribe({
         next: (res) => {
           const results = res.results || [];
-          this.pendingRequests$.next(results);
           this.handlePendingRequestsUpdate(results);
         },
         error: (err) => console.warn('Failed to fetch pending requests list:', err)
@@ -265,22 +382,34 @@ export class ApprovalNotificationService implements OnDestroy {
   }
 
   private handlePendingRequestsUpdate(list: any[]): void {
-    if (!list || list.length === 0) {
+    const rawList = list || [];
+    // Filter to items within the last 5 days
+    const recent5Days = rawList.filter(item => this.isWithinLast5Days(item.created_at || item.updated_at));
+    this.totalRecentCount$.next(recent5Days.length);
+    this.pendingRequests$.next(recent5Days.slice(0, 5));
+
+    // Calculate unread badge count against lastSeenTimestamp
+    const lastSeen = this.getLastSeenTimestamp().getTime();
+    const unread = recent5Days.filter(item => {
+      const t = new Date(item.created_at || item.updated_at || 0).getTime();
+      return t > lastSeen;
+    }).length;
+    this.unreadCount$.next(unread);
+
+    if (recent5Days.length === 0) {
       this.latestPendingRequestId = null;
       this.hasUnacknowledgedAlert$.next(false);
       return;
     }
 
-    const latest = list[0];
+    const latest = recent5Days[0];
     const latestId = String(latest.id || latest.request_id);
     this.latestPendingRequestId = latestId;
-    const storedId = localStorage.getItem(this.STORAGE_KEY_PENDING);
+    const storedId = typeof localStorage !== 'undefined' ? localStorage.getItem(this.STORAGE_KEY_PENDING) : null;
 
     if (storedId === latestId) {
-      // User has already acknowledged this request previously
       this.hasUnacknowledgedAlert$.next(false);
     } else {
-      // Unacknowledged request exists! Show banner and persistent toast
       this.hasUnacknowledgedAlert$.next(true);
 
       if (this.lastToastedPendingRequestId !== latestId) {
@@ -299,7 +428,7 @@ export class ApprovalNotificationService implements OnDestroy {
           () => {
             this.router.navigate(['/recruiter-workflow-bulk-import'], { queryParams: { tab: 'approvals' } });
           },
-          false // autoDismiss: false -> stays until bell icon clicked
+          false // autoDismiss: false
         );
       }
     }
@@ -315,7 +444,6 @@ export class ApprovalNotificationService implements OnDestroy {
         next: (requests) => {
           const approved = (requests || []).filter(r => r.status === 'APPROVED');
           this.approvedReportsCount$.next(approved.length);
-          this.myApprovedRequests$.next(approved.slice(0, 5));
           this.handleApprovedRequestsUpdate(approved);
         },
         error: (err) => console.warn('Failed to fetch my approval requests:', err)
@@ -326,16 +454,30 @@ export class ApprovalNotificationService implements OnDestroy {
   }
 
   private handleApprovedRequestsUpdate(list: any[]): void {
-    if (!list || list.length === 0) {
+    const rawList = list || [];
+    // Filter to items within the last 5 days
+    const recent5Days = rawList.filter(item => this.isWithinLast5Days(item.updated_at || item.created_at));
+    this.totalRecentCount$.next(recent5Days.length);
+    this.myApprovedRequests$.next(recent5Days.slice(0, 5));
+
+    // Calculate unread badge count against lastSeenTimestamp
+    const lastSeen = this.getLastSeenTimestamp().getTime();
+    const unread = recent5Days.filter(item => {
+      const t = new Date(item.updated_at || item.created_at || 0).getTime();
+      return t > lastSeen;
+    }).length;
+    this.unreadCount$.next(unread);
+
+    if (recent5Days.length === 0) {
       this.latestApprovedRequestId = null;
       this.hasUnacknowledgedAlert$.next(false);
       return;
     }
 
-    const latest = list[0];
+    const latest = recent5Days[0];
     const latestId = String(latest.id || latest.request_id);
     this.latestApprovedRequestId = latestId;
-    const storedId = localStorage.getItem(this.STORAGE_KEY_APPROVED);
+    const storedId = typeof localStorage !== 'undefined' ? localStorage.getItem(this.STORAGE_KEY_APPROVED) : null;
 
     if (storedId === latestId) {
       this.hasUnacknowledgedAlert$.next(false);
@@ -356,7 +498,7 @@ export class ApprovalNotificationService implements OnDestroy {
           'success',
           'Download Report',
           () => this.downloadReportDirectly(latest.id || latest.request_id, format),
-          false // autoDismiss: false -> stays until bell icon clicked
+          false // autoDismiss: false
         );
       }
     }
@@ -533,13 +675,33 @@ export class ApprovalNotificationService implements OnDestroy {
         where('status', '==', 'PENDING')
       );
 
+      console.log('%c[Firebase Firestore] 🎧 Subscribing to "report_approval_notifications" (target_role == "super_admin", status == "PENDING")...', 'color: #2196F3;');
+
       this.superAdminUnsubscribe = onSnapshot(
         q,
         snapshot => {
           const count = snapshot.size;
-          this.pendingCount$.next(count);
+          this.lastSnapshotTime = new Date();
+          this.lastSnapshotDocCount = count;
+          this.lastFirebaseError = null;
 
-          if (count === 0) {
+          console.log(`%c[Firebase Firestore] 📥 Super Admin snapshot received: ${count} pending request(s) found in Firestore.`, 'color: #4CAF50; font-weight: bold;');
+
+          // Collect docs and update recent 5-day list and unread count directly from snapshot
+          const snapshotDocs: any[] = [];
+          snapshot.forEach(doc => {
+            snapshotDocs.push({ id: doc.id, ...doc.data() });
+          });
+          const recent5Days = snapshotDocs.filter(d => this.isWithinLast5Days(d.created_at || d.updated_at));
+          this.totalRecentCount$.next(recent5Days.length);
+          this.pendingCount$.next(recent5Days.length);
+          this.pendingRequests$.next(recent5Days.slice(0, 5));
+
+          const lastSeen = this.getLastSeenTimestamp().getTime();
+          const unread = recent5Days.filter(d => new Date(d.created_at || d.updated_at || 0).getTime() > lastSeen).length;
+          this.unreadCount$.next(unread);
+
+          if (recent5Days.length === 0) {
             this.hasUnacknowledgedAlert$.next(false);
           }
 
@@ -586,12 +748,15 @@ export class ApprovalNotificationService implements OnDestroy {
           this.isInitialSuperAdminLoad = false;
         },
         error => {
-          console.warn('ApprovalNotificationService: Super Admin snapshot error:', error);
+          this.lastFirebaseError = error;
+          console.error('%c[Firebase Firestore] ❌ Super Admin snapshot error:', 'color: #F44336; font-weight: bold;', error);
+          console.warn('[Firebase Firestore] 💡 If this is permission-denied or service-disabled, check GCP Console or run "python manage.py check_firebase" on Django backend.');
           this.isSuperAdminListening = false;
         }
       );
-    } catch (err) {
-      console.warn('ApprovalNotificationService: Failed to start Super Admin listener:', err);
+    } catch (err: any) {
+      this.lastFirebaseError = err;
+      console.error('%c[Firebase Firestore] ❌ Failed to start Super Admin listener:', 'color: #F44336; font-weight: bold;', err);
       this.isSuperAdminListening = false;
     }
   }
@@ -622,20 +787,34 @@ export class ApprovalNotificationService implements OnDestroy {
         where('type', '==', 'STATUS_CHANGE')
       );
 
+      console.log(`%c[Firebase Firestore] 🎧 Subscribing to "report_approval_notifications" (target_user_id == "${userId}", type == "STATUS_CHANGE")...`, 'color: #2196F3;');
+
       this.recruiterUnsubscribe = onSnapshot(
         q,
         snapshot => {
-          // Track ready-to-download approved reports count for recruiter badge
-          let approvedCount = 0;
+          this.lastSnapshotTime = new Date();
+          this.lastSnapshotDocCount = snapshot.size;
+          this.lastFirebaseError = null;
+
+          console.log(`%c[Firebase Firestore] 📥 Recruiter snapshot received: ${snapshot.size} notification doc(s) found in Firestore.`, 'color: #4CAF50; font-weight: bold;');
+
+          const snapshotDocs: any[] = [];
           snapshot.forEach(doc => {
             const d = doc.data();
             if (d['status'] === 'APPROVED') {
-              approvedCount++;
+              snapshotDocs.push({ id: doc.id, ...d });
             }
           });
-          this.approvedReportsCount$.next(approvedCount);
+          const recent5Days = snapshotDocs.filter(d => this.isWithinLast5Days(d.updated_at || d.created_at));
+          this.totalRecentCount$.next(recent5Days.length);
+          this.approvedReportsCount$.next(recent5Days.length);
+          this.myApprovedRequests$.next(recent5Days.slice(0, 5));
 
-          if (approvedCount === 0) {
+          const lastSeen = this.getLastSeenTimestamp().getTime();
+          const unread = recent5Days.filter(d => new Date(d.updated_at || d.created_at || 0).getTime() > lastSeen).length;
+          this.unreadCount$.next(unread);
+
+          if (recent5Days.length === 0) {
             this.hasUnacknowledgedAlert$.next(false);
           }
 
@@ -696,12 +875,15 @@ export class ApprovalNotificationService implements OnDestroy {
           this.isInitialRecruiterLoad = false;
         },
         error => {
-          console.warn('ApprovalNotificationService: Recruiter snapshot error:', error);
+          this.lastFirebaseError = error;
+          console.error('%c[Firebase Firestore] ❌ Recruiter snapshot error:', 'color: #F44336; font-weight: bold;', error);
+          console.warn('[Firebase Firestore] 💡 If this is permission-denied or service-disabled, check GCP Console or run "python manage.py check_firebase" on Django backend.');
           this.currentListeningRecruiterId = null;
         }
       );
-    } catch (err) {
-      console.warn('ApprovalNotificationService: Failed to start Recruiter listener:', err);
+    } catch (err: any) {
+      this.lastFirebaseError = err;
+      console.error('%c[Firebase Firestore] ❌ Failed to start Recruiter listener:', 'color: #F44336; font-weight: bold;', err);
       this.currentListeningRecruiterId = null;
     }
   }

@@ -1,11 +1,10 @@
 {
   "config": {
     "argv": [
-      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\nvm4w\\nodejs_\\nodejs\\node.exe",
       "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\node_modules\\@playwright\\test\\cli.js",
       "test",
-      "e2e/notifications-persistent-alert.spec.ts",
-      "--project=chromium"
+      "e2e/notification-bell-read-state.spec.ts"
     ],
     "configFile": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\playwright.config.ts",
     "rootDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/e2e",
@@ -19,7 +18,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 6
+      "actualWorkers": 10
     },
     "preserveOutput": "always",
     "projects": [
@@ -28,7 +27,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 6
+          "actualWorkers": 10
         },
         "id": "chromium",
         "name": "chromium",
@@ -44,7 +43,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 6
+          "actualWorkers": 10
         },
         "id": "firefox",
         "name": "firefox",
@@ -60,7 +59,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 6
+          "actualWorkers": 10
         },
         "id": "webkit",
         "name": "webkit",
@@ -76,7 +75,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 6
+          "actualWorkers": 10
         },
         "id": "mobile-chrome",
         "name": "mobile-chrome",
@@ -127,21 +126,21 @@
   },
   "suites": [
     {
-      "title": "notifications-persistent-alert.spec.ts",
-      "file": "notifications-persistent-alert.spec.ts",
+      "title": "notification-bell-read-state.spec.ts",
+      "file": "notification-bell-read-state.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Persistent Notification Alerts & Idle Heartbeat Workflow",
-          "file": "notifications-persistent-alert.spec.ts",
+          "title": "Synchronized Notification Badges (Bell, Sidebar Import, & Approval Requests Tab)",
+          "file": "notification-bell-read-state.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "Scenario 1: Idle user receives persistent toast and top banner without page interaction",
-              "ok": false,
+              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -154,73 +153,28 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 14348,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-toast-notification .toast-card')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-toast-notification .toast-card')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-toast-notification .toast-card')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-toast-notification .toast-card')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:53:30",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                          "column": 30,
-                          "line": 53
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 51 |\u001b[39m     \u001b[90m// Wait without interacting; verify the persistent toast alert renders\u001b[39m\n \u001b[90m 52 |\u001b[39m     \u001b[36mconst\u001b[39m toastAlert \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-toast-notification .toast-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 53 |\u001b[39m     \u001b[36mawait\u001b[39m expect(toastAlert)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[36mawait\u001b[39m expect(toastAlert)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'New Report Approval Request'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 55 |\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[90m// Verify top global notification bar is visible\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                            "column": 30,
-                            "line": 53
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-toast-notification .toast-card')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-toast-notification .toast-card')\u001b[22m\n\n\n  51 |     // Wait without interacting; verify the persistent toast alert renders\n  52 |     const toastAlert = page.locator('app-toast-notification .toast-card');\n> 53 |     await expect(toastAlert).toBeVisible({ timeout: 10000 });\n     |                              ^\n  54 |     await expect(toastAlert).toContainText('New Report Approval Request');\n  55 |\n  56 |     // Verify top global notification bar is visible\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:53:30"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3468,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-04T21:55:02.334Z",
+                      "startTime": "2026-09-07T07:01:34.983Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-04260-er-without-page-interaction-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-04260-er-without-page-interaction-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-04260-er-without-page-interaction-chromium\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-04260-er-without-page-interaction-chromium\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                        "column": 30,
-                        "line": 53
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "7532d7ab1517bb29676d-863d85ca9e1ff1729b2d",
-              "file": "notifications-persistent-alert.spec.ts",
-              "line": 48,
+              "id": "a7b5b1ba30e70be7fd54-979b9b7ecb989246b95a",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 105,
               "column": 7
             },
             {
-              "title": "Scenario 2: Clicking Notification Bell dismisses toast and top bar and saves to localStorage",
-              "ok": false,
+              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -233,73 +187,28 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 10026,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-toast-notification .toast-card')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-toast-notification .toast-card')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-toast-notification .toast-card')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-toast-notification .toast-card')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:77:30",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                          "column": 30,
-                          "line": 77
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[36mconst\u001b[39m toastAlert \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-toast-notification .toast-card'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m superAdminBar \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-global-notification-bar .superadmin-bar'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(toastAlert)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m     \u001b[36mawait\u001b[39m expect(superAdminBar)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 79 |\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[90m// Click Notification Bell button to acknowledge\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                            "column": 30,
-                            "line": 77
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-toast-notification .toast-card')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-toast-notification .toast-card')\u001b[22m\n\n\n  75 |     const toastAlert = page.locator('app-toast-notification .toast-card');\n  76 |     const superAdminBar = page.locator('app-global-notification-bar .superadmin-bar');\n> 77 |     await expect(toastAlert).toBeVisible();\n     |                              ^\n  78 |     await expect(superAdminBar).toBeVisible();\n  79 |\n  80 |     // Click Notification Bell button to acknowledge\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:77:30"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3656,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-04T21:55:02.347Z",
+                      "startTime": "2026-09-07T07:01:34.976Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-b33a2-r-and-saves-to-localStorage-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-b33a2-r-and-saves-to-localStorage-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-b33a2-r-and-saves-to-localStorage-chromium\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-b33a2-r-and-saves-to-localStorage-chromium\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                        "column": 30,
-                        "line": 77
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "7532d7ab1517bb29676d-698525265e3c9ecef6c7",
-              "file": "notifications-persistent-alert.spec.ts",
-              "line": 72,
+              "id": "a7b5b1ba30e70be7fd54-bf2dc4e3413a20b40477",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 124,
               "column": 7
             },
             {
-              "title": "Scenario 3: Reloading page keeps alerts suppressed but maintains badge counter",
-              "ok": false,
+              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -312,73 +221,28 @@
                     {
                       "workerIndex": 2,
                       "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 8471,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .badge-count')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .badge-count')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .badge-count')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:111:29",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                          "column": 29,
-                          "line": 111
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 109 |\u001b[39m     \u001b[90m// Bell badge must still display 1 for situational reference\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m bellBadge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .badge-count'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 111 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 112 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'1'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 114 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                            "column": 29,
-                            "line": 111
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .badge-count')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .badge-count')\u001b[22m\n\n\n  109 |     // Bell badge must still display 1 for situational reference\n  110 |     const bellBadge = page.locator('app-notification-bell .badge-count');\n> 111 |     await expect(bellBadge).toBeVisible();\n      |                             ^\n  112 |     await expect(bellBadge).toHaveText('1');\n  113 |   });\n  114 |\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:111:29"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3578,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-04T21:55:02.370Z",
+                      "startTime": "2026-09-07T07:01:34.967Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-5166f-but-maintains-badge-counter-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-5166f-but-maintains-badge-counter-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-5166f-but-maintains-badge-counter-chromium\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-5166f-but-maintains-badge-counter-chromium\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                        "column": 29,
-                        "line": 111
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "7532d7ab1517bb29676d-0b7c17a57d53232ab0f4",
-              "file": "notifications-persistent-alert.spec.ts",
-              "line": 95,
+              "id": "a7b5b1ba30e70be7fd54-830e3baf6501f6ef28ce",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 173,
               "column": 7
             },
             {
-              "title": "Scenario 4: New request arrival triggers alert again for idle user",
-              "ok": false,
+              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -391,72 +255,27 @@
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 19248,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-global-notification-bar .superadmin-bar')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-global-notification-bar .superadmin-bar')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-global-notification-bar .superadmin-bar')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-global-notification-bar .superadmin-bar')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:156:33",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                          "column": 33,
-                          "line": 156
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 154 |\u001b[39m\n \u001b[90m 155 |\u001b[39m     \u001b[90m// Verify new alert appears automatically\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 156 |\u001b[39m     \u001b[36mawait\u001b[39m expect(superAdminBar)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 157 |\u001b[39m     \u001b[36mconst\u001b[39m toastAlert \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-toast-notification .toast-card'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 158 |\u001b[39m     \u001b[36mawait\u001b[39m expect(toastAlert)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 159 |\u001b[39m     \u001b[36mawait\u001b[39m expect(toastAlert)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'New Report Approval Request'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                            "column": 33,
-                            "line": 156
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-global-notification-bar .superadmin-bar')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-global-notification-bar .superadmin-bar')\u001b[22m\n\n\n  154 |\n  155 |     // Verify new alert appears automatically\n> 156 |     await expect(superAdminBar).toBeVisible({ timeout: 15000 });\n      |                                 ^\n  157 |     const toastAlert = page.locator('app-toast-notification .toast-card');\n  158 |     await expect(toastAlert).toBeVisible();\n  159 |     await expect(toastAlert).toContainText('New Report Approval Request');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:156:33"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3602,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-04T21:55:02.363Z",
+                      "startTime": "2026-09-07T07:01:35.036Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-1c099-s-alert-again-for-idle-user-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-1c099-s-alert-again-for-idle-user-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-1c099-s-alert-again-for-idle-user-chromium\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-1c099-s-alert-again-for-idle-user-chromium\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                        "column": 33,
-                        "line": 156
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "7532d7ab1517bb29676d-befd6a9eaf58c5bb3a0b",
-              "file": "notifications-persistent-alert.spec.ts",
-              "line": 115,
+              "id": "a7b5b1ba30e70be7fd54-a61b735d0cb110115ee7",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 198,
               "column": 7
             },
             {
-              "title": "Scenario 5: Idle tab title flashes action notice and restores on notification bell click",
+              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
               "ok": false,
               "tags": [],
               "tests": [
@@ -464,78 +283,180 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
                   "results": [
                     {
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "failed",
-                      "duration": 12957,
+                      "duration": 17089,
                       "error": {
-                        "message": "Error: Expected document title to flash action notice for idle user\n\nExpected document title to flash action notice for idle user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Action Required!\"\u001b[39m\nReceived string:    \u001b[31m\"Login - Flashyre\"\u001b[39m\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate",
-                        "stack": "Error: Expected document title to flash action notice for idle user\n\nExpected document title to flash action notice for idle user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Action Required!\"\u001b[39m\nReceived string:    \u001b[31m\"Login - Flashyre\"\u001b[39m\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:170:8",
+                        "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/recruiter-workflow-bulk-import\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/recruiter-workflow-bulk-import\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:106:16",
                         "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                          "column": 8,
-                          "line": 170
+                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                          "column": 16,
+                          "line": 106
                         },
-                        "snippet": "\u001b[0m \u001b[90m 168 |\u001b[39m       timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 169 |\u001b[39m       intervals\u001b[33m:\u001b[39m [\u001b[35m1000\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1500\u001b[39m]\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 170 |\u001b[39m     })\u001b[33m.\u001b[39mtoContain(\u001b[32m'Action Required!'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 171 |\u001b[39m\n \u001b[90m 172 |\u001b[39m     \u001b[90m// Click Notification Bell button to acknowledge\u001b[39m\n \u001b[90m 173 |\u001b[39m     \u001b[36mconst\u001b[39m bellButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .notification-bell-btn'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 104 |\u001b[39m\n \u001b[90m 105 |\u001b[39m   test(\u001b[32m'All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/recruiter-workflow-bulk-import'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 107 |\u001b[39m\n \u001b[90m 108 |\u001b[39m     \u001b[90m// 1. Notification Bell badge shows 6\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[36mconst\u001b[39m bellBadge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .bell-badge-count'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                            "column": 8,
-                            "line": 170
+                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                            "column": 16,
+                            "line": 106
                           },
-                          "message": "Error: Expected document title to flash action notice for idle user\n\nExpected document title to flash action notice for idle user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Action Required!\"\u001b[39m\nReceived string:    \u001b[31m\"Login - Flashyre\"\u001b[39m\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  168 |       timeout: 10000,\n  169 |       intervals: [1000, 1500],\n> 170 |     }).toContain('Action Required!');\n      |        ^\n  171 |\n  172 |     // Click Notification Bell button to acknowledge\n  173 |     const bellButton = page.locator('app-notification-bell .notification-bell-btn');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:170:8"
+                          "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/recruiter-workflow-bulk-import\", waiting until \"load\"\u001b[22m\n\n\n  104 |\n  105 |   test('All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously', async ({ page }) => {\n> 106 |     await page.goto('/recruiter-workflow-bulk-import');\n      |                ^\n  107 |\n  108 |     // 1. Notification Bell badge shows 6\n  109 |     const bellBadge = page.locator('app-notification-bell .bell-badge-count');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:106:16"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-04T21:55:02.374Z",
+                      "startTime": "2026-09-07T07:01:35.017Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ee0df--on-notification-bell-click-chromium\\test-failed-1.png"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\test-failed-1.png"
                         },
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ee0df--on-notification-bell-click-chromium\\video.webm"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\video.webm"
                         },
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ee0df--on-notification-bell-click-chromium\\error-context.md"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\error-context.md"
                         },
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ee0df--on-notification-bell-click-chromium\\trace.zip"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\trace.zip"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                        "column": 8,
-                        "line": 170
+                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                        "column": 16,
+                        "line": 106
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "7532d7ab1517bb29676d-f23d4bc54edf2b258af0",
-              "file": "notifications-persistent-alert.spec.ts",
-              "line": 162,
+              "id": "a7b5b1ba30e70be7fd54-f4c938edeeea871698dc",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 105,
               "column": 7
             },
             {
-              "title": "Scenario 6: Recruiter idle state receives approved report persistent alert and bell dismissal",
+              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 15963,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:35.014Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-9b0dd37a7118edbe39c0",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 124,
+              "column": 7
+            },
+            {
+              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 17465,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:35.003Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-ed06e1215bcc9a8bfe9c",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 173,
+              "column": 7
+            },
+            {
+              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 14315,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:35.043Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-4ddf2a19b2180f4ce405",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
               "ok": false,
               "tags": [],
               "tests": [
@@ -543,74 +464,447 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
+                      "workerIndex": 8,
+                      "parallelIndex": 8,
                       "status": "failed",
-                      "duration": 9088,
+                      "duration": 18015,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-global-notification-bar .recruiter-bar')\nExpected substring: \u001b[32m\"Report \u001b[7mApproved\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7m✅\u001b[27mReport \u001b[7mReady: Your candidate report request has been approved by Super Admin.  Download Report  ✕ \u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-global-notification-bar .recruiter-bar')\u001b[22m\n\u001b[2m    14 × locator resolved to <div role=\"alert\" _ngcontent-ng-c1307176385=\"\" class=\"global-bar recruiter-bar ng-star-inserted\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"✅Report Ready: Your candidate report request has been approved by Super Admin.  Download Report  ✕ \"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-global-notification-bar .recruiter-bar')\nExpected substring: \u001b[32m\"Report \u001b[7mApproved\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7m✅\u001b[27mReport \u001b[7mReady: Your candidate report request has been approved by Super Admin.  Download Report  ✕ \u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-global-notification-bar .recruiter-bar')\u001b[22m\n\u001b[2m    14 × locator resolved to <div role=\"alert\" _ngcontent-ng-c1307176385=\"\" class=\"global-bar recruiter-bar ng-star-inserted\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"✅Report Ready: Your candidate report request has been approved by Super Admin.  Download Report  ✕ \"\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:221:32",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:110:29",
                         "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                          "column": 32,
-                          "line": 221
+                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                          "column": 29,
+                          "line": 110
                         },
-                        "snippet": "\u001b[0m \u001b[90m 219 |\u001b[39m     \u001b[36mconst\u001b[39m recruiterBar \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-global-notification-bar .recruiter-bar'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 220 |\u001b[39m     \u001b[36mawait\u001b[39m expect(recruiterBar)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 221 |\u001b[39m     \u001b[36mawait\u001b[39m expect(recruiterBar)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'Report Approved'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 222 |\u001b[39m\n \u001b[90m 223 |\u001b[39m     \u001b[90m// Bell badge shows 1 approved report ready\u001b[39m\n \u001b[90m 224 |\u001b[39m     \u001b[36mconst\u001b[39m bellBadge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .badge-count'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 108 |\u001b[39m     \u001b[90m// 1. Notification Bell badge shows 6\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[36mconst\u001b[39m bellBadge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .bell-badge-count'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[90m// 2. Sidebar \"Import\" badge shows 6\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                            "column": 32,
-                            "line": 221
+                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                            "column": 29,
+                            "line": 110
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-global-notification-bar .recruiter-bar')\nExpected substring: \u001b[32m\"Report \u001b[7mApproved\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7m✅\u001b[27mReport \u001b[7mReady: Your candidate report request has been approved by Super Admin.  Download Report  ✕ \u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-global-notification-bar .recruiter-bar')\u001b[22m\n\u001b[2m    14 × locator resolved to <div role=\"alert\" _ngcontent-ng-c1307176385=\"\" class=\"global-bar recruiter-bar ng-star-inserted\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"✅Report Ready: Your candidate report request has been approved by Super Admin.  Download Report  ✕ \"\u001b[22m\n\n\n  219 |     const recruiterBar = page.locator('app-global-notification-bar .recruiter-bar');\n  220 |     await expect(recruiterBar).toBeVisible();\n> 221 |     await expect(recruiterBar).toContainText('Report Approved');\n      |                                ^\n  222 |\n  223 |     // Bell badge shows 1 approved report ready\n  224 |     const bellBadge = page.locator('app-notification-bell .badge-count');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts:221:32"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n\n  108 |     // 1. Notification Bell badge shows 6\n  109 |     const bellBadge = page.locator('app-notification-bell .bell-badge-count');\n> 110 |     await expect(bellBadge).toBeVisible({ timeout: 10000 });\n      |                             ^\n  111 |     await expect(bellBadge).toHaveText('6');\n  112 |\n  113 |     // 2. Sidebar \"Import\" badge shows 6\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:110:29"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-04T21:55:02.352Z",
+                      "startTime": "2026-09-07T07:01:35.030Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ce6b2-nt-alert-and-bell-dismissal-chromium\\test-failed-1.png"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\test-failed-1.png"
                         },
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ce6b2-nt-alert-and-bell-dismissal-chromium\\video.webm"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\video.webm"
                         },
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ce6b2-nt-alert-and-bell-dismissal-chromium\\error-context.md"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\error-context.md"
                         },
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notifications-persistent-a-ce6b2-nt-alert-and-bell-dismissal-chromium\\trace.zip"
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\trace.zip"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notifications-persistent-alert.spec.ts",
-                        "column": 32,
-                        "line": 221
+                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                        "column": 29,
+                        "line": 110
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "7532d7ab1517bb29676d-08074ccb4e27f3a72f2b",
-              "file": "notifications-persistent-alert.spec.ts",
-              "line": 183,
+              "id": "a7b5b1ba30e70be7fd54-19ace202f6168bea959b",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 105,
+              "column": 7
+            },
+            {
+              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 9,
+                      "status": "failed",
+                      "duration": 18047,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:132:29",
+                        "location": {
+                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                          "column": 29,
+                          "line": 132
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 130 |\u001b[39m\n \u001b[90m 131 |\u001b[39m     \u001b[90m// Confirm all 3 badges are visible initially\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[36mawait\u001b[39m expect(sidebarImportBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 135 |\u001b[39m     \u001b[36mawait\u001b[39m expect(approvalsTabBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                            "column": 29,
+                            "line": 132
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n\n  130 |\n  131 |     // Confirm all 3 badges are visible initially\n> 132 |     await expect(bellBadge).toBeVisible({ timeout: 10000 });\n      |                             ^\n  133 |     await expect(bellBadge).toHaveText('6');\n  134 |     await expect(sidebarImportBadge).toHaveText('6');\n  135 |     await expect(approvalsTabBadge).toHaveText('6');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:132:29"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:35.045Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                        "column": 29,
+                        "line": 132
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-a5723ba0bf15941d92c8",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 124,
+              "column": 7
+            },
+            {
+              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 14372,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:181:29",
+                        "location": {
+                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                          "column": 29,
+                          "line": 181
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 179 |\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[90m// Confirm all 3 badges are visible initially\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m expect(sidebarImportBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mawait\u001b[39m expect(approvalsTabBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                            "column": 29,
+                            "line": 181
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n\n  179 |\n  180 |     // Confirm all 3 badges are visible initially\n> 181 |     await expect(bellBadge).toBeVisible({ timeout: 10000 });\n      |                             ^\n  182 |     await expect(sidebarImportBadge).toHaveText('6');\n  183 |     await expect(approvalsTabBadge).toHaveText('6');\n  184 |\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:181:29"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:41.078Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                        "column": 29,
+                        "line": 181
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-c5ceb02a8adf1da7e15b",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 173,
+              "column": 7
+            },
+            {
+              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 15635,
+                      "error": {
+                        "message": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('app-notification-bell .see-more-btn')\u001b[22m\n",
+                        "stack": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('app-notification-bell .see-more-btn')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:208:22",
+                        "location": {
+                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                          "column": 22,
+                          "line": 208
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 206 |\u001b[39m\n \u001b[90m 207 |\u001b[39m     \u001b[36mconst\u001b[39m seeMoreBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .see-more-btn'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 208 |\u001b[39m     \u001b[36mawait\u001b[39m seeMoreBtn\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 209 |\u001b[39m\n \u001b[90m 210 |\u001b[39m     \u001b[90m// Popover closes\u001b[39m\n \u001b[90m 211 |\u001b[39m     \u001b[36mawait\u001b[39m expect(popover)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                            "column": 22,
+                            "line": 208
+                          },
+                          "message": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('app-notification-bell .see-more-btn')\u001b[22m\n\n\n  206 |\n  207 |     const seeMoreBtn = page.locator('app-notification-bell .see-more-btn');\n> 208 |     await seeMoreBtn.click();\n      |                      ^\n  209 |\n  210 |     // Popover closes\n  211 |     await expect(popover).not.toBeVisible();\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:208:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:41.058Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
+                        "column": 22,
+                        "line": 208
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-8dae28408243f57b9dae",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1961,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:41.072Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-658f7573ff7081993604",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 105,
+              "column": 7
+            },
+            {
+              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2776,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:41.320Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-fd01351e671e4cc631f0",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 124,
+              "column": 7
+            },
+            {
+              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 3727,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:43.265Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-a3dcb6e8d3aeef554976",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 173,
+              "column": 7
+            },
+            {
+              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1994,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-07T07:01:44.347Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a7b5b1ba30e70be7fd54-62fa136ae035d4d5e302",
+              "file": "notification-bell-read-state.spec.ts",
+              "line": 198,
               "column": 7
             }
           ]
@@ -620,11 +914,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-04T21:54:46.391Z",
-    "duration": 35720.048,
-    "expected": 0,
+    "startTime": "2026-09-07T07:01:34.179Z",
+    "duration": 23263.836,
+    "expected": 11,
     "skipped": 0,
-    "unexpected": 6,
+    "unexpected": 5,
     "flaky": 0
   }
 }

@@ -146,9 +146,8 @@
                 <polyline points="9 12 11 14 15 10"/>
               </svg>
               {{ isSuperAdmin ? 'Approval Requests' : 'My Report Requests' }}
-              <span class="tab-count tab-badge-pulse" *ngIf="isSuperAdmin && pendingApprovalCount > 0">{{ pendingApprovalCount }}</span>
-              <span class="tab-count tab-badge-pulse green-badge" *ngIf="!isSuperAdmin && myApprovedReportCount > 0" title="Approved reports ready to download">{{ myApprovedReportCount }}</span>
-              <span class="tab-count" *ngIf="!isSuperAdmin && myApprovedReportCount === 0 && myPendingApprovalCount > 0" title="Pending approval">{{ myPendingApprovalCount }}</span>
+              <span class="tab-count tab-badge-pulse" *ngIf="isSuperAdmin && unreadApprovalCount > 0">{{ unreadApprovalCount }}</span>
+              <span class="tab-count tab-badge-pulse green-badge" *ngIf="!isSuperAdmin && unreadApprovalCount > 0" title="Approved reports ready to download">{{ unreadApprovalCount }}</span>
             </button>
           </div>
 

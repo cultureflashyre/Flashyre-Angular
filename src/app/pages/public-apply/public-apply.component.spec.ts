@@ -117,4 +117,15 @@ describe('PublicApplyComponent', () => {
     expect(logoImg.getAttribute('src')).toContain('/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png');
     expect(logoImg.getAttribute('alt')).toBe('Flashyre Logo');
   });
+
+  it('should contain background blobs within bg-blobs-layer to prevent duplicate scrollbars', () => {
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const blobLayer = compiled.querySelector('.bg-blobs-layer');
+    expect(blobLayer).toBeTruthy();
+    expect(blobLayer?.querySelector('.bg-blob-1')).toBeTruthy();
+    expect(blobLayer?.querySelector('.bg-blob-2')).toBeTruthy();
+    const wrapper = compiled.querySelector('.apply-page-wrapper');
+    expect(wrapper).toBeTruthy();
+  });
 });

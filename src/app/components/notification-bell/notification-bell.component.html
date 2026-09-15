@@ -24,22 +24,27 @@
       <button type="button" class="close-popover-btn" (click)="closeDropdown()" title="Close">✕</button>
     </div>
 
-    <!-- Popover Body -->
+    <!-- Popover Body (Bounded Height + Slim Scrollbar) -->
     <div class="popover-body">
-      <!-- Super Admin View: Pending Approval Requests -->
+      <!-- Super Admin View: Pending Approval Requests (Capped at 5 from last 5 days) -->
       <ng-container *ngIf="isSuperUser">
-        <div *ngIf="pendingRequests.length === 0 && pendingCount === 0" class="empty-state">
+        <div *ngIf="pendingRequests.length === 0" class="empty-state">
           <span class="empty-icon">🔔</span>
           <p class="empty-title">All caught up!</p>
-          <p class="empty-sub">No report export requests are waiting for approval.</p>
+          <p class="empty-sub">No report export requests from the last 5 days.</p>
         </div>
 
-        <div *ngIf="pendingRequests.length > 0 || pendingCount > 0" class="notif-list">
-          <div *ngFor="let req of pendingRequests" class="notif-item">
+        <div *ngIf="pendingRequests.length > 0" class="notif-list">
+          <div 
+            *ngFor="let req of pendingRequests | slice:0:5" 
+            class="notif-item" 
+            [class.unread-item]="isUnread(req)"
+          >
             <div class="notif-item-icon warning">📋</div>
             <div class="notif-item-content">
               <div class="notif-item-title">
                 <strong>{{ req.requester_name || 'Recruiter' }}</strong> requested candidate export
+                <span class="unread-dot" *ngIf="isUnread(req)" title="Unread"></span>
               </div>
               <div class="notif-item-meta">
                 <span class="meta-tag">{{ req.candidate_count || '0' }} candidates</span>
@@ -56,20 +61,25 @@
         </div>
       </ng-container>
 
-      <!-- Recruiter View: Approved Reports Ready to Download -->
+      <!-- Recruiter View: Approved Reports Ready to Download (Capped at 5 from last 5 days) -->
       <ng-container *ngIf="!isSuperUser">
-        <div *ngIf="myApprovedRequests.length === 0 && approvedCount === 0" class="empty-state">
+        <div *ngIf="myApprovedRequests.length === 0" class="empty-state">
           <span class="empty-icon">🔔</span>
           <p class="empty-title">No new notifications</p>
-          <p class="empty-sub">Approved report downloads will appear here in real-time.</p>
+          <p class="empty-sub">Approved report downloads from the last 5 days will appear here.</p>
         </div>
 
-        <div *ngIf="myApprovedRequests.length > 0 || approvedCount > 0" class="notif-list">
-          <div *ngFor="let req of myApprovedRequests" class="notif-item">
+        <div *ngIf="myApprovedRequests.length > 0" class="notif-list">
+          <div 
+            *ngFor="let req of myApprovedRequests | slice:0:5" 
+            class="notif-item" 
+            [class.unread-item]="isUnread(req)"
+          >
             <div class="notif-item-icon success">✅</div>
             <div class="notif-item-content">
               <div class="notif-item-title">
                 <strong>Report Request Approved</strong>
+                <span class="unread-dot" *ngIf="isUnread(req)" title="Unread"></span>
               </div>
               <div class="notif-item-meta">
                 <span class="meta-tag approved">Ready</span>
@@ -89,12 +99,18 @@
           </div>
         </div>
       </ng-container>
+
+      <!-- See More Row if there are more than 5 notifications from the last 5 days -->
+      <div class="see-more-row" *ngIf="totalRecentCount > 5">
+        <span class="see-more-text">+{{ totalRecentCount - 5 }} more recent requests</span>
+        <button type="button" class="see-more-btn" (click)="seeMore()">See More</button>
+      </div>
     </div>
 
     <!-- Popover Footer -->
     <div class="popover-footer">
-      <button type="button" class="footer-link" (click)="goToApprovalsTab()">
-        {{ isSuperUser ? 'View all approval requests →' : 'View my report requests →' }}
+      <button type="button" class="footer-link" (click)="seeMore()">
+        {{ isSuperUser ? 'View all approval requests →' : 'View all report requests →' }}
       </button>
     </div>
   </div>

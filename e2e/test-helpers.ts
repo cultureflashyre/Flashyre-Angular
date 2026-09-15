@@ -80,3 +80,6 @@ export async function measureResponseTime<T>(
 
   return { result, metric };
 }
+
+// Centralized Authentication & JWT Utilities for all current and future E2E tests
+export * from './auth-helpers';

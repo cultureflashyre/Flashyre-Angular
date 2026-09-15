@@ -1,5 +1,6 @@
 // playwright/recruiter-workflow-bulk-import/test-fixtures.ts
 import { Page, expect } from '@playwright/test';
+import { setupAuthenticatedSession } from '../auth-helpers';
 
 /**
  * Valid mock JWT with role 'admin' and future expiration (year 2038)
@@ -219,18 +220,12 @@ export async function setupMockAuthAndApis(page: Page, options?: {
   const userId = options?.user?.user_id || '1';
   const isSuperUser = options?.user?.is_superuser ?? true;
 
-  // 1. Inject Auth token into localStorage
-  await page.addInitScript((data) => {
-    localStorage.setItem('auth_token', data.jwt);
-    localStorage.setItem('jwtToken', data.jwt);
-    localStorage.setItem('token', data.jwt);
-    localStorage.setItem('userType', data.userType);
-    localStorage.setItem('user_type', data.userType);
-    localStorage.setItem('user_role', data.userType);
-    localStorage.setItem('user_id', data.userId);
-    localStorage.setItem('userId', data.userId);
-    localStorage.setItem('isSuperUser', data.isSuperUser ? 'true' : 'false');
-  }, { jwt, userType, userId, isSuperUser });
+  // 1. Inject Auth token and complete session into localStorage via centralized helper
+  await setupAuthenticatedSession(page, (userType as any) || 'admin', {
+    jwt,
+    userId,
+    isSuperUser
+  });
 
   const trackerBatches = options?.trackerBatches || MOCK_TRACKER_BATCHES;
   const resumeBatches = options?.resumeBatches || MOCK_RESUME_BATCHES;

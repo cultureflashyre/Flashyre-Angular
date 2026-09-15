@@ -12,5 +12,14 @@ export const environment = {
 
   mcq_upload_template: 'https://storage.googleapis.com/flashyre-prod-b5/mcq_question_upload_template/flashyre_mcq_questions_template.xlsx',
   googleMapsApiKey: 'AIzaSyA56OIP2FT8Jffc4t8mMT0dUHd8QUdndaI',
-  googleClientId: '737159065018-mc8kh5samvktn6mgjov77orl3rn7n4dn.apps.googleusercontent.com'
+  googleClientId: '737159065018-mc8kh5samvktn6mgjov77orl3rn7n4dn.apps.googleusercontent.com',
+
+  firebase: {
+    apiKey: "AIzaSyBsgTkQFm6iYKIrpnrTsVg3X5WHs7eVL_E",
+    authDomain: "flashyre-prod-506909-ad9c6.firebaseapp.com",
+    projectId: "flashyre-prod-506909-ad9c6",
+    storageBucket: "flashyre-prod-506909-ad9c6.firebasestorage.app",
+    messagingSenderId: "1029867727867",
+    appId: "1:1029867727867:web:fb4279d31d3bb0f715795e"
+  }
 };

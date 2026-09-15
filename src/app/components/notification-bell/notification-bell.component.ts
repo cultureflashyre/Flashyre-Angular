@@ -17,6 +17,8 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   userType: string = '';
   pendingCount: number = 0;
   approvedCount: number = 0;
+  unreadCount: number = 0;
+  totalRecentCount: number = 0;
   pendingRequests: any[] = [];
   myApprovedRequests: any[] = [];
 
@@ -32,6 +34,14 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true' ||
                        (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
     this.userType = localStorage.getItem('userType') || '';
+
+    this.subs.add(
+      this.notificationService.unreadCount.subscribe(c => this.unreadCount = c)
+    );
+
+    this.subs.add(
+      this.notificationService.totalRecentCount.subscribe(c => this.totalRecentCount = c)
+    );
 
     this.subs.add(
       this.notificationService.pendingCount.subscribe(c => this.pendingCount = c)
@@ -50,18 +60,39 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Returns the unread notification badge count (Facebook/Instagram style).
+   * Once user opens and comes out of the notification list, this returns 0.
+   */
   get badgeCount(): number {
-    return this.isSuperUser ? this.pendingCount : this.approvedCount;
+    return this.unreadCount;
+  }
+
+  /**
+   * Evaluates if an individual notification item is unread (for visual highlight).
+   */
+  isUnread(req: any): boolean {
+    return this.notificationService.isItemUnread(req);
   }
 
   toggleDropdown(event: MouseEvent): void {
     event.stopPropagation();
-    this.isOpen = !this.isOpen;
-    this.notificationService.markNotificationsAsSeen();
+    if (this.isOpen) {
+      this.closeDropdown();
+    } else {
+      this.isOpen = true;
+    }
   }
 
+  /**
+   * Called when user closes the dropdown or clicks outside ("comes out").
+   * Automatically clears the red badge count by marking notifications as seen.
+   */
   closeDropdown(): void {
-    this.isOpen = false;
+    if (this.isOpen) {
+      this.isOpen = false;
+      this.notificationService.markNotificationsAsSeen();
+    }
   }
 
   reviewRequest(requestId?: string): void {
@@ -75,14 +106,18 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     this.notificationService.downloadReportDirectly(requestId, format);
   }
 
-  goToApprovalsTab(): void {
+  seeMore(): void {
     this.closeDropdown();
     this.router.navigate(['/recruiter-workflow-bulk-import'], { queryParams: { tab: 'approvals' } });
   }
 
+  goToApprovalsTab(): void {
+    this.seeMore();
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.elRef.nativeElement.contains(event.target)) {
+    if (this.isOpen && !this.elRef.nativeElement.contains(event.target)) {
       this.closeDropdown();
     }
   }

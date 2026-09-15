@@ -69,4 +69,108 @@ describe('CollectionFormsComponent', () => {
     component.toggleActive(mockForm);
     expect(mockFormService.updateForm).toHaveBeenCalledWith('test-uuid', { is_active: false });
   });
+
+  describe('Form Title Validation & Patterns', () => {
+    it('should accept valid job titles like AI/ML and Data Analyst - 2', () => {
+      const titleControl = component.createFormGroup.controls['title'];
+      const validTitles = [
+        'AI/ML',
+        'AI/ML Engineer',
+        'Data Analyst - 2',
+        'Data Analyst – 2', // en-dash
+        'Data Analyst — Lead', // em-dash
+        'C++ Developer',
+        'C# Backend Engineer',
+        'Senior Dev, Full-Stack (Remote)',
+        'DevOps / SRE Lead',
+        'Product Manager #1'
+      ];
+
+      validTitles.forEach(title => {
+        titleControl.setValue(title);
+        expect(titleControl.valid).toBeTrue();
+        expect(titleControl.errors).toBeNull();
+      });
+    });
+
+    it('should reject whitespace-only or empty titles', () => {
+      const titleControl = component.createFormGroup.controls['title'];
+      
+      titleControl.setValue('');
+      expect(titleControl.valid).toBeFalse();
+      expect(titleControl.errors?.['required']).toBeTruthy();
+
+      titleControl.setValue('   ');
+      expect(titleControl.valid).toBeFalse();
+      expect(titleControl.errors?.['pattern']).toBeTruthy();
+    });
+
+    it('should reject XSS payloads in title like <script>', () => {
+      const titleControl = component.createFormGroup.controls['title'];
+      titleControl.setValue('<script>alert(1)</script>');
+      expect(titleControl.valid).toBeFalse();
+      expect(titleControl.errors?.['pattern']).toBeTruthy();
+    });
+
+    it('should reject titles exceeding 100 characters', () => {
+      const titleControl = component.createFormGroup.controls['title'];
+      titleControl.setValue('A'.repeat(101));
+      expect(titleControl.valid).toBeFalse();
+      expect(titleControl.errors?.['maxlength']).toBeTruthy();
+    });
+  });
+
+  describe('Validation Helpers & Error Messages', () => {
+    it('should correctly determine isFieldInvalid based on touched/dirty/attemptedSubmit', () => {
+      const titleControl = component.createFormGroup.controls['title'];
+      titleControl.setValue('');
+      expect(component.isFieldInvalid('title')).toBeFalse();
+
+      titleControl.markAsTouched();
+      expect(component.isFieldInvalid('title')).toBeTrue();
+
+      titleControl.setValue('Valid Title');
+      expect(component.isFieldInvalid('title')).toBeFalse();
+
+      // Reset and test hasAttemptedSubmit
+      component.createFormGroup.reset();
+      component.hasAttemptedSubmit = true;
+      expect(component.isFieldInvalid('title')).toBeTrue();
+    });
+
+    it('should return appropriate error messages via getFieldError', () => {
+      const titleControl = component.createFormGroup.controls['title'];
+      titleControl.setValue('');
+      expect(component.getFieldError('title')).toBe('Form title is required.');
+
+      titleControl.setValue('<script>');
+      expect(component.getFieldError('title')).toBe('Form title contains invalid characters.');
+
+      titleControl.setValue('A'.repeat(101));
+      expect(component.getFieldError('title')).toBe('Form title cannot exceed 100 characters.');
+
+      const logoControl = component.createFormGroup.controls['logo_url'];
+      logoControl.setValue('not-a-url');
+      expect(component.getFieldError('logo_url')).toBe('Please enter a valid URL starting with http:// or https://');
+
+      const maxControl = component.createFormGroup.controls['max_submissions'];
+      maxControl.setValue('0');
+      expect(component.getFieldError('max_submissions')).toBe('Maximum submissions must be at least 1.');
+
+      const expireControl = component.createFormGroup.controls['expires_at'];
+      expireControl.setValue('2020-01-01T00:00');
+      expect(component.getFieldError('expires_at')).toBe('Expiration date must be set to a future date and time.');
+    });
+
+    it('should mark all fields as touched and set hasAttemptedSubmit on invalid onSubmit', () => {
+      component.createFormGroup.controls['title'].setValue('');
+      expect(component.hasAttemptedSubmit).toBeFalse();
+
+      component.onSubmit();
+
+      expect(component.hasAttemptedSubmit).toBeTrue();
+      expect(component.createFormGroup.controls['title'].touched).toBeTrue();
+      expect(mockFormService.createForm).not.toHaveBeenCalled();
+    });
+  });
 });

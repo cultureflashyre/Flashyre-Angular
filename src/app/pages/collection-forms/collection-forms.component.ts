@@ -1,11 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import DOMPurify from 'dompurify';
 import { CollectionFormService, CollectionForm } from '../../services/collection-form.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
+
+export function futureDateValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null;
+  }
+  const selectedDate = new Date(control.value);
+  if (isNaN(selectedDate.getTime())) {
+    return { invalidDate: true };
+  }
+  const now = new Date();
+  if (selectedDate.getTime() <= now.getTime()) {
+    return { pastDate: true };
+  }
+  return null;
+}
 
 @Component({
   standalone: true,
@@ -23,6 +38,7 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
   isDeleting = false;
   togglingFormId: string | null = null;
   submitCooldown = false;
+  hasAttemptedSubmit = false;
   
   searchQuery = '';
   currentFilter = 'all';
@@ -76,16 +92,67 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
       title: ['', [
         Validators.required,
         Validators.maxLength(100),
-        Validators.pattern(/^[a-zA-Z0-9\s\-_.&()]+$/)
+        Validators.pattern(/^(?!\s*$)[\p{L}\p{N}\s\-–—/+#&().,':;!?]+$/u)
       ]],
       job_post: [null],
       company_name: ['', [Validators.maxLength(100)]],
       logo_url: ['', [Validators.pattern(/https?:\/\/.+/)]],
       require_resume: [true],
       template_type: ['standard', [Validators.required]],
-      expires_at: [''],
-      max_submissions: ['', [Validators.min(1)]]
+      expires_at: ['', [futureDateValidator]],
+      max_submissions: ['', [Validators.min(1), Validators.pattern(/^[0-9]+$/)]]
     });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const control = this.createFormGroup.get(fieldName);
+    if (!control) return false;
+    return control.invalid && (control.touched || control.dirty || this.hasAttemptedSubmit);
+  }
+
+  getFieldError(fieldName: string): string | null {
+    const control = this.createFormGroup.get(fieldName);
+    if (!control || !control.errors) return null;
+
+    if (control.errors['required']) {
+      switch (fieldName) {
+        case 'title': return 'Form title is required.';
+        case 'template_type': return 'Please select a template.';
+        default: return 'This field is required.';
+      }
+    }
+
+    if (control.errors['maxlength']) {
+      const requiredLength = control.errors['maxlength'].requiredLength;
+      switch (fieldName) {
+        case 'title': return `Form title cannot exceed ${requiredLength} characters.`;
+        case 'company_name': return `Company name cannot exceed ${requiredLength} characters.`;
+        default: return `Maximum length is ${requiredLength} characters.`;
+      }
+    }
+
+    if (control.errors['pattern']) {
+      switch (fieldName) {
+        case 'title': return 'Form title contains invalid characters.';
+        case 'logo_url': return 'Please enter a valid URL starting with http:// or https://';
+        case 'max_submissions': return 'Maximum submissions must be a whole positive number.';
+        default: return 'Invalid format.';
+      }
+    }
+
+    if (control.errors['min']) {
+      return 'Maximum submissions must be at least 1.';
+    }
+
+    if (control.errors['pastDate']) {
+      return 'Expiration date must be set to a future date and time.';
+    }
+
+    if (control.errors['invalidDate']) {
+      return 'Please enter a valid date and time.';
+    }
+
+    return 'Invalid value.';
   }
 
   loadForms(): void {
@@ -144,6 +211,7 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
   }
 
   openCreateModal(): void {
+    this.hasAttemptedSubmit = false;
     this.createFormGroup.reset({
       require_resume: true,
       template_type: 'standard'
@@ -152,11 +220,17 @@ export class CollectionFormsComponent implements OnInit, OnDestroy {
   }
 
   closeCreateModal(): void {
+    this.hasAttemptedSubmit = false;
     this.showCreateModal = false;
   }
 
   onSubmit(): void {
-    if (this.createFormGroup.invalid || this.isSubmitting || this.submitCooldown) {
+    if (this.createFormGroup.invalid) {
+      this.hasAttemptedSubmit = true;
+      this.createFormGroup.markAllAsTouched();
+      return;
+    }
+    if (this.isSubmitting || this.submitCooldown) {
       return;
     }
     const val = this.createFormGroup.value;
