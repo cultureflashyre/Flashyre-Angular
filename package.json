@@ -38,6 +38,7 @@
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
     "jwt-decode": "^4.0.0",
+    "marked": "^12.0.2",
     "monaco-editor": "^0.50.0",
     "next": "^12.1.10",
     "ngx-ace-wrapper": "^12.0.0",
