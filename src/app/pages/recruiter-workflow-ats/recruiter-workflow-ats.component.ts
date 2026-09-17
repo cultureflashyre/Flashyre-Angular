@@ -51,6 +51,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   showAddCandidate = false;
   allCandidates: any[] = [];
   filteredCandidates: any[] = [];
+  cooldownMonths: number = 6;
 
   // --- CANDIDATE DETAILS MODAL STATE ---
   showCandidateDetails: boolean = false;
@@ -121,6 +122,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
         this.loadPipeline();
         this.loadAllCandidates();
+        this.loadPlatformSettings();
       }
     });
   }
@@ -487,13 +489,112 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     FileSaver.saveAs(data, fileName + '_' + dateStr + EXCEL_EXTENSION);
   }
 
-  // --- ADD CANDIDATE ---
+  loadPlatformSettings() {
+    this.candidateService.getPlatformSettings().subscribe({
+      next: (res) => {
+        if (res && res.placement_cooldown_months) {
+          this.cooldownMonths = res.placement_cooldown_months;
+        }
+      },
+      error: () => {
+        this.cooldownMonths = 6;
+      }
+    });
+  }
+
+  // --- ADD CANDIDATE (Multi-Field Search & Disambiguation) ---
 
   filterCandidates(event: any) {
-    const term = event.target.value.toLowerCase();
-    this.filteredCandidates = this.allCandidates.filter(c =>
-      c.first_name.toLowerCase().includes(term) || c.last_name.toLowerCase().includes(term)
-    );
+    const term = (event.target.value || '').toLowerCase().trim();
+    if (!term) {
+      this.filteredCandidates = this.allCandidates;
+      return;
+    }
+
+    this.filteredCandidates = this.allCandidates.filter(c => {
+      const fullName = `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase();
+      const email = (c.email || '').toLowerCase();
+      const phone = (c.phone_number || '').toLowerCase();
+      const skills = (c.skills || '').toLowerCase();
+      const location = (c.current_location || '').toLowerCase();
+      const sourcer = (c.sourced_by_name || c.recruiter_name || '').toLowerCase();
+      const source = (c.source || '').toLowerCase();
+
+      return (
+        fullName.includes(term) ||
+        email.includes(term) ||
+        phone.includes(term) ||
+        skills.includes(term) ||
+        location.includes(term) ||
+        sourcer.includes(term) ||
+        source.includes(term)
+      );
+    });
+  }
+
+  // Helper Methods for Disambiguation & Badges
+  getInitials(cand: any): string {
+    if (!cand) return '??';
+    const first = (cand.first_name || '').trim();
+    const last = (cand.last_name || '').trim();
+    const f = first ? first[0].toUpperCase() : '';
+    const l = last ? last[0].toUpperCase() : '';
+    return (f + l) || 'C';
+  }
+
+  maskPhone(phone: string): string {
+    if (!phone) return '';
+    const clean = phone.replace(/[^0-9]/g, '');
+    if (clean.length <= 4) return phone;
+    return `••••••${clean.slice(-4)}`;
+  }
+
+  getSourceClass(source: string): string {
+    if (!source) return 'source-default';
+    const s = source.toLowerCase();
+    if (s.includes('naukri')) return 'source-naukri';
+    if (s.includes('linkedin')) return 'source-linkedin';
+    if (s.includes('indeed')) return 'source-indeed';
+    if (s.includes('referral')) return 'source-referral';
+    if (s.includes('form') || s.includes('collection')) return 'source-form';
+    return 'source-default';
+  }
+
+  getTopSkills(skills: any, limit: number = 3): string[] {
+    if (!skills) return [];
+    let list: string[] = [];
+    if (Array.isArray(skills)) {
+      list = skills;
+    } else if (typeof skills === 'string') {
+      list = skills.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+    }
+    return list.slice(0, limit);
+  }
+
+  getSkillOverflow(skills: any, limit: number = 3): number {
+    if (!skills) return 0;
+    let list: string[] = [];
+    if (Array.isArray(skills)) {
+      list = skills;
+    } else if (typeof skills === 'string') {
+      list = skills.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+    }
+    return Math.max(0, list.length - limit);
+  }
+
+  isRecentlyPlaced(candidate: any): boolean {
+    if (!candidate || !candidate.placement_status || !candidate.placement_at) {
+      return false;
+    }
+    const placedDate = new Date(candidate.placement_at).getTime();
+    if (isNaN(placedDate)) return false;
+    const cooldownMs = this.cooldownMonths * 30.44 * 24 * 60 * 60 * 1000;
+    return (Date.now() - placedDate) < cooldownMs;
+  }
+
+  getSourcerDisplayName(candidate: any): string {
+    if (!candidate) return 'N/A';
+    return candidate.sourced_by_name || candidate.recruiter_name || 'N/A';
   }
 
   // New Method: Check permission before opening dropdown

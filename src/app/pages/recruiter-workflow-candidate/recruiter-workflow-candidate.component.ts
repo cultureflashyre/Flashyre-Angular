@@ -138,6 +138,17 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   masterCandidates: Candidate[] = [];
   displayCandidates: Candidate[] = [];
 
+  // --- Placement Cooldown State ---
+  cooldownMonths: number = 6;
+
+  isRecentlyPlaced(candidate: any): boolean {
+    if (!candidate || !candidate.placement_at) return false;
+    const placedDate = new Date(candidate.placement_at);
+    if (isNaN(placedDate.getTime())) return false;
+    const cooldownMs = this.cooldownMonths * 30 * 24 * 60 * 60 * 1000;
+    return (Date.now() - placedDate.getTime()) < cooldownMs;
+  }
+
   // --- List Management ---
   isAllSelected = false;
   isDeleting = false;
@@ -291,6 +302,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     );
 
     this.setupLocationAutocomplete();
+    this.loadPlatformSettings();
 
     // Fetch all rating criteria for the filter dropdown
     this.candidateService.getRatingCriteria().subscribe({
@@ -303,6 +315,19 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         console.error("Failed to load rating criteria, using defaults", err);
         this.allRatingCriteria = this.getAllDefaultCriteria();
         this.onFilterCategoryChange();
+      }
+    });
+  }
+
+  loadPlatformSettings(): void {
+    this.candidateService.getPlatformSettings().subscribe({
+      next: (res: any) => {
+        if (res && res.placement_cooldown_months) {
+          this.cooldownMonths = res.placement_cooldown_months;
+        }
+      },
+      error: () => {
+        this.cooldownMonths = 6;
       }
     });
   }

@@ -27,6 +27,13 @@ export interface Candidate {
   resume_filename?: string;
   user?: number;
   recruiter_name?: string;
+  sourced_by?: string | number | null;
+  sourced_by_id?: string | null;
+  sourced_by_name?: string;
+  placement_status?: 'Offered' | 'Hired' | null;
+  placement_at?: string | null;
+  placement_job_title?: string | null;
+  placement_client_name?: string | null;
   source?: string;
   latest_rating_score?: number | null;
   latest_rating_breakdown?: { [key: string]: number } | null;
@@ -231,5 +238,9 @@ export class RecruiterWorkflowCandidateService {
     return this.http.get<{ signed_url: string, expires_in: number }>(
       `${this.apiUrl}api/files/signed-url/?file_path=${encodeURIComponent(filePath)}`
     );
+  }
+
+  getPlatformSettings(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}api/super-admin/platform-settings/`);
   }
 }

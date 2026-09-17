@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "flashyre-dev-506010-343bd",
-    "dev": "flashyre-dev-506010-343bd"
+    "dev": "flashyre-dev-506010-343bd",
+    "prod": "flashyre-prod-506909-ad9c6"
   }
 }

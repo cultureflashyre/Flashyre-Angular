@@ -5,14 +5,24 @@ test.describe('Authentication & Form Validation (/login)', () => {
 
   test.describe('Happy Path Flows', () => {
     test('Successful login with valid candidate credentials', async ({ page }) => {
-      await page.route('**/api/**/token/**', async (route) => {
+      await page.route('**/api/captcha/generate/**', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ captcha_id: 'test-captcha-uuid', question: 'What is 5 + 3?' }),
+        });
+      });
+
+      await page.route('**/api/auth/login/**', async (route) => {
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify({
+            message: 'Login successful',
             access: 'fake-jwt-access-token',
             refresh: 'fake-jwt-refresh-token',
-            user_type: 'candidate',
+            role: 'candidate',
+            user_id: 101,
           }),
         });
       });
@@ -20,6 +30,7 @@ test.describe('Authentication & Form Validation (/login)', () => {
       await page.goto('/login');
       await page.locator('#login-email-input').fill('admin@chcs.com');
       await page.locator('#login-password-input').fill('pass@123');
+      await page.locator('.captcha-input').fill('8');
 
       const submitButton = page.locator('#login-button-container');
       await expect(submitButton).toBeEnabled();
@@ -75,16 +86,25 @@ test.describe('Authentication & Form Validation (/login)', () => {
     });
 
     test('Displays backend rejection error banner for invalid credentials', async ({ page }) => {
-      await page.route('**/api/**/token/**', async (route) => {
+      await page.route('**/api/captcha/generate/**', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ captcha_id: 'test-captcha-uuid-inv', question: 'What is 3 + 3?' }),
+        });
+      });
+
+      await page.route('**/api/auth/login/**', async (route) => {
         await route.fulfill({
           status: 401,
           contentType: 'application/json',
-          body: JSON.stringify({ detail: 'Invalid email or password' }),
+          body: JSON.stringify({ error: 'Invalid Email or Password' }),
         });
       });
 
       await page.locator('#login-email-input').fill('unknown@flashyre.com');
       await page.locator('#login-password-input').fill('WrongPassword123');
+      await page.locator('.captcha-input').fill('6');
       await page.locator('#login-button-container').click();
 
       const errorBanner = page.locator('#error-message-login, .log-in-page-error-message-login');

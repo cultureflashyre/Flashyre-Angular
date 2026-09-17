@@ -118,6 +118,10 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
   private pollingSub: Subscription | null = null;
   private resumePollingSub: Subscription | null = null;
 
+  // Sourcer Attribution State
+  selectedDefaultSourcerId: string = '';
+  recruitersList: any[] = [];
+
   // Error Logs State
   errorLogs: ErrorLogItem[] = [];
   errorPage: number = 1;
@@ -227,6 +231,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initCurrentUser();
+    this.loadRecruitersList();
     this.loadBatchHistory();
     this.loadResumeBatches();
     this.loadUnmatchedResumes();
@@ -309,6 +314,18 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  loadRecruitersList(): void {
+    this.bulkImportService.getRecruitersList().subscribe({
+      next: (users: any[]) => {
+        this.recruitersList = (users || []).filter(u => u.user_type === 'recruiter' || u.user_type === 'admin');
+        if (!this.selectedDefaultSourcerId && this.currentUserId) {
+          this.selectedDefaultSourcerId = this.currentUserId;
+        }
+      },
+      error: (err) => console.warn('Failed loading recruiters for sourcer attribution', err)
+    });
   }
 
   canDeleteBatch(batch: UploadBatchDetail | ResumeBatchDetail | null | undefined): boolean {
@@ -555,7 +572,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     // Scenario A: Both Tracker and Resumes selected
     if (this.selectedTrackerFile && this.selectedResumeFiles.length > 0) {
       this.bulkImportService
-        .uploadCandidateFile(this.selectedTrackerFile, false, mapping)
+        .uploadCandidateFile(this.selectedTrackerFile, false, mapping, this.selectedDefaultSourcerId)
         .subscribe({
           next: (res: any) => {
             this.isUploadingTracker = false;
@@ -575,7 +592,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     // Scenario B: Only Tracker Spreadsheet selected
     else {
       this.bulkImportService
-        .uploadCandidateFile(this.selectedTrackerFile, false, mapping)
+        .uploadCandidateFile(this.selectedTrackerFile, false, mapping, this.selectedDefaultSourcerId)
         .pipe(finalize(() => { this.isUploadingTracker = false; }))
         .subscribe({
           next: (res: any) => {

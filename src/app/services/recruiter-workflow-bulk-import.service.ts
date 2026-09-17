@@ -190,7 +190,8 @@ export class RecruiterWorkflowBulkImportService {
   uploadCandidateFile(
     file: File,
     force: boolean = false,
-    columnMapping?: Record<string, string>
+    columnMapping?: Record<string, string>,
+    defaultSourcerId?: string
   ): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
@@ -199,6 +200,9 @@ export class RecruiterWorkflowBulkImportService {
     }
     if (columnMapping && Object.keys(columnMapping).length > 0) {
       formData.append('column_mapping', JSON.stringify(columnMapping));
+    }
+    if (defaultSourcerId) {
+      formData.append('default_sourcer_id', defaultSourcerId);
     }
 
     return this.http.post(`${this.baseUrl}upload/`, formData);
@@ -425,6 +429,13 @@ export class RecruiterWorkflowBulkImportService {
     return this.http.get(`${this.baseUrl}report/approval-requests/${requestId}/download/`, {
       responseType: 'blob'
     });
+  }
+
+  /**
+   * Retrieves list of active recruiters/admins for sourcer attribution.
+   */
+  getRecruitersList(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}api/super-admin/list/`);
   }
 }
 

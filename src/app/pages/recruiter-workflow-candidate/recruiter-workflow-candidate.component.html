@@ -327,6 +327,7 @@
                         <th class="col-meta">Contact</th>
                         <th>Rating</th>
                         <th class="col-src">Source</th>
+                        <th class="col-placement">Status</th>
                         <th class="col-act">Actions</th>
                       </tr>
                     </thead>
@@ -349,7 +350,7 @@
                                   Form
                                 </span>
                               </div>
-                              <div class="candidate-id">Uploaded By: {{ candidate.recruiter_name || 'N/A' }}</div>
+                              <div class="candidate-id">Sourced By: {{ candidate.sourced_by_name || candidate.recruiter_name || 'N/A' }}</div>
                             </div>
                           </div>
                         </td>
@@ -397,6 +398,16 @@
                         <!-- Source -->
                         <td data-label="Source">
                           <span class="src-pill" [ngClass]="getSourceClass(candidate.source)">{{ candidate.source }}</span>
+                        </td>
+
+                        <!-- Status / Placement -->
+                        <td data-label="Status">
+                          <span *ngIf="candidate.placement_status" class="placement-badge"
+                            [ngClass]="{ 'offered': candidate.placement_status === 'Offered', 'hired': candidate.placement_status === 'Hired' }">
+                            {{ candidate.placement_status }}
+                            <span *ngIf="isRecentlyPlaced(candidate)" class="cooldown-tag" title="Placed within {{ cooldownMonths }} months cooldown">⏳</span>
+                          </span>
+                          <span *ngIf="!candidate.placement_status" class="text-muted">—</span>
                         </td>
 
                         <!-- Actions -->
@@ -532,7 +543,7 @@
                               {{ user.first_name }} {{ user.last_name }}
                               <span class="status-badge">Active</span>
                             </div>
-                            <div class="candidate-id">Uploaded By: {{ user.sourced_data?.recruiter_name || 'Self-Registered' }}</div>
+                            <div class="candidate-id">Sourced By: {{ user.sourced_data?.recruiter_name || 'Self-Registered' }}</div>
                           </div>
                         </div>
                       </td>
@@ -1027,12 +1038,28 @@
                     class="resume-text" style="font-weight: 400; color: #999;">No Resume Attached</span></div>
               </ng-template>
             </div>
-            <div class="info-item"><span class="info-label">Recruiter &amp; Source</span>
+            <div class="info-item"><span class="info-label">Sourced By &amp; Source</span>
               <div style="margin-top: 5px;">
-                <div style="font-weight: 600; color: #374151;">{{ selectedCandidateDetails.recruiter_name || 'N/A' }}
+                <div style="font-weight: 600; color: #374151;">{{ selectedCandidateDetails.sourced_by_name || selectedCandidateDetails.recruiter_name || 'N/A' }}
                 </div>
                 <div style="font-size: 13px; color: #05356c; margin-top: 4px; font-weight: 500;">via {{
                   selectedCandidateDetails.source }}</div>
+              </div>
+            </div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.placement_status">
+              <span class="info-label">Placement Status</span>
+              <div style="margin-top: 5px;">
+                <span class="placement-badge"
+                  [ngClass]="{ 'offered': selectedCandidateDetails.placement_status === 'Offered', 'hired': selectedCandidateDetails.placement_status === 'Hired' }">
+                  {{ selectedCandidateDetails.placement_status }}
+                  <span *ngIf="isRecentlyPlaced(selectedCandidateDetails)">⏳</span>
+                </span>
+                <div style="font-size: 12.5px; color: #475569; margin-top: 4px; font-weight: 500;" *ngIf="selectedCandidateDetails.placement_job_title">
+                  {{ selectedCandidateDetails.placement_job_title }} at {{ selectedCandidateDetails.placement_client_name || 'Client' }}
+                </div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;" *ngIf="selectedCandidateDetails.placement_at">
+                  Placed: {{ selectedCandidateDetails.placement_at | date:'mediumDate' }}
+                </div>
               </div>
             </div>
           </div>

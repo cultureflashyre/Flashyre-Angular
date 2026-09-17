@@ -4,7 +4,8 @@
       "C:\\nvm4w\\nodejs_\\nodejs\\node.exe",
       "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\node_modules\\@playwright\\test\\cli.js",
       "test",
-      "e2e/notification-bell-read-state.spec.ts"
+      "e2e/recruiter-workflow-bulk-import.spec.ts",
+      "--list"
     ],
     "configFile": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\playwright.config.ts",
     "rootDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/e2e",
@@ -17,18 +18,14 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 10
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "projects": [
       {
         "outputDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 10
-        },
+        "metadata": {},
         "id": "chromium",
         "name": "chromium",
         "testDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/e2e",
@@ -42,9 +39,7 @@
         "outputDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 10
-        },
+        "metadata": {},
         "id": "firefox",
         "name": "firefox",
         "testDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/e2e",
@@ -58,9 +53,7 @@
         "outputDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 10
-        },
+        "metadata": {},
         "id": "webkit",
         "name": "webkit",
         "testDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/e2e",
@@ -74,9 +67,7 @@
         "outputDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 10
-        },
+        "metadata": {},
         "id": "mobile-chrome",
         "name": "mobile-chrome",
         "testDir": "C:/Users/Admin/Desktop/Project/2nd_march/angular/Flashyre-Angular/e2e",
@@ -126,786 +117,1074 @@
   },
   "suites": [
     {
-      "title": "notification-bell-read-state.spec.ts",
-      "file": "notification-bell-read-state.spec.ts",
+      "title": "recruiter-workflow-bulk-import.spec.ts",
+      "file": "recruiter-workflow-bulk-import.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Synchronized Notification Badges (Bell, Sidebar Import, & Approval Requests Tab)",
-          "file": "notification-bell-read-state.spec.ts",
-          "line": 3,
+          "title": "Bulk Ingestion & AI Resume Matcher E2E Test Suite",
+          "file": "recruiter-workflow-bulk-import.spec.ts",
+          "line": 14,
           "column": 6,
-          "specs": [
+          "specs": [],
+          "suites": [
             {
-              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+              "title": "POSITIVE SCENARIOS",
+              "file": "recruiter-workflow-bulk-import.spec.ts",
+              "line": 125,
+              "column": 8,
+              "specs": [
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
+                  "title": "POS-1: Page renders with correct title, aligned layout, and 4 calculated stat cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3468,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:34.983Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
+                  "id": "7962c80ea37e0d2c145d-49af96e7f666d3ce6eb4",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "POS-2: Ingestion History sub-tab switcher toggles between Trackers and Resume Zip archives",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-7179bd79e3690a1eed64",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 198,
+                  "column": 9
+                },
+                {
+                  "title": "POS-3: Live batch inspection displays progress, row counters, and error diagnostics modal",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-b9ac510b75b3b752bd2c",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 214,
+                  "column": 9
+                },
+                {
+                  "title": "POS-4: Dual Dropzone handles combined ingestion (Tracker + Resume Zip Archive)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-9f325d13bb0c71f7cabd",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 240,
+                  "column": 9
+                },
+                {
+                  "title": "POS-5: Unmatched Resumes Resolver opens search modal, selects candidate, and resolves resume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-9ab2fabdfc19952ad4bf",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 295,
+                  "column": 9
+                },
+                {
+                  "title": "POS-6: Sync Sweeper triggers background reconciliation and shows success banner",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-86be569365e69619c551",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 335,
+                  "column": 9
+                },
+                {
+                  "title": "POS-1: Page renders with correct title, aligned layout, and 4 calculated stat cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-43f4be6989aeb86f0c96",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "POS-2: Ingestion History sub-tab switcher toggles between Trackers and Resume Zip archives",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-fa2a13f426749f857c38",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 198,
+                  "column": 9
+                },
+                {
+                  "title": "POS-3: Live batch inspection displays progress, row counters, and error diagnostics modal",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-080b590d7b79010d2e87",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 214,
+                  "column": 9
+                },
+                {
+                  "title": "POS-4: Dual Dropzone handles combined ingestion (Tracker + Resume Zip Archive)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-fd68e5f315ccbe1126a2",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 240,
+                  "column": 9
+                },
+                {
+                  "title": "POS-5: Unmatched Resumes Resolver opens search modal, selects candidate, and resolves resume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-8f5de2edc00024956f5f",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 295,
+                  "column": 9
+                },
+                {
+                  "title": "POS-6: Sync Sweeper triggers background reconciliation and shows success banner",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-fb72985135760f5fb650",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 335,
+                  "column": 9
+                },
+                {
+                  "title": "POS-1: Page renders with correct title, aligned layout, and 4 calculated stat cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-ca9ceaa71597409aedb1",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "POS-2: Ingestion History sub-tab switcher toggles between Trackers and Resume Zip archives",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-7f7a1423e9430c317eb2",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 198,
+                  "column": 9
+                },
+                {
+                  "title": "POS-3: Live batch inspection displays progress, row counters, and error diagnostics modal",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-f79af11811856755b708",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 214,
+                  "column": 9
+                },
+                {
+                  "title": "POS-4: Dual Dropzone handles combined ingestion (Tracker + Resume Zip Archive)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-66ef337ed193440cf193",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 240,
+                  "column": 9
+                },
+                {
+                  "title": "POS-5: Unmatched Resumes Resolver opens search modal, selects candidate, and resolves resume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-e25ac66f2585b3b7b15b",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 295,
+                  "column": 9
+                },
+                {
+                  "title": "POS-6: Sync Sweeper triggers background reconciliation and shows success banner",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-58207fa29933507bb77a",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 335,
+                  "column": 9
+                },
+                {
+                  "title": "POS-1: Page renders with correct title, aligned layout, and 4 calculated stat cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-e5328edff05b66acae82",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "POS-2: Ingestion History sub-tab switcher toggles between Trackers and Resume Zip archives",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-2bd0d3a0de9f5ef0f585",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 198,
+                  "column": 9
+                },
+                {
+                  "title": "POS-3: Live batch inspection displays progress, row counters, and error diagnostics modal",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-201c8ca9842ebbe1e1ab",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 214,
+                  "column": 9
+                },
+                {
+                  "title": "POS-4: Dual Dropzone handles combined ingestion (Tracker + Resume Zip Archive)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-05621a9a995b4c5e96eb",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 240,
+                  "column": 9
+                },
+                {
+                  "title": "POS-5: Unmatched Resumes Resolver opens search modal, selects candidate, and resolves resume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-0a6e904dfc9fed80bf9f",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 295,
+                  "column": 9
+                },
+                {
+                  "title": "POS-6: Sync Sweeper triggers background reconciliation and shows success banner",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-7049d63fce43ebf59329",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 335,
+                  "column": 9
                 }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-979b9b7ecb989246b95a",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 105,
-              "column": 7
+              ]
             },
             {
-              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+              "title": "NEGATIVE SCENARIOS",
+              "file": "recruiter-workflow-bulk-import.spec.ts",
+              "line": 362,
+              "column": 8,
+              "specs": [
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
+                  "title": "NEG-1: Displays error banner when tracker spreadsheet upload fails (500 Internal Error)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 3656,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:34.976Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-bf2dc4e3413a20b40477",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 124,
-              "column": 7
-            },
-            {
-              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-4c31156c40dd107d4a24",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 368,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
+                  "title": "NEG-2: Displays error banner when resume zip upload fails with 422 Invalid Archive",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 3578,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:34.967Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-830e3baf6501f6ef28ce",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 173,
-              "column": 7
-            },
-            {
-              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-873c557eda69675aca7f",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 407,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
+                  "title": "NEG-3: Displays empty state message when search query yields no matching batches",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 3602,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.036Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-a61b735d0cb110115ee7",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 198,
-              "column": 7
-            },
-            {
-              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
-              "ok": false,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-7ff0a13a9d61e4f2176c",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 446,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
+                  "title": "NEG-4: Displays empty state illustration when all resumes are matched",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
-                      "status": "failed",
-                      "duration": 17089,
-                      "error": {
-                        "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/recruiter-workflow-bulk-import\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/recruiter-workflow-bulk-import\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:106:16",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                          "column": 16,
-                          "line": 106
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 104 |\u001b[39m\n \u001b[90m 105 |\u001b[39m   test(\u001b[32m'All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/recruiter-workflow-bulk-import'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 107 |\u001b[39m\n \u001b[90m 108 |\u001b[39m     \u001b[90m// 1. Notification Bell badge shows 6\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[36mconst\u001b[39m bellBadge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .bell-badge-count'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                            "column": 16,
-                            "line": 106
-                          },
-                          "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/recruiter-workflow-bulk-import\", waiting until \"load\"\u001b[22m\n\n\n  104 |\n  105 |   test('All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously', async ({ page }) => {\n> 106 |     await page.goto('/recruiter-workflow-bulk-import');\n      |                ^\n  107 |\n  108 |     // 1. Notification Bell badge shows 6\n  109 |     const bellBadge = page.locator('app-notification-bell .bell-badge-count');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:106:16"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.017Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-firefox\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                        "column": 16,
-                        "line": 106
-                      }
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-f4c938edeeea871698dc",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 105,
-              "column": 7
-            },
-            {
-              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-9e03a5065c537d00d1e5",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 468,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
+                  "title": "NEG-5: Displays error alert when unmatched resume resolution fails on server",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 15963,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.014Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-9b0dd37a7118edbe39c0",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 124,
-              "column": 7
-            },
-            {
-              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-790912eba3f25b3a6f2f",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 489,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
+                  "title": "NEG-6: AuthGuard blocks access and redirects to /login when user is not authenticated",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 17465,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.003Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-ed06e1215bcc9a8bfe9c",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 173,
-              "column": 7
-            },
-            {
-              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-359df7bb646db5b6d6d4",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 526,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
+                  "title": "NEG-7: AuthGuard redirects candidate role to /candidate-home due to role mismatch",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
-                      "status": "passed",
-                      "duration": 14315,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.043Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-4ddf2a19b2180f4ce405",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 198,
-              "column": 7
-            },
-            {
-              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
-              "ok": false,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-775ce6d9eda51d0b40fc",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 535,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
+                  "title": "NEG-1: Displays error banner when tracker spreadsheet upload fails (500 Internal Error)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 8,
-                      "parallelIndex": 8,
-                      "status": "failed",
-                      "duration": 18015,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:110:29",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                          "column": 29,
-                          "line": 110
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 108 |\u001b[39m     \u001b[90m// 1. Notification Bell badge shows 6\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[36mconst\u001b[39m bellBadge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .bell-badge-count'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[90m// 2. Sidebar \"Import\" badge shows 6\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                            "column": 29,
-                            "line": 110
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n\n  108 |     // 1. Notification Bell badge shows 6\n  109 |     const bellBadge = page.locator('app-notification-bell .bell-badge-count');\n> 110 |     await expect(bellBadge).toBeVisible({ timeout: 10000 });\n      |                             ^\n  111 |     await expect(bellBadge).toHaveText('6');\n  112 |\n  113 |     // 2. Sidebar \"Import\" badge shows 6\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:110:29"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.030Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-1ed79-read-count-6-simultaneously-webkit\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                        "column": 29,
-                        "line": 110
-                      }
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-19ace202f6168bea959b",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 105,
-              "column": 7
-            },
-            {
-              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
-              "ok": false,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-7bb2bcd5b27ac64bd49d",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 368,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
+                  "title": "NEG-2: Displays error banner when resume zip upload fails with 422 Invalid Archive",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 9,
-                      "parallelIndex": 9,
-                      "status": "failed",
-                      "duration": 18047,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:132:29",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                          "column": 29,
-                          "line": 132
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 130 |\u001b[39m\n \u001b[90m 131 |\u001b[39m     \u001b[90m// Confirm all 3 badges are visible initially\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[36mawait\u001b[39m expect(sidebarImportBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 135 |\u001b[39m     \u001b[36mawait\u001b[39m expect(approvalsTabBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                            "column": 29,
-                            "line": 132
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n\n  130 |\n  131 |     // Confirm all 3 badges are visible initially\n> 132 |     await expect(bellBadge).toBeVisible({ timeout: 10000 });\n      |                             ^\n  133 |     await expect(bellBadge).toHaveText('6');\n  134 |     await expect(sidebarImportBadge).toHaveText('6');\n  135 |     await expect(approvalsTabBadge).toHaveText('6');\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:132:29"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:35.045Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-ee1e2-ab-disappear-simultaneously-webkit\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                        "column": 29,
-                        "line": 132
-                      }
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-a5723ba0bf15941d92c8",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 124,
-              "column": 7
-            },
-            {
-              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
-              "ok": false,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-577cef35b4422ff5e356",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 407,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
+                  "title": "NEG-3: Displays empty state message when search query yields no matching batches",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 11,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 14372,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:181:29",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                          "column": 29,
-                          "line": 181
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 179 |\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[90m// Confirm all 3 badges are visible initially\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m expect(bellBadge)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m expect(sidebarImportBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mawait\u001b[39m expect(approvalsTabBadge)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'6'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                            "column": 29,
-                            "line": 181
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('app-notification-bell .bell-badge-count')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('app-notification-bell .bell-badge-count')\u001b[22m\n\n\n  179 |\n  180 |     // Confirm all 3 badges are visible initially\n> 181 |     await expect(bellBadge).toBeVisible({ timeout: 10000 });\n      |                             ^\n  182 |     await expect(sidebarImportBadge).toHaveText('6');\n  183 |     await expect(approvalsTabBadge).toHaveText('6');\n  184 |\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:181:29"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:41.078Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-c45c6-r-Import-tab-simultaneously-webkit\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                        "column": 29,
-                        "line": 181
-                      }
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-c5ceb02a8adf1da7e15b",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 173,
-              "column": 7
-            },
-            {
-              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
-              "ok": false,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-cab74d315b92b0972b43",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 446,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
+                  "title": "NEG-4: Displays empty state illustration when all resumes are matched",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 10,
-                      "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 15635,
-                      "error": {
-                        "message": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('app-notification-bell .see-more-btn')\u001b[22m\n",
-                        "stack": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('app-notification-bell .see-more-btn')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:208:22",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                          "column": 22,
-                          "line": 208
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 206 |\u001b[39m\n \u001b[90m 207 |\u001b[39m     \u001b[36mconst\u001b[39m seeMoreBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'app-notification-bell .see-more-btn'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 208 |\u001b[39m     \u001b[36mawait\u001b[39m seeMoreBtn\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 209 |\u001b[39m\n \u001b[90m 210 |\u001b[39m     \u001b[90m// Popover closes\u001b[39m\n \u001b[90m 211 |\u001b[39m     \u001b[36mawait\u001b[39m expect(popover)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                            "column": 22,
-                            "line": 208
-                          },
-                          "message": "TimeoutError: locator.click: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('app-notification-bell .see-more-btn')\u001b[22m\n\n\n  206 |\n  207 |     const seeMoreBtn = page.locator('app-notification-bell .see-more-btn');\n> 208 |     await seeMoreBtn.click();\n      |                      ^\n  209 |\n  210 |     // Popover closes\n  211 |     await expect(popover).not.toBeVisible();\n    at C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts:208:22"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:41.058Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\test-results\\notification-bell-read-sta-3061f-popover-with-badges-cleared-webkit\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\Project\\2nd_march\\angular\\Flashyre-Angular\\e2e\\notification-bell-read-state.spec.ts",
-                        "column": 22,
-                        "line": 208
-                      }
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-8dae28408243f57b9dae",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 198,
-              "column": 7
-            },
-            {
-              "title": "All 3 numbers (bell, sidebar Import, and Approval Request tab) display unread count 6 simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-be384e433601af1f70a9",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 468,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mobile-chrome",
-                  "projectName": "mobile-chrome",
-                  "results": [
+                  "title": "NEG-5: Displays error alert when unmatched resume resolution fails on server",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 1961,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:41.072Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-658f7573ff7081993604",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 105,
-              "column": 7
-            },
-            {
-              "title": "When notification clears on closing bell popover, all 3 badges (bell, sidebar Import, tab) disappear simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-d79e0a505c3c9315d834",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 489,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mobile-chrome",
-                  "projectName": "mobile-chrome",
-                  "results": [
+                  "title": "NEG-6: AuthGuard blocks access and redirects to /login when user is not authenticated",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 2776,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:41.320Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-fd01351e671e4cc631f0",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 124,
-              "column": 7
-            },
-            {
-              "title": "Clicking directly on Approval Requests tab clears all 3 badges (bell, sidebar Import, tab) simultaneously",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-db23104cea07bdf5cd84",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 526,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mobile-chrome",
-                  "projectName": "mobile-chrome",
-                  "results": [
+                  "title": "NEG-7: AuthGuard redirects candidate role to /candidate-home due to role mismatch",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 3727,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:43.265Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-a3dcb6e8d3aeef554976",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 173,
-              "column": 7
-            },
-            {
-              "title": "Clicking See More in popover navigates to approvals tab and closes popover with badges cleared",
-              "ok": true,
-              "tags": [],
-              "tests": [
+                  "id": "7962c80ea37e0d2c145d-6c3cc8ba4abe19c71301",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 535,
+                  "column": 9
+                },
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mobile-chrome",
-                  "projectName": "mobile-chrome",
-                  "results": [
+                  "title": "NEG-1: Displays error banner when tracker spreadsheet upload fails (500 Internal Error)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1994,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-09-07T07:01:44.347Z",
+                      "timeout": 30000,
                       "annotations": [],
-                      "attachments": []
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
                     }
                   ],
-                  "status": "expected"
+                  "id": "7962c80ea37e0d2c145d-61613e622354895f68c0",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 368,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-2: Displays error banner when resume zip upload fails with 422 Invalid Archive",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-e1364c0699fd9ef38139",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 407,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-3: Displays empty state message when search query yields no matching batches",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-5f6dfaaccdc28329eb3b",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 446,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-4: Displays empty state illustration when all resumes are matched",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-bff17488d6668aa28bf7",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 468,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-5: Displays error alert when unmatched resume resolution fails on server",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-05a55a96edeff1363c7d",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 489,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-6: AuthGuard blocks access and redirects to /login when user is not authenticated",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-ea34d328f506e13b72e3",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 526,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-7: AuthGuard redirects candidate role to /candidate-home due to role mismatch",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-3fa4c19a5c42a79187cd",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 535,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-1: Displays error banner when tracker spreadsheet upload fails (500 Internal Error)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-d44019934774ceca68c5",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 368,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-2: Displays error banner when resume zip upload fails with 422 Invalid Archive",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-30d9d75432453d9f8edf",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 407,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-3: Displays empty state message when search query yields no matching batches",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-e5860edd5ce9d4462a88",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 446,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-4: Displays empty state illustration when all resumes are matched",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-a0b5fe88da3477637ddb",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 468,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-5: Displays error alert when unmatched resume resolution fails on server",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-4339a5d154ae10f2e6b5",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 489,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-6: AuthGuard blocks access and redirects to /login when user is not authenticated",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-0a786525f8ad93989110",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 526,
+                  "column": 9
+                },
+                {
+                  "title": "NEG-7: AuthGuard redirects candidate role to /candidate-home due to role mismatch",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "7962c80ea37e0d2c145d-ca1faba1cc90bf796008",
+                  "file": "recruiter-workflow-bulk-import.spec.ts",
+                  "line": 535,
+                  "column": 9
                 }
-              ],
-              "id": "a7b5b1ba30e70be7fd54-62fa136ae035d4d5e302",
-              "file": "notification-bell-read-state.spec.ts",
-              "line": 198,
-              "column": 7
+              ]
             }
           ]
         }
@@ -914,11 +1193,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-07T07:01:34.179Z",
-    "duration": 23263.836,
-    "expected": 11,
-    "skipped": 0,
-    "unexpected": 5,
+    "startTime": "2026-09-16T10:51:26.541Z",
+    "duration": 169.44600000000003,
+    "expected": 0,
+    "skipped": 52,
+    "unexpected": 0,
     "flaky": 0
   }
 }

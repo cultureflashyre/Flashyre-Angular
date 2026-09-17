@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { setupAuthenticatedSession, VALID_MOCK_ADMIN_JWT } from './auth-helpers';
 
 /**
  * =========================================================================
@@ -112,8 +113,6 @@ test.describe('Bulk Ingestion & AI Resume Matcher E2E Test Suite', () => {
       raw_data: { candidate_name: 'John Doe', email: 'johndoe@test.com', phone: null }
     }
   ];
-
-import { setupAuthenticatedSession, VALID_MOCK_ADMIN_JWT } from './auth-helpers';
 
   // Helper to seed localStorage with valid Admin credentials
   async function setupAuthenticatedAdminSession(page: any) {

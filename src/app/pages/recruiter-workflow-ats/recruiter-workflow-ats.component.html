@@ -52,14 +52,44 @@
 
       <!-- ADD CANDIDATE OVERLAY PANEL -->
       <div *ngIf="showAddCandidate" class="add-candidate-overlay">
-        <h4>Add to Pipeline</h4>
-        <input type="text" placeholder="Search Candidate Name..." (input)="filterCandidates($event)"
+        <div class="overlay-header">
+          <h4>Add Candidate to Pipeline</h4>
+          <span class="results-count">{{ filteredCandidates.length }} available</span>
+        </div>
+        <input type="text" placeholder="Search by name, phone, email, skills, sourcer..." (input)="filterCandidates($event)"
           class="search-input">
 
         <div class="candidate-results-list">
           <div *ngFor="let cand of filteredCandidates" (click)="addCandidateToPipeline(cand)"
-            class="candidate-result-item">
-            {{ cand.first_name }} {{ cand.last_name }}
+            class="candidate-result-card">
+            <div class="result-avatar">{{ getInitials(cand) }}</div>
+            <div class="result-body">
+              <div class="result-name-row">
+                <span class="result-name">{{ cand.first_name }} {{ cand.last_name }}</span>
+                <span class="source-tag" [ngClass]="getSourceClass(cand.source)">{{ cand.source || 'Direct' }}</span>
+                <span *ngIf="cand.placement_status" class="placement-tag" [ngClass]="cand.placement_status.toLowerCase()">
+                  {{ cand.placement_status }}
+                  <span *ngIf="isRecentlyPlaced(cand)" class="cooldown-clock" title="Placed recently — in {{ cooldownMonths }}-month cooldown">⏳</span>
+                </span>
+              </div>
+              <div class="result-meta-row">
+                <span *ngIf="cand.phone_number" class="result-meta-item">📞 {{ maskPhone(cand.phone_number) }}</span>
+                <span *ngIf="cand.current_location" class="result-meta-item">📍 {{ cand.current_location }}</span>
+                <span class="result-meta-item">💼 {{ cand.total_experience || cand.total_experience_min || 0 }}y</span>
+                <span *ngIf="cand.current_ctc" class="result-meta-item">💰 {{ cand.current_ctc }}</span>
+              </div>
+              <div class="result-sourcer-row">
+                <span class="sourcer-label">Sourced by:</span>
+                <span class="sourcer-val">{{ getSourcerDisplayName(cand) }}</span>
+              </div>
+              <div class="result-skills-row" *ngIf="cand.skills">
+                <span *ngFor="let s of getTopSkills(cand.skills, 3)" class="mini-skill-chip">{{ s }}</span>
+                <span *ngIf="getSkillOverflow(cand.skills, 3) > 0" class="mini-skill-more">+{{ getSkillOverflow(cand.skills, 3) }}</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="filteredCandidates.length === 0" class="no-results-msg">
+            No candidates found matching your search.
           </div>
         </div>
       </div>
@@ -91,9 +121,17 @@
             <!-- Candidate Card -->
             <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
 
-              <!-- Card Header Row: Name + Action Icons -->
-              <div class="card-header-row">
-                <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}
+              <!-- Card Header: Avatar + Name + Actions -->
+              <div class="card-identity-row">
+                <div class="card-avatar" [title]="app.candidate_details.first_name + ' ' + app.candidate_details.last_name">
+                  {{ getInitials(app.candidate_details) }}
+                </div>
+                <div class="card-identity-text">
+                  <div class="card-name">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
+                  <div class="card-sub-meta">
+                    <span *ngIf="app.candidate_details.phone_number" class="card-phone">📞 {{ maskPhone(app.candidate_details.phone_number) }}</span>
+                    <span *ngIf="app.candidate_details.current_location" class="card-loc">📍 {{ app.candidate_details.current_location }}</span>
+                  </div>
                 </div>
 
                 <div class="card-actions">
@@ -124,16 +162,35 @@
                 </div>
               </div>
 
-              <!-- Card Details -->
-              <div class="card-info-row">
-                <span class="card-label">Exp:</span> {{ app.candidate_details.total_experience_min }}y
+              <!-- Card Metrics: Experience & CTC -->
+              <div class="card-metrics-row">
+                <span class="metric-pill">Exp: <strong>{{ app.candidate_details.total_experience || app.candidate_details.total_experience_min || 0 }}y</strong></span>
+                <span class="metric-pill" *ngIf="app.candidate_details.current_ctc">CTC: <strong>{{ app.candidate_details.current_ctc }}</strong></span>
               </div>
-              <div class="card-info-row">
-                <span class="card-label">CTC:</span> {{ app.candidate_details.current_ctc }}
+
+              <!-- Skills Chips -->
+              <div class="card-skills-row" *ngIf="app.candidate_details.skills">
+                <span *ngFor="let s of getTopSkills(app.candidate_details.skills, 3)" class="skill-chip">{{ s }}</span>
+                <span *ngIf="getSkillOverflow(app.candidate_details.skills, 3) > 0" class="skill-overflow">+{{ getSkillOverflow(app.candidate_details.skills, 3) }}</span>
+              </div>
+
+              <!-- Footer: Sourcer Attribution + Source -->
+              <div class="card-footer-row">
+                <div class="sourcer-credit" title="Candidate Sourcer">
+                  <span class="sourcer-icon">👤</span>
+                  <span class="sourcer-text">{{ getSourcerDisplayName(app.candidate_details) }}</span>
+                </div>
+                <span class="source-pill" [ngClass]="getSourceClass(app.candidate_details.source)">
+                  {{ app.candidate_details.source || 'Direct' }}
+                </span>
               </div>
 
               <!-- Conditional Badges -->
-              <div class="card-badges">
+              <div class="card-badges" *ngIf="app.interview_date || stage === 'Rejected' || app.candidate_details.placement_status">
+                <span *ngIf="app.candidate_details.placement_status" class="badge placement-badge" [ngClass]="app.candidate_details.placement_status.toLowerCase()">
+                  {{ app.candidate_details.placement_status }}
+                  <span *ngIf="isRecentlyPlaced(app.candidate_details)" class="cooldown-clock" title="Placed recently — in {{ cooldownMonths }}-month cooldown">⏳</span>
+                </span>
                 <span *ngIf="app.interview_date" class="badge interview-badge">
                   📅 {{ app.interview_date | date:'shortDate' }}
                 </span>
@@ -253,6 +310,43 @@
           <label>Skills</label>
           <div class="skills-container">
             <span class="skill-tag">{{ selectedCandidate.skills }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Sourcing & Placement Details -->
+      <div class="details-section">
+        <h4 class="section-title">Sourcing & Placement</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Sourced By</label>
+            <span class="sourcer-highlight">👤 {{ getSourcerDisplayName(selectedCandidate) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Candidate Source</label>
+            <span>{{ selectedCandidate.source || 'External' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Placement Status</label>
+            <div>
+              <span *ngIf="selectedCandidate.placement_status" class="badge placement-badge" [ngClass]="selectedCandidate.placement_status.toLowerCase()">
+                {{ selectedCandidate.placement_status }}
+                <span *ngIf="isRecentlyPlaced(selectedCandidate)" class="cooldown-clock" title="Under {{ cooldownMonths }}-month cooldown">⏳</span>
+              </span>
+              <span *ngIf="!selectedCandidate.placement_status" class="text-muted">Not Placed</span>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="selectedCandidate.placement_at">
+            <label>Placed At</label>
+            <span>{{ selectedCandidate.placement_at | date:'mediumDate' }}</span>
+          </div>
+          <div class="detail-item" *ngIf="selectedCandidate.placement_client_name">
+            <label>Placed Client</label>
+            <span>{{ selectedCandidate.placement_client_name }}</span>
+          </div>
+          <div class="detail-item" *ngIf="selectedCandidate.placement_job_title">
+            <label>Placed Role</label>
+            <span>{{ selectedCandidate.placement_job_title }}</span>
           </div>
         </div>
       </div>

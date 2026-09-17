@@ -229,22 +229,26 @@ export const routes: Routes = [
   {
     path: 'create-job-step2',
     loadComponent: () => import('./pages/create-job-step2/create-job-step2.component').then(m => m.AdminCreateJobStep2),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] }
   },
   {
     path: 'create-job-step3',
     loadComponent: () => import('./pages/create-job-step3/create-job-step3.component').then(m => m.AdminCreateJobStep3),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] }
   },
   {
     path: 'create-job-step4',
     loadComponent: () => import('./pages/create-job-step4/create-job-step4.component').then(m => m.AdminCreateJobStep4Component),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] }
   },
   {
     path: 'admin-candidate-scores',
     loadComponent: () => import('./pages/admin-candidate-scores-page/admin-candidate-scores-page.component').then(m => m.AdminCandidateScoresPageComponent),
-    canActivate: [authGuard] // Or any other guards you need
+    canActivate: [authGuard],
+    data: { roles: ['admin'] }
   },
   {
     path: 'coding-assessment',

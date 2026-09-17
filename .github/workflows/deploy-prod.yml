@@ -1,0 +1,37 @@
+name: Deploy Production Frontend to Firebase Hosting
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: flashyre-prod-506909-ad9c6
+
+jobs:
+  deploy-prod:
+    name: Build & Deploy to Firebase Hosting (Production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          npm install --legacy-peer-deps
+
+      - name: Build Angular Application (Production Configuration)
+        run: |
+          npm run build -- --configuration=production
+
+      - name: Deploy to Firebase Hosting (Production)
+        run: |
+          npx firebase-tools deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project ${{ env.PROJECT_ID }}
