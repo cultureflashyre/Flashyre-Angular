@@ -11,7 +11,7 @@ import { RecruiterWorkflowCandidateService } from '../../services/recruiter-work
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 
 // Components
-import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
+import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 
 // External Libraries for Excel
@@ -26,13 +26,17 @@ import * as FileSaver from 'file-saver';
     DragDropModule,
     FormsModule,
     RouterModule,
-    RecruiterWorkflowNavbarComponent,
+    RecruiterSidebarComponent,
     AlertMessageComponent
   ],
   templateUrl: 'recruiter-workflow-ats.component.html',
   styleUrls: ['recruiter-workflow-ats.component.css']
 })
 export class RecruiterWorkflowAtsComponent implements OnInit {
+
+  // --- DRAWER & FILTER STATE ---
+  activeDrawerTab: 'overview' | 'resume' | 'feedback' | 'sourcing' = 'overview';
+  pipelineSearchTerm: string = '';
 
   // --- JOB DATA ---
   jobId: number | null = null;
@@ -646,16 +650,43 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     });
   }
 
-  // --- CANDIDATE DETAILS MODAL ---
+  // --- CANDIDATE DETAILS DRAWER & FILTERING ---
 
-  viewCandidateDetails(candidate: any) {
+  get totalPipelineCount(): number {
+    let total = 0;
+    for (const stage of this.stages) {
+      total += (this.pipelineData[stage]?.length || 0);
+    }
+    return total;
+  }
+
+  isCardVisible(cand: any): boolean {
+    if (!this.pipelineSearchTerm || !cand) return true;
+    const term = this.pipelineSearchTerm.toLowerCase().trim();
+    const name = `${cand.first_name || ''} ${cand.last_name || ''}`.toLowerCase();
+    const skills = (cand.skills || '').toLowerCase();
+    const phone = (cand.phone_number || '').toLowerCase();
+    const loc = (cand.current_location || '').toLowerCase();
+    const sourcer = (cand.sourced_by_name || cand.recruiter_name || '').toLowerCase();
+    return name.includes(term) || skills.includes(term) || phone.includes(term) || loc.includes(term) || sourcer.includes(term);
+  }
+
+  getVisibleStageCount(stage: string): number {
+    const list = this.pipelineData[stage] || [];
+    if (!this.pipelineSearchTerm) return list.length;
+    return list.filter(app => this.isCardVisible(app.candidate_details)).length;
+  }
+
+  viewCandidateDetails(candidate: any, initialTab: 'overview' | 'resume' | 'feedback' | 'sourcing' = 'overview') {
     this.selectedCandidate = candidate;
+    this.activeDrawerTab = initialTab;
     this.showCandidateDetails = true;
   }
 
   closeCandidateDetails() {
     this.showCandidateDetails = false;
     this.selectedCandidate = null;
+    this.activeDrawerTab = 'overview';
   }
 
   openResume(url: string) {

@@ -1,619 +1,742 @@
-<div class="recruiter-super-admin-analytical-module-container10">
-  <div class="recruiter-super-admin-analytical-module-container11">
-    <recruiter-workflow-navbar
-      rootClassName="recruiter-workflow-navbarroot-class-name1"
-    >
-      <ng-template #link1>
-        <div class="recruiter-super-admin-analytical-module-fragment10">
-          <span class="recruiter-super-admin-analytical-module-text10">
-            Home
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #link4>
-        <div class="recruiter-super-admin-analytical-module-fragment11">
-          <span class="recruiter-super-admin-analytical-module-text11">
-            Requirments
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text1>
-        <div class="recruiter-super-admin-analytical-module-fragment12">
-          <span class="recruiter-super-admin-analytical-module-text12">
-            Profile
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="recruiter-super-admin-analytical-module-fragment13">
-          <span class="recruiter-super-admin-analytical-module-text13">
-            Preference
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text3>
-        <div class="recruiter-super-admin-analytical-module-fragment14">
-          <span class="recruiter-super-admin-analytical-module-text14">
-            Settings
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text7>
-        <div class="recruiter-super-admin-analytical-module-fragment15">
-          <span class="recruiter-super-admin-analytical-module-text15">
-            Dashboard
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text9>
-        <div class="recruiter-super-admin-analytical-module-fragment16">
-          <span class="recruiter-super-admin-analytical-module-text16">
-            Notifications
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text10>
-        <div class="recruiter-super-admin-analytical-module-fragment17">
-          <span class="recruiter-super-admin-analytical-module-text17">
-            Jobs Posted
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text11>
-        <div class="recruiter-super-admin-analytical-module-fragment18">
-          <span class="recruiter-super-admin-analytical-module-text18">
-            Preference
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text12>
-        <div class="recruiter-super-admin-analytical-module-fragment19">
-          <span class="recruiter-super-admin-analytical-module-text19">
-            Settings
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text13>
-        <div class="recruiter-super-admin-analytical-module-fragment20">
-          <span class="recruiter-super-admin-analytical-module-text20">
-            Logout
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text14>
-        <div class="recruiter-super-admin-analytical-module-fragment21">
-          <span class="recruiter-super-admin-analytical-module-text21">2</span>
-        </div>
-      </ng-template>
-      <ng-template #text15>
-        <div class="recruiter-super-admin-analytical-module-fragment22">
-          <span class="recruiter-super-admin-analytical-module-text22">
-            Leslie Alexander
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text16>
-        <div class="recruiter-super-admin-analytical-module-fragment23">
-          <span class="recruiter-super-admin-analytical-module-text23">
-            Google
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text31>
-        <div class="recruiter-super-admin-analytical-module-fragment24">
-          <span class="recruiter-super-admin-analytical-module-text24">
-            Logout
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text32>
-        <div class="recruiter-super-admin-analytical-module-fragment25">
-          <span class="recruiter-super-admin-analytical-module-text25">
-            <span>Software Development</span>
-            <br />
-            <span>Mountain View, CA</span>
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text1411>
-        <div class="recruiter-super-admin-analytical-module-fragment26">
-          <span class="recruiter-super-admin-analytical-module-text29">2</span>
-        </div>
-      </ng-template>
-    </recruiter-workflow-navbar>
+<app-alert-message *ngIf="showAlert" [message]="alertMessage" [buttons]="alertButtons"
+  (buttonClicked)="onAlertAction($event)" (close)="onAlertClose()">
+</app-alert-message>
 
-    <!-- NEW: TAB NAVIGATION -->
-    <div class="tab-navigation-container">
-      <button 
-        class="tab-button" 
-        [class.active]="activeTab === 'reports'" 
-        (click)="setActiveTab('reports')">
-        Reports & Analytics
-      </button>
-      <button 
-        class="tab-button" 
-        [class.active]="activeTab === 'users'" 
-        (click)="setActiveTab('users')">
-        User Management
-      </button>
+<div class="app-layout">
+  <!-- RECRUITER / ADMIN SIDEBAR -->
+  <app-recruiter-sidebar activePage="home"></app-recruiter-sidebar>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="crumbs">
+        <span class="crumb-root">Admin</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="here">Control Center & Analytics</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Help">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <app-notification-bell></app-notification-bell>
+        <button class="btn primary" *ngIf="activeTab === 'users'" (click)="openCreateUserPopup()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create User
+        </button>
+        <button class="btn secondary" *ngIf="activeTab === 'reports'" (click)="downloadReport()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Report
+        </button>
+        <button class="btn primary" *ngIf="activeTab === 'settings'" (click)="savePlatformSettings()" [disabled]="isSavingSettings">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          {{ isSavingSettings ? 'Saving...' : 'Save Settings' }}
+        </button>
+      </div>
     </div>
 
+    <!-- PAGE CONTENT -->
+    <div class="page">
 
-    <!-- TAB 1: REPORTS & ANALYTICS -->
-    <div *ngIf="activeTab === 'reports'" class="dashboard-content">
-      
-      <!-- 1. FILTERS -->
-      <div class="filter-card">
-        <div class="filter-header">Dashboard Filters</div>
-        <div class="filters-row">
-          <div class="filter-item">
-            <label>From</label>
-            <input type="date" [(ngModel)]="filters.start_date" (change)="applyFilter()" class="filter-input">
-          </div>
-          <div class="filter-item">
-            <label>To</label>
-            <input type="date" [(ngModel)]="filters.end_date" (change)="applyFilter()" class="filter-input">
-          </div>
-          <div class="filter-item">
-            <label>Recruiter</label>
-            <select [(ngModel)]="filters.recruiter_id" (change)="applyFilter()" class="filter-select">
-              <option value="">All Recruiters</option>
-              <option *ngFor="let rec of recruitersList" [value]="rec.user_id">{{ rec.first_name }} {{ rec.last_name }}</option>
-            </select>
-          </div>
-          <div class="filter-item">
-            <label>Job Requirement</label>
-            <select [(ngModel)]="filters.job_id" (change)="applyFilter()" class="filter-select">
-              <option value="">All Jobs</option>
-              <option *ngFor="let job of jobsList" [value]="job.id">
-                {{ job.client_name }} - {{ job.job_role || job.role || (job.job_description | slice:0:15) }}
-              </option>            </select>
-          </div>
-          <div class="filter-item">
-            <label>Source</label>
-            <select [(ngModel)]="filters.source" (change)="applyFilter()" class="filter-select">
-              <option value="">All Sources</option>
-              <option value="Naukri">Naukri</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="External">External</option>
-            </select>
-          </div>
-          <button class="download-report-btn" (click)="downloadReport()">Download Report</button>
+      <!-- Page Head -->
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Enterprise Intelligence · Super Admin</div>
+          <h1 class="page-title">Super Admin Control Center</h1>
+          <p class="page-sub">Comprehensive overview of platform analytics, user directory, and global recruitment policies.</p>
         </div>
       </div>
 
-      <!-- 2. HIGH-LEVEL METRICS (NEW KPIs) -->
-      <div>
-        <h3 class="kpi-section-title">Overview</h3>
-        <div class="kpi-grid">
-          <!-- New KPIs -->
-          <div class="kpi-card purple">
-            <span class="kpi-title">Candidates Added</span>
-            <span class="kpi-value">{{ kpis.total_candidates }}</span>
+      <!-- Stats Strip -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
-          <div class="kpi-card purple">
-            <span class="kpi-title">Requirements Added</span>
-            <span class="kpi-value">{{ kpis.total_requirements }}</span>
+          <div>
+            <div class="stat-label">Total Candidates</div>
+            <div class="stat-value">{{ kpis.total_candidates || 0 }}</div>
+            <div class="stat-sub">Profiles sourced in system</div>
           </div>
-          <div class="kpi-card purple">
-            <span class="kpi-title">Clients Added</span>
-            <span class="kpi-value">{{ kpis.total_clients }}</span>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon violet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
           </div>
-          <div class="kpi-card orange">
-            <span class="kpi-title">Active Recruiters</span>
-            <span class="kpi-value">{{ kpis.active_recruiters }}</span>
+          <div>
+            <div class="stat-label">Requirements</div>
+            <div class="stat-value">{{ kpis.total_requirements || 0 }}</div>
+            <div class="stat-sub">Open & active job postings</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="9" y1="15" x2="9" y2="15.01"/><line x1="9" y1="18" x2="9" y2="18.01"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Clients</div>
+            <div class="stat-value">{{ kpis.total_clients || 0 }}</div>
+            <div class="stat-sub">Enterprise companies</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Active Recruiters</div>
+            <div class="stat-value">{{ kpis.active_recruiters || 0 }}</div>
+            <div class="stat-sub">Staff members onboard</div>
           </div>
         </div>
       </div>
 
-      <!-- 3. PERFORMANCE METRICS -->
-      <div>
-        <h3 class="kpi-section-title">Performance & Sourcing</h3>
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <span class="kpi-title">Total Submissions</span>
-            <span class="kpi-value">{{ kpis.total_submissions }}</span>
-          </div>
-          <div class="kpi-card">
-            <span class="kpi-title">Avg Time-to-Fill</span>
-            <span class="kpi-value">{{ kpis.avg_time_to_fill }} <span style="font-size:14px; font-weight:400">days</span></span>
-          </div>
-          <div class="kpi-card green">
-            <span class="kpi-title">Quality Hires</span>
-            <span class="kpi-value">{{ kpis.sourcing.quality_hires }}</span>
-          </div>
-          <div class="kpi-card green">
-            <span class="kpi-title">Top Source</span>
-            <span class="kpi-value" style="font-size:22px;">{{ kpis.sourcing.top_source }}</span>
-          </div>
+      <!-- 3-TAB NAVIGATION BAR -->
+      <div class="tab-strip-card">
+        <div class="tab-strip">
+          <button class="tab" [class.active]="activeTab === 'reports'" (click)="setActiveTab('reports')">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Reports & Analytics</span>
+          </button>
+          <button class="tab" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>User Management</span>
+            <span class="tab-count" *ngIf="userList.length > 0">{{ userList.length }}</span>
+          </button>
+          <button class="tab" [class.active]="activeTab === 'settings'" (click)="setActiveTab('settings')">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Platform Settings</span>
+            <span class="tab-badge-pill">Rules</span>
+          </button>
         </div>
       </div>
 
-      <!-- 4. PIPELINE HEALTH (ALL STAGES) -->
-      <div class="pipeline-section">
-        <h3 class="kpi-section-title" style="margin-bottom:0">Pipeline Health (Real-Time)</h3>
-        <div class="pipeline-grid">
-          <div class="pipeline-stage">
-            <span class="stage-label">Sourced</span>
-            <span class="stage-value">{{ kpis.pipeline.Sourced }}</span>
-          </div>
-          <div class="pipeline-stage">
-            <span class="stage-label">Screening</span>
-            <span class="stage-value">{{ kpis.pipeline.Screening }}</span>
-          </div>
-          <div class="pipeline-stage">
-            <span class="stage-label">Submission</span>
-            <span class="stage-value">{{ kpis.pipeline.Submission }}</span>
-          </div>
-          <div class="pipeline-stage">
-            <span class="stage-label">Interview</span>
-            <span class="stage-value">{{ kpis.pipeline.Interview }}</span>
-          </div>
-          <div class="pipeline-stage">
-            <span class="stage-label">Offer</span>
-            <span class="stage-value">{{ kpis.pipeline.Offer }}</span>
-          </div>
-          <div class="pipeline-stage" style="background-color:#e6fffa">
-            <span class="stage-label">Hired</span>
-            <span class="stage-value" style="color:#1F882B">{{ kpis.pipeline.Hired }}</span>
-          </div>
-          <div class="pipeline-stage" style="background-color:#fff5f5">
-            <span class="stage-label">Rejected</span>
-            <span class="stage-value" style="color:#F10400">{{ kpis.pipeline.Rejected }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. DETAILED REPORT TABLE -->
-      <div class="table-card">
-        <div class="table-header-row">
-          <h3 class="kpi-section-title" style="margin:0">Detailed Performance Report</h3>
-        </div>
-        <!-- ADDED CLASS: report-scroll-container -->
-        <div class="table-container report-scroll-container">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th>Recruiter</th>
-                <th>Client</th>
-                <th>Job Title</th>
-                <th>Created At</th>
-                <th>Location</th>
-                <th>Source</th>
-                <th style="text-align:center">Submissions</th>
-                <th style="text-align:center">Interviews</th>
-                <th style="text-align:center">Hired</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of reportTableData">
-                <td>{{ row.recruiter_name }}</td>
-                <td>{{ row.client }}</td>
-                <td title="{{row.job_title}}">{{ row.job_title }}</td>
-                <td>{{ row.created_at }}</td>
-                <td>{{ row.location }}</td>
-                <td>{{ row.data_source }}</td>
-                <td style="text-align:center">{{ row.submissions }}</td>
-                <td style="text-align:center">{{ row.interviews }}</td>
-                <td style="text-align:center">{{ row.hired }}</td>
-                <td>
-                  <span class="status-badge" 
-                    [ngClass]="{
-                      'status-active': row.status === 'Active',
-                      'status-closed': row.status === 'Closed',
-                      'status-on-hold': row.status === 'On-hold',
-                      'status-hired': row.status === 'Hired'
-                    }">
-                    {{ row.status }}
-                  </span>
-                </td>
-              </tr>
-              <tr *ngIf="reportTableData.length === 0">
-                <td colspan="10" style="text-align:center; padding: 20px; color:#777;">
-                  No data matches the selected filters.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-
-       <!-- NEW: ACTIVITY LOGS SECTION -->
-      <div class="table-card" style="margin-top: 30px;">
+      <!-- ================================================================= -->
+      <!-- TAB 1: REPORTS & ANALYTICS -->
+      <!-- ================================================================= -->
+      <div *ngIf="activeTab === 'reports'" class="tab-content">
         
-        <!-- Header Row with Download Button -->
-        <div class="table-header-row">
-          <h3 class="kpi-section-title" style="margin:0">Recent Activity Logs</h3>
-          <button class="download-report-btn" (click)="downloadLogs()" style="height: 32px; font-size: 12px; padding: 0 15px; margin-left: auto;">
-            Download Logs
+        <!-- Filter Card with Quick Date Range Presets -->
+        <div class="card filter-card">
+          <div class="filter-header-wrap">
+            <div class="filter-title-group">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              <span class="filter-title">Reporting Controls & Date Presets</span>
+            </div>
+            <!-- Quick Date Presets -->
+            <div class="date-presets">
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '7d'" (click)="setDatePreset('7d')">7D</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '30d'" (click)="setDatePreset('30d')">30D</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '3m'" (click)="setDatePreset('3m')">3 Months</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '6m'" (click)="setDatePreset('6m')">6 Months</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '1y'" (click)="setDatePreset('1y')">1 Year</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === 'all'" (click)="setDatePreset('all')">All Time</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === 'custom'" (click)="activeDatePreset = 'custom'">Custom</button>
+            </div>
+          </div>
+
+          <!-- Filter Inputs Row -->
+          <div class="filters-row">
+            <div class="filter-field">
+              <label class="field-label">From</label>
+              <input type="date" [(ngModel)]="filters.start_date" (change)="onCustomDateChange()" class="input-control">
+            </div>
+            <div class="filter-field">
+              <label class="field-label">To</label>
+              <input type="date" [(ngModel)]="filters.end_date" (change)="onCustomDateChange()" class="input-control">
+            </div>
+            <div class="filter-field">
+              <label class="field-label">Recruiter</label>
+              <select [(ngModel)]="filters.recruiter_id" (change)="applyFilter()" class="select-control">
+                <option value="">All Recruiters</option>
+                <option *ngFor="let rec of recruitersList" [value]="rec.user_id">{{ rec.first_name }} {{ rec.last_name }}</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label class="field-label">Job Requirement</label>
+              <select [(ngModel)]="filters.job_id" (change)="applyFilter()" class="select-control">
+                <option value="">All Requirements</option>
+                <option *ngFor="let job of jobsList" [value]="job.id">
+                  {{ job.client_name }} - {{ job.job_role || job.role || (job.job_description | slice:0:20) }}
+                </option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label class="field-label">Source</label>
+              <select [(ngModel)]="filters.source" (change)="applyFilter()" class="select-control">
+                <option value="">All Sources</option>
+                <option value="Naukri">Naukri</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="External">External</option>
+              </select>
+            </div>
+            <div class="filter-actions">
+              <button class="btn secondary download-btn" (click)="downloadReport()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Excel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance & Sourcing Highlights -->
+        <div class="section-block">
+          <div class="section-title">Performance & Sourcing Efficiency</div>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-title">Total Submissions</span>
+              <span class="kpi-value">{{ kpis.total_submissions }}</span>
+              <span class="kpi-hint">Forwarded to clients</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-title">Avg Time-to-Fill</span>
+              <span class="kpi-value">{{ kpis.avg_time_to_fill }} <span class="unit">days</span></span>
+              <span class="kpi-hint">Sourcing to offer accept</span>
+            </div>
+            <div class="kpi-card highlight-green">
+              <span class="kpi-title">Quality Hires</span>
+              <span class="kpi-value">{{ kpis.sourcing.quality_hires }}</span>
+              <span class="kpi-hint">Rated 4.0+ placements</span>
+            </div>
+            <div class="kpi-card highlight-blue">
+              <span class="kpi-title">Top Channel</span>
+              <span class="kpi-value source-val">{{ kpis.sourcing.top_source || 'N/A' }}</span>
+              <span class="kpi-hint">Highest conversion source</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pipeline Health Real-time Stage Funnel -->
+        <div class="card pipeline-card">
+          <div class="pipeline-header">
+            <div>
+              <h3 class="card-title">Real-Time Pipeline Distribution</h3>
+              <p class="card-sub">Active candidate volume across each hiring workflow stage.</p>
+            </div>
+          </div>
+          <div class="pipeline-stages-strip">
+            <div class="pipeline-stage">
+              <div class="stage-tag">Sourced</div>
+              <div class="stage-num">{{ kpis.pipeline.Sourced }}</div>
+            </div>
+            <div class="pipeline-divider">→</div>
+            <div class="pipeline-stage">
+              <div class="stage-tag">Screening</div>
+              <div class="stage-num">{{ kpis.pipeline.Screening }}</div>
+            </div>
+            <div class="pipeline-divider">→</div>
+            <div class="pipeline-stage">
+              <div class="stage-tag">Submission</div>
+              <div class="stage-num">{{ kpis.pipeline.Submission }}</div>
+            </div>
+            <div class="pipeline-divider">→</div>
+            <div class="pipeline-stage">
+              <div class="stage-tag">Interview</div>
+              <div class="stage-num">{{ kpis.pipeline.Interview }}</div>
+            </div>
+            <div class="pipeline-divider">→</div>
+            <div class="pipeline-stage">
+              <div class="stage-tag">Offer</div>
+              <div class="stage-num">{{ kpis.pipeline.Offer }}</div>
+            </div>
+            <div class="pipeline-divider">→</div>
+            <div class="pipeline-stage stage-hired">
+              <div class="stage-tag">Hired</div>
+              <div class="stage-num">{{ kpis.pipeline.Hired }}</div>
+            </div>
+            <div class="pipeline-divider">✕</div>
+            <div class="pipeline-stage stage-rejected">
+              <div class="stage-tag">Rejected</div>
+              <div class="stage-num">{{ kpis.pipeline.Rejected }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Performance Report Table -->
+        <div class="card table-card">
+          <div class="table-card-head">
+            <div>
+              <h3 class="card-title">Detailed Performance Breakdown</h3>
+              <p class="card-sub">Granular performance statistics grouped by recruiter, client, and role.</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Recruiter</th>
+                  <th>Client</th>
+                  <th>Job Title</th>
+                  <th>Created</th>
+                  <th>Location</th>
+                  <th>Primary Source</th>
+                  <th class="cell-center">Submissions</th>
+                  <th class="cell-center">Interviews</th>
+                  <th class="cell-center">Hired</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of reportTableData">
+                  <td>
+                    <div class="user-chip-mini">
+                      <div class="mini-avatar">{{ (row.recruiter_name?.charAt(0) || 'R').toUpperCase() }}</div>
+                      <span>{{ row.recruiter_name }}</span>
+                    </div>
+                  </td>
+                  <td><strong>{{ row.client }}</strong></td>
+                  <td title="{{row.job_title}}"><span class="job-title-trunc">{{ row.job_title }}</span></td>
+                  <td class="text-muted">{{ row.created_at }}</td>
+                  <td class="text-muted">{{ row.location || 'Remote' }}</td>
+                  <td><span class="source-tag">{{ row.data_source || 'Direct' }}</span></td>
+                  <td class="cell-center font-semibold">{{ row.submissions }}</td>
+                  <td class="cell-center font-semibold">{{ row.interviews }}</td>
+                  <td class="cell-center text-good font-semibold">{{ row.hired }}</td>
+                  <td>
+                    <span class="status-badge" 
+                      [ngClass]="{
+                        'status-active': row.status === 'Active',
+                        'status-closed': row.status === 'Closed',
+                        'status-on-hold': row.status === 'On-hold',
+                        'status-hired': row.status === 'Hired'
+                      }">
+                      {{ row.status }}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="reportTableData.length === 0">
+                  <td colspan="10" class="empty-cell">
+                    <div class="empty-state">
+                      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                      <p>No requirement performance data matches the selected filters.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Activity Logs Table -->
+        <div class="card table-card" style="margin-top: 24px;">
+          <div class="table-card-head">
+            <div>
+              <h3 class="card-title">Recent Activity Logs</h3>
+              <p class="card-sub">Audit trail of recruiter, candidate, and platform state updates.</p>
+            </div>
+            <button class="btn secondary" (click)="downloadLogs()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Logs
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 16%;">Date & Time</th>
+                  <th style="width: 18%;">User</th>
+                  <th style="width: 12%;">Module</th>
+                  <th style="width: 32%;">Action</th>
+                  <th style="width: 22%;">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let log of activityLogs">
+                  <td class="text-muted">
+                    <span class="font-medium">{{ log.date }}</span>
+                    <span class="text-subtle">{{ log.time }}</span>
+                  </td>
+                  <td>
+                    <span class="font-semibold text-accent">{{ log.user_name }}</span>
+                  </td>
+                  <td>
+                    <span class="module-badge" 
+                      [ngClass]="{
+                        'badge-workflow': log.module === 'Workflow',
+                        'badge-candidate': log.module === 'Candidate',
+                        'badge-client': log.module === 'Client',
+                        'badge-req': log.module === 'Requirement'
+                      }">
+                      {{ log.module }}
+                    </span>
+                  </td>
+                  <td class="font-medium">{{ log.action_description }}</td>
+                  <td class="text-muted text-small">{{ log.details }}</td>
+                </tr>
+                <tr *ngIf="activityLogs.length === 0">
+                  <td colspan="5" class="empty-cell">
+                    <div class="empty-state">
+                      <p>No recent activity logs found for the selected period.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- TAB 2: USER MANAGEMENT -->
+      <!-- ================================================================= -->
+      <div *ngIf="activeTab === 'users'" class="tab-content">
+        
+        <!-- User Toolbar -->
+        <div class="users-toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" [(ngModel)]="userSearchQuery" placeholder="Search by name, email, phone, or company..." class="search-input">
+          </div>
+
+          <div class="role-filter-pills">
+            <button type="button" class="role-pill" [class.active]="selectedRoleFilter === 'all'" (click)="selectedRoleFilter = 'all'">All Roles</button>
+            <button type="button" class="role-pill" [class.active]="selectedRoleFilter === 'admin'" (click)="selectedRoleFilter = 'admin'">Admins</button>
+            <button type="button" class="role-pill" [class.active]="selectedRoleFilter === 'recruiter'" (click)="selectedRoleFilter = 'recruiter'">Recruiters</button>
+            <button type="button" class="role-pill" [class.active]="selectedRoleFilter === 'client'" (click)="selectedRoleFilter = 'client'">Clients</button>
+          </div>
+
+          <div class="toolbar-spacer"></div>
+
+          <button class="btn primary" (click)="openCreateUserPopup()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create User
           </button>
         </div>
 
-        <!-- Table Container with Vertical Scroll Class -->
-        <div class="table-container logs-scroll-container">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th style="width: 15%;">Date & Time</th>
-                <th style="width: 15%;">User</th>
-                <th style="width: 10%;">Module</th>
-                <th style="width: 35%;">Activity</th>
-                <th style="width: 25%;">Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let log of activityLogs">
-                <td style="color:#555;">
-                  <span style="font-weight:600">{{ log.date }}</span> 
-                  <span style="font-size:12px; color:#888; margin-left:5px;">{{ log.time }}</span>
-                </td>
-                <td>
-                  <span style="font-weight:600; color:#05356C;">{{ log.user_name }}</span>
-                </td>
-                <td>
-                  <span class="log-badge" 
-                    [ngClass]="{
-                      'badge-ats': log.module === 'Workflow',
-                      'badge-cand': log.module === 'Candidate',
-                      'badge-client': log.module === 'Client',
-                      'badge-req': log.module === 'Requirement'
-                    }">
-                    {{ log.module }}
-                  </span>
-                </td>
-                <td style="font-weight: 500;">{{ log.action_description }}</td>
-                <td style="color:#777; font-size:12px;">{{ log.details }}</td>
-              </tr>
-              
-              <tr *ngIf="activityLogs.length === 0">
-                <td colspan="5" style="text-align:center; padding: 20px; color:#777;">
-                  No recent activities found.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Users Grid -->
+        <div *ngIf="isLoadingUsers" class="loading-box">
+          <div class="round-loader"></div>
+          <p>Loading user directory...</p>
         </div>
-      </div>
 
-    </div>
-
-    <!-- TAB 2: USER MANAGEMENT -->
-    <div *ngIf="activeTab === 'users'" class="user-management-container">
-      
-      <!-- 1. Toolbar -->
-      <div class="user-management-toolbar">
-        <h2 class="toolbar-title">User Management</h2>
-        <button class="create-user-btn" (click)="openCreateUserPopup()">
-          <span style="font-size: 20px; line-height: 1;">+</span> Create User
-        </button>
-      </div>
-
-      <!-- User List Grid -->
-      <div class="user-list-view">
-        <div *ngIf="isLoadingUsers">Loading users...</div>
-        
         <div class="user-cards-grid" *ngIf="!isLoadingUsers">
-          @for (user of userList; track user.user_id) {
-            <div class="user-card">
-              <div class="card-header">
-                <div style="display:flex; align-items:center;">
-                  <div class="user-initials">{{ user.initials || 'U' }}</div>
-                  <div class="header-info">
-                    <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
-                    <!-- Role Badge Logic -->
-                    <span class="user-role-badge" 
-                      [class.super]="user.is_superuser"
-                      [class.client-badge]="user.user_type === 'client'"
-                      [class.rec-badge]="user.user_type === 'recruiter'">
-                      {{ user.is_superuser ? 'Super Admin' : (user.user_type | titlecase) }}
-                    </span>
-                  </div>
+          @for (user of filteredUsers; track user.user_id) {
+            <div class="card user-card">
+              <div class="user-card-head">
+                <div class="user-avatar">{{ user.initials || ((user.first_name?.charAt(0) || '') + (user.last_name?.charAt(0) || '')).toUpperCase() || 'U' }}</div>
+                <div class="user-meta">
+                  <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+                  <span class="user-role-tag" 
+                    [class.super]="user.is_superuser"
+                    [class.role-client]="user.user_type === 'client'"
+                    [class.role-recruiter]="user.user_type === 'recruiter'"
+                    [class.role-admin]="user.user_type === 'admin'">
+                    {{ user.is_superuser ? 'Super Admin' : (user.user_type | titlecase) }}
+                  </span>
                 </div>
-                <button class="action-btn copy-all-btn" title="Copy All Info" (click)="copyUserData(user)">
-                  <!-- Copy Icon -->
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <button class="icon-btn-subtle" title="Copy User Details" (click)="copyUserData(user)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 </button>
               </div>
 
-              <div class="card-body">
-                <div class="info-row">
+              <div class="user-card-body">
+                <div class="info-line">
                   <span class="info-label">User ID:</span>
-                  <span>{{ user.user_id }}</span>
+                  <span class="info-value font-mono">{{ user.user_id }}</span>
                 </div>
-                <div class="info-row">
+                <div class="info-line">
                   <span class="info-label">Email:</span>
-                  <span style="display:flex; align-items:center;">
+                  <span class="info-value email-value" (click)="copyToClipboard(user.email)" title="Click to copy email">
                     {{ user.email }}
-                    <span class="copy-icon" (click)="copyToClipboard(user.email)" title="Copy Email">📋</span>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                   </span>
                 </div>
-                <div class="info-row">
+                <div class="info-line">
                   <span class="info-label">Phone:</span>
-                  <span>{{ user.phone_number }}</span>
+                  <span class="info-value">{{ user.phone_number }}</span>
                 </div>
-                <!-- Show Client Name if applicable -->
-                <div class="info-row" *ngIf="user.user_type === 'client' || user.client_name">
+                <div class="info-line" *ngIf="user.user_type === 'client' || user.client_name">
                   <span class="info-label">Company:</span>
-                  <span style="font-weight:700; color:#05356C; font-size: 14px;">
-                    {{ user.client_name || 'Not Assigned' }}
-                  </span>
+                  <span class="info-value company-name">{{ user.client_name || 'Not Assigned' }}</span>
                 </div>
-                <div class="info-row">
+                <div class="info-line">
                   <span class="info-label">Status:</span>
-                  <span [style.color]="user.is_active ? 'green' : 'red'">{{ user.is_active ? 'Active' : 'Inactive' }}</span>
+                  <span class="status-indicator" [class.active]="user.is_active">
+                    <span class="status-dot"></span>
+                    {{ user.is_active ? 'Active' : 'Inactive' }}
+                  </span>
                 </div>
               </div>
 
-              <div class="card-actions">
-                <!-- Edit -->
-                <button class="action-btn edit-btn" title="Edit User" (click)="openEditUserPopup(user)">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              <div class="user-card-actions">
+                <button class="card-action-btn edit-action" (click)="openEditUserPopup(user)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit
                 </button>
-                <!-- Delete -->
-                <button class="action-btn delete-btn" title="Delete User" (click)="confirmDeleteUser(user)">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <button class="card-action-btn delete-action" (click)="confirmDeleteUser(user)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Delete
                 </button>
               </div>
             </div>
           }
+          <div *ngIf="filteredUsers.length === 0" class="empty-users-box">
+            <p>No users match the search criteria.</p>
+          </div>
         </div>
+
       </div>
 
-      <!-- 3. Floating Popup (Modal) for Creation/Editing -->
-      <div class="modal-overlay" *ngIf="showCreateUserPopup">
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="modal-title">
-              <span *ngIf="creationStep === 1">Select User Type</span>
-              <span *ngIf="creationStep === 2">
-                {{ isEditMode ? 'Edit User' : 'Create New ' + (selectedRole | titlecase) }}
-              </span>
-            </span>
-            <button class="close-modal-btn" (click)="closeCreateUserPopup()">&times;</button>
-          </div>
+      <!-- ================================================================= -->
+      <!-- TAB 3: PLATFORM SETTINGS (Rules & Placement Cooldown) -->
+      <!-- ================================================================= -->
+      <div *ngIf="activeTab === 'settings'" class="tab-content">
+        
+        <!-- Feedback Banner -->
+        <div *ngIf="settingsFeedback" class="alert-banner" [class.success]="settingsFeedback.type === 'success'" [class.error]="settingsFeedback.type === 'error'">
+          <svg *ngIf="settingsFeedback.type === 'success'" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <svg *ngIf="settingsFeedback.type === 'error'" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>{{ settingsFeedback.message }}</span>
+        </div>
 
-          @if (successMessage) { <div class="success-banner">{{ successMessage }}</div> }
-          @if (errorMessage) { <div class="error-banner">{{ errorMessage }}</div> }
-
-          <!-- STEP 1: ROLE SELECTION -->
-          <div *ngIf="creationStep === 1 && !isEditMode" class="role-selection-container">
-            <div class="role-card" (click)="selectRole('admin')">
-              <div class="role-icon">🛡️</div>
-              <div class="role-name">Admin</div>
-              <div class="role-desc">Full access to system settings and user management.</div>
-            </div>
-            
-            <div class="role-card" (click)="selectRole('recruiter')">
-              <div class="role-icon">👥</div>
-              <div class="role-name">Recruiter</div>
-              <div class="role-desc">Access to candidates, jobs, and hiring workflow.</div>
-            </div>
-            
-            <div class="role-card" (click)="selectRole('client')">
-              <div class="role-icon">🏢</div>
-              <div class="role-name">Client</div>
-              <div class="role-desc">Access to client portal and job requirements.</div>
-            </div>
-          </div>
-
-          <!-- STEP 2: FORM -->
-          <form *ngIf="creationStep === 2" [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="admin-creation-form">
-            
-            <!-- Back Button (Only for creation) -->
-            <div *ngIf="!isEditMode" style="margin-bottom: 15px;">
-              <button type="button" class="back-link" (click)="goBackToStep1()">← Back to Selection</button>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">First Name</label>
-                <input type="text" class="form-input" formControlName="first_name" placeholder="First Name" [class.error]="isFieldInvalid('first_name')">
-                @if (isFieldInvalid('first_name')) { <div class="error-message">Required (Letters only)</div> }
+        <div class="settings-grid">
+          
+          <!-- Primary Setting Card: Placement Cooldown -->
+          <div class="card settings-card">
+            <div class="settings-card-head">
+              <div class="setting-icon-box">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
-              <div class="form-group">
-                <label class="form-label">Last Name</label>
-                <input type="text" class="form-input" formControlName="last_name" placeholder="Last Name" [class.error]="isFieldInvalid('last_name')">
-                @if (isFieldInvalid('last_name')) { <div class="error-message">Required</div> }
+              <div>
+                <h3 class="settings-card-title">Candidate Placement Cooldown Policy</h3>
+                <p class="settings-card-sub">Global lock-in duration after a candidate is placed before they can be re-approached.</p>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Phone Number</label>
-              <input type="text" class="form-input" formControlName="phone_number" maxlength="10" (input)="sanitizePhoneNumber($event)" [class.error]="isFieldInvalid('phone_number')">
-              
-              <!-- Sync Errors -->
-              @if (createUserForm.get('phone_number')?.hasError('required') && createUserForm.get('phone_number')?.touched) { 
-                <div class="error-message">Phone number is required</div> 
-              }
-              @if (createUserForm.get('phone_number')?.hasError('pattern') && createUserForm.get('phone_number')?.touched) { 
-                <div class="error-message">Must be 10 digits</div> 
-              }
-              <!-- Async Error -->
-              @if (createUserForm.get('phone_number')?.hasError('phoneExists')) { 
-                <div class="error-message">This phone number is already registered</div> 
-              }
-            </div>
+            <div class="settings-card-body">
+              <div class="rule-description-box">
+                <div class="rule-badge">System Rule</div>
+                <p>When a candidate is transitioned to <strong>Hired</strong> or placed in a client role, recruiters across all workflows and bulk-import channels are barred from re-assigning or reaching out to that candidate until the cooldown period elapses.</p>
+              </div>
 
-
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input type="email" class="form-input" formControlName="email" [class.error]="isFieldInvalid('email')" autocomplete="new-password">
-              
-              @if (createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched) { 
-                <div class="error-message">Email is required</div> 
-              }
-              @if (createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched) { 
-                <div class="error-message">Invalid email format</div> 
-              }
-              <!-- Async Error -->
-              @if (createUserForm.get('email')?.hasError('emailExists')) { 
-                <div class="error-message">This email is already registered</div> 
-              }
-            </div>
-
-            <!-- NEW: CLIENT DROPDOWN (Conditional) -->
-            <div class="form-group" *ngIf="selectedRole === 'client' || (isEditMode && createUserForm.get('user_type')?.value === 'client')">
-              <label class="form-label">Assign to Client (Company)</label>
-              <select class="form-input" formControlName="client_name" [class.error]="isFieldInvalid('client_name')">
-                <option value="">Select a Client</option>
-                <option *ngFor="let client of clientList" [value]="client.client_name">{{ client.client_name }}</option>
-              </select>
-              @if (isFieldInvalid('client_name')) { <div class="error-message">Please select a client</div> }
-              <div style="font-size: 11px; color: #666; margin-top: 4px;">* Select the company this user belongs to.</div>
-            </div>
-
-            <!-- SUPER ADMIN CHECKBOX (Conditional - Admins Only) -->
-            <div class="form-group checkbox-group" *ngIf="selectedRole === 'admin' || (isEditMode && createUserForm.get('user_type')?.value === 'admin')">
-              <input type="checkbox" id="isSuperAdmin" class="checkbox-input" formControlName="is_superuser">
-              <label for="isSuperAdmin" class="form-label" style="cursor: pointer; margin:0;">Grant Super-Admin Privileges</label>
-            </div>
-
-            <!-- Passwords hidden in Edit Mode -->
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">
-                  Password
-                  <span *ngIf="isEditMode" style="font-weight:normal; font-size:11px; color:#666;">(Leave blank to keep current)</span>
-                </label>
-                <div class="password-wrapper">
-                  <input [type]="passwordType" class="form-input" formControlName="password" placeholder="Password" autocomplete="new-password">
-                  <span class="password-toggle" (click)="togglePasswordVisibility()">{{ passwordType === 'password' ? 'Show' : 'Hide' }}</span>
+              <div class="cooldown-control-group">
+                <label class="control-label">Cooldown Duration (Months)</label>
+                
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" (click)="adjustCooldown(-1)" [disabled]="placementCooldownMonths <= 1">-</button>
+                  <input type="number" min="1" max="60" [(ngModel)]="placementCooldownMonths" class="stepper-input">
+                  <span class="stepper-unit">Months</span>
+                  <button type="button" class="stepper-btn" (click)="adjustCooldown(1)" [disabled]="placementCooldownMonths >= 60">+</button>
                 </div>
-                @if (isFieldInvalid('password')) { <div class="error-message">Min 8 chars, 1 Upper, 1 Number, 1 Special.</div> }
-              </div>
-              <div class="form-group">
-                <label class="form-label">Confirm Password</label>
-                <div class="password-wrapper">
-                  <input [type]="confirmPasswordType" class="form-input" formControlName="confirm_password" placeholder="Confirm">
-                  <span class="password-toggle" (click)="toggleConfirmPasswordVisibility()">{{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}</span>
+
+                <!-- Quick Presets for Cooldown -->
+                <div class="cooldown-presets">
+                  <span class="preset-label">Quick Presets:</span>
+                  <button type="button" class="cooldown-preset-btn" [class.selected]="placementCooldownMonths === 3" (click)="setCooldownPreset(3)">3 Months</button>
+                  <button type="button" class="cooldown-preset-btn" [class.selected]="placementCooldownMonths === 6" (click)="setCooldownPreset(6)">6 Months (Default)</button>
+                  <button type="button" class="cooldown-preset-btn" [class.selected]="placementCooldownMonths === 9" (click)="setCooldownPreset(9)">9 Months</button>
+                  <button type="button" class="cooldown-preset-btn" [class.selected]="placementCooldownMonths === 12" (click)="setCooldownPreset(12)">12 Months (1 Year)</button>
                 </div>
-                @if (createUserForm.hasError('mismatch') && createUserForm.get('confirm_password')?.touched) { <div class="error-message">Passwords do not match</div> }
+              </div>
+
+              <div class="rule-impact-summary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>Active configuration: Placed candidates remain protected from recruiter sourcing for <strong>{{ placementCooldownMonths }} months</strong>.</span>
               </div>
             </div>
 
-            <div class="form-actions">
-              <button type="button" class="cancel-btn" (click)="closeCreateUserPopup()">Cancel</button>
-              <button type="submit" class="submit-btn" [disabled]="createUserForm.invalid || isSubmitting">
-                {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Create ' + (selectedRole | titlecase)) }}
+            <div class="settings-card-foot">
+              <span class="last-saved-text" *ngIf="cooldownUpdatedAt">Last updated: {{ cooldownUpdatedAt }}</span>
+              <span class="last-saved-text" *ngIf="!cooldownUpdatedAt">Status: Default configuration active</span>
+              <button class="btn primary save-settings-btn" (click)="savePlatformSettings()" [disabled]="isSavingSettings">
+                <svg *ngIf="!isSavingSettings" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                {{ isSavingSettings ? 'Saving to Database...' : 'Save Configuration' }}
               </button>
             </div>
-          </form>
+          </div>
+
+          <!-- Secondary Card: Platform Architecture Status -->
+          <div class="card settings-card">
+            <div class="settings-card-head">
+              <div class="setting-icon-box green">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+              </div>
+              <div>
+                <h3 class="settings-card-title">Infrastructure & Security Overview</h3>
+                <p class="settings-card-sub">Active database connections and architectural health.</p>
+              </div>
+            </div>
+
+            <div class="settings-card-body">
+              <div class="status-rows">
+                <div class="status-row">
+                  <span class="status-title">Database Engine</span>
+                  <span class="status-val font-semibold">Google Cloud SQL (MySQL 8.4)</span>
+                </div>
+                <div class="status-row">
+                  <span class="status-title">Local Dev Connection</span>
+                  <span class="status-pill green">Cloud SQL Auth Proxy (127.0.0.1:3306)</span>
+                </div>
+                <div class="status-row">
+                  <span class="status-title">Production Server</span>
+                  <span class="status-pill blue">Cloud Run (Unix Domain Socket)</span>
+                </div>
+                <div class="status-row">
+                  <span class="status-title">Network Security</span>
+                  <span class="status-pill green">0.0.0.0/0 Revoked · IAM mTLS</span>
+                </div>
+                <div class="status-row">
+                  <span class="status-title">Character Set</span>
+                  <span class="status-val font-mono">utf8mb4 (Full Emoji & Unicode)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
 
-      <!-- ALERT MESSAGE COMPONENT -->
-      @if (showAlert) {
-        <app-alert-message
-          [message]="alertMessage"
-          [buttons]="alertButtons"
-          (buttonClicked)="onAlertAction($event)"
-          (close)="onAlertClose()"
-        ></app-alert-message>
-      }
-
     </div>
-    
+
+    <!-- ================================================================= -->
+    <!-- FLOATING POPUP MODAL (User Creation / Edit) -->
+    <!-- ================================================================= -->
+    <div class="modal-overlay" *ngIf="showCreateUserPopup">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="modal-title">
+            <span *ngIf="creationStep === 1">Select User Type</span>
+            <span *ngIf="creationStep === 2">
+              {{ isEditMode ? 'Edit User' : 'Create New ' + (selectedRole | titlecase) }}
+            </span>
+          </span>
+          <button class="close-modal-btn" (click)="closeCreateUserPopup()">&times;</button>
+        </div>
+
+        @if (successMessage) { <div class="success-banner">{{ successMessage }}</div> }
+        @if (errorMessage) { <div class="error-banner">{{ errorMessage }}</div> }
+
+        <!-- STEP 1: ROLE SELECTION -->
+        <div *ngIf="creationStep === 1 && !isEditMode" class="role-selection-container">
+          <div class="role-card" (click)="selectRole('admin')">
+            <div class="role-icon">🛡️</div>
+            <div class="role-name">Admin</div>
+            <div class="role-desc">Full access to system settings and user management.</div>
+          </div>
+          
+          <div class="role-card" (click)="selectRole('recruiter')">
+            <div class="role-icon">👥</div>
+            <div class="role-name">Recruiter</div>
+            <div class="role-desc">Access to candidates, jobs, and hiring workflow.</div>
+          </div>
+          
+          <div class="role-card" (click)="selectRole('client')">
+            <div class="role-icon">🏢</div>
+            <div class="role-name">Client</div>
+            <div class="role-desc">Access to client portal and job requirements.</div>
+          </div>
+        </div>
+
+        <!-- STEP 2: FORM -->
+        <form *ngIf="creationStep === 2" [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="admin-creation-form">
+          
+          <!-- Back Button (Only for creation) -->
+          <div *ngIf="!isEditMode" style="margin-bottom: 15px;">
+            <button type="button" class="back-link" (click)="goBackToStep1()">← Back to Selection</button>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-input" formControlName="first_name" placeholder="First Name" [class.error]="isFieldInvalid('first_name')">
+              @if (isFieldInvalid('first_name')) { <div class="error-message">Required (Letters only)</div> }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-input" formControlName="last_name" placeholder="Last Name" [class.error]="isFieldInvalid('last_name')">
+              @if (isFieldInvalid('last_name')) { <div class="error-message">Required</div> }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" class="form-input" formControlName="phone_number" maxlength="10" (input)="sanitizePhoneNumber($event)" [class.error]="isFieldInvalid('phone_number')">
+            
+            <!-- Sync Errors -->
+            @if (createUserForm.get('phone_number')?.hasError('required') && createUserForm.get('phone_number')?.touched) { 
+              <div class="error-message">Phone number is required</div> 
+            }
+            @if (createUserForm.get('phone_number')?.hasError('pattern') && createUserForm.get('phone_number')?.touched) { 
+              <div class="error-message">Must be 10 digits</div> 
+            }
+            <!-- Async Error -->
+            @if (createUserForm.get('phone_number')?.hasError('phoneExists')) { 
+              <div class="error-message">This phone number is already registered</div> 
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" formControlName="email" [class.error]="isFieldInvalid('email')" autocomplete="new-password">
+            
+            @if (createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched) { 
+              <div class="error-message">Email is required</div> 
+            }
+            @if (createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched) { 
+              <div class="error-message">Invalid email format</div> 
+            }
+            <!-- Async Error -->
+            @if (createUserForm.get('email')?.hasError('emailExists')) { 
+              <div class="error-message">This email is already registered</div> 
+            }
+          </div>
+
+          <!-- CLIENT DROPDOWN (Conditional) -->
+          <div class="form-group" *ngIf="selectedRole === 'client' || (isEditMode && createUserForm.get('user_type')?.value === 'client')">
+            <label class="form-label">Assign to Client (Company)</label>
+            <select class="form-input" formControlName="client_name" [class.error]="isFieldInvalid('client_name')">
+              <option value="">Select a Client</option>
+              <option *ngFor="let client of clientList" [value]="client.client_name">{{ client.client_name }}</option>
+            </select>
+            @if (isFieldInvalid('client_name')) { <div class="error-message">Please select a client</div> }
+            <div style="font-size: 11px; color: #666; margin-top: 4px;">* Select the company this user belongs to.</div>
+          </div>
+
+          <!-- SUPER ADMIN CHECKBOX (Conditional - Admins Only) -->
+          <div class="form-group checkbox-group" *ngIf="selectedRole === 'admin' || (isEditMode && createUserForm.get('user_type')?.value === 'admin')">
+            <input type="checkbox" id="isSuperAdmin" class="checkbox-input" formControlName="is_superuser">
+            <label for="isSuperAdmin" class="form-label" style="cursor: pointer; margin:0;">Grant Super-Admin Privileges</label>
+          </div>
+
+          <!-- Passwords hidden in Edit Mode -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">
+                Password
+                <span *ngIf="isEditMode" style="font-weight:normal; font-size:11px; color:#666;">(Leave blank to keep current)</span>
+              </label>
+              <div class="password-wrapper">
+                <input [type]="passwordType" class="form-input" formControlName="password" placeholder="Password" autocomplete="new-password">
+                <span class="password-toggle" (click)="togglePasswordVisibility()">{{ passwordType === 'password' ? 'Show' : 'Hide' }}</span>
+              </div>
+              @if (isFieldInvalid('password')) { <div class="error-message">Min 8 chars, 1 Upper, 1 Number, 1 Special.</div> }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <div class="password-wrapper">
+                <input [type]="confirmPasswordType" class="form-input" formControlName="confirm_password" placeholder="Confirm">
+                <span class="password-toggle" (click)="toggleConfirmPasswordVisibility()">{{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}</span>
+              </div>
+              @if (createUserForm.hasError('mismatch') && createUserForm.get('confirm_password')?.touched) { <div class="error-message">Passwords do not match</div> }
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" (click)="closeCreateUserPopup()">Cancel</button>
+            <button type="submit" class="submit-btn" [disabled]="createUserForm.invalid || isSubmitting">
+              {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Create ' + (selectedRole | titlecase)) }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </div>
 </div>

@@ -7,8 +7,8 @@ import { Observable, of, timer } from 'rxjs';
 import { map, catchError, switchMap, distinctUntilChanged, take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
-// Update the import path below if the component exists elsewhere
-import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
+import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
+import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { ThumbnailService } from '../../services/thumbnail.service';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { ChangeDetectorRef } from '@angular/core';
@@ -25,7 +25,8 @@ import * as FileSaver from 'file-saver';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    RecruiterWorkflowNavbarComponent,
+    RecruiterSidebarComponent,
+    NotificationBellComponent,
     AlertMessageComponent,
   ],
   templateUrl: './recruiter-super-admin-analytical-module.component.html',
@@ -95,6 +96,35 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     source: ''
   };
 
+  // --- DATE PRESET & FILTER STATE ---
+  activeDatePreset: string = '6m';
+
+  // --- PLATFORM SETTINGS STATE ---
+  placementCooldownMonths: number = 6;
+  initialCooldownMonths: number = 6;
+  cooldownUpdatedAt: string = '';
+  isSavingSettings: boolean = false;
+  isLoadingSettings: boolean = false;
+  settingsFeedback: { type: 'success' | 'error'; message: string } | null = null;
+
+  // --- USER MANAGEMENT FILTERING ---
+  userSearchQuery: string = '';
+  selectedRoleFilter: string = 'all';
+
+  get filteredUsers(): any[] {
+    return (this.userList || []).filter(u => {
+      const matchesRole = this.selectedRoleFilter === 'all' || u.user_type === this.selectedRoleFilter;
+      const query = (this.userSearchQuery || '').toLowerCase().trim();
+      if (!query) return matchesRole;
+      const fullName = `${u.first_name || ''} ${u.last_name || ''}`.toLowerCase();
+      const email = (u.email || '').toLowerCase();
+      const phone = (u.phone_number || '').toLowerCase();
+      const client = (u.client_name || '').toLowerCase();
+      const matchesSearch = fullName.includes(query) || email.includes(query) || phone.includes(query) || client.includes(query);
+      return matchesRole && matchesSearch;
+    });
+  }
+
   recruitersList: any[] = [];
   jobsList: any[] = [];
 
@@ -114,15 +144,130 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   ngOnInit() {
     this.initForm();
     this.loadDropdowns();
-    this.fetchAnalytics();
+    this.setDatePreset('6m'); // Set 6-month default period and fetch analytics
     this.fetchClientList(); // Load client names for dropdown
+    this.loadPlatformSettings(); // Load placement cooldown
   }
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
     if (tabName === 'users') {
-      this.fetchUsers();
+      if (!this.userList || this.userList.length === 0) {
+        this.fetchUsers();
+      }
+    } else if (tabName === 'settings') {
+      this.loadPlatformSettings();
     }
+  }
+
+  setDatePreset(preset: string) {
+    this.activeDatePreset = preset;
+    const today = new Date();
+    const formatDate = (d: Date) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    this.filters.end_date = formatDate(today);
+
+    if (preset === '7d') {
+      const past = new Date();
+      past.setDate(today.getDate() - 7);
+      this.filters.start_date = formatDate(past);
+    } else if (preset === '30d') {
+      const past = new Date();
+      past.setDate(today.getDate() - 30);
+      this.filters.start_date = formatDate(past);
+    } else if (preset === '3m') {
+      const past = new Date();
+      past.setMonth(today.getMonth() - 3);
+      this.filters.start_date = formatDate(past);
+    } else if (preset === '6m') {
+      const past = new Date();
+      past.setMonth(today.getMonth() - 6);
+      this.filters.start_date = formatDate(past);
+    } else if (preset === '1y') {
+      const past = new Date();
+      past.setFullYear(today.getFullYear() - 1);
+      this.filters.start_date = formatDate(past);
+    } else if (preset === 'all') {
+      this.filters.start_date = '';
+      this.filters.end_date = '';
+    } else if (preset === 'custom') {
+      return;
+    }
+    this.applyFilter();
+  }
+
+  onCustomDateChange() {
+    this.activeDatePreset = 'custom';
+    this.applyFilter();
+  }
+
+  // --- PLATFORM SETTINGS (Placement Cooldown) ---
+  loadPlatformSettings() {
+    this.isLoadingSettings = true;
+    this.superAdminService.getPlatformSettings().subscribe({
+      next: (data: any) => {
+        this.placementCooldownMonths = data?.placement_cooldown_months ?? 6;
+        this.initialCooldownMonths = this.placementCooldownMonths;
+        this.cooldownUpdatedAt = data?.updated_at ? new Date(data.updated_at).toLocaleString() : '';
+        this.isLoadingSettings = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Failed to load platform settings', err);
+        this.isLoadingSettings = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  adjustCooldown(delta: number) {
+    const newVal = (Number(this.placementCooldownMonths) || 0) + delta;
+    if (newVal >= 1 && newVal <= 60) {
+      this.placementCooldownMonths = newVal;
+    }
+  }
+
+  setCooldownPreset(months: number) {
+    this.placementCooldownMonths = months;
+  }
+
+  savePlatformSettings() {
+    const val = Number(this.placementCooldownMonths);
+    if (isNaN(val) || val < 1 || val > 60) {
+      this.settingsFeedback = { type: 'error', message: 'Placement cooldown must be between 1 and 60 months.' };
+      return;
+    }
+    this.isSavingSettings = true;
+    this.settingsFeedback = null;
+    this.superAdminService.updatePlatformSettings(val).subscribe({
+      next: (res: any) => {
+        this.isSavingSettings = false;
+        this.initialCooldownMonths = this.placementCooldownMonths;
+        this.cooldownUpdatedAt = res?.updated_at ? new Date(res.updated_at).toLocaleString() : new Date().toLocaleString();
+        this.settingsFeedback = {
+          type: 'success',
+          message: `Placement cooldown successfully saved! Placed candidates cannot be re-approached for ${this.placementCooldownMonths} months.`
+        };
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.settingsFeedback = null;
+          this.cdr.detectChanges();
+        }, 5000);
+      },
+      error: (err: any) => {
+        this.isSavingSettings = false;
+        this.settingsFeedback = {
+          type: 'error',
+          message: err?.error?.error || 'Failed to save platform settings. Please try again.'
+        };
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // --- API: Fetch Users ---

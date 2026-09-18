@@ -51,4 +51,16 @@ export class SuperAdminService {
   exportClients(): Observable<Blob> {
     return this.http.get(this.apiUrl + 'export-clients/', { responseType: 'blob' });
   }
+
+  // --- PLATFORM SETTINGS (Placement Cooldown, etc.) ---
+  getPlatformSettings(): Observable<{ placement_cooldown_months: number; updated_at?: string }> {
+    return this.http.get<{ placement_cooldown_months: number; updated_at?: string }>(this.apiUrl + 'platform-settings/');
+  }
+
+  updatePlatformSettings(cooldownMonths: number): Observable<{ placement_cooldown_months: number; updated_at?: string }> {
+    return this.http.patch<{ placement_cooldown_months: number; updated_at?: string }>(
+      this.apiUrl + 'platform-settings/',
+      { placement_cooldown_months: cooldownMonths }
+    );
+  }
 }

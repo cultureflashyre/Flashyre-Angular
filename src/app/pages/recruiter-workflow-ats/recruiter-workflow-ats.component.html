@@ -1,133 +1,164 @@
-<div class="ats-layout-wrapper">
+<div class="app-layout">
 
-  <!-- NAVBAR INTEGRATION -->
-  <div class="ats-navbar-container">
-    <recruiter-workflow-navbar rootClassName="recruiter-workflow-navbarroot-class-name2">
-      <!-- Standard Navbar Templates -->
-      <ng-template #link1><span>Home</span></ng-template>
-      <ng-template #link4><span>Requirements</span></ng-template>
-      <ng-template #text1><span>Profile</span></ng-template>
-      <ng-template #text2><span>Preference</span></ng-template>
-      <ng-template #text3><span>Settings</span></ng-template>
-      <ng-template #text7><span>Dashboard</span></ng-template>
-      <ng-template #text9><span>Notifications</span></ng-template>
-      <ng-template #text10><span>Jobs Posted</span></ng-template>
-      <ng-template #text11><span>Preference</span></ng-template>
-      <ng-template #text12><span>Settings</span></ng-template>
-      <ng-template #text13><span>Logout</span></ng-template>
-      <ng-template #text14><span>2</span></ng-template>
-      <ng-template #text15><span>User Name</span></ng-template>
-      <ng-template #text16><span>Company</span></ng-template>
-      <ng-template #text31><span>Logout</span></ng-template>
-      <ng-template #text32><span>Software Development<br />Location</span></ng-template>
-      <ng-template #text1411><span>2</span></ng-template>
-    </recruiter-workflow-navbar>
-  </div>
+  <!-- 1. FLASHYRE STANDARD RECRUITER SIDEBAR -->
+  <app-recruiter-sidebar activePage="requirements"></app-recruiter-sidebar>
 
-  <!-- MAIN ATS CONTENT -->
-  <div class="ats-main-content">
-    <div class="ats-container">
+  <!-- 2. MAIN ATS WORKSPACE -->
+  <div class="main-content">
 
-      <!-- HEADER: Workflow Switcher & Add Candidate -->
-      <div class="ats-header">
-        <div class="header-left">
-          <label class="workflow-label">Current Workflow:</label>
-
-          <!-- WORKFLOW SWITCHER DROPDOWN -->
-          <div class="custom-select-wrapper">
-            <select [(ngModel)]="selectedJobId" (change)="onJobSwitch()" class="workflow-switcher">
-              <option *ngFor="let job of availableJobs" [value]="job.id">
-                <!-- Displays: Client Name - Job Role (Fallback to Description) -->
-                {{ job.client_name }} - {{ job.role || job.job_role || (job.job_description | slice:0:30) }}
-              </option>
-            </select>
-            <span class="dropdown-arrow">▼</span>
+    <!-- TOP CONTEXTUAL COMMAND BAR (No redundant website navbar tabs) -->
+    <header class="ats-topbar">
+      <!-- Left: Active Requirement Pill Switcher -->
+      <div class="topbar-left">
+        <div class="req-selector-card">
+          <div class="client-badge-box">
+            {{ (clientName || 'TC').slice(0, 2).toUpperCase() }}
           </div>
-        </div>
-
-        <button class="add-candidate-btn" (click)="toggleAddCandidate()">
-          <span>+</span> Add Candidate
-        </button>
-      </div>
-
-      <!-- ADD CANDIDATE OVERLAY PANEL -->
-      <div *ngIf="showAddCandidate" class="add-candidate-overlay">
-        <div class="overlay-header">
-          <h4>Add Candidate to Pipeline</h4>
-          <span class="results-count">{{ filteredCandidates.length }} available</span>
-        </div>
-        <input type="text" placeholder="Search by name, phone, email, skills, sourcer..." (input)="filterCandidates($event)"
-          class="search-input">
-
-        <div class="candidate-results-list">
-          <div *ngFor="let cand of filteredCandidates" (click)="addCandidateToPipeline(cand)"
-            class="candidate-result-card">
-            <div class="result-avatar">{{ getInitials(cand) }}</div>
-            <div class="result-body">
-              <div class="result-name-row">
-                <span class="result-name">{{ cand.first_name }} {{ cand.last_name }}</span>
-                <span class="source-tag" [ngClass]="getSourceClass(cand.source)">{{ cand.source || 'Direct' }}</span>
-                <span *ngIf="cand.placement_status" class="placement-tag" [ngClass]="cand.placement_status.toLowerCase()">
-                  {{ cand.placement_status }}
-                  <span *ngIf="isRecentlyPlaced(cand)" class="cooldown-clock" title="Placed recently — in {{ cooldownMonths }}-month cooldown">⏳</span>
-                </span>
-              </div>
-              <div class="result-meta-row">
-                <span *ngIf="cand.phone_number" class="result-meta-item">📞 {{ maskPhone(cand.phone_number) }}</span>
-                <span *ngIf="cand.current_location" class="result-meta-item">📍 {{ cand.current_location }}</span>
-                <span class="result-meta-item">💼 {{ cand.total_experience || cand.total_experience_min || 0 }}y</span>
-                <span *ngIf="cand.current_ctc" class="result-meta-item">💰 {{ cand.current_ctc }}</span>
-              </div>
-              <div class="result-sourcer-row">
-                <span class="sourcer-label">Sourced by:</span>
-                <span class="sourcer-val">{{ getSourcerDisplayName(cand) }}</span>
-              </div>
-              <div class="result-skills-row" *ngIf="cand.skills">
-                <span *ngFor="let s of getTopSkills(cand.skills, 3)" class="mini-skill-chip">{{ s }}</span>
-                <span *ngIf="getSkillOverflow(cand.skills, 3) > 0" class="mini-skill-more">+{{ getSkillOverflow(cand.skills, 3) }}</span>
-              </div>
+          <div class="req-meta-group">
+            <div class="req-title-row">
+              <span class="req-client-name">{{ clientName ? (clientName + ' — ') : '' }}</span>
+              <span class="req-role-title">{{ jobTitle }}</span>
+              <span class="req-status-pill">Active</span>
+            </div>
+            <div class="req-select-wrap">
+              <select [(ngModel)]="selectedJobId" (change)="onJobSwitch()" class="workflow-switcher" title="Switch Requirement">
+                <option *ngFor="let job of availableJobs" [value]="job.id">
+                  {{ job.client_name }} - {{ job.role || job.job_role || (job.job_description | slice:0:35) }}
+                </option>
+              </select>
+              <span class="select-chevron">▼</span>
             </div>
           </div>
-          <div *ngIf="filteredCandidates.length === 0" class="no-results-msg">
-            No candidates found matching your search.
-          </div>
         </div>
       </div>
 
-      <!-- KANBAN BOARD -->
-      <div class="pipeline-board" cdkDropListGroup>
-        <div class="stage-column" *ngFor="let stage of stages">
+      <!-- Center: Pipeline Bento Metrics Ribbon -->
+      <div class="pipeline-metrics-ribbon">
+        <div class="metric-chip active" title="Total candidates in this pipeline">
+          <span class="metric-label">Pipeline</span>
+          <span class="metric-val">{{ totalPipelineCount }}</span>
+        </div>
+        <div class="metric-chip" title="Candidates in Screening">
+          <span class="metric-label">Screening</span>
+          <span class="metric-val">{{ pipelineData['Screening']?.length || 0 }}</span>
+        </div>
+        <div class="metric-chip" title="Candidates in Interview">
+          <span class="metric-label">Interviews</span>
+          <span class="metric-val">{{ pipelineData['Interview']?.length || 0 }}</span>
+        </div>
+        <div class="metric-chip" title="Offers Made">
+          <span class="metric-label">Offers</span>
+          <span class="metric-val">{{ pipelineData['Offer']?.length || 0 }}</span>
+        </div>
+        <div class="metric-chip" title="Candidates Hired">
+          <span class="metric-label">Hired</span>
+          <span class="metric-val">{{ pipelineData['Hired']?.length || 0 }}</span>
+        </div>
+      </div>
 
-          <!-- Stage Header -->
-          <div class="stage-header">
-            <span>{{ stage }}</span>
-            <span class="stage-count">{{ pipelineData[stage]?.length || 0 }}</span>
+      <!-- Right: Real-Time Search & Primary Add Candidate CTA -->
+      <div class="topbar-right">
+        <div class="cand-search-box">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" [(ngModel)]="pipelineSearchTerm" placeholder="Filter candidates by name, skill, phone..." class="cand-search-input" />
+          <button *ngIf="pipelineSearchTerm" class="clear-search-btn" (click)="pipelineSearchTerm = ''" title="Clear filter">✕</button>
+        </div>
+
+        <button class="btn-add-candidate" (click)="toggleAddCandidate()" title="Add Candidate to Pipeline">
+          <span class="plus-icon">+</span> Add Candidate
+        </button>
+      </div>
+    </header>
+
+    <!-- ADD CANDIDATE OVERLAY PANEL -->
+    <div *ngIf="showAddCandidate" class="add-candidate-overlay">
+      <div class="overlay-header">
+        <div>
+          <h4>Add Candidate to Pipeline</h4>
+          <span class="results-count">{{ filteredCandidates.length }} available in talent pool</span>
+        </div>
+        <button class="overlay-close-btn" (click)="showAddCandidate = false">✕</button>
+      </div>
+      
+      <div class="overlay-search-bar">
+        <input type="text" placeholder="Search talent pool by name, phone, email, skills, sourcer..." (input)="filterCandidates($event)" class="search-input" autofocus>
+      </div>
+
+      <div class="candidate-results-list">
+        <div *ngFor="let cand of filteredCandidates" (click)="addCandidateToPipeline(cand)" class="candidate-result-card">
+          <div class="result-avatar">{{ getInitials(cand) }}</div>
+          <div class="result-body">
+            <div class="result-name-row">
+              <span class="result-name">{{ cand.first_name }} {{ cand.last_name }}</span>
+              <span class="source-tag" [ngClass]="getSourceClass(cand.source)">{{ cand.source || 'Direct' }}</span>
+              <span *ngIf="cand.placement_status" class="placement-tag" [ngClass]="cand.placement_status.toLowerCase()">
+                {{ cand.placement_status }}
+                <span *ngIf="isRecentlyPlaced(cand)" class="cooldown-clock" title="Placed recently — in {{ cooldownMonths }}-month cooldown">⏳</span>
+              </span>
+            </div>
+            <div class="result-meta-row">
+              <span *ngIf="cand.phone_number" class="result-meta-item">📞 {{ maskPhone(cand.phone_number) }}</span>
+              <span *ngIf="cand.current_location" class="result-meta-item">📍 {{ cand.current_location }}</span>
+              <span class="result-meta-item">💼 {{ cand.total_experience || cand.total_experience_min || 0 }}y</span>
+              <span *ngIf="cand.current_ctc" class="result-meta-item">💰 {{ cand.current_ctc }}</span>
+            </div>
+            <div class="result-sourcer-row">
+              <span class="sourcer-label">Sourced by:</span>
+              <span class="sourcer-val">{{ getSourcerDisplayName(cand) }}</span>
+            </div>
+            <div class="result-skills-row" *ngIf="cand.skills">
+              <span *ngFor="let s of getTopSkills(cand.skills, 3)" class="mini-skill-chip">{{ s }}</span>
+              <span *ngIf="getSkillOverflow(cand.skills, 3) > 0" class="mini-skill-more">+{{ getSkillOverflow(cand.skills, 3) }}</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="filteredCandidates.length === 0" class="no-results-msg">
+          No candidates found matching your search.
+        </div>
+      </div>
+    </div>
+
+    <!-- KANBAN PIPELINE BOARD -->
+    <main class="pipeline-board-container" cdkDropListGroup>
+      <div class="stage-column" *ngFor="let stage of stages" [attr.data-stage]="stage">
+
+        <!-- Stage Header -->
+        <div class="stage-header">
+          <div class="stage-title-wrap">
+            <span class="stage-dot" [ngClass]="stage.toLowerCase()"></span>
+            <span class="stage-name">{{ stage }}</span>
+            <span class="stage-count-badge">{{ getVisibleStageCount(stage) }}</span>
           </div>
 
           <!-- Download Stage Report Button -->
-          <button class="icon-btn download-btn" title="Download {{stage}} Report" (click)="downloadStageReport(stage)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
+          <button class="stage-download-btn" title="Download {{stage}} Excel Report" (click)="downloadStageReport(stage)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
           </button>
+        </div>
 
-          <!-- Drop List Area -->
-          <div class="card-list" cdkDropList [cdkDropListData]="pipelineData[stage]"
-            (cdkDropListDropped)="drop($event, stage)">
+        <!-- Drop List Area -->
+        <div class="card-list" cdkDropList [cdkDropListData]="pipelineData[stage]" (cdkDropListDropped)="drop($event, stage)">
 
-            <!-- Candidate Card -->
-            <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
+          <!-- Candidate Card -->
+          <ng-container *ngFor="let app of pipelineData[stage]">
+            <div class="candidate-card" *ngIf="isCardVisible(app.candidate_details)" cdkDrag>
 
-              <!-- Card Header: Avatar + Name + Actions -->
+              <!-- Card Header: Avatar + Name + Quick Actions -->
               <div class="card-identity-row">
                 <div class="card-avatar" [title]="app.candidate_details.first_name + ' ' + app.candidate_details.last_name">
                   {{ getInitials(app.candidate_details) }}
                 </div>
                 <div class="card-identity-text">
-                  <div class="card-name">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
+                  <div class="card-name" (click)="viewCandidateDetails(app.candidate_details, 'overview')" title="Click to view details">
+                    {{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}
+                  </div>
                   <div class="card-sub-meta">
                     <span *ngIf="app.candidate_details.phone_number" class="card-phone">📞 {{ maskPhone(app.candidate_details.phone_number) }}</span>
                     <span *ngIf="app.candidate_details.current_location" class="card-loc">📍 {{ app.candidate_details.current_location }}</span>
@@ -135,11 +166,9 @@
                 </div>
 
                 <div class="card-actions">
-                  <!-- Eye Icon (View Details) -->
-                  <button class="action-icon-btn view-btn" (click)="viewCandidateDetails(app.candidate_details)"
-                    title="View Details">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
+                  <!-- Eye Icon (View Slide-over Sheet) -->
+                  <button class="action-icon-btn view-btn" (click)="viewCandidateDetails(app.candidate_details, 'overview')" title="Open Profile Sheet">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
@@ -150,8 +179,7 @@
                     [class.disabled]="!app.candidate_details.resume && !app.candidate_details.resume_url"
                     (click)="openResume(app.candidate_details.resume || app.candidate_details.resume_url)"
                     title="Open Resume">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                       <polyline points="14 2 14 8 20 8"></polyline>
                       <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -162,10 +190,11 @@
                 </div>
               </div>
 
-              <!-- Card Metrics: Experience & CTC -->
+              <!-- Card Metrics: Experience, CTC & Notice -->
               <div class="card-metrics-row">
                 <span class="metric-pill">Exp: <strong>{{ app.candidate_details.total_experience || app.candidate_details.total_experience_min || 0 }}y</strong></span>
                 <span class="metric-pill" *ngIf="app.candidate_details.current_ctc">CTC: <strong>{{ app.candidate_details.current_ctc }}</strong></span>
+                <span class="metric-pill notice" *ngIf="app.candidate_details.notice_period">⏳ {{ app.candidate_details.notice_period }}</span>
               </div>
 
               <!-- Skills Chips -->
@@ -185,7 +214,7 @@
                 </span>
               </div>
 
-              <!-- Conditional Badges -->
+              <!-- Conditional Badges (Interview, Cooldown, Rejection) -->
               <div class="card-badges" *ngIf="app.interview_date || stage === 'Rejected' || app.candidate_details.placement_status">
                 <span *ngIf="app.candidate_details.placement_status" class="badge placement-badge" [ngClass]="app.candidate_details.placement_status.toLowerCase()">
                   {{ app.candidate_details.placement_status }}
@@ -195,138 +224,187 @@
                   📅 {{ app.interview_date | date:'shortDate' }}
                 </span>
                 <span *ngIf="stage === 'Rejected'" class="badge rejection-badge" title="{{app.rejection_reason}}">
-                  Rejected
+                  Rejected: {{ (app.rejection_reason | slice:0:22) || 'Reason specified' }}
                 </span>
               </div>
-            </div>
 
+            </div>
+          </ng-container>
+
+          <!-- Empty State when no candidates match filter or stage is empty -->
+          <div *ngIf="getVisibleStageCount(stage) === 0" class="empty-stage-state">
+            <span class="empty-text">No candidates in {{ stage }}</span>
           </div>
+
         </div>
       </div>
+    </main>
 
-    </div>
   </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- 3. SLIDE-OVER CANDIDATE SHEET (DRAWER)                       -->
+<!-- ============================================================ -->
+<div *ngIf="showCandidateDetails && selectedCandidate" class="drawer-backdrop" (click)="closeCandidateDetails()"></div>
+<aside *ngIf="showCandidateDetails && selectedCandidate" class="candidate-drawer" [class.active]="showCandidateDetails">
 
-<!-- ========================================== -->
-<!-- CANDIDATE DETAILS MODAL OVERLAY            -->
-<!-- ========================================== -->
-<div *ngIf="showCandidateDetails && selectedCandidate" class="details-modal-overlay">
-  <div class="details-modal">
-
-    <!-- Header with Name, File Icon, ID, Close Button -->
-    <div class="details-modal-header">
-      <div class="details-title-group">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <h2>{{ selectedCandidate.first_name }} {{ selectedCandidate.last_name }}</h2>
-
-          <!-- File Icon in Modal Header -->
-          <button class="action-icon-btn file-btn modal-icon"
-            [class.disabled]="!selectedCandidate.resume && !selectedCandidate.resume_url"
-            (click)="openResume(selectedCandidate.resume || selectedCandidate.resume_url)" title="Open Resume">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-          </button>
-        </div>
-        <span class="details-id">ID: {{ selectedCandidate.id }}</span>
+  <!-- Drawer Header -->
+  <div class="drawer-header">
+    <div class="drawer-identity">
+      <div class="drawer-avatar">{{ getInitials(selectedCandidate) }}</div>
+      <div class="drawer-title-box">
+        <h2 class="drawer-name">{{ selectedCandidate.first_name }} {{ selectedCandidate.last_name }}</h2>
+        <span class="drawer-sub">ID #{{ selectedCandidate.id }} • {{ selectedCandidate.current_location || 'Location Not Specified' }}</span>
       </div>
-      <button class="close-details-btn" (click)="closeCandidateDetails()">×</button>
     </div>
 
-    <!-- Modal Body -->
-    <div class="details-modal-body">
+    <div class="drawer-header-actions">
+      <!-- Open Resume Button in Header -->
+      <button class="action-icon-btn file-btn"
+        [class.disabled]="!selectedCandidate.resume && !selectedCandidate.resume_url"
+        (click)="openResume(selectedCandidate.resume || selectedCandidate.resume_url)"
+        title="Open Resume in New Tab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+      </button>
+      <button class="drawer-close-btn" (click)="closeCandidateDetails()" title="Close details">✕</button>
+    </div>
+  </div>
 
-      <!-- Section 1: Contact & Location -->
-      <div class="details-section">
-        <h4 class="section-title">Contact Information</h4>
-        <div class="details-grid">
-          <div class="detail-item">
-            <label>Email</label>
-            <span>{{ selectedCandidate.email }}</span>
+  <!-- Drawer Tab Navigation -->
+  <div class="drawer-tabs-bar">
+    <button class="d-tab" [class.active]="activeDrawerTab === 'overview'" (click)="activeDrawerTab = 'overview'">Overview</button>
+    <button class="d-tab" [class.active]="activeDrawerTab === 'resume'" (click)="activeDrawerTab = 'resume'">Resume</button>
+    <button class="d-tab" [class.active]="activeDrawerTab === 'feedback'" (click)="activeDrawerTab = 'feedback'">Work History</button>
+    <button class="d-tab" [class.active]="activeDrawerTab === 'sourcing'" (click)="activeDrawerTab = 'sourcing'">Sourcing & Cooldown</button>
+  </div>
+
+  <!-- Drawer Scrollable Content Body -->
+  <div class="drawer-body">
+
+    <!-- Tab 1: Overview -->
+    <div *ngIf="activeDrawerTab === 'overview'" class="tab-pane">
+      <!-- Contact Information -->
+      <div class="drawer-section">
+        <h4 class="section-heading">Contact Information</h4>
+        <div class="info-grid">
+          <div class="info-card">
+            <label>Email Address</label>
+            <span>{{ selectedCandidate.email || 'N/A' }}</span>
           </div>
-          <div class="detail-item">
-            <label>Phone</label>
-            <span>{{ selectedCandidate.phone_number }}</span>
+          <div class="info-card">
+            <label>Phone Number</label>
+            <span>{{ selectedCandidate.phone_number || 'N/A' }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Current Location</label>
-            <span>{{ selectedCandidate.current_location }}</span>
+            <span>{{ selectedCandidate.current_location || 'N/A' }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Preferred Location</label>
-            <span>{{ selectedCandidate.preferred_location }}</span>
+            <span>{{ selectedCandidate.preferred_location || 'N/A' }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Section 2: Professional Details -->
-      <div class="details-section">
-        <h4 class="section-title">Professional Overview</h4>
-        <div class="details-grid">
-          <div class="detail-item">
+      <!-- Professional Overview -->
+      <div class="drawer-section">
+        <h4 class="section-heading">Professional Details</h4>
+        <div class="info-grid">
+          <div class="info-card">
             <label>Total Experience</label>
-            <span>{{ selectedCandidate.total_experience_min }} - {{ selectedCandidate.total_experience_max }}
-              Years</span>
+            <span>{{ selectedCandidate.total_experience_min }} - {{ selectedCandidate.total_experience_max }} Years</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Relevant Experience</label>
-            <span>{{ selectedCandidate.relevant_experience_min }} - {{ selectedCandidate.relevant_experience_max }}
-              Years</span>
+            <span>{{ selectedCandidate.relevant_experience_min }} - {{ selectedCandidate.relevant_experience_max }} Years</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Current CTC</label>
-            <span>{{ selectedCandidate.current_ctc }}</span>
+            <span>{{ selectedCandidate.current_ctc || 'N/A' }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Expected CTC</label>
             <span>{{ selectedCandidate.expected_ctc_min }} - {{ selectedCandidate.expected_ctc_max }} LPA</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Notice Period</label>
-            <span>{{ selectedCandidate.notice_period }}</span>
+            <span>{{ selectedCandidate.notice_period || 'N/A' }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Gender</label>
-            <span>{{ selectedCandidate.gender }}</span>
+            <span>{{ selectedCandidate.gender || 'N/A' }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Section 3: Skills & Work -->
-      <div class="details-section">
-        <h4 class="section-title">Skills & Experience</h4>
-        <div class="detail-item full-width">
-          <label>Work Experience</label>
-          <p class="text-block">{{ selectedCandidate.work_experience }}</p>
-        </div>
-        <div class="detail-item full-width">
-          <label>Skills</label>
-          <div class="skills-container">
-            <span class="skill-tag">{{ selectedCandidate.skills }}</span>
-          </div>
+      <!-- Skills -->
+      <div class="drawer-section">
+        <h4 class="section-heading">Skills</h4>
+        <div class="skills-tag-cluster">
+          <span *ngFor="let s of getTopSkills(selectedCandidate.skills, 20)" class="full-skill-chip">{{ s }}</span>
+          <span *ngIf="!selectedCandidate.skills" class="text-muted">No skills listed</span>
         </div>
       </div>
+    </div>
 
-      <!-- Section 4: Sourcing & Placement Details -->
-      <div class="details-section">
-        <h4 class="section-title">Sourcing & Placement</h4>
-        <div class="details-grid">
-          <div class="detail-item">
+    <!-- Tab 2: Resume -->
+    <div *ngIf="activeDrawerTab === 'resume'" class="tab-pane">
+      <div class="resume-preview-box">
+        <div class="resume-preview-banner">
+          <div>
+            <strong>Attached Resume</strong>
+            <p *ngIf="selectedCandidate.resume || selectedCandidate.resume_url" class="resume-url-text">
+              {{ selectedCandidate.resume || selectedCandidate.resume_url }}
+            </p>
+            <p *ngIf="!selectedCandidate.resume && !selectedCandidate.resume_url" class="text-muted">
+              No document uploaded for this candidate.
+            </p>
+          </div>
+          <button *ngIf="selectedCandidate.resume || selectedCandidate.resume_url"
+            class="btn-open-resume"
+            (click)="openResume(selectedCandidate.resume || selectedCandidate.resume_url)">
+            Open Resume Document ↗
+          </button>
+        </div>
+
+        <div class="resume-notes-box">
+          <h5>Profile Highlights</h5>
+          <p>{{ selectedCandidate.work_experience || 'No detailed work summary provided.' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Work History -->
+    <div *ngIf="activeDrawerTab === 'feedback'" class="tab-pane">
+      <div class="drawer-section">
+        <h4 class="section-heading">Detailed Work Experience</h4>
+        <div class="work-experience-card">
+          <p class="experience-text">{{ selectedCandidate.work_experience || 'No work experience description provided.' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Sourcing & Cooldown -->
+    <div *ngIf="activeDrawerTab === 'sourcing'" class="tab-pane">
+      <div class="drawer-section">
+        <h4 class="section-heading">Sourcing Attribution & Cooldown</h4>
+        <div class="info-grid">
+          <div class="info-card">
             <label>Sourced By</label>
-            <span class="sourcer-highlight">👤 {{ getSourcerDisplayName(selectedCandidate) }}</span>
+            <span class="sourcer-pill-bold">👤 {{ getSourcerDisplayName(selectedCandidate) }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Candidate Source</label>
             <span>{{ selectedCandidate.source || 'External' }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-card">
             <label>Placement Status</label>
             <div>
               <span *ngIf="selectedCandidate.placement_status" class="badge placement-badge" [ngClass]="selectedCandidate.placement_status.toLowerCase()">
@@ -336,63 +414,73 @@
               <span *ngIf="!selectedCandidate.placement_status" class="text-muted">Not Placed</span>
             </div>
           </div>
-          <div class="detail-item" *ngIf="selectedCandidate.placement_at">
-            <label>Placed At</label>
+          <div class="info-card" *ngIf="selectedCandidate.placement_at">
+            <label>Placed Date</label>
             <span>{{ selectedCandidate.placement_at | date:'mediumDate' }}</span>
           </div>
-          <div class="detail-item" *ngIf="selectedCandidate.placement_client_name">
+          <div class="info-card" *ngIf="selectedCandidate.placement_client_name">
             <label>Placed Client</label>
             <span>{{ selectedCandidate.placement_client_name }}</span>
           </div>
-          <div class="detail-item" *ngIf="selectedCandidate.placement_job_title">
+          <div class="info-card" *ngIf="selectedCandidate.placement_job_title">
             <label>Placed Role</label>
             <span>{{ selectedCandidate.placement_job_title }}</span>
           </div>
         </div>
       </div>
-
-    </div>
-
-    <!-- Footer Area (Optional - Left empty as View Resume is in Header) -->
-    <div class="details-modal-footer">
     </div>
 
   </div>
-</div>
 
-<!-- ============================================== -->
-<!-- MODAL: SCHEDULE INTERVIEW                      -->
-<!-- ============================================== -->
+  <!-- Drawer Footer Actions -->
+  <div class="drawer-footer">
+    <button class="btn-drawer-close" (click)="closeCandidateDetails()">Close</button>
+  </div>
+
+</aside>
+
+<!-- ============================================================ -->
+<!-- 4. MODAL: SCHEDULE INTERVIEW                                 -->
+<!-- ============================================================ -->
 <div *ngIf="showInterviewModal" class="input-modal-overlay">
   <div class="input-modal">
     <div class="input-modal-header">
-      <h3>Schedule Interview</h3>
-      <button class="close-btn" (click)="closeModals()">×</button>
+      <h3>📅 Schedule Interview</h3>
+      <button class="modal-close-btn" (click)="closeModals()">✕</button>
     </div>
     <div class="input-modal-body">
-      <label>Select Interview Date</label>
+      <label class="modal-label">Select Interview Date & Time</label>
       <input type="date" [(ngModel)]="interviewDateInput" class="custom-input">
     </div>
     <div class="input-modal-footer">
       <button class="modal-btn cancel" (click)="closeModals()">Cancel</button>
-      <button class="modal-btn confirm" (click)="submitInterview()">Confirm</button>
+      <button class="modal-btn confirm" (click)="submitInterview()">Confirm Schedule</button>
     </div>
   </div>
 </div>
 
-<!-- ============================================== -->
-<!-- MODAL: REJECTION REASON                        -->
-<!-- ============================================== -->
+<!-- ============================================================ -->
+<!-- 5. MODAL: REJECTION REASON                                   -->
+<!-- ============================================================ -->
 <div *ngIf="showRejectionModal" class="input-modal-overlay">
   <div class="input-modal">
     <div class="input-modal-header">
-      <h3>Reason for Rejection</h3>
-      <button class="close-btn" (click)="closeModals()">×</button>
+      <h3 style="color: #dc2626;">⚠️ Reason for Rejection</h3>
+      <button class="modal-close-btn" (click)="closeModals()">✕</button>
     </div>
     <div class="input-modal-body">
-      <label>Please specify why this candidate is being rejected:</label>
-      <textarea [(ngModel)]="rejectionReasonInput" class="custom-textarea"
-        placeholder="e.g. Skills mismatch, high CTC expectation..."></textarea>
+      <label class="modal-label">Please specify why this candidate is being rejected:</label>
+      
+      <!-- Quick Select Preset Chips -->
+      <div class="rejection-preset-chips">
+        <button type="button" class="preset-chip" (click)="rejectionReasonInput = 'Skills & tech stack mismatch'">Skills Mismatch</button>
+        <button type="button" class="preset-chip" (click)="rejectionReasonInput = 'CTC expectation is higher than client budget'">High CTC</button>
+        <button type="button" class="preset-chip" (click)="rejectionReasonInput = 'Notice period exceeds client timeline (>60 days)'">Notice Period</button>
+        <button type="button" class="preset-chip" (click)="rejectionReasonInput = 'Failed technical / live coding assessment'">Tech Assessment</button>
+        <button type="button" class="preset-chip" (click)="rejectionReasonInput = 'Candidate backed out or accepted another offer'">Candidate Backed Out</button>
+      </div>
+
+      <textarea [(ngModel)]="rejectionReasonInput" class="custom-textarea" placeholder="Enter detailed reason for rejection..."></textarea>
     </div>
     <div class="input-modal-footer">
       <button class="modal-btn cancel" (click)="closeModals()">Cancel</button>
@@ -401,8 +489,8 @@
   </div>
 </div>
 
-<!-- ============================================== -->
-<!-- GENERIC ALERT MESSAGE                          -->
-<!-- ============================================== -->
+<!-- ============================================================ -->
+<!-- 6. GENERIC ALERT MESSAGE POPUP                               -->
+<!-- ============================================================ -->
 <app-alert-message *ngIf="showAlert" [message]="alertMessage" [buttons]="alertButtons"
   (buttonClicked)="onAlertAction($event)" (close)="onAlertClose()"></app-alert-message>
