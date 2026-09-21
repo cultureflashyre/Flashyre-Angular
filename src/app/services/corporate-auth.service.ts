@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subscription, throwError, timer } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { jwtDecode } from 'jwt-decode';
+import { clearAllAuthData, isAuthenticated } from '../utils/auth-utils';
+import { AuthBroadcastService } from './auth-broadcast.service';
 
 interface CorporateSignupData {
   first_name: string;
@@ -27,17 +30,40 @@ interface AuthResponse {
 @Injectable({
   providedIn: 'root'
 })
-
 export class CorporateAuthService {
-  
-  
   private apiUrl = environment.apiUrl; // Adjust the API URL as needed
+  private silentRefreshSub: Subscription | null = null;
+  private isSilentRefreshing = false;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private socialAuthService: SocialAuthService,
-) {}
+    private authBroadcastService: AuthBroadcastService,
+  ) {
+    this.initBroadcastListeners();
+    if (this.isLoggedIn()) {
+      this.startSilentRefreshTimer();
+    }
+  }
+
+  private initBroadcastListeners(): void {
+    this.authBroadcastService.messages$.subscribe(msg => {
+      if (msg.type === 'TOKEN_REFRESHED' || msg.type === 'LOGIN_SUCCESS') {
+        localStorage.setItem('jwtToken', msg.accessToken);
+        if (msg.refreshToken) {
+          localStorage.setItem('refreshToken', msg.refreshToken);
+        }
+        this.startSilentRefreshTimer(msg.accessToken, false);
+      } else if (msg.type === 'LOGOUT') {
+        this.clearTokens(false);
+        const currentUrl = this.router.url;
+        if (!currentUrl.includes('/login') && !currentUrl.includes('/signup')) {
+          this.router.navigate(['/login']);
+        }
+      }
+    });
+  }
 
   loginCorporate(email: string, password: string, captchaId?: string, captchaAnswer?: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/login/`, { 
@@ -84,9 +110,16 @@ export class CorporateAuthService {
     return throwError(() => new Error(errorMessage));
   }
 
-  saveTokens(access: string, refresh: string): void {
+  /**
+   * Saves access and refresh tokens to localStorage and schedules proactive refresh.
+   */
+  saveTokens(access: string, refresh: string, shouldBroadcast: boolean = true): void {
     localStorage.setItem('jwtToken', access);
     localStorage.setItem('refreshToken', refresh);
+    this.startSilentRefreshTimer(access, shouldBroadcast);
+    if (shouldBroadcast) {
+      this.authBroadcastService.broadcastTokenRefreshed(access, refresh);
+    }
   }
 
   getJWTToken(): string | null {
@@ -95,6 +128,58 @@ export class CorporateAuthService {
 
   getRefreshToken(): string | null {
     return localStorage.getItem('refreshToken');
+  }
+
+  /**
+   * Starts a proactive silent refresh timer that executes 2 minutes before the JWT access token expires.
+   */
+  startSilentRefreshTimer(tokenStr?: string, shouldBroadcast: boolean = true): void {
+    this.stopSilentRefreshTimer();
+
+    const token = tokenStr || this.getJWTToken();
+    if (!token) return;
+
+    try {
+      const decoded = jwtDecode<{ exp: number }>(token);
+      const expMs = decoded.exp * 1000;
+      const nowMs = Date.now();
+      // Proactive refresh target: 2 minutes (120,000 ms) before expiration
+      const leadTimeMs = 2 * 60 * 1000;
+      const delayMs = Math.max(0, expMs - nowMs - leadTimeMs);
+
+      console.log(`[CorporateAuthService] Proactive silent refresh scheduled in ${(delayMs / 1000).toFixed(0)} seconds.`);
+
+      this.silentRefreshSub = timer(delayMs).subscribe(() => {
+        if (this.isSilentRefreshing) return;
+        this.isSilentRefreshing = true;
+
+        console.log('[CorporateAuthService] Proactive silent refresh timer fired at T-2min.');
+        this.refreshToken().subscribe({
+          next: (res: any) => {
+            this.isSilentRefreshing = false;
+            if (res && res.access) {
+              this.saveTokens(res.access, res.refresh || this.getRefreshToken() || '', shouldBroadcast);
+            }
+          },
+          error: (err: any) => {
+            this.isSilentRefreshing = false;
+            console.warn('[CorporateAuthService] Proactive silent refresh failed (will fallback to interceptor on demand):', err);
+          }
+        });
+      });
+    } catch (e) {
+      console.warn('[CorporateAuthService] Failed to schedule silent refresh timer:', e);
+    }
+  }
+
+  /**
+   * Cancels active proactive silent refresh timer subscription.
+   */
+  stopSilentRefreshTimer(): void {
+    if (this.silentRefreshSub) {
+      this.silentRefreshSub.unsubscribe();
+      this.silentRefreshSub = null;
+    }
   }
 
   refreshToken(): Observable<any> {
@@ -106,7 +191,7 @@ export class CorporateAuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getJWTToken();
+    return isAuthenticated();
   }
 
 async logout(): Promise<void> {
@@ -118,24 +203,20 @@ async logout(): Promise<void> {
   } catch (error) {
     console.error('Error signing out from social provider:', error);
   } finally {
-    // 2. Clear all your application's session data from localStorage.
-    this.clearTokens();
+    // 2. Clear all application session data and notify other tabs
+    this.clearTokens(true);
 
     // 3. Redirect the user to the login page.
     this.router.navigate(['/login']);
   }
 }
 
-  clearTokens(): void {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userType');
-    localStorage.removeItem('isSuperUser');
-    localStorage.removeItem('firstName');
-    localStorage.removeItem('lastName');
+  clearTokens(shouldBroadcast: boolean = true): void {
+    this.stopSilentRefreshTimer();
+    if (shouldBroadcast) {
+      this.authBroadcastService.broadcastLogout();
+    }
+    clearAllAuthData();
   }
   
   // --- NEW METHOD 1: Initial Google Auth Check ---

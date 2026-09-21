@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
+import { clearAllAuthData } from '../utils/auth-utils';
+import { AuthBroadcastService } from './auth-broadcast.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +16,9 @@ export class AdminAuthService {
 
   constructor(
     private http: HttpClient,
-  private router: Router
-) {}
+    private router: Router,
+    private authBroadcastService: AuthBroadcastService
+  ) {}
 
   /**
    * Registers a new admin user by posting to the generic signup endpoint.
@@ -33,16 +37,8 @@ export class AdminAuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userType');
-    localStorage.removeItem('isSuperUser');
-    localStorage.removeItem('firstName');
-    localStorage.removeItem('lastName');
-
+    this.authBroadcastService.broadcastLogout();
+    clearAllAuthData();
     this.router.navigate(['/login']);
   }
 }

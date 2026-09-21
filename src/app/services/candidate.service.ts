@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subscription, throwError, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { tap, catchError } from 'rxjs/operators';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { jwtDecode } from 'jwt-decode';
+import { clearAllAuthData, isAuthenticated } from '../utils/auth-utils';
+import { AuthBroadcastService } from './auth-broadcast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +15,38 @@ import { SocialAuthService } from '@abacritt/angularx-social-login';
 export class AuthService {
   // Base URL for the API, loaded from the environment configuration.
   private apiUrl = environment.apiUrl;
+  private silentRefreshSub: Subscription | null = null;
+  private isSilentRefreshing = false;
 
   constructor(
     private http: HttpClient, 
     private router: Router,
     private socialAuthService: SocialAuthService,
-) {}
+    private authBroadcastService: AuthBroadcastService,
+  ) {
+    this.initBroadcastListeners();
+    if (this.isLoggedIn()) {
+      this.startSilentRefreshTimer();
+    }
+  }
+
+  private initBroadcastListeners(): void {
+    this.authBroadcastService.messages$.subscribe(msg => {
+      if (msg.type === 'TOKEN_REFRESHED' || msg.type === 'LOGIN_SUCCESS') {
+        localStorage.setItem('jwtToken', msg.accessToken);
+        if (msg.refreshToken) {
+          localStorage.setItem('refreshToken', msg.refreshToken);
+        }
+        this.startSilentRefreshTimer(msg.accessToken, false);
+      } else if (msg.type === 'LOGOUT') {
+        this.clearTokens(false);
+        const currentUrl = this.router.url;
+        if (!currentUrl.includes('/login') && !currentUrl.includes('/signup')) {
+          this.router.navigate(['/login']);
+        }
+      }
+    });
+  }
 
   /**
    * Creates and returns HttpHeaders with the JWT token for authenticated requests.
@@ -67,24 +96,20 @@ async logout(): Promise<void> {
   } catch (error) {
     console.error('Error signing out from social provider:', error);
   } finally {
-    // 2. Clear all your application's session data from localStorage.
-    this.clearTokens();
+    // 2. Clear all your application's session data and notify other tabs
+    this.clearTokens(true);
 
     // 3. Redirect the user to the login page.
     this.router.navigate(['/login']);
   }
 }
 
-  clearTokens(): void {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userType');
-    localStorage.removeItem('isSuperUser');
-    localStorage.removeItem('firstName');
-    localStorage.removeItem('lastName');
+  clearTokens(shouldBroadcast: boolean = true): void {
+    this.stopSilentRefreshTimer();
+    if (shouldBroadcast) {
+      this.authBroadcastService.broadcastLogout();
+    }
+    clearAllAuthData();
   }
 
   getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {
@@ -261,13 +286,70 @@ async logout(): Promise<void> {
   }
 
   /**
-   * Saves access and refresh tokens to localStorage.
+   * Saves access and refresh tokens to localStorage and schedules proactive refresh.
    * @param access The JWT access token.
    * @param refresh The JWT refresh token.
+   * @param shouldBroadcast Whether to synchronize this token across browser tabs.
    */
-  saveTokens(access: string, refresh: string) {
+  saveTokens(access: string, refresh: string, shouldBroadcast: boolean = true): void {
     localStorage.setItem('jwtToken', access);
     localStorage.setItem('refreshToken', refresh);
+    this.startSilentRefreshTimer(access, shouldBroadcast);
+    if (shouldBroadcast) {
+      this.authBroadcastService.broadcastTokenRefreshed(access, refresh);
+    }
+  }
+
+  /**
+   * Starts a proactive silent refresh timer that executes 2 minutes before the JWT access token expires.
+   */
+  startSilentRefreshTimer(tokenStr?: string, shouldBroadcast: boolean = true): void {
+    this.stopSilentRefreshTimer();
+
+    const token = tokenStr || this.getJWTToken();
+    if (!token) return;
+
+    try {
+      const decoded = jwtDecode<{ exp: number }>(token);
+      const expMs = decoded.exp * 1000;
+      const nowMs = Date.now();
+      // Proactive refresh target: 2 minutes (120,000 ms) before expiration
+      const leadTimeMs = 2 * 60 * 1000;
+      const delayMs = Math.max(0, expMs - nowMs - leadTimeMs);
+
+      console.log(`[AuthService] Proactive silent refresh scheduled in ${(delayMs / 1000).toFixed(0)} seconds.`);
+
+      this.silentRefreshSub = timer(delayMs).subscribe(() => {
+        if (this.isSilentRefreshing) return;
+        this.isSilentRefreshing = true;
+
+        console.log('[AuthService] Proactive silent refresh timer fired at T-2min.');
+        this.refreshToken().subscribe({
+          next: (res: any) => {
+            this.isSilentRefreshing = false;
+            if (res && res.access) {
+              this.saveTokens(res.access, res.refresh || this.getRefreshToken() || '', shouldBroadcast);
+            }
+          },
+          error: (err: any) => {
+            this.isSilentRefreshing = false;
+            console.warn('[AuthService] Proactive silent refresh failed (will fallback to interceptor on demand):', err);
+          }
+        });
+      });
+    } catch (e) {
+      console.warn('[AuthService] Failed to schedule silent refresh timer:', e);
+    }
+  }
+
+  /**
+   * Cancels the active proactive silent refresh timer subscription.
+   */
+  stopSilentRefreshTimer(): void {
+    if (this.silentRefreshSub) {
+      this.silentRefreshSub.unsubscribe();
+      this.silentRefreshSub = null;
+    }
   }
 
   /**
@@ -283,12 +365,11 @@ async logout(): Promise<void> {
   }
 
   /**
-   * Checks if a user is currently logged in by verifying the presence of a JWT token.
-   * @returns True if a token exists, false otherwise.
+   * Checks if a user is currently logged in by verifying the presence of a valid, unexpired JWT token.
+   * @returns True if a valid token exists, false otherwise.
    */
   isLoggedIn(): boolean {
-    const token = this.getJWTToken();
-    return !!token; // Converts the token string (or null) to a boolean.
+    return isAuthenticated();
   }
    /**
    * Revokes a job application for the current user.

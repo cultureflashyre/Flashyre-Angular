@@ -2,9 +2,10 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError, timer } from 'rxjs';
+import { catchError, filter, retry, switchMap, take } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
+import { clearAllAuthData } from '../utils/auth-utils';
 
 import { AuthService } from '../services/candidate.service';
 import { CorporateAuthService } from '../services/corporate-auth.service';
@@ -124,8 +125,27 @@ function handleTokenRefresh(
     console.log(`[JWT Interceptor] Calling API to refresh token. Using refresh token: ${!!refreshToken}`);
 
     return authService.refreshToken().pipe(
+      retry({
+        count: 3,
+        delay: (error: any, retryCount: number) => {
+          // Do not retry fatal auth rejections or client configuration failures
+          if (
+            error?.status === 401 ||
+            error?.status === 403 ||
+            error?.message === 'No refresh token available'
+          ) {
+            return throwError(() => error);
+          }
+          // Exponential backoff: 1000ms * 2^(retryCount - 1) + jitter (0-500ms)
+          const baseDelay = 1000 * Math.pow(2, retryCount - 1);
+          const jitter = Math.floor(Math.random() * 500);
+          const delayMs = baseDelay + jitter;
+          console.warn(`[JWT Interceptor] Transient refresh failure (${error?.status || error?.message}). Retrying attempt ${retryCount}/3 in ${delayMs}ms...`);
+          return timer(delayMs);
+        }
+      }),
       catchError(err => {
-        console.error(`[JWT Interceptor] Refresh token API failed!`, err);
+        console.error(`[JWT Interceptor] Refresh token API failed after retries!`, err);
         isRefreshing = false;
 
         const status = err?.status;
@@ -141,17 +161,7 @@ function handleTokenRefresh(
 
         console.log(`[JWT Interceptor] Refresh token invalid or unrecoverable. Clearing session and navigating to /login`);
         
-        // Comprehensive session cleanup
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userProfile');
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userType');
-        localStorage.removeItem('isSuperUser');
-        localStorage.removeItem('firstName');
-        localStorage.removeItem('lastName');
-
+        clearAllAuthData();
         authService.clearTokens();
         router.navigate(['/login']);
         return throwError(() => err);
