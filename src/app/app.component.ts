@@ -29,14 +29,30 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Initialize global notification listeners on app startup
-    this.notificationService.initGlobalListeners();
+    // Check if token exists before initializing global listeners on startup
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('jwtToken') : null;
+    const currentUrl = this.router.url;
+    const isPublicRoute = currentUrl.includes('/login') || currentUrl.includes('/signup');
 
-    // Re-verify on route changes in case user just authenticated
+    if (token && !isPublicRoute) {
+      this.notificationService.initGlobalListeners();
+    } else {
+      this.notificationService.stopListening();
+    }
+
+    // Re-verify on route changes in case user authenticated or logged out
     this.routerSub = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.notificationService.initGlobalListeners();
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const hasToken = typeof localStorage !== 'undefined' ? !!localStorage.getItem('jwtToken') : false;
+        const targetUrl = event.urlAfterRedirects || event.url;
+        const isAuthOrPublicPage = targetUrl.includes('/login') || targetUrl.includes('/signup');
+
+        if (hasToken && !isAuthOrPublicPage) {
+          this.notificationService.initGlobalListeners();
+        } else {
+          this.notificationService.stopListening();
+        }
       });
   }
 

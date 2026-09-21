@@ -510,6 +510,12 @@ export class ApprovalNotificationService implements OnDestroy {
    * Safe to call repeatedly (idempotent).
    */
   public initGlobalListeners(): void {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('jwtToken') : null;
+    if (!token) {
+      this.stopListening();
+      return;
+    }
+
     const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
                     (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
     const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
@@ -538,6 +544,12 @@ export class ApprovalNotificationService implements OnDestroy {
 
     // Run immediately (0s) and then every 15s in the background
     this.heartbeatSub = timer(0, 15000).subscribe(() => {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('jwtToken') : null;
+      if (!token) {
+        this.stopListening();
+        return;
+      }
+
       const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
                       (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
       const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
@@ -553,6 +565,12 @@ export class ApprovalNotificationService implements OnDestroy {
     if (typeof document !== 'undefined' && !this.visibilityListener) {
       this.visibilityListener = () => {
         if (document.visibilityState === 'visible') {
+          const token = typeof localStorage !== 'undefined' ? localStorage.getItem('jwtToken') : null;
+          if (!token) {
+            this.stopListening();
+            return;
+          }
+
           const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
                           (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
           const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
