@@ -37,9 +37,12 @@ export class AdminAuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userProfile');
     localStorage.removeItem('user_id');
+    localStorage.removeItem('userId');
     localStorage.removeItem('userType');
+    localStorage.removeItem('isSuperUser');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
 
-    
     this.router.navigate(['/login']);
   }
 }

@@ -68,11 +68,7 @@ async logout(): Promise<void> {
     console.error('Error signing out from social provider:', error);
   } finally {
     // 2. Clear all your application's session data from localStorage.
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('userType');
+    this.clearTokens();
 
     // 3. Redirect the user to the login page.
     this.router.navigate(['/login']);
@@ -84,7 +80,11 @@ async logout(): Promise<void> {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userProfile');
     localStorage.removeItem('user_id');
+    localStorage.removeItem('userId');
     localStorage.removeItem('userType');
+    localStorage.removeItem('isSuperUser');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
   }
 
   getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {

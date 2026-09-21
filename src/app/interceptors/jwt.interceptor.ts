@@ -127,14 +127,30 @@ function handleTokenRefresh(
       catchError(err => {
         console.error(`[JWT Interceptor] Refresh token API failed!`, err);
         isRefreshing = false;
-        console.log(`[JWT Interceptor] Clearing tokens and navigating to /login`);
+
+        const status = err?.status;
+        // Do not clear tokens or kick user to /login on rate-limiting (429) or transient network/server issues (0, 5xx)
+        if (status === 429) {
+          console.warn('[JWT Interceptor] Refresh request rate-limited (HTTP 429). Preserving local session.');
+          return throwError(() => err);
+        }
+        if (status === 0 || (status >= 500 && status < 600)) {
+          console.warn(`[JWT Interceptor] Transient server/network error (HTTP ${status}) during refresh. Preserving local session.`);
+          return throwError(() => err);
+        }
+
+        console.log(`[JWT Interceptor] Refresh token invalid or unrecoverable. Clearing session and navigating to /login`);
         
-        // Clear tokens directly here just in case
+        // Comprehensive session cleanup
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userProfile');
         localStorage.removeItem('user_id');
+        localStorage.removeItem('userId');
         localStorage.removeItem('userType');
+        localStorage.removeItem('isSuperUser');
+        localStorage.removeItem('firstName');
+        localStorage.removeItem('lastName');
 
         authService.clearTokens();
         router.navigate(['/login']);
