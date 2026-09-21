@@ -34,9 +34,7 @@ export class AuthService {
     this.authBroadcastService.messages$.subscribe(msg => {
       if (msg.type === 'TOKEN_REFRESHED' || msg.type === 'LOGIN_SUCCESS') {
         localStorage.setItem('jwtToken', msg.accessToken);
-        if (msg.refreshToken) {
-          localStorage.setItem('refreshToken', msg.refreshToken);
-        }
+        localStorage.removeItem('refreshToken');
         this.startSilentRefreshTimer(msg.accessToken, false);
       } else if (msg.type === 'LOGOUT') {
         this.clearTokens(false);
@@ -278,25 +276,26 @@ async logout(): Promise<void> {
   }
 
   /**
-   * Retrieves the refresh token from localStorage.
-   * @returns The refresh token string or null if not found.
+   * Refresh token is stored securely in an HttpOnly cookie and managed by the browser.
+   * @returns null (HttpOnly cookie cannot be read via JavaScript).
    */
   getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
+    return null;
   }
 
   /**
-   * Saves access and refresh tokens to localStorage and schedules proactive refresh.
+   * Saves access token to localStorage and schedules proactive refresh.
+   * Refresh token is stored in HttpOnly cookie and intentionally removed from localStorage.
    * @param access The JWT access token.
-   * @param refresh The JWT refresh token.
+   * @param refresh Optional legacy refresh token (ignored/cleaned).
    * @param shouldBroadcast Whether to synchronize this token across browser tabs.
    */
-  saveTokens(access: string, refresh: string, shouldBroadcast: boolean = true): void {
+  saveTokens(access: string, refresh?: string, shouldBroadcast: boolean = true): void {
     localStorage.setItem('jwtToken', access);
-    localStorage.setItem('refreshToken', refresh);
+    localStorage.removeItem('refreshToken');
     this.startSilentRefreshTimer(access, shouldBroadcast);
     if (shouldBroadcast) {
-      this.authBroadcastService.broadcastTokenRefreshed(access, refresh);
+      this.authBroadcastService.broadcastTokenRefreshed(access);
     }
   }
 
@@ -328,7 +327,7 @@ async logout(): Promise<void> {
           next: (res: any) => {
             this.isSilentRefreshing = false;
             if (res && res.access) {
-              this.saveTokens(res.access, res.refresh || this.getRefreshToken() || '', shouldBroadcast);
+              this.saveTokens(res.access, '', shouldBroadcast);
             }
           },
           error: (err: any) => {
@@ -353,14 +352,13 @@ async logout(): Promise<void> {
   }
 
   /**
-   * Refreshes an expired JWT token using HttpOnly cookie or refresh token fallback.
+   * Refreshes an expired JWT token using the HttpOnly refresh_token cookie.
    * @returns An Observable of the new token pair.
    */
   refreshToken() {
-    const refresh = this.getRefreshToken();
     return this.http.post<any>(
       `${this.apiUrl}api/token/refresh/`,
-      refresh ? { refresh } : {},
+      {},
       { withCredentials: true }
     );
   }

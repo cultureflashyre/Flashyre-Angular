@@ -51,9 +51,7 @@ export class CorporateAuthService {
     this.authBroadcastService.messages$.subscribe(msg => {
       if (msg.type === 'TOKEN_REFRESHED' || msg.type === 'LOGIN_SUCCESS') {
         localStorage.setItem('jwtToken', msg.accessToken);
-        if (msg.refreshToken) {
-          localStorage.setItem('refreshToken', msg.refreshToken);
-        }
+        localStorage.removeItem('refreshToken');
         this.startSilentRefreshTimer(msg.accessToken, false);
       } else if (msg.type === 'LOGOUT') {
         this.clearTokens(false);
@@ -111,14 +109,15 @@ export class CorporateAuthService {
   }
 
   /**
-   * Saves access and refresh tokens to localStorage and schedules proactive refresh.
+   * Saves access token to localStorage and schedules proactive refresh.
+   * Refresh token is stored in HttpOnly cookie and intentionally removed from localStorage.
    */
-  saveTokens(access: string, refresh: string, shouldBroadcast: boolean = true): void {
+  saveTokens(access: string, refresh?: string, shouldBroadcast: boolean = true): void {
     localStorage.setItem('jwtToken', access);
-    localStorage.setItem('refreshToken', refresh);
+    localStorage.removeItem('refreshToken');
     this.startSilentRefreshTimer(access, shouldBroadcast);
     if (shouldBroadcast) {
-      this.authBroadcastService.broadcastTokenRefreshed(access, refresh);
+      this.authBroadcastService.broadcastTokenRefreshed(access);
     }
   }
 
@@ -126,8 +125,12 @@ export class CorporateAuthService {
     return localStorage.getItem('jwtToken');
   }
 
+  /**
+   * Refresh token is stored securely in an HttpOnly cookie and managed by the browser.
+   * @returns null (HttpOnly cookie cannot be read via JavaScript).
+   */
   getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
+    return null;
   }
 
   /**
@@ -158,7 +161,7 @@ export class CorporateAuthService {
           next: (res: any) => {
             this.isSilentRefreshing = false;
             if (res && res.access) {
-              this.saveTokens(res.access, res.refresh || this.getRefreshToken() || '', shouldBroadcast);
+              this.saveTokens(res.access, '', shouldBroadcast);
             }
           },
           error: (err: any) => {
@@ -183,10 +186,9 @@ export class CorporateAuthService {
   }
 
   refreshToken(): Observable<any> {
-    const refresh = this.getRefreshToken();
     return this.http.post<any>(
       `${this.apiUrl}api/token/refresh/`,
-      refresh ? { refresh } : {},
+      {},
       { withCredentials: true }
     );
   }

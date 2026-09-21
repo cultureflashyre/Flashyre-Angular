@@ -22,6 +22,10 @@ export const IS_AUTH_RETRIED = new HttpContextToken<boolean>(() => false);
 let isRefreshing = false;
 const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
+// Refresh cooldown: prevent infinite refresh loops from polling services
+let lastRefreshFailedAt = 0;
+const REFRESH_COOLDOWN_MS = 30_000; // 30 seconds
+
 const isTokenExpired = (token: string): boolean => {
   try {
     const decoded = jwtDecode<JwtPayload>(token);
@@ -78,7 +82,8 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       const headers: Record<string, string> = {
         'X-Device-ID': getDeviceId()
       };
-      if (dpopProof) {
+      // Only set DPoP header if we have a valid proof (not null, not empty)
+      if (dpopProof && dpopProof.trim()) {
         headers['DPoP'] = dpopProof;
       }
 
@@ -93,6 +98,11 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       if (token) {
         const expired = isTokenExpired(token);
         if (expired && !isAuthRequest && !authReq.context.get(IS_AUTH_RETRIED)) {
+          // Check cooldown to prevent infinite refresh loops
+          if (Date.now() - lastRefreshFailedAt < REFRESH_COOLDOWN_MS) {
+            console.warn('[JWT Interceptor] Refresh cooldown active, skipping proactive refresh.');
+            return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Refresh cooldown active' }));
+          }
           return handleTokenRefresh(authReq, next, authService, router, dpopCryptoService);
         }
       }
@@ -110,6 +120,11 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
             !isAuthRequest &&
             !authReq.context.get(IS_AUTH_RETRIED)
           ) {
+            // Check cooldown to prevent infinite refresh loops
+            if (Date.now() - lastRefreshFailedAt < REFRESH_COOLDOWN_MS) {
+              console.warn('[JWT Interceptor] Refresh cooldown active, not retrying.');
+              return throwError(() => error);
+            }
             return handleTokenRefresh(authReq, next, authService, router, dpopCryptoService);
           }
           return throwError(() => error);
@@ -132,7 +147,8 @@ function retryWithFreshTokenAndDPoP(
         .set('Authorization', `Bearer ${newToken}`)
         .set('X-Device-ID', getDeviceId());
 
-      if (freshDPoPProof) {
+      // Only set DPoP header if we have a valid proof; otherwise remove any stale one
+      if (freshDPoPProof && freshDPoPProof.trim()) {
         headers = headers.set('DPoP', freshDPoPProof);
       } else {
         headers = headers.delete('DPoP');
@@ -168,8 +184,7 @@ function handleTokenRefresh(
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
-    const refreshToken = authService.getRefreshToken();
-    console.log(`[JWT Interceptor] Calling API to refresh token. Using refresh token: ${!!refreshToken}`);
+    console.log(`[JWT Interceptor] Calling API to refresh token. Using HttpOnly cookie (withCredentials).`);
 
     return authService.refreshToken().pipe(
       retry({
@@ -194,6 +209,7 @@ function handleTokenRefresh(
       catchError(err => {
         console.error(`[JWT Interceptor] Refresh token API failed after retries!`, err);
         isRefreshing = false;
+        lastRefreshFailedAt = Date.now(); // Set cooldown
         refreshTokenSubject.next('FAILED');
 
         const status = err?.status;
@@ -217,9 +233,11 @@ function handleTokenRefresh(
       switchMap((tokenResponse: any) => {
         console.log(`[JWT Interceptor] Refresh token API success!`);
         isRefreshing = false;
+        lastRefreshFailedAt = 0; // Reset cooldown on success
         const newAccessToken = tokenResponse.access;
         refreshTokenSubject.next(newAccessToken);
-        authService.saveTokens(newAccessToken, tokenResponse.refresh || authService.getRefreshToken());
+        // Save only the access token; refresh token is managed via HttpOnly cookie
+        authService.saveTokens(newAccessToken, tokenResponse.refresh || '');
         return retryWithFreshTokenAndDPoP(request, next, newAccessToken, dpopCryptoService);
       })
     );
