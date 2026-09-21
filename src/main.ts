@@ -2,7 +2,7 @@
 
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { importProvidersFrom } from '@angular/core'; // Import this
 import { MatSnackBarModule } from '@angular/material/snack-bar'; // Import this
@@ -25,9 +25,13 @@ bootstrapApplication(AppComponent, {
     // 2. Set up animations (replaces BrowserAnimationsModule)
     provideAnimations(),
 
-    // 3. Set up HttpClient and register your functional interceptor
+    // 3. Set up HttpClient with interceptor and CSRF protection
     provideHttpClient(
-      withInterceptors([jwtInterceptor])
+      withInterceptors([jwtInterceptor]),
+      withXsrfConfiguration({
+        cookieName: 'csrftoken',
+        headerName: 'X-CSRFToken',
+      })
     ),
 
     importProvidersFrom(MatSnackBarModule),

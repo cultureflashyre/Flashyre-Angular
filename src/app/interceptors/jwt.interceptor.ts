@@ -2,10 +2,11 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError, timer } from 'rxjs';
+import { BehaviorSubject, Observable, from, throwError, timer } from 'rxjs';
 import { catchError, filter, retry, switchMap, take } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { clearAllAuthData } from '../utils/auth-utils';
+import { DPoPCryptoService } from '../services/dpop-crypto.service';
 
 import { AuthService } from '../services/candidate.service';
 import { CorporateAuthService } from '../services/corporate-auth.service';
@@ -50,6 +51,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const candidateAuthService = inject(AuthService);
   const corporateAuthService = inject(CorporateAuthService);
   const router = inject(Router);
+  const dpopCryptoService = inject(DPoPCryptoService);
 
   // Auth endpoints that should NEVER be intercepted for token refresh
   const authEndpoints = [
@@ -68,43 +70,43 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = req.url.includes('/corporate/') ? corporateAuthService : candidateAuthService;
   const token = authService.getJWTToken();
 
-  console.log(`[JWT Interceptor] Request URL: ${req.url}`);
-  console.log(`[JWT Interceptor] Is Auth Request? ${isAuthRequest}`);
-  console.log(`[JWT Interceptor] Token present? ${!!token}`);
-
-  // Attach Device ID to all requests
-  let authReq = req.clone({
-    setHeaders: {
-      'X-Device-ID': getDeviceId()
-    }
-  });
-
-  // If we have a token but it's expired, proactively refresh it
-  // BUT skip this for auth endpoints (login, signup, refresh, etc.)
-  if (token) {
-    const expired = isTokenExpired(token);
-    console.log(`[JWT Interceptor] Is Token Expired? ${expired}`);
-    if (expired && !isAuthRequest) {
-      console.log(`[JWT Interceptor] Proactively triggering handleTokenRefresh`);
-      return handleTokenRefresh(authReq, next, authService, router);
-    }
-  }
-
-  // Do NOT attach the token if this is a login/signup/refresh request.
-  // Django REST Framework's JWTAuthentication will reject the request with a 401
-  // if an expired token is sent in the header, even for public endpoints like login.
-  if (token && !isAuthRequest) {
-    authReq = addToken(authReq, token);
-  }
-
-  return next(authReq).pipe(
-    catchError(error => {
-      console.error(`[JWT Interceptor] Request error:`, error);
-      if (error instanceof HttpErrorResponse && error.status === 401 && !isAuthRequest) {
-        console.log(`[JWT Interceptor] 401 Unauthorized received. Triggering handleTokenRefresh`);
-        return handleTokenRefresh(authReq, next, authService, router);
+  return from(dpopCryptoService.generateDPoPProof(req.method, req.url)).pipe(
+    switchMap(dpopProof => {
+      const headers: Record<string, string> = {
+        'X-Device-ID': getDeviceId()
+      };
+      if (dpopProof) {
+        headers['DPoP'] = dpopProof;
       }
-      return throwError(() => error);
+
+      // Attach Device ID, DPoP cryptographic proof, and ensure withCredentials=true for HttpOnly cookies
+      let authReq = req.clone({
+        setHeaders: headers,
+        withCredentials: true
+      });
+
+      // If we have a token but it's expired, proactively refresh it
+      // BUT skip this for auth endpoints (login, signup, refresh, etc.)
+      if (token) {
+        const expired = isTokenExpired(token);
+        if (expired && !isAuthRequest) {
+          return handleTokenRefresh(authReq, next, authService, router);
+        }
+      }
+
+      // Do NOT attach the token if this is a login/signup/refresh request.
+      if (token && !isAuthRequest) {
+        authReq = addToken(authReq, token);
+      }
+
+      return next(authReq).pipe(
+        catchError(error => {
+          if (error instanceof HttpErrorResponse && error.status === 401 && !isAuthRequest) {
+            return handleTokenRefresh(authReq, next, authService, router);
+          }
+          return throwError(() => error);
+        })
+      );
     })
   );
 };

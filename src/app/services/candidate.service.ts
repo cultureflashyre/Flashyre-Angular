@@ -353,15 +353,16 @@ async logout(): Promise<void> {
   }
 
   /**
-   * Refreshes an expired JWT token using the refresh token.
+   * Refreshes an expired JWT token using HttpOnly cookie or refresh token fallback.
    * @returns An Observable of the new token pair.
    */
   refreshToken() {
     const refresh = this.getRefreshToken();
-    if (!refresh) {
-      return throwError(() => new Error('No refresh token available'));
-    }
-    return this.http.post<any>(`${this.apiUrl}api/token/refresh/`, { refresh });
+    return this.http.post<any>(
+      `${this.apiUrl}api/token/refresh/`,
+      refresh ? { refresh } : {},
+      { withCredentials: true }
+    );
   }
 
   /**
