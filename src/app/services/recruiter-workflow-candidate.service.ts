@@ -34,6 +34,9 @@ export interface Candidate {
   placement_at?: string | null;
   placement_job_title?: string | null;
   placement_client_name?: string | null;
+  placed_by?: string | number | null;
+  placed_by_id?: string | null;
+  placed_by_name?: string | null;
   source?: string;
   latest_rating_score?: number | null;
   latest_rating_breakdown?: { [key: string]: number } | null;

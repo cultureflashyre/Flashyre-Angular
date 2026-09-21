@@ -214,6 +214,15 @@
                 </span>
               </div>
 
+              <!-- Placer Attribution for Hired / Offered Stage -->
+              <div class="placer-credit-row" *ngIf="stage === 'Hired' || app.candidate_details?.placement_status === 'Hired'" title="Placing Recruiter who managed placement">
+                <div class="placer-badge-chip">
+                  <span class="placer-icon">🏆</span>
+                  <span class="placer-label">Placed by:</span>
+                  <strong class="placer-name">{{ app.recruiter_name || app.candidate_details?.placed_by_name || getSourcerDisplayName(app.candidate_details) }}</strong>
+                </div>
+              </div>
+
               <!-- Conditional Badges (Interview, Cooldown, Rejection) -->
               <div class="card-badges" *ngIf="app.interview_date || stage === 'Rejected' || app.candidate_details.placement_status">
                 <span *ngIf="app.candidate_details.placement_status" class="badge placement-badge" [ngClass]="app.candidate_details.placement_status.toLowerCase()">
@@ -399,6 +408,10 @@
           <div class="info-card">
             <label>Sourced By</label>
             <span class="sourcer-pill-bold">👤 {{ getSourcerDisplayName(selectedCandidate) }}</span>
+          </div>
+          <div class="info-card" *ngIf="selectedCandidate.placed_by_name || selectedCandidate.placement_status === 'Hired'">
+            <label>Placing Recruiter</label>
+            <span class="placer-pill-bold">🏆 {{ selectedCandidate.placed_by_name || 'Assigned in ATS' }}</span>
           </div>
           <div class="info-card">
             <label>Candidate Source</label>

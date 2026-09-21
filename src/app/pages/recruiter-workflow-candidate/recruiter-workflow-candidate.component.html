@@ -351,6 +351,9 @@
                                 </span>
                               </div>
                               <div class="candidate-id">Sourced By: {{ candidate.sourced_by_name || candidate.recruiter_name || 'N/A' }}</div>
+                              <div class="candidate-placed-by" *ngIf="candidate.placement_status === 'Hired' && candidate.placed_by_name" title="Placed by {{ candidate.placed_by_name }} for {{ candidate.placement_client_name || 'Client' }}">
+                                <span class="placer-icon">🏆</span> Placed By: <strong>{{ candidate.placed_by_name }}</strong>
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -403,7 +406,8 @@
                         <!-- Status / Placement -->
                         <td data-label="Status">
                           <span *ngIf="candidate.placement_status" class="placement-badge"
-                            [ngClass]="{ 'offered': candidate.placement_status === 'Offered', 'hired': candidate.placement_status === 'Hired' }">
+                            [ngClass]="{ 'offered': candidate.placement_status === 'Offered', 'hired': candidate.placement_status === 'Hired' }"
+                            [title]="(candidate.placement_status === 'Hired' && candidate.placed_by_name ? 'Placed by ' + candidate.placed_by_name + (candidate.placement_client_name ? ' • ' + candidate.placement_client_name : '') + (candidate.placement_job_title ? ' (' + candidate.placement_job_title + ')' : '') : 'Status: ' + candidate.placement_status)">
                             {{ candidate.placement_status }}
                             <span *ngIf="isRecentlyPlaced(candidate)" class="cooldown-tag" title="Placed within {{ cooldownMonths }} months cooldown">⏳</span>
                           </span>
@@ -1047,18 +1051,25 @@
               </div>
             </div>
             <div class="info-item" *ngIf="selectedCandidateDetails.placement_status">
-              <span class="info-label">Placement Status</span>
+              <span class="info-label">Placement &amp; Attribution</span>
               <div style="margin-top: 5px;">
                 <span class="placement-badge"
                   [ngClass]="{ 'offered': selectedCandidateDetails.placement_status === 'Offered', 'hired': selectedCandidateDetails.placement_status === 'Hired' }">
                   {{ selectedCandidateDetails.placement_status }}
                   <span *ngIf="isRecentlyPlaced(selectedCandidateDetails)">⏳</span>
                 </span>
-                <div style="font-size: 12.5px; color: #475569; margin-top: 4px; font-weight: 500;" *ngIf="selectedCandidateDetails.placement_job_title">
+                <div class="drawer-placer-chip" *ngIf="selectedCandidateDetails.placed_by_name">
+                  <span class="placer-icon">🏆</span>
+                  <span>Placed By: <strong>{{ selectedCandidateDetails.placed_by_name }}</strong></span>
+                </div>
+                <div style="font-size: 12.5px; color: #475569; margin-top: 6px; font-weight: 500;" *ngIf="selectedCandidateDetails.placement_job_title">
                   {{ selectedCandidateDetails.placement_job_title }} at {{ selectedCandidateDetails.placement_client_name || 'Client' }}
                 </div>
                 <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;" *ngIf="selectedCandidateDetails.placement_at">
-                  Placed: {{ selectedCandidateDetails.placement_at | date:'mediumDate' }}
+                  Placement Date: {{ selectedCandidateDetails.placement_at | date:'mediumDate' }}
+                </div>
+                <div *ngIf="isRecentlyPlaced(selectedCandidateDetails)" style="font-size: 11.5px; color: #d97706; margin-top: 4px; font-weight: 500;">
+                  ⏳ Cooldown Active (Protected under {{ cooldownMonths }}-month policy)
                 </div>
               </div>
             </div>
