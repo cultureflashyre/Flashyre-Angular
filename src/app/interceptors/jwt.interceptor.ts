@@ -89,8 +89,8 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       // BUT skip this for auth endpoints (login, signup, refresh, etc.)
       if (token) {
         const expired = isTokenExpired(token);
-        if (expired && !isAuthRequest) {
-          return handleTokenRefresh(authReq, next, authService, router);
+        if (expired && !isAuthRequest && !authReq.headers.has('X-Auth-Retried')) {
+          return handleTokenRefresh(authReq, next, authService, router, dpopCryptoService);
         }
       }
 
@@ -101,8 +101,13 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
       return next(authReq).pipe(
         catchError(error => {
-          if (error instanceof HttpErrorResponse && error.status === 401 && !isAuthRequest) {
-            return handleTokenRefresh(authReq, next, authService, router);
+          if (
+            error instanceof HttpErrorResponse &&
+            error.status === 401 &&
+            !isAuthRequest &&
+            !authReq.headers.has('X-Auth-Retried')
+          ) {
+            return handleTokenRefresh(authReq, next, authService, router, dpopCryptoService);
           }
           return throwError(() => error);
         })
@@ -111,13 +116,48 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   );
 };
 
+// --- Helper: Retries request with fresh access token and fresh DPoP proof (RFC 9449 anti-replay) ---
+function retryWithFreshTokenAndDPoP(
+  request: HttpRequest<any>,
+  next: HttpHandlerFn,
+  newToken: string,
+  dpopCryptoService: DPoPCryptoService
+): Observable<HttpEvent<any>> {
+  return from(dpopCryptoService.generateDPoPProof(request.method, request.url)).pipe(
+    switchMap(freshDPoPProof => {
+      let headers = request.headers
+        .set('Authorization', `Bearer ${newToken}`)
+        .set('X-Auth-Retried', 'true')
+        .set('X-Device-ID', getDeviceId());
+
+      if (freshDPoPProof) {
+        headers = headers.set('DPoP', freshDPoPProof);
+      } else {
+        headers = headers.delete('DPoP');
+      }
+
+      const retriedReq = request.clone({
+        headers,
+        withCredentials: true
+      });
+      return next(retriedReq);
+    })
+  );
+}
+
 // --- Token Refresh Logic Helper ---
 function handleTokenRefresh(
   request: HttpRequest<any>,
   next: HttpHandlerFn,
   authService: AuthService | CorporateAuthService,
-  router: Router
+  router: Router,
+  dpopCryptoService: DPoPCryptoService
 ): Observable<HttpEvent<any>> {
+  if (request.headers.has('X-Auth-Retried')) {
+    console.warn('[JWT Interceptor] Request already retried once with fresh token and failed. Halting retry to prevent loop.');
+    return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized after retry' }));
+  }
+
   console.log(`[JWT Interceptor] handleTokenRefresh called. isRefreshing: ${isRefreshing}`);
   if (!isRefreshing) {
     isRefreshing = true;
@@ -149,6 +189,7 @@ function handleTokenRefresh(
       catchError(err => {
         console.error(`[JWT Interceptor] Refresh token API failed after retries!`, err);
         isRefreshing = false;
+        refreshTokenSubject.next('FAILED');
 
         const status = err?.status;
         // Do not clear tokens or kick user to /login on rate-limiting (429) or transient network/server issues (0, 5xx)
@@ -174,7 +215,7 @@ function handleTokenRefresh(
         const newAccessToken = tokenResponse.access;
         refreshTokenSubject.next(newAccessToken);
         authService.saveTokens(newAccessToken, tokenResponse.refresh || authService.getRefreshToken());
-        return next(addToken(request, newAccessToken));
+        return retryWithFreshTokenAndDPoP(request, next, newAccessToken, dpopCryptoService);
       })
     );
   } else {
@@ -183,8 +224,11 @@ function handleTokenRefresh(
       filter(token => token !== null),
       take(1),
       switchMap(token => {
+        if (token === 'FAILED') {
+          return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Token refresh failed' }));
+        }
         console.log(`[JWT Interceptor] Received new token from subject, retrying request.`);
-        return next(addToken(request, token!))
+        return retryWithFreshTokenAndDPoP(request, next, token!, dpopCryptoService);
       })
     );
   }
