@@ -1,6 +1,6 @@
 // src/app/interceptors/jwt.interceptor.ts
 import { inject } from '@angular/core';
-import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn, HttpEvent, HttpContextToken } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, from, throwError, timer } from 'rxjs';
 import { catchError, filter, retry, switchMap, take } from 'rxjs/operators';
@@ -14,6 +14,9 @@ import { CorporateAuthService } from '../services/corporate-auth.service';
 interface JwtPayload {
   exp: number;
 }
+
+// Angular HttpContextToken for tracking retry state purely in-memory (no CORS preflight header)
+export const IS_AUTH_RETRIED = new HttpContextToken<boolean>(() => false);
 
 // --- State and Helpers moved to the module scope ---
 let isRefreshing = false;
@@ -89,7 +92,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       // BUT skip this for auth endpoints (login, signup, refresh, etc.)
       if (token) {
         const expired = isTokenExpired(token);
-        if (expired && !isAuthRequest && !authReq.headers.has('X-Auth-Retried')) {
+        if (expired && !isAuthRequest && !authReq.context.get(IS_AUTH_RETRIED)) {
           return handleTokenRefresh(authReq, next, authService, router, dpopCryptoService);
         }
       }
@@ -105,7 +108,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
             error instanceof HttpErrorResponse &&
             error.status === 401 &&
             !isAuthRequest &&
-            !authReq.headers.has('X-Auth-Retried')
+            !authReq.context.get(IS_AUTH_RETRIED)
           ) {
             return handleTokenRefresh(authReq, next, authService, router, dpopCryptoService);
           }
@@ -127,7 +130,6 @@ function retryWithFreshTokenAndDPoP(
     switchMap(freshDPoPProof => {
       let headers = request.headers
         .set('Authorization', `Bearer ${newToken}`)
-        .set('X-Auth-Retried', 'true')
         .set('X-Device-ID', getDeviceId());
 
       if (freshDPoPProof) {
@@ -136,8 +138,11 @@ function retryWithFreshTokenAndDPoP(
         headers = headers.delete('DPoP');
       }
 
+      // Mark request context with IS_AUTH_RETRIED to prevent infinite loops,
+      // without transmitting any unauthorized custom header over the wire.
       const retriedReq = request.clone({
         headers,
+        context: request.context.set(IS_AUTH_RETRIED, true),
         withCredentials: true
       });
       return next(retriedReq);
@@ -153,7 +158,7 @@ function handleTokenRefresh(
   router: Router,
   dpopCryptoService: DPoPCryptoService
 ): Observable<HttpEvent<any>> {
-  if (request.headers.has('X-Auth-Retried')) {
+  if (request.context.get(IS_AUTH_RETRIED) || request.headers.has('X-Auth-Retried')) {
     console.warn('[JWT Interceptor] Request already retried once with fresh token and failed. Halting retry to prevent loop.');
     return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized after retry' }));
   }
