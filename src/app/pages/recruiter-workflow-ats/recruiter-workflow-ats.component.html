@@ -88,7 +88,11 @@
       </div>
 
       <div class="candidate-results-list">
-        <div *ngFor="let cand of filteredCandidates" (click)="addCandidateToPipeline(cand)" class="candidate-result-card">
+        <div *ngFor="let cand of filteredCandidates"
+             [class.candidate-locked]="cand.placement_status === 'Hired' && isRecentlyPlaced(cand)"
+             (click)="(cand.placement_status === 'Hired' && isRecentlyPlaced(cand)) ? onPlacedCandidateClick(cand, $event) : addCandidateToPipeline(cand)"
+             [title]="(cand.placement_status === 'Hired' && isRecentlyPlaced(cand)) ? ('Candidate placed at ' + (cand.placement_client_name || 'another client') + ' — in cooldown. Click for details.') : 'Click to add candidate to Sourced'"
+             class="candidate-result-card">
           <div class="result-avatar">{{ getInitials(cand) }}</div>
           <div class="result-body">
             <div class="result-name-row">
@@ -97,6 +101,9 @@
               <span *ngIf="cand.placement_status" class="placement-tag" [ngClass]="cand.placement_status.toLowerCase()">
                 {{ cand.placement_status }}
                 <span *ngIf="isRecentlyPlaced(cand)" class="cooldown-clock" title="Placed recently — in {{ cooldownMonths }}-month cooldown">⏳</span>
+              </span>
+              <span *ngIf="cand.placement_status === 'Hired' && isRecentlyPlaced(cand)" class="cooldown-locked-pill">
+                🔒 In Cooldown
               </span>
             </div>
             <div class="result-meta-row">

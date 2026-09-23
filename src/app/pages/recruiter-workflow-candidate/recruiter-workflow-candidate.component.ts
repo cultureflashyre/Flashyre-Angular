@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -147,6 +147,59 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     if (isNaN(placedDate.getTime())) return false;
     const cooldownMs = this.cooldownMonths * 30 * 24 * 60 * 60 * 1000;
     return (Date.now() - placedDate.getTime()) < cooldownMs;
+  }
+
+  // --- Active Pipeline Popover State ---
+  activePipelinePopoverCandidateId: number | null = null;
+
+  togglePipelinePopover(candidateId: number | undefined, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!candidateId) return;
+    if (this.activePipelinePopoverCandidateId === candidateId) {
+      this.activePipelinePopoverCandidateId = null;
+    } else {
+      this.activePipelinePopoverCandidateId = candidateId;
+    }
+  }
+
+  closePipelinePopover(): void {
+    this.activePipelinePopoverCandidateId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.activePipelinePopoverCandidateId !== null) {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.pipeline-popover-menu') && !target.closest('.pipeline-trigger-btn')) {
+        this.activePipelinePopoverCandidateId = null;
+      }
+    }
+  }
+
+  getStageClass(stage: string | undefined | null): string {
+    if (!stage) return 'stage-default';
+    const s = stage.toLowerCase();
+    if (s === 'hired') return 'stage-hired';
+    if (s === 'offer') return 'stage-offer';
+    if (s === 'interview') return 'stage-interview';
+    if (s === 'submission') return 'stage-submission';
+    if (s === 'screening') return 'stage-screening';
+    if (s === 'sourced') return 'stage-sourced';
+    if (s === 'rejected') return 'stage-rejected';
+    return 'stage-default';
+  }
+
+  getLeadPipeline(candidate: Candidate): any {
+    if (candidate.lead_pipeline) return candidate.lead_pipeline;
+    if (candidate.active_applications && candidate.active_applications.length > 0) {
+      const priorityMap: { [key: string]: number } = {
+        'Hired': 7, 'Offer': 6, 'Interview': 5, 'Submission': 4, 'Screening': 3, 'Sourced': 2, 'Rejected': 1
+      };
+      return [...candidate.active_applications].sort((a, b) => (priorityMap[b.stage] || 0) - (priorityMap[a.stage] || 0))[0];
+    }
+    return null;
   }
 
   // --- List Management ---
@@ -1832,6 +1885,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       return;
     }
 
+    const placedInCooldown = selected.filter(c => c.placement_status === 'Hired' && this.isRecentlyPlaced(c));
+    if (placedInCooldown.length > 0) {
+      const names = placedInCooldown.map(c => `${c.first_name} ${c.last_name}`).join(', ');
+      this.showAlert(
+        `The following candidate(s) are currently placed and in cooldown: ${names}. Ongoing interview pipelines can continue, but adding them to new requirements is restricted. Please uncheck them to proceed.`,
+        ["Close"]
+      );
+      return;
+    }
+
     this.selectedCandidateCount = selected.length;
     this.selectedJobId = null;
 
@@ -1869,7 +1932,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         this.closeWorkflowModal();
 
         let msg = '';
-        if (res.existing > 0) {
+        if (res.cooldown_skipped > 0) {
+          msg = `Added ${res.added}. Note: ${res.cooldown_skipped} candidate(s) were skipped as they are currently placed in cooldown.`;
+        } else if (res.existing > 0) {
           msg = `Added ${res.added}. Note: ${res.existing} already in workflow.`;
         } else {
           msg = `Successfully added ${res.added} candidate(s).`;

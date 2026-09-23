@@ -3,6 +3,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface ActiveApplicationSummary {
+  id: number;
+  job_id: number;
+  job_role: string;
+  client_name: string;
+  stage: 'Sourced' | 'Screening' | 'Submission' | 'Interview' | 'Offer' | 'Hired' | 'Rejected' | string;
+  recruiter_name: string;
+  recruiter_id: string | null;
+  updated_at: string | null;
+}
+
 export interface Candidate {
   id?: number;
   first_name: string;
@@ -37,6 +48,8 @@ export interface Candidate {
   placed_by?: string | number | null;
   placed_by_id?: string | null;
   placed_by_name?: string | null;
+  active_applications?: ActiveApplicationSummary[];
+  lead_pipeline?: ActiveApplicationSummary | null;
   source?: string;
   latest_rating_score?: number | null;
   latest_rating_breakdown?: { [key: string]: number } | null;

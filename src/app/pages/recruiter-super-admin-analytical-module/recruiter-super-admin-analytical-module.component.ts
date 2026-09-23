@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -6,12 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, timer } from 'rxjs';
 import { map, catchError, switchMap, distinctUntilChanged, take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import Chart from 'chart.js/auto';
 
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { ThumbnailService } from '../../services/thumbnail.service';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
-import { ChangeDetectorRef } from '@angular/core';
 
 import { SuperAdminService } from '../../services/super-admin.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
@@ -32,7 +32,7 @@ import * as FileSaver from 'file-saver';
   templateUrl: './recruiter-super-admin-analytical-module.component.html',
   styleUrls: ['./recruiter-super-admin-analytical-module.component.css'],
 })
-export class RecruiterSuperAdminAnalyticalModuleComponent {
+export class RecruiterSuperAdminAnalyticalModuleComponent implements OnInit, AfterViewInit, OnDestroy {
   // Tab State
   activeTab: string = 'reports';
   activityLogs: any[] = [];
@@ -86,6 +86,108 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   };
 
   reportTableData: any[] = [];
+
+  // --- CHART INSTANCES ---
+  private recruiterChart: Chart | null = null;
+  private pipelineChart: Chart | null = null;
+
+  // --- PAGINATION FOR DETAILED PERFORMANCE BREAKDOWN ---
+  reportCurrentPage: number = 1;
+  reportPageSize: number = 10;
+  readonly reportPageSizeOptions: number[] = [5, 10, 25, 50];
+
+  get totalReportPages(): number {
+    return Math.ceil((this.reportTableData?.length || 0) / this.reportPageSize) || 1;
+  }
+
+  get paginatedReportData(): any[] {
+    if (!this.reportTableData || this.reportTableData.length === 0) return [];
+    const startIndex = (this.reportCurrentPage - 1) * this.reportPageSize;
+    return this.reportTableData.slice(startIndex, startIndex + this.reportPageSize);
+  }
+
+  get reportShowingFrom(): number {
+    if (!this.reportTableData || this.reportTableData.length === 0) return 0;
+    return (this.reportCurrentPage - 1) * this.reportPageSize + 1;
+  }
+
+  get reportShowingTo(): number {
+    if (!this.reportTableData || this.reportTableData.length === 0) return 0;
+    return Math.min(this.reportCurrentPage * this.reportPageSize, this.reportTableData.length);
+  }
+
+  get reportPageRange(): (number | string)[] {
+    return this.generatePageRange(this.reportCurrentPage, this.totalReportPages);
+  }
+
+  setReportPage(page: number | string) {
+    if (typeof page !== 'number') return;
+    if (page < 1 || page > this.totalReportPages) return;
+    this.reportCurrentPage = page;
+  }
+
+  onReportPageSizeChange() {
+    this.reportCurrentPage = 1;
+  }
+
+  // --- PAGINATION FOR RECENT ACTIVITY LOGS ---
+  logsCurrentPage: number = 1;
+  logsPageSize: number = 10;
+  readonly logsPageSizeOptions: number[] = [5, 10, 25, 50];
+
+  get totalLogsPages(): number {
+    return Math.ceil((this.activityLogs?.length || 0) / this.logsPageSize) || 1;
+  }
+
+  get paginatedLogsData(): any[] {
+    if (!this.activityLogs || this.activityLogs.length === 0) return [];
+    const startIndex = (this.logsCurrentPage - 1) * this.logsPageSize;
+    return this.activityLogs.slice(startIndex, startIndex + this.logsPageSize);
+  }
+
+  get logsShowingFrom(): number {
+    if (!this.activityLogs || this.activityLogs.length === 0) return 0;
+    return (this.logsCurrentPage - 1) * this.logsPageSize + 1;
+  }
+
+  get logsShowingTo(): number {
+    if (!this.activityLogs || this.activityLogs.length === 0) return 0;
+    return Math.min(this.logsCurrentPage * this.logsPageSize, this.activityLogs.length);
+  }
+
+  get logsPageRange(): (number | string)[] {
+    return this.generatePageRange(this.logsCurrentPage, this.totalLogsPages);
+  }
+
+  setLogsPage(page: number | string) {
+    if (typeof page !== 'number') return;
+    if (page < 1 || page > this.totalLogsPages) return;
+    this.logsCurrentPage = page;
+  }
+
+  onLogsPageSizeChange() {
+    this.logsCurrentPage = 1;
+  }
+
+  private generatePageRange(current: number, total: number): (number | string)[] {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const delta = 2;
+    const range: (number | string)[] = [];
+    for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+      range.push(i);
+    }
+    if (current - delta > 2) {
+      range.unshift(-1); // rendered as ellipsis '…'
+    }
+    range.unshift(1);
+    if (current + delta < total - 1) {
+      range.push(-2); // rendered as ellipsis '…'
+    }
+    range.push(total);
+    return range;
+  }
 
   // --- FILTERS ---
   filters = {
@@ -157,6 +259,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       }
     } else if (tabName === 'settings') {
       this.loadPlatformSettings();
+    } else if (tabName === 'reports') {
+      this.renderCharts();
     }
   }
 
@@ -624,15 +728,262 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     });
   }
 
+  ngAfterViewInit() {
+    this.renderCharts();
+  }
+
+  ngOnDestroy() {
+    if (this.recruiterChart) {
+      this.recruiterChart.destroy();
+      this.recruiterChart = null;
+    }
+    if (this.pipelineChart) {
+      this.pipelineChart.destroy();
+      this.pipelineChart = null;
+    }
+  }
+
   fetchAnalytics() {
     this.superAdminService.getAnalytics(this.filters).subscribe({
       next: (data: any) => {
         this.kpis = data.kpis;
         this.reportTableData = data.table_data;
         this.activityLogs = data.logs || [];
+        this.reportCurrentPage = 1;
+        this.logsCurrentPage = 1;
         this.cdr.detectChanges(); // Force UI update
+        this.renderCharts();
       },
       error: (err) => console.error("Failed to load analytics", err)
+    });
+  }
+
+  renderCharts() {
+    if (this.activeTab !== 'reports') return;
+    setTimeout(() => {
+      this.renderRecruiterPerformanceChart();
+      this.renderPipelineDistributionChart();
+    }, 50);
+  }
+
+  private renderRecruiterPerformanceChart() {
+    const canvas = document.getElementById('recruiterPerformanceChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    if (this.recruiterChart) {
+      this.recruiterChart.destroy();
+      this.recruiterChart = null;
+    }
+
+    // Aggregate metrics per recruiter from reportTableData
+    const recruiterMap = new Map<string, { submissions: number; interviews: number; hired: number }>();
+
+    (this.reportTableData || []).forEach((row: any) => {
+      const name = row.recruiter_name ? row.recruiter_name.trim() : 'Unassigned';
+      const existing = recruiterMap.get(name) || { submissions: 0, interviews: 0, hired: 0 };
+      existing.submissions += Number(row.submissions) || 0;
+      existing.interviews += Number(row.interviews) || 0;
+      existing.hired += Number(row.hired) || 0;
+      recruiterMap.set(name, existing);
+    });
+
+    // If reportTableData has no recruiter records, populate with active recruiter names if available
+    if (recruiterMap.size === 0 && this.recruitersList && this.recruitersList.length > 0) {
+      this.recruitersList.slice(0, 5).forEach((rec: any) => {
+        recruiterMap.set(`${rec.first_name || ''} ${rec.last_name || ''}`.trim() || 'Recruiter', {
+          submissions: 0,
+          interviews: 0,
+          hired: 0
+        });
+      });
+    }
+
+    // Sort by total volume and take top 6
+    const sorted = Array.from(recruiterMap.entries())
+      .sort((a, b) => (b[1].submissions + b[1].interviews + b[1].hired) - (a[1].submissions + a[1].interviews + a[1].hired))
+      .slice(0, 6);
+
+    const labels = sorted.map(([name]) => name);
+    const submissions = sorted.map(([_, s]) => s.submissions);
+    const interviews = sorted.map(([_, s]) => s.interviews);
+    const hired = sorted.map(([_, s]) => s.hired);
+
+    const hasData = labels.length > 0;
+
+    this.recruiterChart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: hasData ? labels : ['No Activity Recorded'],
+        datasets: [
+          {
+            label: 'Submissions',
+            data: hasData ? submissions : [0],
+            backgroundColor: '#2563eb',
+            borderRadius: 6,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7
+          },
+          {
+            label: 'Interviews',
+            data: hasData ? interviews : [0],
+            backgroundColor: '#d97706',
+            borderRadius: 6,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7
+          },
+          {
+            label: 'Hired',
+            data: hasData ? hired : [0],
+            backgroundColor: '#059669',
+            borderRadius: 6,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            align: 'end',
+            labels: {
+              boxWidth: 10,
+              boxHeight: 10,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              color: '#475569',
+              font: { family: "'Outfit', system-ui, sans-serif", size: 12, weight: 500 }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            titleFont: { family: "'Outfit', system-ui, sans-serif", size: 13, weight: 600 },
+            bodyFont: { family: "'Outfit', system-ui, sans-serif", size: 12 },
+            padding: 10,
+            cornerRadius: 8
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { family: "'Outfit', system-ui, sans-serif", size: 11 },
+              color: '#64748b'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            ticks: {
+              precision: 0,
+              font: { family: "'Outfit', system-ui, sans-serif", size: 11 },
+              color: '#64748b'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private renderPipelineDistributionChart() {
+    const canvas = document.getElementById('pipelineDistributionChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    if (this.pipelineChart) {
+      this.pipelineChart.destroy();
+      this.pipelineChart = null;
+    }
+
+    const pipe = this.kpis.pipeline || { Sourced: 0, Screening: 0, Submission: 0, Interview: 0, Offer: 0, Hired: 0, Rejected: 0 };
+    const labels = ['Sourced', 'Screening', 'Submission', 'Interview', 'Offer', 'Hired', 'Rejected'];
+    const dataValues = [
+      Number(pipe.Sourced) || 0,
+      Number(pipe.Screening) || 0,
+      Number(pipe.Submission) || 0,
+      Number(pipe.Interview) || 0,
+      Number(pipe.Offer) || 0,
+      Number(pipe.Hired) || 0,
+      Number(pipe.Rejected) || 0
+    ];
+
+    const totalCount = dataValues.reduce((a, b) => a + b, 0);
+    const colors = [
+      '#3b82f6', // Sourced
+      '#8b5cf6', // Screening
+      '#06b6d4', // Submission
+      '#f59e0b', // Interview
+      '#10b981', // Offer
+      '#059669', // Hired
+      '#ef4444'  // Rejected
+    ];
+
+    this.pipelineChart = new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: totalCount > 0 ? dataValues : [1],
+          backgroundColor: totalCount > 0 ? colors : ['#e2e8f0'],
+          borderWidth: 2,
+          borderColor: '#ffffff',
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '66%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              boxWidth: 8,
+              boxHeight: 8,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              color: '#475569',
+              font: { family: "'Outfit', system-ui, sans-serif", size: 11 },
+              padding: 10,
+              generateLabels: (chart) => {
+                const data = chart.data;
+                if (data.labels && data.datasets.length) {
+                  return data.labels.map((label, i) => {
+                    const val = dataValues[i] || 0;
+                    const pct = totalCount > 0 ? Math.round((val / totalCount) * 100) : 0;
+                    return {
+                      text: `${label}: ${val} (${pct}%)`,
+                      fillStyle: colors[i],
+                      strokeStyle: '#ffffff',
+                      lineWidth: 1,
+                      hidden: false,
+                      index: i,
+                      pointStyle: 'circle'
+                    };
+                  });
+                }
+                return [];
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            titleFont: { family: "'Outfit', system-ui, sans-serif", size: 13, weight: 600 },
+            bodyFont: { family: "'Outfit', system-ui, sans-serif", size: 12 },
+            padding: 10,
+            cornerRadius: 8,
+            callbacks: {
+              label: (context) => {
+                if (totalCount === 0) return ' No active candidates';
+                const val = context.raw as number;
+                const pct = ((val / totalCount) * 100).toFixed(1);
+                return ` ${context.label}: ${val} candidates (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
     });
   }
 

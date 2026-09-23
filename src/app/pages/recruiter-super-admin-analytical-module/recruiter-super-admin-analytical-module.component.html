@@ -257,6 +257,37 @@
           </div>
         </div>
 
+        <!-- Visual Intelligence & Analytics Charts -->
+        <div class="analytics-charts-grid">
+          <!-- Chart Card 1: Recruiter Performance Comparison -->
+          <div class="card chart-card">
+            <div class="chart-card-head">
+              <div>
+                <div class="chart-card-badge blue">Recruiter Insights</div>
+                <h3 class="card-title">Recruiter Activity & Conversion</h3>
+                <p class="card-sub">Submissions, interviews, and successful hires per recruiter.</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="recruiterPerformanceChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart Card 2: Real-time Pipeline Funnel Distribution -->
+          <div class="card chart-card">
+            <div class="chart-card-head">
+              <div>
+                <div class="chart-card-badge violet">Pipeline Dynamics</div>
+                <h3 class="card-title">Candidate Pipeline Distribution</h3>
+                <p class="card-sub">Active candidate volume & share across each workflow stage.</p>
+              </div>
+            </div>
+            <div class="chart-container doughnut-container">
+              <canvas id="pipelineDistributionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
         <!-- Detailed Performance Report Table -->
         <div class="card table-card">
           <div class="table-card-head">
@@ -282,7 +313,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let row of reportTableData">
+                <tr *ngFor="let row of paginatedReportData">
                   <td>
                     <div class="user-chip-mini">
                       <div class="mini-avatar">{{ (row.recruiter_name?.charAt(0) || 'R').toUpperCase() }}</div>
@@ -320,6 +351,39 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Detailed Performance Pagination Footer -->
+          <div class="table-pagination-footer" *ngIf="reportTableData.length > 0">
+            <div class="pagination-left">
+              <span class="pagination-count-text">
+                Showing <span class="font-semibold text-accent">{{ reportShowingFrom }}</span> to <span class="font-semibold text-accent">{{ reportShowingTo }}</span> of <span class="font-semibold">{{ reportTableData.length }}</span> requirements
+              </span>
+              <div class="page-size-selector">
+                <label class="page-size-label">Rows per page:</label>
+                <select [(ngModel)]="reportPageSize" (change)="onReportPageSizeChange()" class="page-size-select">
+                  <option *ngFor="let size of reportPageSizeOptions" [value]="size">{{ size }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="pagination-nav">
+              <button type="button" class="pager-btn" [disabled]="reportCurrentPage === 1" (click)="setReportPage(reportCurrentPage - 1)" title="Previous Page">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Prev</span>
+              </button>
+              <div class="pager-numbers">
+                <ng-container *ngFor="let page of reportPageRange">
+                  <span *ngIf="page === -1 || page === -2" class="pager-ellipsis">…</span>
+                  <button *ngIf="page !== -1 && page !== -2" type="button" class="pager-num-btn" [class.active]="reportCurrentPage === page" (click)="setReportPage(page)">
+                    {{ page }}
+                  </button>
+                </ng-container>
+              </div>
+              <button type="button" class="pager-btn" [disabled]="reportCurrentPage === totalReportPages || totalReportPages === 0" (click)="setReportPage(reportCurrentPage + 1)" title="Next Page">
+                <span>Next</span>
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Recent Activity Logs Table -->
@@ -346,7 +410,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let log of activityLogs">
+                <tr *ngFor="let log of paginatedLogsData">
                   <td class="text-muted">
                     <span class="font-medium">{{ log.date }}</span>
                     <span class="text-subtle">{{ log.time }}</span>
@@ -377,6 +441,39 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Activity Logs Pagination Footer -->
+          <div class="table-pagination-footer" *ngIf="activityLogs.length > 0">
+            <div class="pagination-left">
+              <span class="pagination-count-text">
+                Showing <span class="font-semibold text-accent">{{ logsShowingFrom }}</span> to <span class="font-semibold text-accent">{{ logsShowingTo }}</span> of <span class="font-semibold">{{ activityLogs.length }}</span> logs
+              </span>
+              <div class="page-size-selector">
+                <label class="page-size-label">Rows per page:</label>
+                <select [(ngModel)]="logsPageSize" (change)="onLogsPageSizeChange()" class="page-size-select">
+                  <option *ngFor="let size of logsPageSizeOptions" [value]="size">{{ size }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="pagination-nav">
+              <button type="button" class="pager-btn" [disabled]="logsCurrentPage === 1" (click)="setLogsPage(logsCurrentPage - 1)" title="Previous Page">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Prev</span>
+              </button>
+              <div class="pager-numbers">
+                <ng-container *ngFor="let page of logsPageRange">
+                  <span *ngIf="page === -1 || page === -2" class="pager-ellipsis">…</span>
+                  <button *ngIf="page !== -1 && page !== -2" type="button" class="pager-num-btn" [class.active]="logsCurrentPage === page" (click)="setLogsPage(page)">
+                    {{ page }}
+                  </button>
+                </ng-container>
+              </div>
+              <button type="button" class="pager-btn" [disabled]="logsCurrentPage === totalLogsPages || totalLogsPages === 0" (click)="setLogsPage(logsCurrentPage + 1)" title="Next Page">
+                <span>Next</span>
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 

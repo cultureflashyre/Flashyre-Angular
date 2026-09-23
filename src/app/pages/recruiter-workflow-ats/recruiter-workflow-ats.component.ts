@@ -86,6 +86,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   isRecruiterUser: boolean = false;
   authorizedUserIds: string[] = [];
 
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -612,6 +613,16 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     this.showAddCandidate = !this.showAddCandidate;
   }
 
+  onPlacedCandidateClick(candidate: any, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    const clientName = candidate.placement_client_name || 'another client';
+    this.alertMessage = `Cannot add candidate: Candidate was placed at ${clientName} and is in active cooldown (${this.cooldownMonths} months). Ongoing interview pipelines can continue, but enrolling into new pipelines is restricted.`;
+    this.alertButtons = ['OK'];
+    this.showAlert = true;
+  }
+
   addCandidateToPipeline(candidate: any) {
     if (!this.jobId) return;
 
@@ -620,6 +631,12 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
       this.alertButtons = ['OK'];
       this.showAlert = true;
+      return;
+    }
+
+    // Cooldown check for Placed/Hired candidates
+    if (candidate.placement_status === 'Hired' && this.isRecentlyPlaced(candidate)) {
+      this.onPlacedCandidateClick(candidate);
       return;
     }
 
@@ -639,10 +656,12 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         this.showAlert = true;
       },
       error: (err) => {
-        if (err.error && err.error.non_field_errors) {
+        if (err.error && err.error.candidate) {
+          this.alertMessage = Array.isArray(err.error.candidate) ? err.error.candidate.join(' ') : err.error.candidate;
+        } else if (err.error && err.error.non_field_errors) {
           this.alertMessage = "Candidate is already in this pipeline.";
         } else {
-          this.alertMessage = "Failed to add candidate.";
+          this.alertMessage = err.error?.error || "Failed to add candidate.";
         }
         this.alertButtons = ['OK'];
         this.showAlert = true;

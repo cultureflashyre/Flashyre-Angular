@@ -420,6 +420,32 @@
   background: var(--accent-soft);
 }
 
+.candidate-result-card.candidate-locked {
+  background: #fbfbfe;
+  border-left: 3px solid #f59e0b;
+  cursor: not-allowed;
+  opacity: 0.82;
+}
+
+.candidate-result-card.candidate-locked:hover {
+  background: #fefce8;
+  opacity: 1;
+}
+
+.cooldown-locked-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  letter-spacing: 0.2px;
+}
+
 .result-avatar {
   width: 32px;
   height: 32px;
