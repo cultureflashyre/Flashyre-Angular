@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Existing report approval notifications (read by frontend, write by Admin SDK)
+    match /report_approval_notifications/{notificationId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ATS Pipeline Events (read by frontend listeners, write only by Django Admin SDK)
+    match /ats_pipeline_events/{eventId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

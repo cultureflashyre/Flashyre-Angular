@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "ats_pipeline_events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "target_user_ids", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "consumed", "order": "ASCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
