@@ -28,6 +28,7 @@
     "@angular/router": "^18.1.0",
     "@auth0/angular-jwt": "^5.2.0",
     "@googlemaps/js-api-loader": "^1.16.10",
+    "@grafana/faro-web-sdk": "^2.12.1",
     "ace-builds": "^1.43.3",
     "chart.js": "^4.5.0",
     "core-js": "~3.0.1",

@@ -26,6 +26,12 @@ export const environment = {
     messagingSenderId: "881412327538",
     appId: "1:881412327538:web:0350156d5257a6eb9edaeb"
   },
+  grafanaFaro: {
+    enabled: false,
+    url: '', // e.g. 'https://faro-collector-prod-us-central-0.grafana.net/collect/your-app-key'
+    appName: 'flashyre-angular-dev',
+    environment: 'development',
+  },
 };
 
 

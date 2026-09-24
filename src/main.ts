@@ -4,8 +4,9 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { importProvidersFrom } from '@angular/core'; // Import this
+import { importProvidersFrom, ErrorHandler } from '@angular/core'; // Import this
 import { MatSnackBarModule } from '@angular/material/snack-bar'; // Import this
+import { GlobalErrorHandler } from './app/services/telemetry.service';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes'; // Import your new routes file
@@ -53,7 +54,10 @@ bootstrapApplication(AppComponent, {
           console.error(err);
         }
       } as SocialAuthServiceConfig,
-    }
+    },
+
+    // 4. Global ErrorHandler for Grafana Faro Observability
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
 
     // If you have other global services that were in AppModule's providers,
     // you would add them here using `importProvidersFrom` or by providing them directly.

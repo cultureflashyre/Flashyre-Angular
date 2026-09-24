@@ -21,5 +21,11 @@ export const environment = {
     storageBucket: "flashyre-prod-506909-ad9c6.firebasestorage.app",
     messagingSenderId: "1029867727867",
     appId: "1:1029867727867:web:fb4279d31d3bb0f715795e"
-  }
+  },
+  grafanaFaro: {
+    enabled: true, // Will activate as soon as URL is added
+    url: '', // e.g. 'https://faro-collector-prod-us-central-0.grafana.net/collect/your-app-key'
+    appName: 'flashyre-angular',
+    environment: 'production',
+  },
 };
