@@ -402,65 +402,90 @@
 
                         <!-- Status / Placement & Multi-Pipeline -->
                         <td data-label="Status" class="col-status-cell">
-                          <!-- CASE 1: Placed as Hired -->
-                          <div class="status-cell-wrap" *ngIf="candidate.placement_status === 'Hired'">
-                            <span class="placement-badge hired"
-                              [title]="'Placed by ' + (candidate.placed_by_name || 'Recruiter') + (candidate.placement_client_name ? ' at ' + candidate.placement_client_name : '')">
-                              🏆 Hired
-                              <span *ngIf="isRecentlyPlaced(candidate)" class="cooldown-tag" title="Placed recently — in {{ cooldownMonths }} months cooldown">⏳</span>
-                            </span>
-                            <div class="status-sub-attribution" *ngIf="candidate.placed_by_name">
-                              <span class="placer-credit-text">by <strong>{{ candidate.placed_by_name }}</strong></span>
-                              <span class="placer-company-text" *ngIf="candidate.placement_client_name">· {{ candidate.placement_client_name }}</span>
+                          <!-- Case A: Candidate has an active lead pipeline (Screening, Interview, Submission, Offer, Hired, Sourced, Rejected) -->
+                          <ng-container *ngIf="getLeadPipeline(candidate) as lead; else noPipelineTpl">
+                            <!-- A1: Lead is Hired -->
+                            <div class="status-cell-wrap" *ngIf="lead.stage === 'Hired' || candidate.placement_status === 'Hired'">
+                              <span class="placement-badge hired"
+                                [title]="'Placed by ' + (candidate.placed_by_name || lead.recruiter_name || 'Recruiter') + (candidate.placement_client_name || lead.client_name ? ' at ' + (candidate.placement_client_name || lead.client_name) : '')">
+                                🏆 Hired
+                                <span *ngIf="isRecentlyPlaced(candidate)" class="cooldown-tag" title="Placed recently — in {{ cooldownMonths }} months cooldown">⏳</span>
+                              </span>
+                              <div class="status-sub-attribution" *ngIf="candidate.placed_by_name || lead.recruiter_name">
+                                <span class="placer-credit-text">by <strong>{{ candidate.placed_by_name || lead.recruiter_name }}</strong></span>
+                                <span class="placer-company-text" *ngIf="candidate.placement_client_name || lead.client_name">· {{ candidate.placement_client_name || lead.client_name }}</span>
+                              </div>
+                              <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
+                                <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.id, $event)" title="View all concurrent ATS pipelines">
+                                  <span>+{{ candidate.active_applications.length - 1 }} more</span>
+                                  <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                                </button>
+                              </div>
                             </div>
-                            <!-- Multi-Pipeline popover trigger if candidate has concurrent active applications -->
-                            <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 0">
-                              <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.id, $event)" title="View all concurrent ATS pipelines">
-                                <span>{{ candidate.active_applications.length }} active pipeline{{ candidate.active_applications.length > 1 ? 's' : '' }}</span>
-                                <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                              </button>
-                            </div>
-                          </div>
 
-                          <!-- CASE 2: Placed as Offered (Not yet hired) -->
-                          <div class="status-cell-wrap" *ngIf="candidate.placement_status === 'Offered'">
-                            <span class="placement-badge offered">
-                              Offered
-                            </span>
-                            <div class="status-sub-attribution" *ngIf="candidate.placement_client_name">
-                              <span>at {{ candidate.placement_client_name }}</span>
+                            <!-- A2: Lead is Offer -->
+                            <div class="status-cell-wrap" *ngIf="lead.stage === 'Offer' && candidate.placement_status !== 'Hired'">
+                              <span class="placement-badge offered">
+                                Offered
+                              </span>
+                              <div class="status-sub-attribution" *ngIf="lead.client_name || candidate.placement_client_name">
+                                <span>at {{ lead.client_name || candidate.placement_client_name }}</span>
+                              </div>
+                              <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
+                                <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.id, $event)" title="View all concurrent ATS pipelines">
+                                  <span>+{{ candidate.active_applications.length - 1 }} more</span>
+                                  <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                                </button>
+                              </div>
                             </div>
-                            <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 0">
-                              <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.id, $event)" title="View all concurrent ATS pipelines">
-                                <span>{{ candidate.active_applications.length }} active pipeline{{ candidate.active_applications.length > 1 ? 's' : '' }}</span>
-                                <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                              </button>
-                            </div>
-                          </div>
 
-                          <!-- CASE 3: In Active ATS Pipelines (Screening, Interview, Submission, etc.) -->
-                          <div class="status-cell-wrap" *ngIf="!candidate.placement_status && getLeadPipeline(candidate) as lead">
-                            <span class="stage-pill" [ngClass]="getStageClass(lead.stage)">
-                              <span class="stage-dot"></span>
-                              {{ lead.stage }}
-                            </span>
-                            <div class="status-sub-attribution">
-                              <span *ngIf="lead.client_name" class="pipeline-client-tag">{{ lead.client_name }}</span>
-                              <span *ngIf="lead.recruiter_name" class="pipeline-recruiter-tag">({{ lead.recruiter_name }})</span>
+                            <!-- A3: Lead is in Interview, Screening, Submission, Sourced, Rejected, or any other active stage -->
+                            <div class="status-cell-wrap" *ngIf="lead.stage !== 'Hired' && lead.stage !== 'Offer' && candidate.placement_status !== 'Hired'">
+                              <span class="stage-pill" [ngClass]="getStageClass(lead.stage)">
+                                <span class="stage-dot"></span>
+                                {{ lead.stage }}
+                              </span>
+                              <div class="status-sub-attribution">
+                                <span *ngIf="lead.client_name" class="pipeline-client-tag">{{ lead.client_name }}</span>
+                                <span *ngIf="lead.recruiter_name" class="pipeline-recruiter-tag">({{ lead.recruiter_name }})</span>
+                              </div>
+                              <!-- If candidate has multiple concurrent applications -->
+                              <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
+                                <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.id, $event)" title="View all concurrent ATS pipelines">
+                                  <span>+{{ candidate.active_applications.length - 1 }} more</span>
+                                  <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                                </button>
+                              </div>
                             </div>
-                            <!-- If candidate has multiple concurrent applications -->
-                            <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
-                              <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.id, $event)" title="View all concurrent ATS pipelines">
-                                <span>+{{ candidate.active_applications.length - 1 }} more</span>
-                                <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                              </button>
-                            </div>
-                          </div>
+                          </ng-container>
 
-                          <!-- CASE 4: Not in any active pipeline and not placed -->
-                          <div class="status-cell-wrap" *ngIf="!candidate.placement_status && !getLeadPipeline(candidate)">
-                            <span class="status-available-pill">Available</span>
-                          </div>
+                          <!-- Case B: Candidate has no active lead pipeline in ATS -->
+                          <ng-template #noPipelineTpl>
+                            <div class="status-cell-wrap" *ngIf="candidate.placement_status === 'Hired'">
+                              <span class="placement-badge hired"
+                                [title]="'Placed by ' + (candidate.placed_by_name || 'Recruiter') + (candidate.placement_client_name ? ' at ' + candidate.placement_client_name : '')">
+                                🏆 Hired
+                                <span *ngIf="isRecentlyPlaced(candidate)" class="cooldown-tag" title="Placed recently — in {{ cooldownMonths }} months cooldown">⏳</span>
+                              </span>
+                              <div class="status-sub-attribution" *ngIf="candidate.placed_by_name">
+                                <span class="placer-credit-text">by <strong>{{ candidate.placed_by_name }}</strong></span>
+                                <span class="placer-company-text" *ngIf="candidate.placement_client_name">· {{ candidate.placement_client_name }}</span>
+                              </div>
+                            </div>
+
+                            <div class="status-cell-wrap" *ngIf="(candidate.placement_status === 'Offered' || candidate.placement_status === 'Offer') && candidate.placement_status !== 'Hired'">
+                              <span class="placement-badge offered">
+                                Offered
+                              </span>
+                              <div class="status-sub-attribution" *ngIf="candidate.placement_client_name">
+                                <span>at {{ candidate.placement_client_name }}</span>
+                              </div>
+                            </div>
+
+                            <div class="status-cell-wrap" *ngIf="!candidate.placement_status || (candidate.placement_status !== 'Hired' && candidate.placement_status !== 'Offered' && candidate.placement_status !== 'Offer')">
+                              <span class="status-available-pill">Available</span>
+                            </div>
+                          </ng-template>
 
                           <!-- CONCURRENT ATS PIPELINES POPOVER MENU (Rendered per candidate when open) -->
                           <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === candidate.id && candidate.active_applications && candidate.active_applications.length > 0" (click)="$event.stopPropagation()">

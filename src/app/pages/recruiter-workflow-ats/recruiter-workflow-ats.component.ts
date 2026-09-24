@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, DragDropModule } from '@angular/cdk/drag-drop';
@@ -9,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { AtsWorkflowService } from '../../services/ats-workflow.service';
 import { RecruiterWorkflowCandidateService } from '../../services/recruiter-workflow-candidate.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
+import { AtsPipelineEventService, AtsPipelineEvent } from '../../services/ats-pipeline-event.service';
 
 // Components
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
@@ -32,7 +34,9 @@ import * as FileSaver from 'file-saver';
   templateUrl: 'recruiter-workflow-ats.component.html',
   styleUrls: ['recruiter-workflow-ats.component.css']
 })
-export class RecruiterWorkflowAtsComponent implements OnInit {
+export class RecruiterWorkflowAtsComponent implements OnInit, OnDestroy {
+
+  private subscriptions = new Subscription();
 
   // --- DRAWER & FILTER STATE ---
   activeDrawerTab: 'overview' | 'resume' | 'feedback' | 'sourcing' = 'overview';
@@ -94,7 +98,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     private router: Router,
     private atsService: AtsWorkflowService,
     private candidateService: RecruiterWorkflowCandidateService,
-    private reqService: AdbRequirementService
+    private reqService: AdbRequirementService,
+    private atsPipelineEventService: AtsPipelineEventService
   ) {
     this.title.setTitle('Recruiter-Workflow-ATS - Flashyre');
   }
@@ -130,6 +135,27 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         this.loadPlatformSettings();
       }
     });
+
+    // Real-time multi-recruiter ATS pipeline sync
+    const currentUserId = String(localStorage.getItem('user_id') || localStorage.getItem('userId') || '').trim();
+    if (currentUserId) {
+      this.atsPipelineEventService.startListening(currentUserId);
+      this.subscriptions.add(
+        this.atsPipelineEventService.pipelineEvents.subscribe(
+          (event: AtsPipelineEvent) => {
+            if (event.job_requirement_id && Number(event.job_requirement_id) === Number(this.jobId)) {
+              console.log('[ATS Page] Real-time pipeline event received for current job, refreshing pipeline...', event);
+              this.loadPipeline();
+            }
+          }
+        )
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.atsPipelineEventService.stopListening();
+    this.subscriptions.unsubscribe();
   }
 
   // --- DATA LOADING & PERMISSIONS ---

@@ -15,6 +15,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { PollingService } from '../../services/polling.service'; // Import Polling Service
 import { SuperAdminService } from '../../services/super-admin.service';
+import { AtsPipelineEventService, AtsPipelineEvent } from '../../services/ats-pipeline-event.service';
 
 // Custom Validators
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -192,12 +193,15 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   }
 
   getLeadPipeline(candidate: Candidate): any {
-    if (candidate.lead_pipeline) return candidate.lead_pipeline;
+    if (candidate.lead_pipeline && candidate.lead_pipeline.stage) return candidate.lead_pipeline;
     if (candidate.active_applications && candidate.active_applications.length > 0) {
       const priorityMap: { [key: string]: number } = {
         'Hired': 7, 'Offer': 6, 'Interview': 5, 'Submission': 4, 'Screening': 3, 'Sourced': 2, 'Rejected': 1
       };
-      return [...candidate.active_applications].sort((a, b) => (priorityMap[b.stage] || 0) - (priorityMap[a.stage] || 0))[0];
+      const validApps = candidate.active_applications.filter(a => a && a.stage);
+      if (validApps.length > 0) {
+        return [...validApps].sort((a, b) => (priorityMap[b.stage] || 0) - (priorityMap[a.stage] || 0))[0];
+      }
     }
     return null;
   }
@@ -328,6 +332,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     private adbRequirementService: AdbRequirementService,
     private pollingService: PollingService, // Inject Polling Service
     private superAdminService: SuperAdminService,
+    private atsPipelineEventService: AtsPipelineEventService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -370,6 +375,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         this.onFilterCategoryChange();
       }
     });
+
+    // Real-time ATS pipeline sync via Firebase Firestore
+    const currentUserId = String(localStorage.getItem('user_id') || localStorage.getItem('userId') || '').trim();
+    if (currentUserId) {
+      this.atsPipelineEventService.startListening(currentUserId);
+      this.subscriptions.add(
+        this.atsPipelineEventService.pipelineEvents.subscribe(
+          (event: AtsPipelineEvent) => {
+            console.log('[Candidate Page] Real-time ATS pipeline event received, refreshing candidate table...', event);
+            this.loadCandidates(this.currentPage);
+          }
+        )
+      );
+    }
   }
 
   loadPlatformSettings(): void {
@@ -428,6 +447,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
 
   ngOnDestroy(): void {
+    this.atsPipelineEventService.stopListening();
     if (this.subscriptions) {
       this.subscriptions.unsubscribe();
     }
