@@ -51,7 +51,9 @@ export class CorporateAuthService {
     this.authBroadcastService.messages$.subscribe(msg => {
       if (msg.type === 'TOKEN_REFRESHED' || msg.type === 'LOGIN_SUCCESS') {
         localStorage.setItem('jwtToken', msg.accessToken);
-        localStorage.removeItem('refreshToken');
+        if (msg.refreshToken) {
+          localStorage.setItem('refreshToken', msg.refreshToken);
+        }
         this.startSilentRefreshTimer(msg.accessToken, false);
       } else if (msg.type === 'LOGOUT') {
         this.clearTokens(false);
@@ -109,15 +111,16 @@ export class CorporateAuthService {
   }
 
   /**
-   * Saves access token to localStorage and schedules proactive refresh.
-   * Refresh token is stored in HttpOnly cookie and intentionally removed from localStorage.
+   * Saves access token (and refresh token fallback) to localStorage and schedules proactive refresh.
    */
   saveTokens(access: string, refresh?: string, shouldBroadcast: boolean = true): void {
     localStorage.setItem('jwtToken', access);
-    localStorage.removeItem('refreshToken');
+    if (refresh && refresh.trim()) {
+      localStorage.setItem('refreshToken', refresh);
+    }
     this.startSilentRefreshTimer(access, shouldBroadcast);
     if (shouldBroadcast) {
-      this.authBroadcastService.broadcastTokenRefreshed(access);
+      this.authBroadcastService.broadcastTokenRefreshed(access, refresh);
     }
   }
 
@@ -126,11 +129,10 @@ export class CorporateAuthService {
   }
 
   /**
-   * Refresh token is stored securely in an HttpOnly cookie and managed by the browser.
-   * @returns null (HttpOnly cookie cannot be read via JavaScript).
+   * Retrieves the stored refresh token as a fallback for cross-origin environments.
    */
   getRefreshToken(): string | null {
-    return null;
+    return localStorage.getItem('refreshToken');
   }
 
   /**
@@ -161,7 +163,7 @@ export class CorporateAuthService {
           next: (res: any) => {
             this.isSilentRefreshing = false;
             if (res && res.access) {
-              this.saveTokens(res.access, '', shouldBroadcast);
+              this.saveTokens(res.access, res.refresh || '', shouldBroadcast);
             }
           },
           error: (err: any) => {
@@ -186,9 +188,14 @@ export class CorporateAuthService {
   }
 
   refreshToken(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    const body: Record<string, string> = {};
+    if (refreshToken) {
+      body['refresh'] = refreshToken;
+    }
     return this.http.post<any>(
       `${this.apiUrl}api/token/refresh/`,
-      {},
+      body,
       { withCredentials: true }
     );
   }

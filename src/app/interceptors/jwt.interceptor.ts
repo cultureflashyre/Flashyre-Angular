@@ -184,7 +184,7 @@ function handleTokenRefresh(
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
-    console.log(`[JWT Interceptor] Calling API to refresh token. Using HttpOnly cookie (withCredentials).`);
+    console.log(`[JWT Interceptor] Calling API to refresh token. Using HttpOnly cookie + body fallback.`);
 
     return authService.refreshToken().pipe(
       retry({
@@ -192,6 +192,7 @@ function handleTokenRefresh(
         delay: (error: any, retryCount: number) => {
           // Do not retry fatal auth rejections or client configuration failures
           if (
+            error?.status === 400 ||
             error?.status === 401 ||
             error?.status === 403 ||
             error?.message === 'No refresh token available'
@@ -236,7 +237,7 @@ function handleTokenRefresh(
         lastRefreshFailedAt = 0; // Reset cooldown on success
         const newAccessToken = tokenResponse.access;
         refreshTokenSubject.next(newAccessToken);
-        // Save only the access token; refresh token is managed via HttpOnly cookie
+        // Save access token and rotated refresh token fallback
         authService.saveTokens(newAccessToken, tokenResponse.refresh || '');
         return retryWithFreshTokenAndDPoP(request, next, newAccessToken, dpopCryptoService);
       })

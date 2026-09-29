@@ -33,11 +33,12 @@ export function getJWTToken(): string | null {
 }
 
 /**
- * Refresh token is stored securely in an HttpOnly cookie and managed by the browser.
- * @returns null (HttpOnly cookie cannot be read via JavaScript).
+ * Retrieves the stored refresh token as a fallback for cross-origin environments
+ * where HttpOnly cookies may be blocked or not transmitted by the browser.
  */
 export function getRefreshToken(): string | null {
-  return null;
+  if (typeof localStorage === 'undefined') return null;
+  return localStorage.getItem('refreshToken');
 }
 
 /**

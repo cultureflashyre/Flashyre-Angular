@@ -1,8 +1,8 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'https://backend-dot-flashyre-prod-506909.el.r.appspot.com/',
-  websocketUrl: 'https://backend-dot-flashyre-prod-506909.el.r.appspot.com/',
+  apiUrl: 'https://flashyre-api-prod-cocss5qyka-el.a.run.app/',
+  websocketUrl: 'https://flashyre-api-prod-cocss5qyka-el.a.run.app/',
 
   defaultProfilePicture: 'https://storage.googleapis.com/flashyre-prod-b5/default_images/profile-placeholder.jpg',
   defaultCompanyIcon: 'https://storage.googleapis.com/flashyre-prod-b5/default_images/defaultCompanyIcon.png',
