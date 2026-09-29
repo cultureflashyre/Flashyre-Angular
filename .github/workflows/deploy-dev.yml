@@ -38,6 +38,6 @@ jobs:
         run: |
           npm run build -- --configuration=development
 
-      - name: Deploy to Firebase Hosting
+      - name: Deploy to Firebase Hosting & Firestore (Dev)
         run: |
-          npx firebase-tools deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project ${{ env.PROJECT_ID }}
+          npx firebase-tools deploy --only hosting,firestore:rules,firestore:indexes --token "${{ secrets.FIREBASE_TOKEN }}" --project ${{ env.PROJECT_ID }}
