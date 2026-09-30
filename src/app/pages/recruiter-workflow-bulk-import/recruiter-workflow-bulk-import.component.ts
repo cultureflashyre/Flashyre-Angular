@@ -1302,8 +1302,8 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     const req: ReportGenerateRequest = {
       format: this.reportFormat,
       fields: this.selectedReportFields,
-      date_from: this.reportDateFrom ? `${this.reportDateFrom}T00:00:00` : undefined,
-      date_to: this.reportDateTo ? `${this.reportDateTo}T23:59:59` : undefined,
+      date_from: !this.reportBatchFilter && this.reportDateFrom ? `${this.reportDateFrom}T00:00:00` : undefined,
+      date_to: !this.reportBatchFilter && this.reportDateTo ? `${this.reportDateTo}T23:59:59` : undefined,
       batch_id: this.reportBatchFilter || undefined,
       source_filter: this.reportSourceFilter || undefined
     };
