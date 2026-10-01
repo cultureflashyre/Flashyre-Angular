@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { JobMatchingScoreService } from '../../services/job-matching-score.service';
@@ -26,15 +26,17 @@ export class JobMatchingScoreComponent implements OnInit {
 
   isLoading = false;
   isInitialLoading = true;
+  errorMessage: string = '';
 
   // Pagination
   displayPage = 1;
   pageSize = 30;
   displayTotalPages = 1;
 
-  // Search
+  // Search & Input Validation
   searchQuery = '';
   searchTimeout: any;
+  searchValidationError = '';
 
   // Stats
   strongMatchCount = 0;
@@ -53,6 +55,55 @@ export class JobMatchingScoreComponent implements OnInit {
   selectedCandidateForRating: any = null;
   ratingHistory: any[] = [];
   isLoadingRatings = false;
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event?: KeyboardEvent) {
+    if (this.selectedCandidateDetails) {
+      this.closeDetailsModal();
+    }
+    if (this.showProfileModal) {
+      this.closeProfileModal();
+    }
+    if (this.showRatingHistoryModal) {
+      this.closeRatingHistoryModal();
+    }
+  }
+
+  // --- Input & Form Validations ---
+
+  validateEmail(email: string): boolean {
+    if (!email) return false;
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(email.trim());
+  }
+
+  validatePhone(phone: string): boolean {
+    if (!phone) return false;
+    const digits = phone.replace(/\D/g, '');
+    return digits.length >= 7 && digits.length <= 15;
+  }
+
+  validateSearchInput(value: string): boolean {
+    const trimmed = (value || '').trim();
+    if (!trimmed) {
+      this.searchValidationError = '';
+      return true;
+    }
+    if (trimmed.includes('@')) {
+      if (!this.validateEmail(trimmed)) {
+        this.searchValidationError = 'Please enter a valid email address format.';
+        return false;
+      }
+    } else if (/^[\d+\-\s()]+$/.test(trimmed) && trimmed.length > 3) {
+      if (!this.validatePhone(trimmed)) {
+        this.searchValidationError = 'Please enter a valid phone number (7-15 digits).';
+        return false;
+      }
+    }
+    this.searchValidationError = '';
+    return true;
+  }
+
 
   constructor(
     private jobScoreService: JobMatchingScoreService,
@@ -94,6 +145,7 @@ export class JobMatchingScoreComponent implements OnInit {
   loadScores() {
     if (!this.selectedJobId) return;
     this.isLoading = true;
+    this.errorMessage = '';
 
     // We can pass the search query to the backend as planned, 
     // but since the backend returns all candidates and caches them, 
@@ -125,12 +177,17 @@ export class JobMatchingScoreComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading scores:', err);
+        this.errorMessage = err?.error?.detail || err?.error?.error || 'Unable to compute matching scores. Please try again.';
         this.allCandidatesScores = [];
         this.candidatesScores = [];
         this.paginatedCandidates = [];
         this.isLoading = false;
       }
     });
+  }
+
+  retryLoadScores() {
+    this.loadScores();
   }
 
   computeStats() {
@@ -153,6 +210,7 @@ export class JobMatchingScoreComponent implements OnInit {
   }
 
   onSearchChange() {
+    this.validateSearchInput(this.searchQuery);
     // Debounce the search input for better performance
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);

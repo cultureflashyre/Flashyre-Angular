@@ -131,6 +131,84 @@
   }
   .job-selector-meta .meta-item svg { width: 14px; height: 14px; }
 
+  /* ============== ERROR BANNER ============== */
+  .error-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bad-soft);
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-1);
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .error-banner-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #fee2e2;
+    color: var(--bad);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .error-banner-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .error-banner-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .error-banner-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #991b1b;
+    margin-bottom: 2px;
+  }
+  .error-banner-msg {
+    font-size: 13px;
+    color: #b91c1c;
+    word-break: break-word;
+  }
+  .retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid #fca5a5;
+    background: #ffffff;
+    color: #b91c1c;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .retry-btn:hover {
+    background: #fef2f2;
+    border-color: #f87171;
+    color: #991b1b;
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.1);
+  }
+  .retry-btn svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+  }
+  .retry-btn:hover svg {
+    transform: rotate(90deg);
+  }
+
   /* ============== STATS ============== */
   .stats {
     display: grid; grid-template-columns: repeat(4, 1fr);
@@ -599,6 +677,8 @@
   @media (max-width: 640px) {
     .page { padding: 16px 16px 40px; }
     .stats { grid-template-columns: 1fr; }
+    .error-banner { flex-direction: column; align-items: flex-start; }
+    .retry-btn { width: 100%; justify-content: center; }
     .table thead { display: none; }
     .table tbody tr { display: block; padding: 14px; border-bottom: 1px solid var(--line-soft); }
     .table tbody td { display: flex; justify-content: space-between; padding: 4px 0; border: none; }

@@ -43,8 +43,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
         <div class="job-selector-body">
-          <div class="job-selector-label">Select Requirement</div>
-          <select id="jobSelect" [(ngModel)]="selectedJobId" (change)="onJobSelect()">
+          <div class="job-selector-label">
+            Select Requirement <span class="required-indicator" aria-hidden="true" style="color: #dc2626; font-weight: bold;">*</span>
+          </div>
+          <select id="jobSelect" aria-label="Select Job Requirement" aria-required="true" [disabled]="isLoading" [attr.disabled]="isLoading ? '' : null" [(ngModel)]="selectedJobId" (change)="onJobSelect()">
             <option [ngValue]="null" disabled selected>-- Choose a Job Requirement --</option>
             <option *ngFor="let job of availableJobs" [ngValue]="job.id">
               {{ job.job_role }} ({{ job.client_name }})
@@ -53,8 +55,30 @@
         </div>
       </div>
 
+      <!-- Error Alert Banner -->
+      <div class="error-banner" *ngIf="errorMessage && !isLoading" role="alert">
+        <div class="error-banner-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="error-banner-content">
+          <div class="error-banner-title">Error Loading Matching Scores</div>
+          <div class="error-banner-msg">{{ errorMessage }}</div>
+        </div>
+        <button class="retry-btn" (click)="retryLoadScores()" type="button" aria-label="Retry loading matching scores" [disabled]="isLoading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Retry
+        </button>
+      </div>
+
       <!-- Stats (visible only when a job is selected and has results) -->
-      <div class="stats" *ngIf="selectedJobId && allCandidatesScores.length > 0 && !isLoading">
+      <div class="stats" *ngIf="selectedJobId && allCandidatesScores.length > 0 && !isLoading && !errorMessage">
         <div class="stat">
           <div class="stat-icon violet">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -104,7 +128,7 @@
 
       <!-- Main Card (visible when job selected and has results) -->
       <!-- Un-analyzable Candidates Alert -->
-      <div *ngIf="selectedJobId && skippedCandidates.length > 0 && !isLoading" style="margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px; background: #fffbeb; border: 1px solid #fde68a; padding: 16px; border-radius: 8px;">
+      <div *ngIf="selectedJobId && skippedCandidates.length > 0 && !isLoading && !errorMessage" style="margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px; background: #fffbeb; border: 1px solid #fde68a; padding: 16px; border-radius: 8px;">
         <svg style="flex-shrink: 0; color: #d97706; margin-top: 2px;" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <div style="flex: 1;">
           <div style="font-weight: 600; color: #92400e; margin-bottom: 4px;">{{ skippedCandidates.length }} candidate(s) could not be analyzed</div>
@@ -118,7 +142,7 @@
         </div>
       </div>
 
-      <div class="card" *ngIf="selectedJobId && !isLoading">
+      <div class="card" *ngIf="selectedJobId && !isLoading && !errorMessage">
         <ng-container *ngIf="allCandidatesScores.length > 0">
           <div class="card-head">
             <div class="card-title-area">
@@ -128,7 +152,10 @@
             <div class="toolbar">
               <div class="search">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" placeholder="Search by name, email, phone..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
+                <input type="text" id="candidateSearchInput" aria-label="Search candidates by name, email, or phone" placeholder="Search by name, email, phone..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
+              </div>
+              <div *ngIf="searchValidationError" class="input-error-msg" role="alert" style="color: #dc2626; font-size: 12px; margin-top: 4px;">
+                {{ searchValidationError }}
               </div>
             </div>
           </div>
@@ -261,14 +288,14 @@
             <div class="pagination" *ngIf="displayTotalPages > 1">
               <span class="pagination-info">Page {{ displayPage }} of {{ displayTotalPages }}</span>
               <div class="pagination-controls">
-                <button class="page-btn" (click)="goToPage(displayPage - 1)" [disabled]="displayPage <= 1">
+                <button class="page-btn" (click)="goToPage(displayPage - 1)" [disabled]="displayPage <= 1" aria-label="Previous Page">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                   Prev
                 </button>
                 <ng-container *ngFor="let p of getPageNumbers()">
-                  <button class="page-btn" [class.active-page]="p === displayPage" (click)="goToPage(p)">{{ p }}</button>
+                  <button class="page-btn" [class.active-page]="p === displayPage" (click)="goToPage(p)" [attr.aria-label]="'Go to page ' + p">{{ p }}</button>
                 </ng-container>
-                <button class="page-btn" (click)="goToPage(displayPage + 1)" [disabled]="displayPage >= displayTotalPages">
+                <button class="page-btn" (click)="goToPage(displayPage + 1)" [disabled]="displayPage >= displayTotalPages" aria-label="Next Page">
                   Next
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
@@ -302,7 +329,7 @@
      DETAILED SCORE MODAL
      ==================================================================== -->
 <div class="modal-overlay" *ngIf="selectedCandidateDetails" (click)="closeDetailsModal()">
-  <div class="modal" (click)="$event.stopPropagation()">
+  <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Detailed Score Breakdown Modal">
     <!-- Header -->
     <div class="modal-head">
       <div class="modal-head-av" [ngClass]="getAvatarColor(0)">
@@ -315,7 +342,7 @@
           <span *ngIf="selectedClientName"> · {{ selectedClientName }}</span>
         </div>
       </div>
-      <button class="modal-close" (click)="closeDetailsModal()">
+      <button class="modal-close" (click)="closeDetailsModal()" aria-label="Close details modal">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
@@ -432,7 +459,7 @@
      ==================================================================== -->
 <ng-container *ngIf="showProfileModal && selectedProfileDetails">
   <div class="elegant-modal-backdrop" (click)="closeProfileModal()">
-    <div class="elegant-modal-content" (click)="$event.stopPropagation()">
+    <div class="elegant-modal-content" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Candidate Profile Details Modal">
       <div class="elegant-header">
         <div class="candidate-identity">
           <div class="candidate-avatar">
@@ -444,7 +471,7 @@
           </div>
         </div>
         <div class="header-actions">
-          <button class="action-icon-btn" (click)="closeProfileModal()" title="Close">
+          <button class="action-icon-btn" (click)="closeProfileModal()" title="Close" aria-label="Close profile modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -554,7 +581,7 @@
      ==================================================================== -->
 <ng-container *ngIf="showRatingHistoryModal && selectedCandidateForRating">
   <div class="elegant-modal-backdrop" (click)="closeRatingHistoryModal()">
-    <div class="elegant-modal-content" (click)="$event.stopPropagation()" style="width: 650px;">
+    <div class="elegant-modal-content" (click)="$event.stopPropagation()" style="width: 650px;" role="dialog" aria-modal="true" aria-label="Candidate Rating History Modal">
       
       <!-- Header -->
       <div class="elegant-header">
@@ -568,7 +595,7 @@
           </div>
         </div>
         <div class="header-actions">
-          <button class="action-icon-btn" (click)="closeRatingHistoryModal()" title="Close">
+          <button class="action-icon-btn" (click)="closeRatingHistoryModal()" title="Close" aria-label="Close rating history modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>

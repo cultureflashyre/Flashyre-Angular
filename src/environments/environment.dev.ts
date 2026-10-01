@@ -1,8 +1,8 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'https://flashyre-api-tf2cr7nfbq-el.a.run.app/',
-  websocketUrl: 'https://flashyre-api-tf2cr7nfbq-el.a.run.app/',
+  apiUrl: 'https://flashyre-api-780211241141.asia-south1.run.app/',
+  websocketUrl: 'https://flashyre-api-780211241141.asia-south1.run.app/',
 
   defaultProfilePicture: 'https://storage.googleapis.com/cflashyre-dev-b2/media/profile-placeholder.jpg',
   defaultCompanyIcon: 'https://storage.googleapis.com/cflashyre-dev-b2/media/defaultCompanyIcon.png',
@@ -12,7 +12,7 @@ export const environment = {
 
   mcq_upload_template: 'https://storage.googleapis.com/cflashyre-dev-b4/mcq_question_upload_template/flashyre_mcq_questions_template.xlsx',
   googleMapsApiKey: 'AIzaSyBuAysKAIvJKX7VRIfpcmcQg6IPgIJaFlU',
-  googleClientId: '964117340672-8i8qqk25s947671n36j6hvu4e84rlt2f.apps.googleusercontent.com',
+  googleClientId: '970909670920-6r0aibmfor13ti355uh8avfqd4nsaiqf.apps.googleusercontent.com',
 
   firebase: {
     apiKey: "AIzaSyBq4HMHBQL3erNEoAWQQLIlKf5_9raCznA",
