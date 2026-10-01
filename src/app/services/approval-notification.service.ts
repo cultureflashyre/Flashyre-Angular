@@ -51,6 +51,18 @@ export class ApprovalNotificationService implements OnDestroy {
   private lastToastedPendingRequestId: string | null = null;
   private lastToastedApprovedRequestId: string | null = null;
 
+  // Circuit breaker & 429 rate limit backoff
+  private throttledUntil: number = 0;
+
+  // Request deduplication & cooldown tracking
+  private lastPendingFetchTime: number = 0;
+  private lastApprovedFetchTime: number = 0;
+  private readonly FETCH_COOLDOWN_MS: number = 5000;
+  private readonly FALLBACK_POLL_INTERVAL_MS: number = 60000;
+
+  // Lifecycle & listener registration state
+  private isInitialized: boolean = false;
+
   private app: FirebaseApp | null = null;
   private db: Firestore | null = null;
   private isFirebaseReady: boolean = false;
@@ -160,7 +172,8 @@ export class ApprovalNotificationService implements OnDestroy {
       'Unread Badge Count': this.unreadCount$.getValue(),
       'Total Recent in 5 Days': this.totalRecentCount$.getValue(),
       'Last Seen Timestamp': this.getLastSeenTimestamp().toLocaleTimeString(),
-      '15s Polling Heartbeat': this.heartbeatSub ? 'Running' : 'Stopped',
+      'Fallback REST Polling (60s)': this.heartbeatSub ? 'Running' : 'Stopped',
+      'Circuit Breaker (429 Throttled)': Date.now() < this.throttledUntil ? `Active until ${new Date(this.throttledUntil).toLocaleTimeString()}` : 'Clear',
       'Last Error': this.lastFirebaseError ? (this.lastFirebaseError.message || String(this.lastFirebaseError)) : 'None (Healthy)'
     };
 
@@ -360,21 +373,70 @@ export class ApprovalNotificationService implements OnDestroy {
   }
 
   /**
-   * Refreshes pending requests via REST API and evaluates acknowledgment state.
+   * Evaluates HTTP error response for status 429 (Too Many Requests) and activates backoff cooldown.
    */
-  public refreshPendingRequests(): void {
+  private handle429Throttling(err: any): void {
+    if (err && err.status === 429) {
+      let retryAfterSeconds = 60;
+      if (err.headers && typeof err.headers.get === 'function') {
+        const headerVal = err.headers.get('Retry-After') || err.headers.get('retry-after');
+        if (headerVal) {
+          const parsed = parseInt(headerVal, 10);
+          if (!isNaN(parsed) && parsed > 0) {
+            retryAfterSeconds = parsed;
+          }
+        }
+      } else if (err.error && typeof err.error.detail === 'string') {
+        const match = err.error.detail.match(/(\d+)\s+seconds/);
+        if (match && match[1]) {
+          const parsed = parseInt(match[1], 10);
+          if (!isNaN(parsed) && parsed > 0) {
+            retryAfterSeconds = parsed;
+          }
+        }
+      }
+      this.throttledUntil = Date.now() + (retryAfterSeconds * 1000);
+      console.warn(
+        `[ApprovalNotificationService] Throttling active (HTTP 429). Backing off for ${retryAfterSeconds}s until ${new Date(this.throttledUntil).toLocaleTimeString()}`
+      );
+    }
+  }
+
+  /**
+   * Refreshes pending requests via REST API and evaluates acknowledgment state.
+   * Includes circuit breaker 429 backoff and 5-second request deduplication cooldown.
+   */
+  public refreshPendingRequests(force: boolean = false): void {
+    if (Date.now() < this.throttledUntil) {
+      console.log(`[ApprovalNotificationService] Throttling active (429 cooldown), skipping fetch until ${new Date(this.throttledUntil).toLocaleTimeString()}`);
+      return;
+    }
+
+    const now = Date.now();
+    if (!force && (now - this.lastPendingFetchTime < this.FETCH_COOLDOWN_MS)) {
+      console.log('[ApprovalNotificationService] Skipping duplicate pending requests fetch (5s cooldown active)');
+      return;
+    }
+    this.lastPendingFetchTime = now;
+
     try {
       const bulkService = this.injector.get(RecruiterWorkflowBulkImportService);
       bulkService.getPendingApprovalCount().subscribe({
         next: (res) => this.pendingCount$.next(res.count || 0),
-        error: (err) => console.warn('Failed to fetch pending approval count:', err)
+        error: (err) => {
+          this.handle429Throttling(err);
+          console.warn('Failed to fetch pending approval count:', err);
+        }
       });
       bulkService.getApprovalRequests('PENDING', 1).subscribe({
         next: (res) => {
           const results = res.results || [];
           this.handlePendingRequestsUpdate(results);
         },
-        error: (err) => console.warn('Failed to fetch pending requests list:', err)
+        error: (err) => {
+          this.handle429Throttling(err);
+          console.warn('Failed to fetch pending requests list:', err);
+        }
       });
     } catch (e) {
       console.warn('Error refreshing pending requests:', e);
@@ -436,8 +498,21 @@ export class ApprovalNotificationService implements OnDestroy {
 
   /**
    * Refreshes approved requests for recruiter via REST API and evaluates acknowledgment state.
+   * Includes circuit breaker 429 backoff and 5-second request deduplication cooldown.
    */
-  public refreshMyApprovedRequests(): void {
+  public refreshMyApprovedRequests(force: boolean = false): void {
+    if (Date.now() < this.throttledUntil) {
+      console.log(`[ApprovalNotificationService] Throttling active (429 cooldown), skipping fetch until ${new Date(this.throttledUntil).toLocaleTimeString()}`);
+      return;
+    }
+
+    const now = Date.now();
+    if (!force && (now - this.lastApprovedFetchTime < this.FETCH_COOLDOWN_MS)) {
+      console.log('[ApprovalNotificationService] Skipping duplicate recruiter approved requests fetch (5s cooldown active)');
+      return;
+    }
+    this.lastApprovedFetchTime = now;
+
     try {
       const bulkService = this.injector.get(RecruiterWorkflowBulkImportService);
       bulkService.getMyApprovalRequests().subscribe({
@@ -446,7 +521,10 @@ export class ApprovalNotificationService implements OnDestroy {
           this.approvedReportsCount$.next(approved.length);
           this.handleApprovedRequestsUpdate(approved);
         },
-        error: (err) => console.warn('Failed to fetch my approval requests:', err)
+        error: (err) => {
+          this.handle429Throttling(err);
+          console.warn('Failed to fetch my approval requests:', err);
+        }
       });
     } catch (e) {
       console.warn('Error refreshing recruiter approved requests:', e);
@@ -505,8 +583,28 @@ export class ApprovalNotificationService implements OnDestroy {
   }
 
   /**
+   * Returns true if global listeners (Firestore or fallback polling) are already active.
+   */
+  public isListeningActive(): boolean {
+    const isSuper = typeof localStorage !== 'undefined' && (
+      localStorage.getItem('isSuperUser') === 'true' ||
+      (localStorage.getItem('userType') || '').toLowerCase() === 'admin'
+    );
+    const userId = typeof localStorage !== 'undefined'
+      ? (localStorage.getItem('user_id') || localStorage.getItem('userId'))
+      : null;
+
+    if (isSuper) {
+      return this.isSuperAdminListening || (this.isInitialized && this.heartbeatSub !== null && !this.heartbeatSub.closed);
+    } else if (userId) {
+      return (this.currentListeningRecruiterId === String(userId)) || (this.isInitialized && this.heartbeatSub !== null && !this.heartbeatSub.closed);
+    }
+    return false;
+  }
+
+  /**
    * Initializes global notification listeners based on current logged-in user state.
-   * Starts Firestore real-time listeners AND autonomous 15s polling heartbeat.
+   * Starts Firestore real-time listeners and fallback 60s polling heartbeat.
    * Safe to call repeatedly (idempotent).
    */
   public initGlobalListeners(): void {
@@ -516,11 +614,17 @@ export class ApprovalNotificationService implements OnDestroy {
       return;
     }
 
+    // Skip initialization if listeners are already active for current session
+    if (this.isListeningActive()) {
+      return;
+    }
+
+    this.isInitialized = true;
     const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
                     (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
     const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
 
-    // Start background heartbeat polling for idle awareness
+    // Start background heartbeat polling (only polls REST as fallback when Firestore is inactive/errored)
     this.startPollingHeartbeat();
 
     if (isSuper) {
@@ -533,17 +637,18 @@ export class ApprovalNotificationService implements OnDestroy {
   }
 
   /**
-   * Starts an autonomous 15-second background polling heartbeat stream.
-   * Ensures idle users viewing a page without interaction receive instant notifications.
-   * Also listens for browser visibilitychange to refresh immediately when focusing the tab.
+   * Starts a 60-second fallback background polling heartbeat stream.
+   * If Firestore is active and listening, REST polling is skipped entirely to prevent
+   * redundant HTTP requests and avoid rate limits (429).
+   * Only polls if Firestore is NOT listening or encountered an error.
    */
   public startPollingHeartbeat(): void {
     if (this.heartbeatSub) {
       return;
     }
 
-    // Run immediately (0s) and then every 15s in the background
-    this.heartbeatSub = timer(0, 15000).subscribe(() => {
+    // Run fallback polling every 60s (not 15s) when Firestore is inactive or errored
+    this.heartbeatSub = timer(this.FALLBACK_POLL_INTERVAL_MS, this.FALLBACK_POLL_INTERVAL_MS).subscribe(() => {
       const token = typeof localStorage !== 'undefined' ? localStorage.getItem('jwtToken') : null;
       if (!token) {
         this.stopListening();
@@ -554,6 +659,19 @@ export class ApprovalNotificationService implements OnDestroy {
                       (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
       const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
 
+      // Check if Firestore is actively listening and healthy
+      const isFirestoreListening = this.isFirebaseReady && !this.lastFirebaseError && (
+        (isSuper && this.isSuperAdminListening) ||
+        (!isSuper && !!this.currentListeningRecruiterId)
+      );
+
+      if (isFirestoreListening) {
+        // Firestore is healthy and receiving push updates via onSnapshot. Skip redundant REST polling.
+        return;
+      }
+
+      // Fallback mode: Firestore is inactive, not ready, or errored
+      console.log('[ApprovalNotificationService] Firestore listener inactive or errored. Running fallback REST polling...');
       if (isSuper) {
         this.refreshPendingRequests();
       } else if (userId) {
@@ -561,7 +679,7 @@ export class ApprovalNotificationService implements OnDestroy {
       }
     });
 
-    // Instant refresh when user returns/focuses the tab
+    // Tab focus listener for idle users returning (only poll REST if Firestore is inactive)
     if (typeof document !== 'undefined' && !this.visibilityListener) {
       this.visibilityListener = () => {
         if (document.visibilityState === 'visible') {
@@ -574,10 +692,18 @@ export class ApprovalNotificationService implements OnDestroy {
           const isSuper = localStorage.getItem('isSuperUser') === 'true' ||
                           (localStorage.getItem('userType') || '').toLowerCase() === 'admin';
           const userId = localStorage.getItem('user_id') || localStorage.getItem('userId');
-          if (isSuper) {
-            this.refreshPendingRequests();
-          } else if (userId) {
-            this.refreshMyApprovedRequests();
+
+          const isFirestoreListening = this.isFirebaseReady && !this.lastFirebaseError && (
+            (isSuper && this.isSuperAdminListening) ||
+            (!isSuper && !!this.currentListeningRecruiterId)
+          );
+
+          if (!isFirestoreListening) {
+            if (isSuper) {
+              this.refreshPendingRequests();
+            } else if (userId) {
+              this.refreshMyApprovedRequests();
+            }
           }
         }
       };
@@ -730,8 +856,7 @@ export class ApprovalNotificationService implements OnDestroy {
 
               // Don't fire alerts on initial mass load
               if (!this.isInitialSuperAdminLoad) {
-                this.refreshPendingRequests();
-                const reqId = String(data.request_id);
+                const reqId = String(data.request_id || change.doc.id);
                 this.latestPendingRequestId = reqId;
                 const storedId = localStorage.getItem(this.STORAGE_KEY_PENDING);
 
@@ -842,9 +967,8 @@ export class ApprovalNotificationService implements OnDestroy {
               this.notificationEvents$.next(data);
 
               if (!this.isInitialRecruiterLoad) {
-                this.refreshMyApprovedRequests();
                 const approver = data.reviewed_by_name || 'Super Admin';
-                const reqId = String(data.request_id);
+                const reqId = String(data.request_id || change.doc.id);
 
                 if (data.status === 'APPROVED') {
                   this.latestApprovedRequestId = reqId;
@@ -969,6 +1093,7 @@ export class ApprovalNotificationService implements OnDestroy {
       this.visibilityListener = null;
     }
     this.stopTitleFlash();
+    this.isInitialized = false;
   }
 
   ngOnDestroy(): void {

@@ -35,7 +35,9 @@ export class AppComponent implements OnInit, OnDestroy {
     const isPublicRoute = currentUrl.includes('/login') || currentUrl.includes('/signup');
 
     if (token && !isPublicRoute) {
-      this.notificationService.initGlobalListeners();
+      if (!this.notificationService.isListeningActive()) {
+        this.notificationService.initGlobalListeners();
+      }
     } else {
       this.notificationService.stopListening();
     }
@@ -49,7 +51,9 @@ export class AppComponent implements OnInit, OnDestroy {
         const isAuthOrPublicPage = targetUrl.includes('/login') || targetUrl.includes('/signup');
 
         if (hasToken && !isAuthOrPublicPage) {
-          this.notificationService.initGlobalListeners();
+          if (!this.notificationService.isListeningActive()) {
+            this.notificationService.initGlobalListeners();
+          }
         } else {
           this.notificationService.stopListening();
         }
