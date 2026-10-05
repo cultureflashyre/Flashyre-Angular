@@ -2,7 +2,13 @@ name: Deploy Production Frontend to Firebase Hosting
 
 on:
   release:
-    types: [published]
+    types: [published, created, prereleased]
+  push:
+    tags:
+      - 'v*'
+      - 'Prod*'
+      - 'prod*'
+      - '*[Rr]elease*'
   workflow_dispatch:
 
 env:

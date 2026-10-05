@@ -5,6 +5,8 @@ on:
     branches:
       - dev
       - adb_prashanth_020326
+      - prashanth_05_10_26
+      - '*prashanth*'
     paths-ignore:
       - '**.md'
       - 'documentation/**'
