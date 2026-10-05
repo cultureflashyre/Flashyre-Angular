@@ -304,7 +304,7 @@
                           </span>
                           <div class="status-sub-attribution">
                             <span class="pipeline-role-tag" *ngIf="lead.job_role">💼 {{ lead.job_role }}</span>
-                            <span class="pipeline-client-tag" *ngIf="lead.client_name">@ {{ lead.client_name }}</span>
+                            <span class="pipeline-client-tag" *ngIf="lead.client_name">&#64; {{ lead.client_name }}</span>
                             <span class="pipeline-recruiter-tag" *ngIf="lead.recruiter_name">({{ lead.recruiter_name }})</span>
                           </div>
                           <!-- Multi-pipeline trigger button -->
@@ -620,7 +620,7 @@
                       </span>
                       <div class="status-sub-attribution">
                         <span class="pipeline-role-tag" *ngIf="lead.job_role">💼 {{ lead.job_role }}</span>
-                        <span class="pipeline-client-tag" *ngIf="lead.client_name">@ {{ lead.client_name }}</span>
+                        <span class="pipeline-client-tag" *ngIf="lead.client_name">&#64; {{ lead.client_name }}</span>
                         <span class="pipeline-recruiter-tag" *ngIf="lead.recruiter_name">({{ lead.recruiter_name }})</span>
                       </div>
                       <div class="multi-pipeline-dropdown-wrap" *ngIf="ni.active_applications && ni.active_applications.length > 1">
