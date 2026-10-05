@@ -355,6 +355,17 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.subscriptions.add(
       this.route.queryParams.subscribe(params => {
         this.formIdFilter = params['form_id'] || null;
+        if (params['search']) {
+          this.searchQuery = params['search'];
+          if (this.filterForm) {
+            const q = this.searchQuery.trim();
+            if (q.includes('@')) {
+              this.filterForm.get('email')?.setValue(q);
+            } else {
+              this.filterForm.get('name')?.setValue(q);
+            }
+          }
+        }
         this.loadCandidates();
       })
     );
@@ -2282,9 +2293,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   }
 
   onSearchChange(): void {
-    // Quick search: set the name filter to the search query and apply
+    // Quick search: set the name or email filter to the search query and apply
     if (this.filterForm) {
-      this.filterForm.get('name')?.setValue(this.searchQuery);
+      const q = (this.searchQuery || '').trim();
+      if (q.includes('@')) {
+        this.filterForm.get('email')?.setValue(q);
+        this.filterForm.get('name')?.setValue('');
+      } else {
+        this.filterForm.get('name')?.setValue(q);
+        this.filterForm.get('email')?.setValue('');
+      }
       this.applyFiltersAndSort();
     }
   }

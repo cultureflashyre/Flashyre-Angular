@@ -131,8 +131,8 @@
       <div *ngIf="selectedJobId && skippedCandidates.length > 0 && !isLoading && !errorMessage" style="margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px; background: #fffbeb; border: 1px solid #fde68a; padding: 16px; border-radius: 8px;">
         <svg style="flex-shrink: 0; color: #d97706; margin-top: 2px;" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <div style="flex: 1;">
-          <div style="font-weight: 600; color: #92400e; margin-bottom: 4px;">{{ skippedCandidates.length }} candidate(s) could not be analyzed</div>
-          <div style="font-size: 14px; color: #b45309; margin-bottom: 8px;">Their resumes were either unreadable or missing, preventing the AI from extracting text to calculate a semantic match score.</div>
+          <div style="font-weight: 600; color: #92400e; margin-bottom: 4px;">{{ skippedCandidates.length }} candidate(s) had system errors during vector analysis</div>
+          <div style="font-size: 14px; color: #b45309; margin-bottom: 8px;">These candidates had unreadable embeddings or vector dimension mismatches preventing scoring.</div>
           <div style="font-size: 13px; color: #92400e; background: #fef3c7; padding: 8px; border-radius: 4px;">
             <div style="font-weight: 600; margin-bottom: 4px;">Skipped Candidates:</div>
             <ul style="margin: 0; padding-left: 16px;">
@@ -154,6 +154,13 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" id="candidateSearchInput" aria-label="Search candidates by name, email, or phone" placeholder="Search by name, email, phone..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
               </div>
+              <button type="button" class="sort-toggle-btn" (click)="toggleScoreSort()" [title]="'Sort score: ' + (scoreSortOrder === 'desc' ? 'High to Low' : 'Low to High')">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18M6 12h12m-9 6h6"/>
+                </svg>
+                <span>Score: {{ scoreSortOrder === 'desc' ? 'High to Low' : 'Low to High' }}</span>
+                <span class="sort-direction-badge">{{ scoreSortOrder === 'desc' ? '⬇' : '⬆' }}</span>
+              </button>
               <div *ngIf="searchValidationError" class="input-error-msg" role="alert" style="color: #dc2626; font-size: 12px; margin-top: 4px;">
                 {{ searchValidationError }}
               </div>
@@ -170,10 +177,16 @@
                 <thead>
                   <tr>
                     <th class="col-cand">Candidate</th>
+                    <th class="col-pipeline">Pipeline</th>
                     <th class="col-role">Role & Experience</th>
                     <th class="col-loc">Location</th>
                     <th class="col-skill">Skill Match</th>
-                    <th class="col-score">Match Score</th>
+                    <th class="col-score sortable-col" (click)="toggleScoreSort()" title="Click to sort by match score">
+                      <div class="sortable-col-header">
+                        <span>Match Score</span>
+                        <span class="sort-col-icon">{{ scoreSortOrder === 'desc' ? '▼' : '▲' }}</span>
+                      </div>
+                    </th>
                     <th class="col-rate">Rating</th>
                   </tr>
                 </thead>
@@ -185,10 +198,165 @@
                         <div class="cand-av" [ngClass]="getAvatarColor(i)">{{ getInitials(candidate.name) }}</div>
                         <div>
                           <div class="cand-name" (click)="openProfileModal(candidate)">{{ candidate.name }}</div>
+                          <span class="score-source-tag" [ngClass]="getScoreSourceTag(candidate).cssClass">
+                            {{ getScoreSourceTag(candidate).label }}
+                          </span>
                           <div class="cand-sub">{{ candidate.email || '—' }}</div>
                           <div class="cand-sub" *ngIf="candidate.phone_number">{{ candidate.phone_number }}</div>
                         </div>
                       </div>
+                    </td>
+
+                    <!-- Pipeline -->
+                    <td data-label="Pipeline" class="col-pipeline-cell">
+                      <!-- Case A: Active Lead Pipeline or Placed Hired -->
+                      <ng-container *ngIf="candidate.lead_pipeline as lead; else noLeadPipeline">
+                        <!-- A1: Hired -->
+                        <div class="status-cell-wrap" *ngIf="lead.stage === 'Hired' || candidate.placement_status === 'Hired'">
+                          <span class="placement-badge hired"
+                            [title]="'Placed by ' + (candidate.placed_by_name || lead.recruiter_name || 'Recruiter') + (candidate.placement_client_name || lead.client_name ? ' at ' + (candidate.placement_client_name || lead.client_name) : '')">
+                            🏆 Hired
+                          </span>
+                          <div class="status-sub-attribution">
+                            <span class="pipeline-role-tag" *ngIf="candidate.placement_job_title || lead.job_role">
+                              💼 {{ candidate.placement_job_title || lead.job_role }}
+                            </span>
+                            <span class="placer-company-text" *ngIf="candidate.placement_client_name || lead.client_name">
+                              at <strong>{{ candidate.placement_client_name || lead.client_name }}</strong>
+                            </span>
+                            <span class="placer-credit-text" *ngIf="candidate.placed_by_name || lead.recruiter_name">
+                              by {{ candidate.placed_by_name || lead.recruiter_name }}
+                            </span>
+                          </div>
+                          <!-- Multi-pipeline trigger button -->
+                          <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
+                            <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.candidate_id, $event)" title="View all concurrent ATS applications">
+                              <span>+{{ candidate.active_applications.length - 1 }} more</span>
+                              <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <!-- Multi-pipeline floating popover menu -->
+                            <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === candidate.candidate_id" (click)="$event.stopPropagation()">
+                              <div class="popover-head">
+                                <strong>Active Applications ({{ candidate.active_applications.length }})</strong>
+                                <button type="button" class="popover-close-btn" (click)="closePipelinePopover()">✕</button>
+                              </div>
+                              <div class="popover-scroll">
+                                <div class="popover-card" *ngFor="let app of candidate.active_applications">
+                                  <div class="popover-card-head">
+                                    <span class="popover-company">{{ app.client_name || 'Client' }}</span>
+                                    <span class="stage-pill mini" [ngClass]="getStageClass(app.stage)">{{ app.stage }}</span>
+                                  </div>
+                                  <div class="popover-card-body">
+                                    <div class="popover-role" *ngIf="app.job_role">💼 {{ app.job_role }}</div>
+                                    <div class="popover-handler">👤 Handler: <strong>{{ app.recruiter_name || 'Unassigned' }}</strong></div>
+                                  </div>
+                                  <a *ngIf="app.job_id" [routerLink]="['/recruiter-workflow-ats', app.job_id]" class="popover-ats-link">Open in ATS Board ↗</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- A2: Offered -->
+                        <div class="status-cell-wrap" *ngIf="lead.stage === 'Offer' && candidate.placement_status !== 'Hired'">
+                          <span class="placement-badge offered">Offered</span>
+                          <div class="status-sub-attribution">
+                            <span class="pipeline-role-tag" *ngIf="lead.job_role || candidate.placement_job_title">
+                              💼 {{ lead.job_role || candidate.placement_job_title }}
+                            </span>
+                            <span class="pipeline-client-tag" *ngIf="lead.client_name || candidate.placement_client_name">
+                              at {{ lead.client_name || candidate.placement_client_name }}
+                            </span>
+                          </div>
+                          <!-- Multi-pipeline trigger button -->
+                          <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
+                            <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.candidate_id, $event)">
+                              <span>+{{ candidate.active_applications.length - 1 }} more</span>
+                              <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === candidate.candidate_id" (click)="$event.stopPropagation()">
+                              <div class="popover-head">
+                                <strong>Active Applications ({{ candidate.active_applications.length }})</strong>
+                                <button type="button" class="popover-close-btn" (click)="closePipelinePopover()">✕</button>
+                              </div>
+                              <div class="popover-scroll">
+                                <div class="popover-card" *ngFor="let app of candidate.active_applications">
+                                  <div class="popover-card-head">
+                                    <span class="popover-company">{{ app.client_name || 'Client' }}</span>
+                                    <span class="stage-pill mini" [ngClass]="getStageClass(app.stage)">{{ app.stage }}</span>
+                                  </div>
+                                  <div class="popover-card-body">
+                                    <div class="popover-role" *ngIf="app.job_role">💼 {{ app.job_role }}</div>
+                                    <div class="popover-handler">👤 Handler: <strong>{{ app.recruiter_name || 'Unassigned' }}</strong></div>
+                                  </div>
+                                  <a *ngIf="app.job_id" [routerLink]="['/recruiter-workflow-ats', app.job_id]" class="popover-ats-link">Open in ATS Board ↗</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- A3: Active ATS Stage (Interview, Screening, Submission, Sourced, Rejected) -->
+                        <div class="status-cell-wrap" *ngIf="lead.stage !== 'Hired' && lead.stage !== 'Offer' && candidate.placement_status !== 'Hired'">
+                          <span class="stage-pill" [ngClass]="getStageClass(lead.stage)">
+                            <span class="stage-dot"></span>
+                            {{ lead.stage }}
+                          </span>
+                          <div class="status-sub-attribution">
+                            <span class="pipeline-role-tag" *ngIf="lead.job_role">💼 {{ lead.job_role }}</span>
+                            <span class="pipeline-client-tag" *ngIf="lead.client_name">@ {{ lead.client_name }}</span>
+                            <span class="pipeline-recruiter-tag" *ngIf="lead.recruiter_name">({{ lead.recruiter_name }})</span>
+                          </div>
+                          <!-- Multi-pipeline trigger button -->
+                          <div class="multi-pipeline-dropdown-wrap" *ngIf="candidate.active_applications && candidate.active_applications.length > 1">
+                            <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(candidate.candidate_id, $event)">
+                              <span>+{{ candidate.active_applications.length - 1 }} more</span>
+                              <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === candidate.candidate_id" (click)="$event.stopPropagation()">
+                              <div class="popover-head">
+                                <strong>Active Applications ({{ candidate.active_applications.length }})</strong>
+                                <button type="button" class="popover-close-btn" (click)="closePipelinePopover()">✕</button>
+                              </div>
+                              <div class="popover-scroll">
+                                <div class="popover-card" *ngFor="let app of candidate.active_applications">
+                                  <div class="popover-card-head">
+                                    <span class="popover-company">{{ app.client_name || 'Client' }}</span>
+                                    <span class="stage-pill mini" [ngClass]="getStageClass(app.stage)">{{ app.stage }}</span>
+                                  </div>
+                                  <div class="popover-card-body">
+                                    <div class="popover-role" *ngIf="app.job_role">💼 {{ app.job_role }}</div>
+                                    <div class="popover-handler">👤 Handler: <strong>{{ app.recruiter_name || 'Unassigned' }}</strong></div>
+                                  </div>
+                                  <a *ngIf="app.job_id" [routerLink]="['/recruiter-workflow-ats', app.job_id]" class="popover-ats-link">Open in ATS Board ↗</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+
+                      <!-- Case B: No active lead pipeline -->
+                      <ng-template #noLeadPipeline>
+                        <div class="status-cell-wrap" *ngIf="candidate.placement_status === 'Hired'">
+                          <span class="placement-badge hired">🏆 Hired</span>
+                          <div class="status-sub-attribution">
+                            <span class="pipeline-role-tag" *ngIf="candidate.placement_job_title">💼 {{ candidate.placement_job_title }}</span>
+                            <span class="placer-company-text" *ngIf="candidate.placement_client_name">at <strong>{{ candidate.placement_client_name }}</strong></span>
+                            <span class="placer-credit-text" *ngIf="candidate.placed_by_name">by {{ candidate.placed_by_name }}</span>
+                          </div>
+                        </div>
+                        <div class="status-cell-wrap" *ngIf="candidate.placement_status === 'Offered' || candidate.placement_status === 'Offer'">
+                          <span class="placement-badge offered">Offered</span>
+                          <div class="status-sub-attribution" *ngIf="candidate.placement_client_name || candidate.placement_job_title">
+                            <span class="pipeline-role-tag" *ngIf="candidate.placement_job_title">💼 {{ candidate.placement_job_title }}</span>
+                            <span class="pipeline-client-tag" *ngIf="candidate.placement_client_name">at {{ candidate.placement_client_name }}</span>
+                          </div>
+                        </div>
+                        <span class="pipeline-available" *ngIf="!candidate.placement_status || (candidate.placement_status !== 'Hired' && candidate.placement_status !== 'Offered' && candidate.placement_status !== 'Offer')">
+                          Available
+                        </span>
+                      </ng-template>
                     </td>
 
                     <!-- Role & Experience -->
@@ -319,6 +487,214 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <h3>No Matches Found</h3>
           <p>We couldn't find any candidates that match this requirement.</p>
+        </div>
+      </div>
+
+      <!-- Needs Info Section -->
+      <div class="needs-info-section" *ngIf="selectedJobId && needsInfoCandidates.length > 0 && !isLoading && !errorMessage">
+        <div class="needs-info-header">
+          <div class="needs-info-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="needs-info-title">Candidates Needing Resume or More Information ({{ needsInfoCandidates.length }})</h3>
+            <p class="needs-info-desc">We need a resume to determine the score, or more profile information from these candidates. Click "View in Candidates" to upload their resume or edit their profile on the candidate page.</p>
+          </div>
+        </div>
+        <div class="needs-info-table-wrapper">
+          <table class="table needs-info-table">
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Pipeline</th>
+                <th>Available Data</th>
+                <th>What's Missing</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ni of needsInfoCandidates">
+                <td data-label="Candidate">
+                  <div class="cand-id">
+                    <div class="cand-av av-amber">{{ ni.name?.charAt(0) || '?' }}</div>
+                    <div>
+                      <div class="cand-name-ni">{{ ni.name }}</div>
+                      <span class="score-source-tag tag-needs-info">⚠️ Needs Info</span>
+                      <div class="cand-sub">{{ ni.email || '—' }}</div>
+                      <div class="cand-sub" *ngIf="ni.phone_number">{{ ni.phone_number }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td data-label="Pipeline" class="col-pipeline-cell">
+                  <!-- Case A: Active Lead Pipeline or Placed Hired -->
+                  <ng-container *ngIf="ni.lead_pipeline as lead; else noNiLeadPipeline">
+                    <!-- A1: Hired -->
+                    <div class="status-cell-wrap" *ngIf="lead.stage === 'Hired' || ni.placement_status === 'Hired'">
+                      <span class="placement-badge hired"
+                        [title]="'Placed by ' + (ni.placed_by_name || lead.recruiter_name || 'Recruiter') + (ni.placement_client_name || lead.client_name ? ' at ' + (ni.placement_client_name || lead.client_name) : '')">
+                        🏆 Hired
+                      </span>
+                      <div class="status-sub-attribution">
+                        <span class="pipeline-role-tag" *ngIf="ni.placement_job_title || lead.job_role">
+                          💼 {{ ni.placement_job_title || lead.job_role }}
+                        </span>
+                        <span class="placer-company-text" *ngIf="ni.placement_client_name || lead.client_name">
+                          at <strong>{{ ni.placement_client_name || lead.client_name }}</strong>
+                        </span>
+                        <span class="placer-credit-text" *ngIf="ni.placed_by_name || lead.recruiter_name">
+                          by {{ ni.placed_by_name || lead.recruiter_name }}
+                        </span>
+                      </div>
+                      <div class="multi-pipeline-dropdown-wrap" *ngIf="ni.active_applications && ni.active_applications.length > 1">
+                        <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(ni.candidate_id, $event)">
+                          <span>+{{ ni.active_applications.length - 1 }} more</span>
+                          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === ni.candidate_id" (click)="$event.stopPropagation()">
+                          <div class="popover-head">
+                            <strong>Active Applications ({{ ni.active_applications.length }})</strong>
+                            <button type="button" class="popover-close-btn" (click)="closePipelinePopover()">✕</button>
+                          </div>
+                          <div class="popover-scroll">
+                            <div class="popover-card" *ngFor="let app of ni.active_applications">
+                              <div class="popover-card-head">
+                                <span class="popover-company">{{ app.client_name || 'Client' }}</span>
+                                <span class="stage-pill mini" [ngClass]="getStageClass(app.stage)">{{ app.stage }}</span>
+                              </div>
+                              <div class="popover-card-body">
+                                <div class="popover-role" *ngIf="app.job_role">💼 {{ app.job_role }}</div>
+                                <div class="popover-handler">👤 Handler: <strong>{{ app.recruiter_name || 'Unassigned' }}</strong></div>
+                              </div>
+                              <a *ngIf="app.job_id" [routerLink]="['/recruiter-workflow-ats', app.job_id]" class="popover-ats-link">Open in ATS Board ↗</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- A2: Offered -->
+                    <div class="status-cell-wrap" *ngIf="lead.stage === 'Offer' && ni.placement_status !== 'Hired'">
+                      <span class="placement-badge offered">Offered</span>
+                      <div class="status-sub-attribution">
+                        <span class="pipeline-role-tag" *ngIf="lead.job_role || ni.placement_job_title">
+                          💼 {{ lead.job_role || ni.placement_job_title }}
+                        </span>
+                        <span class="pipeline-client-tag" *ngIf="lead.client_name || ni.placement_client_name">
+                          at {{ lead.client_name || ni.placement_client_name }}
+                        </span>
+                      </div>
+                      <div class="multi-pipeline-dropdown-wrap" *ngIf="ni.active_applications && ni.active_applications.length > 1">
+                        <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(ni.candidate_id, $event)">
+                          <span>+{{ ni.active_applications.length - 1 }} more</span>
+                          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === ni.candidate_id" (click)="$event.stopPropagation()">
+                          <div class="popover-head">
+                            <strong>Active Applications ({{ ni.active_applications.length }})</strong>
+                            <button type="button" class="popover-close-btn" (click)="closePipelinePopover()">✕</button>
+                          </div>
+                          <div class="popover-scroll">
+                            <div class="popover-card" *ngFor="let app of ni.active_applications">
+                              <div class="popover-card-head">
+                                <span class="popover-company">{{ app.client_name || 'Client' }}</span>
+                                <span class="stage-pill mini" [ngClass]="getStageClass(app.stage)">{{ app.stage }}</span>
+                              </div>
+                              <div class="popover-card-body">
+                                <div class="popover-role" *ngIf="app.job_role">💼 {{ app.job_role }}</div>
+                                <div class="popover-handler">👤 Handler: <strong>{{ app.recruiter_name || 'Unassigned' }}</strong></div>
+                              </div>
+                              <a *ngIf="app.job_id" [routerLink]="['/recruiter-workflow-ats', app.job_id]" class="popover-ats-link">Open in ATS Board ↗</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- A3: Active ATS Stage -->
+                    <div class="status-cell-wrap" *ngIf="lead.stage !== 'Hired' && lead.stage !== 'Offer' && ni.placement_status !== 'Hired'">
+                      <span class="stage-pill" [ngClass]="getStageClass(lead.stage)">
+                        <span class="stage-dot"></span>
+                        {{ lead.stage }}
+                      </span>
+                      <div class="status-sub-attribution">
+                        <span class="pipeline-role-tag" *ngIf="lead.job_role">💼 {{ lead.job_role }}</span>
+                        <span class="pipeline-client-tag" *ngIf="lead.client_name">@ {{ lead.client_name }}</span>
+                        <span class="pipeline-recruiter-tag" *ngIf="lead.recruiter_name">({{ lead.recruiter_name }})</span>
+                      </div>
+                      <div class="multi-pipeline-dropdown-wrap" *ngIf="ni.active_applications && ni.active_applications.length > 1">
+                        <button type="button" class="pipeline-trigger-btn" (click)="togglePipelinePopover(ni.candidate_id, $event)">
+                          <span>+{{ ni.active_applications.length - 1 }} more</span>
+                          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="pipeline-popover-menu" *ngIf="activePipelinePopoverCandidateId === ni.candidate_id" (click)="$event.stopPropagation()">
+                          <div class="popover-head">
+                            <strong>Active Applications ({{ ni.active_applications.length }})</strong>
+                            <button type="button" class="popover-close-btn" (click)="closePipelinePopover()">✕</button>
+                          </div>
+                          <div class="popover-scroll">
+                            <div class="popover-card" *ngFor="let app of ni.active_applications">
+                              <div class="popover-card-head">
+                                <span class="popover-company">{{ app.client_name || 'Client' }}</span>
+                                <span class="stage-pill mini" [ngClass]="getStageClass(app.stage)">{{ app.stage }}</span>
+                              </div>
+                              <div class="popover-card-body">
+                                <div class="popover-role" *ngIf="app.job_role">💼 {{ app.job_role }}</div>
+                                <div class="popover-handler">👤 Handler: <strong>{{ app.recruiter_name || 'Unassigned' }}</strong></div>
+                              </div>
+                              <a *ngIf="app.job_id" [routerLink]="['/recruiter-workflow-ats', app.job_id]" class="popover-ats-link">Open in ATS Board ↗</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Case B: No active lead pipeline -->
+                  <ng-template #noNiLeadPipeline>
+                    <div class="status-cell-wrap" *ngIf="ni.placement_status === 'Hired'">
+                      <span class="placement-badge hired">🏆 Hired</span>
+                      <div class="status-sub-attribution">
+                        <span class="pipeline-role-tag" *ngIf="ni.placement_job_title">💼 {{ ni.placement_job_title }}</span>
+                        <span class="placer-company-text" *ngIf="ni.placement_client_name">at <strong>{{ ni.placement_client_name }}</strong></span>
+                        <span class="placer-credit-text" *ngIf="ni.placed_by_name">by {{ ni.placed_by_name }}</span>
+                      </div>
+                    </div>
+                    <div class="status-cell-wrap" *ngIf="ni.placement_status === 'Offered' || ni.placement_status === 'Offer'">
+                      <span class="placement-badge offered">Offered</span>
+                      <div class="status-sub-attribution" *ngIf="ni.placement_client_name || ni.placement_job_title">
+                        <span class="pipeline-role-tag" *ngIf="ni.placement_job_title">💼 {{ ni.placement_job_title }}</span>
+                        <span class="pipeline-client-tag" *ngIf="ni.placement_client_name">at {{ ni.placement_client_name }}</span>
+                      </div>
+                    </div>
+                    <span class="pipeline-available" *ngIf="!ni.placement_status || (ni.placement_status !== 'Hired' && ni.placement_status !== 'Offered' && ni.placement_status !== 'Offer')">
+                      Available
+                    </span>
+                  </ng-template>
+                </td>
+                <td data-label="Available Data">
+                  <div class="field-pills">
+                    <span *ngFor="let f of ni.available_fields" class="field-pill available">{{ f }}</span>
+                    <span *ngIf="!ni.available_fields || ni.available_fields.length === 0" class="no-data-text">Contact only</span>
+                  </div>
+                </td>
+                <td data-label="What's Missing">
+                  <div class="field-pills">
+                    <span *ngFor="let f of ni.missing_fields" class="field-pill missing">{{ f }}</span>
+                  </div>
+                </td>
+                <td data-label="Actions">
+                  <button class="action-btn view-btn" (click)="navigateToCandidate(ni)" title="View on Candidates page to upload resume or edit profile">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                    View in Candidates
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

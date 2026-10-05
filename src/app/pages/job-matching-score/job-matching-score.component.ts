@@ -1,7 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { JobMatchingScoreService } from '../../services/job-matching-score.service';
+import { Router, RouterModule } from '@angular/router';
+import { JobMatchingScoreService, NeedsInfoCandidate, ScoredCandidate } from '../../services/job-matching-score.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 import { RecruiterWorkflowCandidateService } from '../../services/recruiter-workflow-candidate.service';
@@ -11,7 +12,7 @@ import { RecruiterWorkflowCandidateService } from '../../services/recruiter-work
   selector: 'app-job-matching-score',
   templateUrl: './job-matching-score.component.html',
   styleUrls: ['./job-matching-score.component.css'],
-  imports: [CommonModule, FormsModule, RecruiterSidebarComponent]
+  imports: [CommonModule, FormsModule, RecruiterSidebarComponent, RouterModule]
 })
 export class JobMatchingScoreComponent implements OnInit {
   availableJobs: any[] = [];
@@ -22,6 +23,8 @@ export class JobMatchingScoreComponent implements OnInit {
   allCandidatesScores: any[] = []; // Full list from backend
   candidatesScores: any[] = []; // Filtered list
   paginatedCandidates: any[] = []; // Sliced list for display
+  allNeedsInfoCandidates: NeedsInfoCandidate[] = []; // Full needs info list
+  needsInfoCandidates: NeedsInfoCandidate[] = []; // Filtered needs info list
   skippedCandidates: any[] = []; // Candidates missing embeddings
 
   isLoading = false;
@@ -32,6 +35,12 @@ export class JobMatchingScoreComponent implements OnInit {
   displayPage = 1;
   pageSize = 30;
   displayTotalPages = 1;
+
+  // Sorting
+  scoreSortOrder: 'desc' | 'asc' = 'desc';
+
+  // Multi-pipeline Popover
+  activePipelinePopoverCandidateId: number | null = null;
 
   // Search & Input Validation
   searchQuery = '';
@@ -58,6 +67,9 @@ export class JobMatchingScoreComponent implements OnInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey(event?: KeyboardEvent) {
+    if (this.activePipelinePopoverCandidateId) {
+      this.closePipelinePopover();
+    }
     if (this.selectedCandidateDetails) {
       this.closeDetailsModal();
     }
@@ -67,6 +79,11 @@ export class JobMatchingScoreComponent implements OnInit {
     if (this.showRatingHistoryModal) {
       this.closeRatingHistoryModal();
     }
+  }
+
+  @HostListener('document:click')
+  handleDocumentClick() {
+    this.closePipelinePopover();
   }
 
   // --- Input & Form Validations ---
@@ -108,7 +125,8 @@ export class JobMatchingScoreComponent implements OnInit {
   constructor(
     private jobScoreService: JobMatchingScoreService,
     private adbRequirementService: AdbRequirementService,
-    private candidateService: RecruiterWorkflowCandidateService
+    private candidateService: RecruiterWorkflowCandidateService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -155,6 +173,8 @@ export class JobMatchingScoreComponent implements OnInit {
       next: (res: any) => {
         const data = res.results || res;
         this.allCandidatesScores = Array.isArray(data) ? data : (data.candidates || []);
+        this.allNeedsInfoCandidates = data.needs_info_candidates || [];
+        this.needsInfoCandidates = [...this.allNeedsInfoCandidates];
         this.skippedCandidates = data.skipped_candidates || [];
         
         // Clean up location strings
@@ -181,6 +201,8 @@ export class JobMatchingScoreComponent implements OnInit {
         this.allCandidatesScores = [];
         this.candidatesScores = [];
         this.paginatedCandidates = [];
+        this.allNeedsInfoCandidates = [];
+        this.needsInfoCandidates = [];
         this.isLoading = false;
       }
     });
@@ -220,10 +242,16 @@ export class JobMatchingScoreComponent implements OnInit {
     }, 300);
   }
 
+  toggleScoreSort(): void {
+    this.scoreSortOrder = this.scoreSortOrder === 'desc' ? 'asc' : 'desc';
+    this.applyFilters();
+  }
+
   applyFilters() {
     const q = this.searchQuery.toLowerCase().trim();
     if (!q) {
       this.candidatesScores = [...this.allCandidatesScores];
+      this.needsInfoCandidates = [...this.allNeedsInfoCandidates];
     } else {
       this.candidatesScores = this.allCandidatesScores.filter(c => {
         const name = (c.name || '').toLowerCase();
@@ -231,7 +259,20 @@ export class JobMatchingScoreComponent implements OnInit {
         const phone = (c.phone_number || '').toLowerCase();
         return name.includes(q) || email.includes(q) || phone.includes(q);
       });
+      this.needsInfoCandidates = this.allNeedsInfoCandidates.filter(c => {
+        const name = (c.name || '').toLowerCase();
+        const email = (c.email || '').toLowerCase();
+        const phone = (c.phone_number || '').toLowerCase();
+        return name.includes(q) || email.includes(q) || phone.includes(q);
+      });
     }
+
+    // Sort by match score (high to low vs low to high)
+    this.candidatesScores.sort((a, b) => {
+      const scoreA = Number(a.score) || 0;
+      const scoreB = Number(b.score) || 0;
+      return this.scoreSortOrder === 'desc' ? scoreB - scoreA : scoreA - scoreB;
+    });
     
     this.displayTotalPages = Math.ceil(this.candidatesScores.length / this.pageSize) || 1;
     this.goToPage(1);
@@ -410,5 +451,61 @@ export class JobMatchingScoreComponent implements OnInit {
     this.selectedCandidateForRating = null;
     this.ratingHistory = [];
     document.body.style.overflow = '';
+  }
+
+  // --- ATS Pipeline Helpers ---
+
+  getStageClass(stage: string | undefined | null): string {
+    if (!stage) return 'stage-default';
+    const s = stage.toLowerCase();
+    if (s === 'hired') return 'stage-hired';
+    if (s === 'offer') return 'stage-offer';
+    if (s === 'interview') return 'stage-interview';
+    if (s === 'submission') return 'stage-submission';
+    if (s === 'screening') return 'stage-screening';
+    if (s === 'sourced') return 'stage-sourced';
+    if (s === 'rejected') return 'stage-rejected';
+    return 'stage-default';
+  }
+
+  getScoreSourceTag(candidate: any): { label: string; cssClass: string } {
+    const source = candidate.score_source || 'resume_analyzed';
+    if (source === 'resume_analyzed') {
+      return { label: '📄 Resume Analyzed', cssClass: 'tag-resume' };
+    }
+    return { label: '📊 Profile Data', cssClass: 'tag-profile' };
+  }
+
+  navigateToCandidate(candidate: any): void {
+    const searchVal = candidate.email || candidate.name || '';
+    this.router.navigate(['/recruiter-workflow-candidate'], {
+      queryParams: { search: searchVal }
+    });
+  }
+
+  getMissingFieldsText(fields: string[]): string {
+    if (!fields || fields.length === 0) return '';
+    return fields.map(f => {
+      switch (f) {
+        case 'skills': return 'Skills';
+        case 'experience': return 'Experience';
+        case 'location': return 'Location';
+        case 'education': return 'Education';
+        default: return f;
+      }
+    }).join(', ');
+  }
+
+  togglePipelinePopover(candidateId: number | undefined, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!candidateId) return;
+    this.activePipelinePopoverCandidateId =
+      this.activePipelinePopoverCandidateId === candidateId ? null : candidateId;
+  }
+
+  closePipelinePopover(): void {
+    this.activePipelinePopoverCandidateId = null;
   }
 }
