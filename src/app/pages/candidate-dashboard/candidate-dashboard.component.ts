@@ -9,7 +9,7 @@ import { FlashyreDashboard } from 'src/app/components/flashyre-dashboard/flashyr
 
 
 @Component({
-  selector: 'candidate-dashboard',
+  selector: 'candidate-dashboard', 
     standalone: true,
     imports: [ RouterModule, FormsModule, CommonModule,
       FlashyreDashboard
