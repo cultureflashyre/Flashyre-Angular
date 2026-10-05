@@ -404,6 +404,7 @@ async logout(): Promise<void> {
     first_name: string;
     last_name: string;
     phone_number: string;
+    signup_token: string;
   }): Observable<any> {
     const payload = {
       ...userData,

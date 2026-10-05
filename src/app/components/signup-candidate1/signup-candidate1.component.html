@@ -13,8 +13,6 @@
       <h3>Who is signing up?</h3>
       <div class="role-buttons">
         <button class="role-button" (click)="selectUserType('candidate')">Candidate</button>
-        <button class="role-button" (click)="selectUserType('recruiter')">Recruiter</button>
-        <button class="role-button" (click)="selectUserType('admin')">Admin</button>
       </div>
       <div class="popup-actions">
         <button class="popup-button cancel" (click)="cancelRoleSelection()">Cancel</button>
@@ -89,7 +87,6 @@
       <!-- ADD: Contextual Header -->
       <div class="signup-context-header">
         <span class="context-text">Signing up as {{ userType | titlecase }}</span>
-        <button type="button" class="change-button" (click)="changeUserType()">Change</button>
       </div>
 
       <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">

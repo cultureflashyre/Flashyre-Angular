@@ -71,10 +71,11 @@ export class SignupCandidate1 implements OnInit {
   showPhonePopup: boolean = false;
   isSubmittingPhone: boolean = false;
   popupErrorMessage: string = '';
-  googleUserData: { email: string, first_name: string, last_name: string } | null = null;
+  googleUserData: { email: string, first_name: string, last_name: string, signup_token: string } | null = null;
 
-  userType: 'candidate' | 'recruiter' | 'admin' | null = null;
-  showRoleSelection = true; // Show overlay by default
+  // Only candidates can self-register; recruiters and admins are created by a super admin.
+  userType: 'candidate' | 'recruiter' | 'admin' | null = 'candidate';
+  showRoleSelection = false;
 
   showRoleMismatchAlert = false;
   roleMismatchMessage = '';
@@ -183,7 +184,8 @@ export class SignupCandidate1 implements OnInit {
             this.googleUserData = {
               email: response.email,
               first_name: response.first_name,
-              last_name: response.last_name
+              last_name: response.last_name,
+              signup_token: response.signup_token
             };
             this.showPhonePopup = true;
           }
