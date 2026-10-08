@@ -56,6 +56,7 @@ export class SignupCandidate1 implements OnInit {
   signupForm: FormGroup;
   errorMessage: string = '';
   successMessage: string = '';
+  isSubmitting: boolean = false;
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
 
@@ -73,8 +74,8 @@ export class SignupCandidate1 implements OnInit {
   popupErrorMessage: string = '';
   googleUserData: { email: string, first_name: string, last_name: string } | null = null;
 
-  userType: 'candidate' | 'recruiter' | 'admin' | null = null;
-  showRoleSelection = true; // Show overlay by default
+  userType: 'candidate' | 'recruiter' | 'admin' | null = 'candidate';
+  showRoleSelection = false; // Role is picked with the inline toggle; Candidate by default
 
   showRoleMismatchAlert = false;
   roleMismatchMessage = '';
@@ -286,6 +287,22 @@ export class SignupCandidate1 implements OnInit {
   };
 }
 
+  // View only: how many of the existing password rules the current value meets (0-5).
+  get passwordStrength(): number {
+    const v: string = this.signupForm?.get('password')?.value || '';
+    let n = 0;
+    if (v.length >= 8) n++;
+    if (/[A-Z]/.test(v)) n++;
+    if (/[a-z]/.test(v)) n++;
+    if (/[0-9]/.test(v)) n++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(v)) n++;
+    return n;
+  }
+
+  get passwordStrengthLabel(): string {
+    return ['Too short', 'Weak', 'Weak', 'Fair', 'Good', 'Strong'][this.passwordStrength];
+  }
+
   togglePasswordVisibility() {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
@@ -394,7 +411,7 @@ export class SignupCandidate1 implements OnInit {
         this.errorMessage = 'Please solve the security check';
         return;
       }
-      this.spinner.show(); // Show spinner only when request starts
+      this.isSubmitting = true; // button spinner + dimmed form while the request runs
 
       console.log("Form is valid. Proceeding with API call.");
 
@@ -442,8 +459,6 @@ export class SignupCandidate1 implements OnInit {
               this.router.navigate(['/profile-overview-page'], { state: { source: 'candidate' } });
             }
           );
-          // Hide overlay before navigation
-          this.spinner.hide();
         },
         (error) => {
           console.log('Error response:', error);
@@ -453,8 +468,7 @@ export class SignupCandidate1 implements OnInit {
             this.captchaComponent.loadNewCaptcha();
           }
 
-          // Hide overlay on error
-          this.spinner.hide();
+          this.isSubmitting = false;
 
           if (error.status === 400 && error.error.email) {
             this.errorMessage = 'Email already exists!';

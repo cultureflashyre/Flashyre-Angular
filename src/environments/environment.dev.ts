@@ -1,6 +1,7 @@
 
 export const environment = {
   production: true,
+  turnstileSiteKey: '0x4AAAAAAFQZ5jdHOg2xswXY',
   apiUrl: 'https://flashyre-api-780211241141.asia-south1.run.app/',
   websocketUrl: 'https://flashyre-api-780211241141.asia-south1.run.app/',
 

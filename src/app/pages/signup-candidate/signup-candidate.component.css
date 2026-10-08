@@ -4,19 +4,12 @@
  
 .signup-candidate-container {
   width: 100%;
-  display: flex;
+  display: block;
   min-height: 100vh;
-  align-items: center;
-  flex-direction: column;
 }
  
 .signup-candidate-main-container {
-  flex: 0 0 auto;
   width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
 }
  
 .signup-candidate-fragment10 {

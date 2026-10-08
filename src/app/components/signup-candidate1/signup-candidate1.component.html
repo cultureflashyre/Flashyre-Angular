@@ -7,335 +7,269 @@
   ></app-alert-message>
 }
 
-@if (showRoleSelection) {
-  <div class="popup-overlay">
-    <div class="popup-content role-selection-popup">
-      <h3>Who is signing up?</h3>
-      <div class="role-buttons">
-        <button class="role-button" (click)="selectUserType('candidate')">Candidate</button>
-        <button class="role-button" (click)="selectUserType('recruiter')">Recruiter</button>
-        <button class="role-button" (click)="selectUserType('admin')">Admin</button>
-      </div>
-      <div class="popup-actions">
-        <button class="popup-button cancel" (click)="cancelRoleSelection()">Cancel</button>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- Phone Number Popup Overlay -->
+<!-- Phone Number Popup Overlay (Google sign up) -->
 @if (showPhonePopup) {
-  <div class="popup-overlay">
-    <div class="popup-content">
-      <h3>Complete Your Signup</h3>
-      <p class="popup-note">
-        Welcome, {{ googleUserData?.first_name }}! To finish creating your account, please provide your 10-digit phone number.
-      </p>
-      <div class="popup-input-group">
-        <label for="phone-number-input">Phone Number</label>
+  <div class="auth-root auth-modal-bg">
+    <div class="auth-modal" [formGroup]="phonePopupForm">
+      <h3>Complete your signup</h3>
+      <p>Welcome, {{ googleUserData?.first_name }}! To finish creating your account, please provide your 10-digit phone number.</p>
+      <div class="auth-fld">
+        <label class="auth-lbl" for="phone-number-input">Phone number</label>
         <input
           id="phone-number-input"
           type="tel"
-          class="popup-input"
+          class="auth-inp"
           placeholder="Enter 10-digit phone number"
           formControlName="popup_phone_number"
           maxlength="10"
-          (input)="sanitizePhoneNumber($event, 'popup_phone_number')" 
+          (input)="sanitizePhoneNumber($event, 'popup_phone_number')"
           />
-          @if (phonePopupForm.get('popup_phone_number').invalid && phonePopupForm.get('popup_phone_number').touched) {
-            <div class="error-text">
-              @if (phonePopupForm.get('popup_phone_number').errors?.required) {
-                <span>Phone number is required.</span>
-              }
-              @if (phonePopupForm.get('popup_phone_number').errors?.pattern) {
-                <span>Phone number must be exactly 10 digits.</span>
-              }
-            </div>
-          }
-              @if (phonePopupForm.get('popup_phone_number').errors?.phoneExists) {
-                    <div class="error-text">
-                      Phone number already exists.
-                    </div>
-                  }
+        @if (phonePopupForm.get('popup_phone_number').invalid && phonePopupForm.get('popup_phone_number').touched) {
+          <div class="auth-err error-text">
+            @if (phonePopupForm.get('popup_phone_number').errors?.required) {
+              <span>Phone number is required.</span>
+            }
+            @if (phonePopupForm.get('popup_phone_number').errors?.pattern) {
+              <span>Phone number must be exactly 10 digits.</span>
+            }
+          </div>
+        }
+        @if (phonePopupForm.get('popup_phone_number').errors?.phoneExists) {
+          <div class="auth-err error-text">Phone number already exists.</div>
+        }
       </div>
-      <div class="popup-actions">
-        <button class="popup-button cancel" (click)="cancelGoogleSignup()">Cancel</button>
-        <button class="popup-button generate" (click)="onPhoneSubmit()" [disabled]="phonePopupForm.get('popup_phone_number').invalid || isSubmittingPhone">
+      <div class="auth-modal-actions">
+        <button type="button" class="auth-btn ghost" (click)="cancelGoogleSignup()">Cancel</button>
+        <button type="button" class="auth-btn" (click)="onPhoneSubmit()" [disabled]="phonePopupForm.get('popup_phone_number').invalid || isSubmittingPhone">
           @if (!isSubmittingPhone) {
-            <span>Create Account</span>
+            <span>Create account</span>
           }
           @if (isSubmittingPhone) {
-            <span class="button-spinner-container">
-              <span class="tab-spinner"></span> Creating...
-            </span>
+            <span>Creating...</span>
           }
         </button>
       </div>
       @if (popupErrorMessage) {
-        <div class="error-text" style="text-align: center; margin-top: 10px;">{{ popupErrorMessage }}</div>
+        <div class="auth-banner bad">{{ popupErrorMessage }}</div>
       }
     </div>
   </div>
 }
-  <!-- End of Popup -->
 
-@if (!showRoleSelection) {
-  <div id="signup-page" class="signup-candidate1-container" [ngClass]="rootClassName">
-    <div id="signup-container" class="signup-candidate1-signup-container">
-      <h2 id="heading" class="signup-candidate1-welcome-to-flashyre">
-        <span>Welcome to Flashyre</span>
-      </h2>
+<div id="signup-page" class="auth-root auth-signup" [ngClass]="rootClassName">
+  <!-- ============ BRAND PANEL ============ -->
+  <aside class="auth-brand">
+    <a class="auth-logo" routerLink="/" aria-label="Flashyre home">
+      <img src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png" alt="Flashyre" />
+    </a>
 
-      <!-- ADD: Contextual Header -->
-      <div class="signup-context-header">
-        <span class="context-text">Signing up as {{ userType | titlecase }}</span>
-        <button type="button" class="change-button" (click)="changeUserType()">Change</button>
+    <div>
+      <span class="auth-eyebrow"><span class="auth-dot"></span> 2,400+ companies hiring now</span>
+      <h2 class="auth-headline">Your skills. Your potential. <em>Your next opportunity.</em></h2>
+      <p class="auth-brand-sub">A smarter recruitment platform where candidates discover their next opportunity and companies discover their next great hire.</p>
+      <div class="auth-stats">
+        <div><div class="auth-stat-num">2,400</div><div class="auth-stat-label">Partner companies</div></div>
+        <div><div class="auth-stat-num">180,000+</div><div class="auth-stat-label">Candidates placed</div></div>
+        <div><div class="auth-stat-num">94%</div><div class="auth-stat-label">Response rate</div></div>
       </div>
+    </div>
 
-      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-        <div id="details" class="signup-candidate1-details-container">
-          <!-- First Name -->
-          <div id="first-name-container" class="signup-candidate1-first-name-container">
-            <span class="signup-candidate1-first-name-text">First Name</span>
-            <input
-              type="text"
-              id="signup-first-name-input"
-              placeholder="Enter First Name"
-              formControlName="first_name"
-              class="signup-candidate1-first-name-input input"
-              />
+    <div class="auth-testi">
+      <p>"Flashyre has made the whole application process a lot easier for me. I can keep track of the jobs I’ve applied for, complete assessments, and check my application status all in one place."</p>
+      <div class="auth-testi-author">
+        <span class="auth-av" style="background:#8b5cf6">AR</span>
+        <div>
+          <div class="name">Ananya Rao</div>
+          <div class="role">Software Engineer &#64; TechNova</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ FORM PANEL ============ -->
+  <main class="auth-form-panel">
+    <div id="signup-container" class="auth-card" [attr.aria-busy]="isSubmitting">
+      @if (isSubmitting) { <div class="auth-busy" aria-hidden="true"></div> }
+      <a class="auth-logo auth-mobile-logo" routerLink="/" aria-label="Flashyre home">
+        <img src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png" alt="Flashyre" />
+      </a>
+      <h1 id="heading" class="auth-title">Create your account</h1>
+      <p class="auth-sub">Start your journey. It takes less than a minute.</p>
+
+      <div class="google-signin-container auth-google">
+        <asl-google-signin-button
+          class="google-button-wrapper"
+          type='standard'
+          size='large'
+          theme='outline'
+          shape='rectangular'
+          text='signup_with'
+          width='320px'
+        ></asl-google-signin-button>
+      </div>
+      <div class="auth-or">Or continue with email</div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
+        <div id="details">
+          <div class="auth-row2">
+            <!-- First Name -->
+            <div id="first-name-container" class="auth-fld">
+              <label class="auth-lbl" for="signup-first-name-input">First name</label>
+              <input type="text" id="signup-first-name-input" placeholder="Deepthi" formControlName="first_name" class="auth-inp input" autocomplete="given-name" />
               @if (signupForm.get('first_name').invalid && signupForm.get('first_name').touched) {
-                <div class="error-text">
-                  @if (signupForm.get('first_name').errors?.required) {
-                    <span>First name is required.</span>
-                  }
-                  @if (signupForm.get('first_name').errors?.pattern) {
-                    <span>Only letters and spaces are allowed.</span>
-                  }
-                  @if (signupForm.get('first_name').errors?.minlength) {
-                    <span>First name must be at least 3 characters long.</span>
-                  }
-                  @if (signupForm.get('first_name').errors?.maxlength) {
-                    <span>First name cannot exceed 10 characters.</span>
-                  }
+                <div class="auth-err error-text">
+                  @if (signupForm.get('first_name').errors?.required) { <span>First name is required.</span> }
+                  @if (signupForm.get('first_name').errors?.pattern) { <span>Only letters and spaces are allowed.</span> }
+                  @if (signupForm.get('first_name').errors?.minlength) { <span>First name must be at least 3 characters long.</span> }
+                  @if (signupForm.get('first_name').errors?.maxlength) { <span>First name cannot exceed 10 characters.</span> }
                 </div>
               }
             </div>
 
             <!-- Last Name -->
-            <div id="last-name-container" class="signup-candidate1-last-name-container1">
-              <span class="signup-candidate1-last-name-text1">Last Name</span>
+            <div id="last-name-container" class="auth-fld">
+              <label class="auth-lbl" for="signup-last-name-input">Last name</label>
+              <input type="text" id="signup-last-name-input" placeholder="Raikar" formControlName="last_name" class="auth-inp input" autocomplete="family-name" />
+              @if (signupForm.get('last_name').invalid && signupForm.get('last_name').touched) {
+                <div class="auth-err error-text">
+                  @if (signupForm.get('last_name').errors?.required) { <span>Last name is required.</span> }
+                  @if (signupForm.get('last_name').errors?.pattern) { <span>Only letters and spaces are allowed.</span> }
+                  @if (signupForm.get('last_name').errors?.minlength) { <span>Last name must be at least 3 characters long.</span> }
+                  @if (signupForm.get('last_name').errors?.maxlength) { <span>Last name cannot exceed 10 characters.</span> }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="auth-row2">
+          <!-- Email -->
+          <div id="email-container" class="auth-fld">
+            <label class="auth-lbl" for="signup-email-input">Email address</label>
+            <input type="email" id="signup-email-input" placeholder="you@example.com" formControlName="email" class="auth-inp input" autocomplete="email" />
+            @if (signupForm.get('email').invalid && signupForm.get('email').touched) {
+              <div class="auth-err error-text">
+                @if (signupForm.get('email').errors?.required) { <span>Email is required.</span> }
+                @if (signupForm.get('email').errors?.email) { <span>Please enter a valid email.</span> }
+              </div>
+            }
+            @if (signupForm.get('email').errors?.emailExists) {
+              <div class="auth-err error-text">Email already exists.</div>
+            }
+          </div>
+
+          <!-- Phone Number -->
+          <div id="phone-container" class="auth-fld">
+            <label class="auth-lbl" for="signup-phone-number-input">Phone number</label>
+            <input
+              type="text"
+              id="signup-phone-number-input"
+              placeholder="10-digit mobile number"
+              formControlName="phone_number"
+              class="auth-inp input"
+              maxlength="10"
+              inputmode="numeric"
+              autocomplete="tel-national"
+              (input)="sanitizePhoneNumber($event, 'phone_number')"
+              />
+            @if (signupForm.get('phone_number').invalid && signupForm.get('phone_number').touched) {
+              <div class="auth-err error-text">
+                @if (signupForm.get('phone_number').errors?.required) { <span>Phone number is required.</span> }
+                @if (signupForm.get('phone_number').errors?.pattern) { <span>Phone number must be exactly 10 digits.</span> }
+              </div>
+            }
+            @if (signupForm.get('phone_number').errors?.phoneExists) {
+              <div class="auth-err error-text">Phone number already exists.</div>
+            }
+          </div>
+
+          </div>
+
+          <div class="auth-row2">
+          <!-- Password -->
+          <div id="password-container" class="auth-fld">
+            <label class="auth-lbl" for="signup-password-input">Password</label>
+            <div class="auth-pw">
               <input
-                type="text"
-                id="signup-last-name-input"
-                placeholder="Enter Last Name"
-                formControlName="last_name"
-                class="signup-candidate1-last-name-input1 input"
+                [type]="passwordType"
+                id="signup-password-input"
+                placeholder="8-15 characters"
+                formControlName="password"
+                class="auth-inp input"
+                maxlength="15"
+                autocomplete="new-password"
                 />
-                @if (signupForm.get('last_name').invalid && signupForm.get('last_name').touched) {
-                  <div class="error-text">
-                    @if (signupForm.get('last_name').errors?.required) {
-                      <span>Last name is required.</span>
-                    }
-                    @if (signupForm.get('last_name').errors?.pattern) {
-                      <span>Only letters and spaces are allowed.</span>
-                    }
-                    @if (signupForm.get('last_name').errors?.minlength) {
-                      <span>Last name must be at least 3 characters long.</span>
-                    }
-                    @if (signupForm.get('last_name').errors?.maxlength) {
-                      <span>Last name cannot exceed 10 characters.</span>
-                    }
-                  </div>
-                }
+              <button type="button" class="auth-pw-toggle" [attr.aria-label]="passwordType === 'password' ? 'Show password' : 'Hide password'" (click)="togglePasswordVisibility()">
+                {{ passwordType === 'password' ? 'Show' : 'Hide' }}
+              </button>
+            </div>
+            @if (signupForm.get('password').value) {
+              <div class="auth-strength" [attr.data-level]="passwordStrength">
+                <div class="auth-strength-bars"><span></span><span></span><span></span><span></span><span></span></div>
+                <small>Password strength: {{ passwordStrengthLabel }}</small>
               </div>
-
-              <!-- Phone Number -->
-              <div id="phone-container" class="signup-candidate1-last-name-container2">
-                <span class="signup-candidate1-last-name-text2">Phone Number</span>
-                <input
-                  type="text"
-                  id="signup-phone-number-input"
-                  placeholder="Enter Phone Number"
-                  formControlName="phone_number"
-                  class="signup-candidate1-last-name-input2 input"
-                  maxlength="10"
-                  (input)="sanitizePhoneNumber($event, 'phone_number')"
-                  />
-                  @if (signupForm.get('phone_number').invalid && signupForm.get('phone_number').touched) {
-                    <div class="error-text">
-                      @if (signupForm.get('phone_number').errors?.required) {
-                        <span>Phone number is required.</span>
-                      }
-                      @if (signupForm.get('phone_number').errors?.pattern) {
-                        <span>Phone number must be exactly 10 digits.</span>
-                      }
-                    </div>
-                  }
-                  @if (signupForm.get('phone_number').errors?.phoneExists) {
-                    <div class="error-text">
-                      Phone number already exists.
-                    </div>
-                  }
-                </div>
-
-                <!-- Email -->
-                <div id="email-container" class="signup-candidate1-email-container">
-                  <span class="signup-candidate1-email-text">Email Id</span>
-                  <input
-                    type="email"
-                    id="signup-email-input"
-                    placeholder="Enter Email Id"
-                    formControlName="email"
-                    class="signup-candidate1-email-input input"
-                    />
-                    @if (signupForm.get('email').invalid && signupForm.get('email').touched) {
-                      <div class="error-text">
-                        @if (signupForm.get('email').errors?.required) {
-                          <span>Email is required.</span>
-                        }
-                        @if (signupForm.get('email').errors?.email) {
-                          <span>Please enter a valid email.</span>
-                        }
-                      </div>
-                    }
-                    @if (signupForm.get('email').errors?.emailExists) {
-                      <div class="error-text">
-                        Email already exists.
-                      </div>
-                    }
-                  </div>
-
-                  <!-- Password -->
-                  <div id="password-container" class="signup-candidate1-password-container1">
-                    <div class="signup-candidate1-password1">
-                      <span class="signup-candidate1-password-text1">Password</span>
-                      <span
-                        class="signup-candidate1-show-text1 button"
-                        (click)="togglePasswordVisibility()"
-                        >
-                        {{ passwordType === 'password' ? 'Show' : 'Hide' }}
-                      </span>
-                      <input
-                        [type]="passwordType"
-                        id="signup-password-input"
-                        placeholder="Enter Password"
-                        formControlName="password"
-                        class="signup-candidate1-password-input1 input"
-                        maxlength="15"
-                        />
-
-                      </div>
-                      @if (signupForm.get('password').invalid && signupForm.get('password').dirty) {
-                        <div class="error-text">
-                          @if (signupForm.get('password').errors?.required) {
-                            <span>Password is required.</span>
-                          }
-                          @if (signupForm.get('password').errors?.minlength) {
-                            <span>Password must be at least 8 characters.</span>
-                          }
-                          @if (signupForm.get('password').errors?.maxlength) {
-                            <span>Password cannot exceed 15 characters.</span>
-                          }
-                          @if (signupForm.get('password').errors?.uppercase) {
-                            <span>Password must include at least one uppercase letter.</span>
-                          }
-                          @if (signupForm.get('password').errors?.lowercase) {
-                            <span>Password must include at least one lowercase letter.</span>
-                          }
-                          @if (signupForm.get('password').errors?.number) {
-                            <span>Password must include at least one number.</span>
-                          }
-                          @if (signupForm.get('password').errors?.specialChar) {
-                            <span>Password must include at least one special character.</span>
-                          }
-                          @if (signupForm.get('password').errors?.alphabet) {
-                            <span>Password must include at least one alphabet.</span>
-                          }
-                        </div>
-                      }
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div id="password-container" class="signup-candidate1-password-container2">
-                      <div class="signup-candidate1-password2">
-                        <span class="signup-candidate1-password-text2">Confirm Password</span>
-                        <span
-                          class="signup-candidate1-show-text2 button"
-                          (click)="toggleConfirmPasswordVisibility()"
-                          >
-                          {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
-                        </span>
-                        <input
-                          [type]="confirmPasswordType"
-                          id="signup-confirm-password-input"
-                          placeholder="Confirm Password"
-                          formControlName="confirm_password"
-                          class="signup-candidate1-password-input2 input"
-                          maxlength="15"
-                          />
-
-                        </div>
-                        @if (signupForm.hasError('mismatch') && signupForm.get('confirm_password').dirty) {
-                          <div class="error-text">
-                            Passwords do not match.
-                          </div>
-                        }
-                      </div>
-                      <app-captcha (captchaData)="onCaptchaData($event)"></app-captcha>
-
-                      <!-- Signup Button and Error Message -->
-                      <div class="signup-candidate1-signup-and-signin-container">
-                        <button
-                          id="signup-button"
-                          type="submit"
-                          [disabled]="signupForm.invalid"
-                          class="signup-candidate1-signup-button button"
-                          >
-                          Sign Up
-                        </button>
-
-                        <div class="google-signin-container">
-                          <div class="separator">OR</div>
-                          <asl-google-signin-button
-                            class="google-button-wrapper"
-                            type='standard'
-                            size='large'
-                            theme='outline'
-                            shape='rectangular'
-                            text='signup_with'
-                            width='320px'
-                          ></asl-google-signin-button>
-                        </div>
-                        <!-- ADD GOOGLE SIGNUP SECTION -->
-
-                        <!-- END GOOGLE SIGNUP SECTION -->
-
-                        @if (errorMessage) {
-                          <div class="signup-candidate1-error-signup-container">
-                            <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
-                          </div>
-                        }
-
-                        <!-- Add this after the error message div -->
-                        @if (successMessage) {
-                          <div class="signup-candidate1-success-signup-container">
-                            <span class="signup-candidate1-success-message-signup">{{ successMessage }}</span>
-                          </div>
-                        }
-
-                        <!-- Sign In Link -->
-                        <div class="signup-candidate1-signin-container">
-                          <span class="signup-candidate1-already-have-an-account-text">
-                            Already have an account?
-                          </span>
-                          <span class="signup-candidate1-signin-text button" routerLink="/login">
-                            Sign In
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+            }
+            @if (signupForm.get('password').invalid && signupForm.get('password').dirty) {
+              <div class="auth-err error-text">
+                @if (signupForm.get('password').errors?.required) { <span>Password is required.</span> }
+                @if (signupForm.get('password').errors?.minlength) { <span>Password must be at least 8 characters.</span> }
+                @if (signupForm.get('password').errors?.maxlength) { <span>Password cannot exceed 15 characters.</span> }
+                @if (signupForm.get('password').errors?.uppercase) { <span>Password must include at least one uppercase letter.</span> }
+                @if (signupForm.get('password').errors?.lowercase) { <span>Password must include at least one lowercase letter.</span> }
+                @if (signupForm.get('password').errors?.number) { <span>Password must include at least one number.</span> }
+                @if (signupForm.get('password').errors?.specialChar) { <span>Password must include at least one special character.</span> }
+                @if (signupForm.get('password').errors?.alphabet) { <span>Password must include at least one alphabet.</span> }
               </div>
-}              
+            }
+          </div>
+
+          <!-- Confirm Password -->
+          <div id="confirm-password-container" class="auth-fld">
+            <label class="auth-lbl" for="signup-confirm-password-input">Confirm password</label>
+            <div class="auth-pw">
+              <input
+                [type]="confirmPasswordType"
+                id="signup-confirm-password-input"
+                placeholder="Re-enter your password"
+                formControlName="confirm_password"
+                class="auth-inp input"
+                maxlength="15"
+                autocomplete="new-password"
+                />
+              <button type="button" class="auth-pw-toggle" [attr.aria-label]="confirmPasswordType === 'password' ? 'Show password' : 'Hide password'" (click)="toggleConfirmPasswordVisibility()">
+                {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
+              </button>
+            </div>
+            @if (signupForm.hasError('mismatch') && signupForm.get('confirm_password').dirty) {
+              <div class="auth-err error-text">Passwords do not match.</div>
+            }
+          </div>
+
+          </div>
+
+          <app-captcha action="signup" (captchaData)="onCaptchaData($event)"></app-captcha>
+
+          <button id="signup-button" type="submit" [disabled]="signupForm.invalid || isSubmitting" class="auth-btn button">
+            @if (isSubmitting) { <span class="auth-spin"></span> }
+            {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+          </button>
+
+          @if (errorMessage) {
+            <div class="auth-banner bad signup-candidate1-error-signup-container">
+              <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
+            </div>
+          }
+          @if (successMessage) {
+            <div class="auth-banner good signup-candidate1-success-signup-container">
+              <span class="signup-candidate1-success-message-signup">{{ successMessage }}</span>
+            </div>
+          }
+        </div>
+      </form>
+
+      <p class="auth-foot signup-candidate1-signin-container">
+        <span class="signup-candidate1-already-have-an-account-text">Already have an account?</span>&nbsp;
+        <a class="signup-candidate1-signin-text" routerLink="/login">Sign in</a>
+      </p>
+    </div>
+  </main>
+</div>

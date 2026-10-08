@@ -5,6 +5,8 @@
 
 export const environment = {
   production: false,
+  // Cloudflare's published always-pass test sitekey (pairs with the backend's local test secret).
+  turnstileSiteKey: '1x00000000000000000000AA',
   apiUrl: 'http://localhost:8000/',
   websocketUrl: 'http://localhost:8000/',
 

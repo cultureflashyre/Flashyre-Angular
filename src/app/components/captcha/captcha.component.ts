@@ -1,59 +1,90 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Output, Input, EventEmitter, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { CaptchaService } from '../../services/captcha.service';
+import { environment } from '../../../environments/environment';
 
+declare global {
+  interface Window { turnstile?: any; }
+}
+
+const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+let turnstileScript: Promise<void> | null = null;
+
+/** Loads the Turnstile script once per page; later calls reuse the same promise. */
+function loadTurnstile(): Promise<void> {
+  if (window.turnstile) return Promise.resolve();
+  if (!turnstileScript) {
+    turnstileScript = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = TURNSTILE_SRC;
+      s.async = true;
+      s.defer = true;
+      s.onload = () => resolve();
+      s.onerror = () => { turnstileScript = null; reject(new Error('Turnstile failed to load')); };
+      document.head.appendChild(s);
+    });
+  }
+  return turnstileScript;
+}
+
+/**
+ * Cloudflare Turnstile security check. Keeps the old math-captcha contract:
+ * emits { captchaId, captchaAnswer } where captchaAnswer is the Turnstile token
+ * (verified server-side at siteverify) and loadNewCaptcha() resets the widget.
+ */
 @Component({
   selector: 'app-captcha',
   templateUrl: './captcha.component.html',
   styleUrls: ['./captcha.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule]
 })
-export class CaptchaComponent implements OnInit {
-  captchaId: string = '';
-  question: string = '';
-  userAnswer: string = '';
-  isLoading: boolean = false;
-
+export class CaptchaComponent implements AfterViewInit, OnDestroy {
+  /** Must match the action the backend expects ('login' or 'signup'). */
+  @Input() action: string = 'login';
   @Output() captchaData = new EventEmitter<{ captchaId: string, captchaAnswer: string }>();
+  @ViewChild('box', { static: true }) box!: ElementRef<HTMLElement>;
 
-  constructor(private captchaService: CaptchaService) {}
+  loadError: boolean = false;
+  private widgetId: string | null = null;
 
-  ngOnInit() {
-    this.loadNewCaptcha();
+  constructor(private zone: NgZone) {}
+
+  ngAfterViewInit() {
+    this.renderWidget();
   }
 
-  /**
-   * Fetches a new math challenge from the backend.
-   */
+  ngOnDestroy() {
+    if (this.widgetId && window.turnstile) window.turnstile.remove(this.widgetId);
+  }
+
+  private renderWidget() {
+    this.loadError = false;
+    loadTurnstile().then(() => {
+      if (this.widgetId || !this.box) return;
+      this.widgetId = window.turnstile.render(this.box.nativeElement, {
+        sitekey: environment.turnstileSiteKey,
+        action: this.action,
+        theme: 'light',
+        size: 'flexible',
+        callback: (token: string) => this.emit(token),
+        'expired-callback': () => this.emit(''),
+        'timeout-callback': () => this.emit(''),
+        'error-callback': () => { this.emit(''); },
+      });
+    }).catch(() => this.zone.run(() => this.loadError = true));
+  }
+
+  private emit(token: string) {
+    this.zone.run(() => this.captchaData.emit({ captchaId: token ? 'turnstile' : '', captchaAnswer: token }));
+  }
+
+  /** Gets a fresh token (tokens are single-use, so call after every failed submit). */
   loadNewCaptcha() {
-    this.isLoading = true;
-    this.userAnswer = '';
-    this.captchaData.emit({ captchaId: '', captchaAnswer: '' }); // Reset parent
-    
-    this.captchaService.generateCaptcha().subscribe({
-      next: (data) => {
-        this.captchaId = data.captcha_id;
-        this.question = data.question;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Failed to load CAPTCHA:', err);
-        this.question = 'Error loading challenge';
-        this.isLoading = false;
-      }
-    });
-  }
-
-  /**
-   * Called on keyup/change of the input field.
-   * Emits the ID and answer to the parent component.
-   */
-  onInputChange() {
-    this.captchaData.emit({
-      captchaId: this.captchaId,
-      captchaAnswer: this.userAnswer.trim()
-    });
+    this.emit('');
+    if (this.widgetId && window.turnstile) {
+      window.turnstile.reset(this.widgetId);
+    } else {
+      this.renderWidget();
+    }
   }
 }

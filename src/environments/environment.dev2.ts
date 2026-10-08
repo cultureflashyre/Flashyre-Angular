@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  turnstileSiteKey: '0x4AAAAAAFQZ5jdHOg2xswXY',
 
   // 👇 Point this ONLY to the new backend service
   apiUrl: 'https://backend-dev2-dot-flashyre-dev-481412.el.r.appspot.com/',

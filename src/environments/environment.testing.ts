@@ -5,6 +5,7 @@
 
 export const environment = {
   production: true,
+  turnstileSiteKey: '0x4AAAAAAFQZ5jdHOg2xswXY',
   apiUrl: 'https://backend-dot-flashyre-testing-473116.el.r.appspot.com/',
   websocketUrl: 'https://backend-dot-flashyre-testing-473116.el.r.appspot.com/',
 

@@ -33,6 +33,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "src/app/styles/auth.css",
               "node_modules/ngx-spinner/animations/ball-beat.css"
             ],
             "scripts": [],
@@ -201,6 +202,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "src/app/styles/auth.css",
               "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
             ],
             "scripts": []

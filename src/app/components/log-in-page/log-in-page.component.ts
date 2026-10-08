@@ -53,6 +53,7 @@ export class LogInPage implements OnInit, OnDestroy {
   captchaId: string = '';
   captchaAnswer: string = '';
 
+  isSubmitting: boolean = false;
   isLocked: boolean = false;
   lockoutTimeRemaining: number = 0;
   lockoutTimerInterval: any = null;
@@ -136,6 +137,7 @@ export class LogInPage implements OnInit, OnDestroy {
       return;
     }
 
+    this.isSubmitting = true;
     const { email, password } = this.loginForm.value;
     const loginObservable = this.userType === 'corporate'
       ? this.corporateAuthService.loginCorporate(email, password, this.captchaId, this.captchaAnswer)
@@ -202,10 +204,12 @@ export class LogInPage implements OnInit, OnDestroy {
             // this.handleRedirection(response.role, response.is_superuser); 
 
             this.loginSubmit.emit(response);
+            this.isSubmitting = false;
             this.cdr.detectChanges(); 
-          }, 5000); 
+          }, 2000); 
 
         } else {
+          this.isSubmitting = false;
           this.errorMessage = response.error || 'Invalid Email or Password';
           if (this.captchaComponent) {
             this.captchaComponent.loadNewCaptcha();
@@ -214,6 +218,7 @@ export class LogInPage implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
+        this.isSubmitting = false;
         if (err.status === 423) {
           this.isLocked = true;
           // Extract retry after or default to 1800 (30 min)

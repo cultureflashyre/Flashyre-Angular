@@ -5,6 +5,7 @@
 
 export const environment = {
   production: true,
+  turnstileSiteKey: '0x4AAAAAAFQZ5jdHOg2xswXY',
   apiUrl: '',
 
   defaultProfilePicture: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/profile-placeholder.jpg',
