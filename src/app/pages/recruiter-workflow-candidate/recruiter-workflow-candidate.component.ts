@@ -1148,7 +1148,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       this.showAlert('No resume file attached for this candidate.', ['Close']);
       return;
     }
-    window.open(url, '_blank');
+    // A bare storage path (e.g. "processing/<uuid>_name.pdf") would resolve against
+    // the app's own origin, so exchange it for a signed URL first.
+    if (/^https?:\/\//i.test(url)) {
+      window.open(url, '_blank');
+      return;
+    }
+    this.candidateService.getSignedUrl(url).subscribe({
+      next: (res) => window.open(res.signed_url, '_blank'),
+      error: () => this.showAlert('Could not open the resume. Please try again.', ['Close'])
+    });
   }
 
   private initializeForm(): void {
@@ -1813,8 +1822,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       formData.append('resume', this.selectedFile);
     }
 
-    const userId = localStorage.getItem('user_id');
-    if (userId) { formData.append('user_id', userId); }
+    // The logged-in recruiter is identified by the auth token on the server and saved as
+    // 'Sourced by'. Do not send the recruiter's user_id here: it would be saved as the
+    // candidate's own login account, which can only belong to one candidate.
     formData.append('source', this.formSource);
 
     const handleSuccess = (candidate: Candidate) => {

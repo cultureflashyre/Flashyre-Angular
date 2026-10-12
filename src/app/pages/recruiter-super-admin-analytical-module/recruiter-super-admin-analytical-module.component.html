@@ -103,6 +103,10 @@
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             <span>Reports & Analytics</span>
           </button>
+          <button class="tab" [class.active]="activeTab === 'insights'" (click)="setActiveTab('insights')">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span>Recruiter Insights</span>
+          </button>
           <button class="tab" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             <span>User Management</span>
@@ -477,6 +481,318 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- TAB: RECRUITER INSIGHTS -->
+      <!-- ================================================================= -->
+      <div *ngIf="activeTab === 'insights'" class="tab-content">
+
+        <div class="card filter-card">
+          <div class="filter-header-wrap">
+            <div class="filter-title-group">
+              <span class="filter-title">Recruiter Insights Period</span>
+            </div>
+            <div class="date-presets">
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '7d'" (click)="setDatePreset('7d')">7D</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '30d'" (click)="setDatePreset('30d')">30D</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '3m'" (click)="setDatePreset('3m')">3 Months</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '6m'" (click)="setDatePreset('6m')">6 Months</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === '1y'" (click)="setDatePreset('1y')">1 Year</button>
+              <button type="button" class="preset-pill" [class.active]="activeDatePreset === 'all'" (click)="setDatePreset('all')">All Time</button>
+            </div>
+          </div>
+          <div class="filters-row">
+            <div class="filter-field">
+              <label class="field-label">From</label>
+              <input type="date" [(ngModel)]="filters.start_date" (change)="onCustomDateChange()" class="input-control">
+            </div>
+            <div class="filter-field">
+              <label class="field-label">To</label>
+              <input type="date" [(ngModel)]="filters.end_date" (change)="onCustomDateChange()" class="input-control">
+            </div>
+            <div class="filter-field">
+              <label class="field-label">Recruiter</label>
+              <select [(ngModel)]="filters.recruiter_id" (change)="applyFilter()" class="select-control">
+                <option value="">All Recruiters</option>
+                <option *ngFor="let rec of recruitersList" [value]="rec.user_id">{{ rec.first_name }} {{ rec.last_name }}</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label class="field-label">Client</label>
+              <select [(ngModel)]="insightsClient" (change)="onInsightsClientChange()" class="select-control">
+                <option value="">All Clients</option>
+                <option *ngFor="let client of clientList" [value]="client.client_name">{{ client.client_name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isLoadingInsights && !insights" class="card ins-state">Loading recruiter insights…</div>
+        <div *ngIf="insightsError" class="card ins-state ins-error">{{ insightsError }}</div>
+
+        <ng-container *ngIf="insights">
+
+          <!-- 1. PLACEMENT SCORECARD -->
+          <div class="section-block">
+            <div class="section-title">Placement Scorecard</div>
+            <div class="kpi-grid">
+              <div class="kpi-card highlight-green">
+                <span class="kpi-title">Team Hires</span>
+                <span class="kpi-value">{{ insights.placements.team_hired }}</span>
+                <span class="kpi-hint" *ngIf="insights.placements.previous_period_hired !== null">
+                  Previous period: {{ insights.placements.previous_period_hired }}
+                  <ng-container *ngIf="insights.placements.delta_pct !== null">
+                    ({{ insights.placements.delta_pct > 0 ? '+' : '' }}{{ insights.placements.delta_pct }}%)
+                  </ng-container>
+                </span>
+                <span class="kpi-hint" *ngIf="insights.placements.previous_period_hired === null">Pick a date range to compare</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-title">Offers Pending</span>
+                <span class="kpi-value">{{ insights.placements.team_offers }}</span>
+                <span class="kpi-hint">At Offer stage, not yet joined</span>
+              </div>
+              <div class="kpi-card highlight-blue">
+                <span class="kpi-title">Offer-to-Join</span>
+                <span class="kpi-value">{{ insights.offer_to_join.team_offer_to_join_pct !== null ? insights.offer_to_join.team_offer_to_join_pct + '%' : '—' }}</span>
+                <span class="kpi-hint">Joined of offers made</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-title">Fresh Candidates Added</span>
+                <span class="kpi-value">{{ insights.sourcing.total_added }}</span>
+                <span class="kpi-hint">Sourced by recruiters in period</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analytics-charts-grid">
+            <div class="card chart-card">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-badge green">Placements</div>
+                  <h3 class="card-title">Hires per Recruiter</h3>
+                  <p class="card-sub">Hired candidates and offers still open, by recruiter.</p>
+                </div>
+              </div>
+              <div class="chart-container"><canvas id="insPlacementsChart"></canvas></div>
+            </div>
+            <div class="card chart-card">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-badge blue">Sourcing</div>
+                  <h3 class="card-title">Candidates Added per Week</h3>
+                  <p class="card-sub">Last 12 weeks in range, split by source.</p>
+                </div>
+              </div>
+              <div class="chart-container"><canvas id="insSourcingChart"></canvas></div>
+            </div>
+          </div>
+
+          <div class="card table-card ins-table">
+            <div class="table-card-head"><div><h3 class="card-title">Placement Scorecard by Recruiter</h3>
+              <p class="card-sub">Sorted by hires. Hired per requirement uses the recruiter's active requirements.</p></div></div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead><tr><th>Recruiter</th><th>Hired</th><th>Offers</th><th>Prev. period hires</th><th>Active requirements</th><th>Hired / requirement</th><th>Candidates added</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let r of insights.placements.rows; let i = index">
+                    <td><strong>{{ r.recruiter_name }}</strong></td>
+                    <td>{{ r.hired }}</td>
+                    <td>{{ r.offers }}</td>
+                    <td>{{ r.previous_hired !== null ? r.previous_hired : '—' }}</td>
+                    <td>{{ r.active_requirements }}</td>
+                    <td>{{ r.hired_per_requirement !== null ? r.hired_per_requirement : '—' }}</td>
+                    <td>{{ insightsSourcedFor(r.recruiter_id) }}</td>
+                  </tr>
+                  <tr *ngIf="insights.placements.rows.length === 0"><td colspan="7" class="ins-empty">No active recruiters.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 2. FUNNEL -->
+          <div class="card ins-funnel-card">
+            <h3 class="card-title">Pipeline Funnel (Team)</h3>
+            <p class="card-sub">Applications in the period, by furthest stage reached.</p>
+            <div class="ins-funnel">
+              <div class="ins-funnel-row" *ngFor="let s of [
+                  {l: 'Sourced', v: insights.funnel.team.sourced},
+                  {l: 'Submitted', v: insights.funnel.team.submitted},
+                  {l: 'Interviewed', v: insights.funnel.team.interviewed},
+                  {l: 'Offered', v: insights.funnel.team.offered},
+                  {l: 'Hired', v: insights.funnel.team.hired}]">
+                <span class="ins-funnel-label">{{ s.l }}</span>
+                <div class="ins-funnel-track"><div class="ins-funnel-bar" [style.width.%]="funnelBarWidth(s.v)"></div></div>
+                <span class="ins-funnel-num">{{ s.v }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card table-card ins-table">
+            <div class="table-card-head"><div><h3 class="card-title">Stage Conversion by Recruiter</h3>
+              <p class="card-sub">Where each recruiter's candidates drop off. Red under 30%, amber under 60%.</p></div></div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead><tr><th>Recruiter</th><th>Sourced</th><th>Submitted</th><th>Interviewed</th><th>Offered</th><th>Hired</th><th>Submit → Interview</th><th>Interview → Offer</th><th>Offer → Hired</th></tr></thead>
+                <tbody>
+                  <tr class="ins-team-row">
+                    <td><strong>Team average</strong></td>
+                    <td>{{ insights.funnel.team.sourced }}</td><td>{{ insights.funnel.team.submitted }}</td>
+                    <td>{{ insights.funnel.team.interviewed }}</td><td>{{ insights.funnel.team.offered }}</td><td>{{ insights.funnel.team.hired }}</td>
+                    <td><span class="conv-cell" [ngClass]="convClass(insights.funnel.team.sub_to_interview_pct)">{{ insights.funnel.team.sub_to_interview_pct !== null ? insights.funnel.team.sub_to_interview_pct + '%' : '—' }}</span></td>
+                    <td><span class="conv-cell" [ngClass]="convClass(insights.funnel.team.interview_to_offer_pct)">{{ insights.funnel.team.interview_to_offer_pct !== null ? insights.funnel.team.interview_to_offer_pct + '%' : '—' }}</span></td>
+                    <td><span class="conv-cell" [ngClass]="convClass(insights.funnel.team.offer_to_hired_pct)">{{ insights.funnel.team.offer_to_hired_pct !== null ? insights.funnel.team.offer_to_hired_pct + '%' : '—' }}</span></td>
+                  </tr>
+                  <tr *ngFor="let r of insights.funnel.rows">
+                    <td><strong>{{ r.recruiter_name }}</strong></td>
+                    <td>{{ r.sourced }}</td><td>{{ r.submitted }}</td><td>{{ r.interviewed }}</td><td>{{ r.offered }}</td><td>{{ r.hired }}</td>
+                    <td><span class="conv-cell" [ngClass]="convClass(r.sub_to_interview_pct)">{{ r.sub_to_interview_pct !== null ? r.sub_to_interview_pct + '%' : '—' }}</span></td>
+                    <td><span class="conv-cell" [ngClass]="convClass(r.interview_to_offer_pct)">{{ r.interview_to_offer_pct !== null ? r.interview_to_offer_pct + '%' : '—' }}</span></td>
+                    <td><span class="conv-cell" [ngClass]="convClass(r.offer_to_hired_pct)">{{ r.offer_to_hired_pct !== null ? r.offer_to_hired_pct + '%' : '—' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="ins-note">Stage is stored as the current stage only, so a candidate rejected after an interview counts as submitted but not interviewed.</p>
+          </div>
+
+          <!-- 6. QUALITY + 7. OFFER TO JOIN -->
+          <div class="analytics-charts-grid">
+            <div class="card chart-card">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-badge violet">Quality</div>
+                  <h3 class="card-title">Volume vs Interview Rate</h3>
+                  <p class="card-sub">Top-right is high volume with good quality. Hover a dot for the recruiter.</p>
+                </div>
+              </div>
+              <div class="chart-container"><canvas id="insQualityChart"></canvas></div>
+            </div>
+            <div class="card table-card ins-table">
+              <div class="table-card-head"><div><h3 class="card-title">Submission Quality</h3>
+                <p class="card-sub">Rating is the average overall score on submitted candidates.</p></div></div>
+              <div class="table-responsive">
+                <table class="custom-table">
+                  <thead><tr><th>Recruiter</th><th>Submitted</th><th>Interview rate</th><th>Rejected</th><th>Avg rating</th></tr></thead>
+                  <tbody>
+                    <tr *ngFor="let r of insights.quality.rows">
+                      <td><strong>{{ r.recruiter_name }}</strong></td>
+                      <td>{{ r.submitted }}</td>
+                      <td><span class="conv-cell" [ngClass]="convClass(r.sub_to_interview_pct)">{{ r.sub_to_interview_pct !== null ? r.sub_to_interview_pct + '%' : '—' }}</span></td>
+                      <td>{{ r.rejected_pct !== null ? r.rejected_pct + '%' : '—' }}</td>
+                      <td>{{ r.avg_rating !== null ? r.avg_rating : '—' }} <span class="ins-muted" *ngIf="r.rated_count">({{ r.rated_count }})</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card table-card ins-table">
+            <div class="table-card-head"><div><h3 class="card-title">Offer-to-Join</h3>
+              <p class="card-sub">Offers made = at Offer or Hired, plus rejected after an offer was recorded.</p></div></div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead><tr><th>Recruiter</th><th>Offers made</th><th>Joined</th><th>Dropped after offer</th><th>Offer-to-join</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let r of insights.offer_to_join.rows">
+                    <td><strong>{{ r.recruiter_name }}</strong></td>
+                    <td>{{ r.offers_made }}</td><td>{{ r.joined }}</td><td>{{ r.dropped_after_offer }}</td>
+                    <td><span class="conv-cell" [ngClass]="convClass(r.offer_to_join_pct)">{{ r.offer_to_join_pct !== null ? r.offer_to_join_pct + '%' : '—' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="ins-reasons" *ngIf="insights.offer_to_join.top_drop_reasons.length">
+              <span class="ins-reasons-title">Top reasons candidates dropped after an offer</span>
+              <span class="ins-reason-chip" *ngFor="let d of insights.offer_to_join.top_drop_reasons">{{ d.reason }} · {{ d.count }}</span>
+            </div>
+          </div>
+
+          <!-- 8. WORKLOAD -->
+          <div class="card table-card ins-table">
+            <div class="table-card-head"><div><h3 class="card-title">Workload & Capacity</h3>
+              <p class="card-sub">Current snapshot. Capacity compares live pipeline to the team median ({{ insights.workload.team_median_pipeline }} candidates): red above 1.5×, amber above 1×.</p></div></div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead><tr><th>Recruiter</th><th>Open requirements</th><th>Open vacancies</th><th>Candidates in pipeline</th><th>Capacity</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let r of insights.workload.rows">
+                    <td><strong>{{ r.recruiter_name }}</strong></td>
+                    <td>{{ r.open_requirements }}</td><td>{{ r.open_vacancies }}</td><td>{{ r.pipeline_candidates }}</td>
+                    <td><span class="cap-pill" [ngClass]="'cap-' + r.capacity">{{ r.capacity === 'red' ? 'Overloaded' : r.capacity === 'amber' ? 'Busy' : 'Has room' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 11. FILL RATE + AGEING -->
+          <div class="analytics-charts-grid">
+            <div class="card chart-card">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-badge amber">Ageing</div>
+                  <h3 class="card-title">Open Requirement Ageing</h3>
+                  <p class="card-sub">Active and on-hold requirements by days since created.</p>
+                </div>
+              </div>
+              <div class="chart-container"><canvas id="insAgeingChart"></canvas></div>
+            </div>
+            <div class="card table-card ins-table">
+              <div class="table-card-head"><div><h3 class="card-title">Vacancy Fill Rate</h3>
+                <p class="card-sub">Hires divided by vacancies on the recruiter's requirements.</p></div></div>
+              <div class="table-responsive">
+                <table class="custom-table">
+                  <thead><tr><th>Recruiter</th><th>Vacancies</th><th>Filled</th><th>Fill rate</th></tr></thead>
+                  <tbody>
+                    <tr *ngFor="let r of insights.fill_ageing.rows">
+                      <td><strong>{{ r.recruiter_name }}</strong></td>
+                      <td>{{ r.vacancies }}</td><td>{{ r.filled }}</td>
+                      <td><span class="conv-cell" [ngClass]="convClass(r.fill_pct)">{{ r.fill_pct !== null ? r.fill_pct + '%' : '—' }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 10. CLIENTS -->
+          <div class="card table-card ins-table">
+            <div class="table-card-head"><div><h3 class="card-title">Client-wise Performance</h3>
+              <p class="card-sub">Click a client to see which recruiters work it. Clients are grouped by name text.</p></div></div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead><tr><th>Client</th><th>Requirements</th><th>Filled</th><th>Fill rate</th><th>Submissions</th><th>Interview rate</th><th>Median days to fill</th></tr></thead>
+                <tbody>
+                  <ng-container *ngFor="let c of insights.clients">
+                    <tr class="ins-click-row" (click)="toggleClientRow(c.client)">
+                      <td><strong>{{ expandedClient === c.client ? '▾' : '▸' }} {{ c.client }}</strong></td>
+                      <td>{{ c.requirements }}</td><td>{{ c.filled_requirements }}</td>
+                      <td><span class="conv-cell" [ngClass]="convClass(c.fill_pct)">{{ c.fill_pct !== null ? c.fill_pct + '%' : '—' }}</span></td>
+                      <td>{{ c.submissions }}</td>
+                      <td>{{ c.sub_to_interview_pct !== null ? c.sub_to_interview_pct + '%' : '—' }}</td>
+                      <td>{{ c.median_days_to_fill !== null ? c.median_days_to_fill : '—' }}</td>
+                    </tr>
+                    <tr *ngIf="expandedClient === c.client" class="ins-sub-row">
+                      <td colspan="7">
+                        <div class="ins-sub-list">
+                          <span class="ins-sub-item" *ngFor="let rr of c.recruiters">
+                            <strong>{{ rr.recruiter_name }}</strong>: {{ rr.submissions }} submitted, {{ rr.interviews }} interviewed, {{ rr.hired }} hired
+                          </span>
+                          <span class="ins-muted" *ngIf="c.recruiters.length === 0">No recruiter activity in this period.</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="insights.clients.length === 0"><td colspan="7" class="ins-empty">No client activity in this period.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </ng-container>
       </div>
 
       <!-- ================================================================= -->

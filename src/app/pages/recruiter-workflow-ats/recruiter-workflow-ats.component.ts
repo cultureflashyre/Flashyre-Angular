@@ -737,7 +737,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit, OnDestroy {
   openResume(url: string) {
     if (url) {
       // If it's a GCS file or path, dynamically fetch a fresh signed URL first
-      if (url.includes('storage.googleapis.com') || url.startsWith('resumes/') || url.startsWith('staging_resumes/') || url.includes('/media/')) {
+      if (url.includes('storage.googleapis.com') || !/^https?:\/\//i.test(url) || url.includes('/media/')) {
         this.candidateService.getSignedUrl(url).subscribe({
           next: (res) => {
             window.open(res.signed_url, '_blank');
