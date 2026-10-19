@@ -1069,6 +1069,15 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
+  /** True when the server reported per-row outcomes for this batch. */
+  hasOutcomeCounts(batch: UploadBatchDetail | null): boolean {
+    return !!batch && !!batch.outcome_counts && Object.keys(batch.outcome_counts).length > 0;
+  }
+
+  outcomeCount(batch: UploadBatchDetail | null, outcome: string): number {
+    return batch?.outcome_counts?.[outcome] || 0;
+  }
+
   getProgressPercentage(batch: UploadBatchDetail | null): number {
     if (!batch) return 0;
     if (batch.progress_percentage !== undefined && batch.progress_percentage !== null) {

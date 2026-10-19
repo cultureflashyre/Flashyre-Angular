@@ -165,6 +165,9 @@
                 <div class="card-identity-text">
                   <div class="card-name" (click)="viewCandidateDetails(app.candidate_details, 'overview')" title="Click to view details">
                     {{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}
+                    <app-person-badges [missingFields]="app.candidate_details.missing_fields" [verificationStatus]="app.candidate_details.verification_status"
+                                       [aiFilledFields]="app.candidate_details.ai_filled_fields" [legacy]="!!app.candidate_details.legacy_incomplete"
+                                       [compact]="true"></app-person-badges>
                   </div>
                   <div class="card-sub-meta">
                     <span *ngIf="app.candidate_details.phone_number" class="card-phone">📞 {{ maskPhone(app.candidate_details.phone_number) }}</span>

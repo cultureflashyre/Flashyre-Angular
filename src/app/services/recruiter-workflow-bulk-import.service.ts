@@ -14,6 +14,8 @@ export interface UploadBatchDetail {
   total_rows: number;
   success_rows: number;
   failed_rows: number;
+  /** What happened to each row: created_complete, created_incomplete, updated, promoted, skipped_owned, skipped_invalid */
+  outcome_counts?: { [outcome: string]: number };
   current_sheet_name: string;
   last_processed_row: number;
   processed_sheets: string[];

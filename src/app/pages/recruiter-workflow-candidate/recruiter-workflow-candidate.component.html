@@ -111,6 +111,10 @@
               Registered Users
               <span class="tab-count">{{ registeredCandidates.length }}</span>
             </button>
+            <button class="tab" [class.active]="activeTab === 'needs_info'" (click)="setActiveTab('needs_info')">
+              Needs info
+              <span class="tab-count">{{ intakeSummary ? intakeSummary.open : intakePeople.length }}</span>
+            </button>
           </div>
 
           <div class="toolbar">
@@ -250,11 +254,16 @@
             </button>
 
             <!-- Add to ATS -->
-            <button *ngIf="activeTab === 'sourced'" class="btn" (click)="openAddToWorkflowModal()">
+            <button *ngIf="activeTab === 'sourced' || activeTab === 'needs_info'" class="btn" (click)="openAddToWorkflowModal()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
               Add to ATS
             </button>
           </div>
+        </div>
+
+        <div *ngIf="formIdFilter" style="padding:8px 20px; font-size:13px; color:#64748b; border-bottom:1px solid #e2e8f0;">
+          Showing people who applied through one collection form. Applicants who are still missing mandatory fields are under
+          <button type="button" style="border:0; background:none; color:#1d4ed8; cursor:pointer; padding:0; font:inherit; text-decoration:underline;" (click)="setActiveTab('needs_info')">Needs info</button>.
         </div>
 
         <!-- Filter Chips -->
@@ -349,6 +358,9 @@
                                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
                                   Form
                                 </span>
+                                <app-person-badges [missingFields]="candidate.missing_fields" [verificationStatus]="candidate.verification_status"
+                                                   [aiFilledFields]="candidate.ai_filled_fields" [legacy]="!!candidate.legacy_incomplete" [compact]="true"
+                                                   [canVerify]="canEditPerson(candidate)" (verify)="verifyCandidate(candidate)"></app-person-badges>
                               </div>
                               <div class="candidate-id">Sourced By: {{ candidate.sourced_by_name || candidate.recruiter_name || 'N/A' }}</div>
                             </div>
@@ -525,7 +537,7 @@
                             <button class="row-action" [class.disabled]="!candidate.resume && !candidate.resume_url" (click)="(candidate.resume || candidate.resume_url) && openResume(candidate.resume || candidate.resume_url)" title="View Resume">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                             </button>
-                            <button class="row-action" (click)="startEdit(candidate)" title="Edit">
+                            <button *ngIf="canEditPerson(candidate)" class="row-action" (click)="startEdit(candidate)" title="Edit">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
                             <button *ngIf="isSuperUser" class="row-action danger" (click)="deleteCandidate(candidate.id)" title="Delete">
@@ -574,6 +586,122 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
                 <h3>No Candidate Profiles Found</h3>
                 <p>Get started by adding a new candidate profile.</p>
+              </div>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+
+
+        <!-- ============================================ -->
+        <!-- TAB 3: NEEDS INFO (missing mandatory fields) -->
+        <!-- ============================================ -->
+        <ng-container *ngIf="activeTab === 'needs_info'">
+          <div class="needs-info-bar" style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:10px 20px; border-bottom:1px solid #e2e8f0;">
+            <span style="font-size:13px; color:#64748b;">
+              People who are still missing one or more of the seven mandatory fields. They move to Sourced Database automatically once complete.
+            </span>
+            <select class="select" [(ngModel)]="intakeMissingFilter" (ngModelChange)="onIntakeFilterChange()" aria-label="Filter by missing field">
+              <option value="">Any missing field</option>
+              <option *ngFor="let field of missingFieldChoices" [value]="field">
+                Missing: {{ missingFieldLabel(field) }}{{ intakeSummary?.missing_by_field?.[field] ? ' (' + intakeSummary?.missing_by_field?.[field] + ')' : '' }}
+              </option>
+            </select>
+            <label style="display:inline-flex; gap:6px; align-items:center; font-size:13px;">
+              <input type="checkbox" [(ngModel)]="intakeUnverifiedOnly" (ngModelChange)="onIntakeFilterChange()" />
+              Needs verification only{{ intakeSummary?.unverified ? ' (' + intakeSummary?.unverified + ')' : '' }}
+            </label>
+          </div>
+
+          <div class="table-wrapper" *ngIf="isIntakeLoading">
+            <div class="empty"><h3>Loading...</h3></div>
+          </div>
+
+          <ng-container *ngIf="!isIntakeLoading">
+            <div class="table-wrapper" *ngIf="intakePeople.length > 0; else noIntake">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="col-check"></th>
+                    <th class="col-name">Person</th>
+                    <th class="col-meta">Contact</th>
+                    <th class="col-tags">Skills</th>
+                    <th>Rating</th>
+                    <th class="col-src">Source</th>
+                    <th class="col-act">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let person of intakePeople">
+                    <td data-label="">
+                      <input type="checkbox" class="checkbox" [(ngModel)]="person.selected" />
+                    </td>
+                    <td data-label="Person">
+                      <div class="candidate">
+                        <div class="candidate-avatar">{{ getInitials(person) || '?' }}</div>
+                        <div>
+                          <div class="candidate-name" (click)="openIntake(person)" title="Click to complete this profile">
+                            {{ intakeName(person) }}
+                            <app-person-badges [missingFields]="person.missing_fields" [verificationStatus]="person.verification_status"
+                                               [aiFilledFields]="person.ai_filled_fields" [compact]="true"
+                                               [canVerify]="canEditPerson(person)" (verify)="verifyIntakePerson(person)"></app-person-badges>
+                          </div>
+                          <div class="candidate-id">Sourced By: {{ person.sourced_by_name || 'N/A' }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="col-meta" data-label="Contact">
+                      <div class="meta-row">{{ person.phone_number?.split(',')[0]?.trim() || '—' }}</div>
+                      <div class="meta-row">{{ person.email || '—' }}</div>
+                    </td>
+                    <td class="col-tags" data-label="Skills">
+                      <div class="tag-row">
+                        <span *ngFor="let skill of getSkillsList(person.skills || '').visible" class="tag">{{ skill }}</span>
+                        <span *ngIf="getSkillsList(person.skills || '').overflow > 0" class="tag">+{{ getSkillsList(person.skills || '').overflow }}</span>
+                        <span *ngIf="!person.skills" class="tag" style="color:#b91c1c;">none yet</span>
+                      </div>
+                    </td>
+                    <td data-label="Rating">
+                      <button class="rating" [class.rated]="person.latest_rating_score" [class.unrated]="!person.latest_rating_score" (click)="openRatingModal(person)">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        {{ person.latest_rating_score ? person.latest_rating_score : 'Rate' }}
+                      </button>
+                    </td>
+                    <td data-label="Source">
+                      <span class="src-pill" [ngClass]="getSourceClass(person.source)">{{ person.source }}</span>
+                    </td>
+                    <td data-label="Actions">
+                      <div class="row-actions">
+                        <button class="row-action" [class.disabled]="!hasResume(person)" (click)="hasResume(person) && openResume(person.resume_path)" [title]="hasResume(person) ? 'View Resume' : 'No resume yet'">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </button>
+                        <button class="row-action" (click)="openIntake(person)" [title]="canEditPerson(person) ? 'Complete profile' : 'View details'">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button *ngIf="isSuperUser" class="row-action danger" (click)="deleteIntakePerson(person)" title="Delete">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination" *ngIf="intakePages > 1">
+              <span class="pagination-info">Page {{ intakePage }} of {{ intakePages }}</span>
+              <div class="pagination-controls">
+                <button class="page-btn" (click)="loadIntake(intakePage - 1)" [disabled]="intakePage <= 1">Prev</button>
+                <ng-container *ngFor="let p of getIntakePageNumbers()">
+                  <button class="page-btn" [class.active-page]="p === intakePage" (click)="loadIntake(p)">{{ p }}</button>
+                </ng-container>
+                <button class="page-btn" (click)="loadIntake(intakePage + 1)" [disabled]="intakePage >= intakePages">Next</button>
+              </div>
+            </div>
+
+            <ng-template #noIntake>
+              <div class="empty">
+                <h3>Nobody is waiting for more information</h3>
+                <p>People who apply or are imported without all seven mandatory fields will show up here.</p>
               </div>
             </ng-template>
           </ng-container>
@@ -979,6 +1107,17 @@
               <div class="hint" *ngIf="f['skills'].invalid && f['skills'].touched" style="color:var(--bad)">Skills are required.</div>
             </div>
           </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Highest Qualification <span class="req">*</span></label>
+              <input type="text" formControlName="latest_education_level" placeholder="e.g. B.Tech, MBA, MCA" maxlength="255" class="form-input" [class.invalid]="f['latest_education_level'].invalid && f['latest_education_level'].touched" />
+              <div class="hint" *ngIf="f['latest_education_level'].invalid && f['latest_education_level'].touched" style="color:var(--bad)">Highest qualification is required.</div>
+            </div>
+            <div class="field">
+              <label>University / College</label>
+              <input type="text" formControlName="latest_university" placeholder="Enter university or college" maxlength="255" class="form-input" />
+            </div>
+          </div>
         </div>
 
         <!-- SECTION 6: PREFERENCES -->
@@ -1093,6 +1232,15 @@
             </svg></button></div>
       </div>
       <div class="elegant-body">
+        <div class="info-section" *ngIf="selectedCandidateDetails.missing_fields?.length || selectedCandidateDetails.verification_status === 'ai_unverified'">
+          <h4 class="section-title">Profile status</h4>
+          <app-person-badges [missingFields]="selectedCandidateDetails.missing_fields" [verificationStatus]="selectedCandidateDetails.verification_status"
+                             [aiFilledFields]="selectedCandidateDetails.ai_filled_fields" [legacy]="!!selectedCandidateDetails.legacy_incomplete"
+                             [canVerify]="canEditPerson(selectedCandidateDetails)" (verify)="verifyCandidate(selectedCandidateDetails)"></app-person-badges>
+          <p style="margin:8px 0 0; font-size:12.5px; color:#64748b;" *ngIf="selectedCandidateDetails.missing_fields?.length">
+            Edit the candidate to fill in what is missing.
+          </p>
+        </div>
         <div class="info-section">
           <h4 class="section-title">Contact Information</h4>
           <div class="info-grid-3">
@@ -1124,6 +1272,14 @@
                 selectedCandidateDetails.expected_ctc_max }} LPA</span></div>
             <div class="info-item"><span class="info-label">Preferred Location</span><span class="info-value">{{
                 formatLocationList(selectedCandidateDetails.preferred_location) }}</span></div>
+          </div>
+        </div>
+        <div class="info-section" *ngIf="selectedCandidateDetails.latest_education_level">
+          <h4 class="section-title">Education</h4>
+          <div class="info-grid-3">
+            <div class="info-item"><span class="info-label">Highest qualification</span><span class="info-value">{{ selectedCandidateDetails.latest_education_level }}</span></div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.latest_university"><span class="info-label">University / college</span><span class="info-value">{{ selectedCandidateDetails.latest_university }}</span></div>
+            <div class="info-item" *ngIf="selectedCandidateDetails.latest_specialization"><span class="info-label">Specialization</span><span class="info-value">{{ selectedCandidateDetails.latest_specialization }}</span></div>
           </div>
         </div>
         <div class="info-section">
@@ -1179,6 +1335,10 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="info-section">
+          <app-person-notes kind="candidate" [personId]="selectedCandidateDetails.id ?? null"></app-person-notes>
         </div>
 
         <!-- IMPORTED TRACKER DETAILS (BULK IMPORT METADATA) -->
@@ -1336,3 +1496,9 @@
     </div>
   </div>
 </div>
+
+<!-- Complete-profile panel for a person in the Needs info list -->
+<app-intake-drawer *ngIf="selectedIntake" [person]="selectedIntake"
+                   [canEdit]="canEditPerson(selectedIntake)" [canVerify]="canEditPerson(selectedIntake)"
+                   (closed)="closeIntake()" (updated)="onIntakeUpdated($event)"
+                   (openResume)="openResume($event)"></app-intake-drawer>

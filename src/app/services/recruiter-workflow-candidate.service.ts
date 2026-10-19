@@ -55,6 +55,18 @@ export interface Candidate {
   latest_rating_breakdown?: { [key: string]: number } | null;
   source_form?: number | string | null;
   source_form_title?: string;
+  // Completeness (set by the server): which of the seven mandatory fields are still missing,
+  // and whether AI-parsed values still need a recruiter to verify them.
+  missing_fields?: string[];
+  legacy_incomplete?: boolean;
+  verification_status?: 'verified' | 'ai_unverified';
+  ai_filled_fields?: string[];
+  latest_education_level?: string | null;
+  latest_university?: string | null;
+  latest_specialization?: string | null;
+  year_of_graduation?: number | null;
+  current_job_title?: string | null;
+  latest_company?: string | null;
   import_metadata?: {
     client?: string;
     sub_client?: string;
@@ -140,9 +152,88 @@ export interface RatingScore {
   score_label: string;
 }
 
+/** A person who is still missing one or more of the seven mandatory fields (the "Needs info" inbox). */
+export interface IntakePerson {
+  id: number;
+  uuid: string;
+  kind: 'intake';
+  status: 'open' | 'promoted';
+  promoted_candidate: number | null;
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+  phone_number: string | null;
+  gender?: string | null;
+  skills: string | null;
+  work_experience?: string | null;
+  total_experience?: number;
+  relevant_experience?: number;
+  current_ctc?: string | null;
+  notice_period?: string | null;
+  preferred_location?: any;
+  current_location?: string | null;
+  current_job_title?: string | null;
+  latest_company?: string | null;
+  latest_education_level?: string | null;
+  latest_university?: string | null;
+  latest_specialization?: string | null;
+  year_of_graduation?: number | null;
+  missing_fields: string[];
+  verification_status: 'verified' | 'ai_unverified';
+  ai_filled_fields: string[];
+  verified_at?: string | null;
+  source: string;
+  source_form?: number | null;
+  sourced_by: string | null;
+  sourced_by_name: string | null;
+  resume_filename?: string | null;
+  resume_path?: string | null;
+  skills_list: string[];
+  preferred_locations: { name: string; lat: number | null; lng: number | null }[];
+  education: { level: string | null; institution: string | null; specialization: string | null; year: number | null; is_highest: boolean }[];
+  submissions: { form: string; form_id: string; status: string; submitted_at: string }[];
+  created_at: string;
+  updated_at: string;
+  // front-end only
+  selected?: boolean;
+  latest_rating_score?: number | null;
+}
+
+export interface IntakeSummary {
+  open: number;
+  unverified: number;
+  missing_by_field: { [field: string]: number };
+  legacy_incomplete_candidates: number;
+  unverified_candidates: number;
+}
+
+export interface IntakeUpdateResult {
+  kind: 'candidate' | 'intake';
+  id: number;
+  uuid?: string;
+  missing_fields: string[];
+  promoted?: boolean;
+  changed?: string[];
+  outcome?: string;
+  existing?: boolean;
+  detail?: string;
+}
+
+export interface CandidateNote {
+  id: number;
+  kind: 'candidate' | 'intake';
+  candidate: number | null;
+  intake: number | null;
+  author: string | null;
+  author_name: string | null;
+  body: string;
+  created_at: string;
+}
+
 export interface CandidateRating {
   id?: number;
-  candidate: number;
+  candidate: number | null;
+  intake?: number | null;
   job_requirement?: number;
   rated_by?: number;
   rated_by_name: string;
@@ -229,7 +320,8 @@ export class RecruiterWorkflowCandidateService {
   }
 
   submitRating(payload: {
-    candidate_id: number;
+    candidate_id?: number;
+    intake_id?: number;
     job_requirement_id?: number | null;
     rating_category: string;
     notes?: string;
@@ -244,6 +336,66 @@ export class RecruiterWorkflowCandidateService {
 
   deleteRating(ratingId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}api/candidate-ratings/${ratingId}/`);
+  }
+
+  // ---- "Needs info" inbox (people missing mandatory fields) ----
+  getIntakeList(opts: { page?: number; status?: string; missing?: string; q?: string; formId?: string | null; unverified?: boolean } = {}): Observable<any> {
+    const params: string[] = [`page=${opts.page || 1}`];
+    if (opts.status) { params.push(`status=${encodeURIComponent(opts.status)}`); }
+    if (opts.missing) { params.push(`missing=${encodeURIComponent(opts.missing)}`); }
+    if (opts.q) { params.push(`q=${encodeURIComponent(opts.q)}`); }
+    if (opts.formId) { params.push(`form_id=${encodeURIComponent(opts.formId)}`); }
+    if (opts.unverified) { params.push('unverified=1'); }
+    return this.http.get<any>(`${this.apiUrl}api/candidate-intake/?${params.join('&')}`);
+  }
+
+  getIntakeSummary(): Observable<IntakeSummary> {
+    return this.http.get<IntakeSummary>(`${this.apiUrl}api/candidate-intake/summary/`);
+  }
+
+  getIntake(id: number): Observable<IntakePerson> {
+    return this.http.get<IntakePerson>(`${this.apiUrl}api/candidate-intake/${id}/`);
+  }
+
+  createIntakeDraft(data: any): Observable<IntakeUpdateResult> {
+    return this.http.post<IntakeUpdateResult>(`${this.apiUrl}api/candidate-intake/`, data);
+  }
+
+  updateIntake(id: number, data: any): Observable<IntakeUpdateResult> {
+    return this.http.patch<IntakeUpdateResult>(`${this.apiUrl}api/candidate-intake/${id}/`, data);
+  }
+
+  deleteIntake(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}api/candidate-intake/${id}/`);
+  }
+
+  verifyIntake(id: number): Observable<IntakePerson> {
+    return this.http.post<IntakePerson>(`${this.apiUrl}api/candidate-intake/${id}/verify/`, {});
+  }
+
+  verifyCandidate(id: number): Observable<Candidate> {
+    return this.http.post<Candidate>(`${this.apiUrl}api/candidates/${id}/verify/`, {});
+  }
+
+  addIntakeToJob(jobId: number, intakeIds: number[]): Observable<any> {
+    return this.http.post(this.atsUrl, { job_id: jobId, intake_ids: intakeIds });
+  }
+
+  getIntakeRatings(intakeId: number): Observable<CandidateRating[]> {
+    return this.http.get<CandidateRating[]>(`${this.apiUrl}api/candidate-ratings/?intake_id=${intakeId}`);
+  }
+
+  // ---- Notes (candidates and inbox people) ----
+  getNotes(kind: 'candidate' | 'intake', id: number): Observable<CandidateNote[]> {
+    return this.http.get<CandidateNote[]>(`${this.apiUrl}api/candidate-notes/?${kind}_id=${id}`);
+  }
+
+  addNote(kind: 'candidate' | 'intake', id: number, body: string): Observable<CandidateNote> {
+    return this.http.post<CandidateNote>(`${this.apiUrl}api/candidate-notes/`, { [`${kind}_id`]: id, body });
+  }
+
+  deleteNote(noteId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}api/candidate-notes/${noteId}/`);
   }
 
   getStatistics(): Observable<any> {

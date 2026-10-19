@@ -15,6 +15,7 @@ import { AtsPipelineEventService, AtsPipelineEvent } from '../../services/ats-pi
 // Components
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
+import { PersonBadgesComponent } from '../../components/person-badges/person-badges.component';
 
 // External Libraries for Excel
 import * as XLSX from 'xlsx';
@@ -29,7 +30,8 @@ import * as FileSaver from 'file-saver';
     FormsModule,
     RouterModule,
     RecruiterSidebarComponent,
-    AlertMessageComponent
+    AlertMessageComponent,
+    PersonBadgesComponent
   ],
   templateUrl: 'recruiter-workflow-ats.component.html',
   styleUrls: ['recruiter-workflow-ats.component.css']
@@ -271,11 +273,30 @@ export class RecruiterWorkflowAtsComponent implements OnInit, OnDestroy {
     this.atsService.getPipelineForJob(this.jobId).subscribe(apps => {
       this.stages.forEach(stage => this.pipelineData[stage] = []);
       apps.forEach(app => {
+        this.useInboxPersonAsCandidate(app);
         if (this.pipelineData[app.stage]) {
           this.pipelineData[app.stage].push(app);
         }
       });
     });
+  }
+
+  /**
+   * A person from the Needs info list can be in a pipeline (they need a resume). The board shows every card
+   * from `candidate_details`, so for these people it is filled from `intake_details` and flagged `is_intake`.
+   */
+  private useInboxPersonAsCandidate(app: any): void {
+    if (app.candidate_details || !app.intake_details) { return; }
+    const p = app.intake_details;
+    app.candidate_details = {
+      ...p,
+      first_name: p.first_name || '',
+      last_name: p.last_name || '',
+      resume: p.resume_path || null,
+      total_experience: p.total_experience ?? 0,
+      placement_status: null,
+      is_intake: true,
+    };
   }
 
   loadAllCandidates() {
@@ -432,7 +453,9 @@ export class RecruiterWorkflowAtsComponent implements OnInit, OnDestroy {
     this.atsService.updateStage(application.id, newStage, metadata).subscribe({
       next: (res) => console.log('Stage updated successfully', res),
       error: (err) => {
-        this.alertMessage = "Failed to update stage on server. Reverting changes.";
+        // The server explains rules such as "complete this person's profile before an offer or hire"
+        const reason = err?.error?.error || err?.error?.detail;
+        this.alertMessage = reason ? `${reason} The card was moved back.` : "Failed to update stage on server. Reverting changes.";
         this.alertButtons = ['OK'];
         this.showAlert = true;
         this.loadPipeline(); // Reload to revert UI state

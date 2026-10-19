@@ -526,6 +526,30 @@
               </div>
             </div>
 
+            <!-- What happened to each row -->
+            <div class="monitor-counters-grid" *ngIf="hasOutcomeCounts(currentTrackerBatch)" style="margin-top:12px;">
+              <div class="counter-box good-box" title="New people with all seven mandatory fields">
+                <div class="cnt-label">New candidates</div>
+                <div class="cnt-val">{{ outcomeCount(currentTrackerBatch, 'created_complete') }}</div>
+              </div>
+              <div class="counter-box warn-box" title="New people missing some mandatory fields. They are in Needs info.">
+                <div class="cnt-label">Needs info</div>
+                <div class="cnt-val">{{ outcomeCount(currentTrackerBatch, 'created_incomplete') }}</div>
+              </div>
+              <div class="counter-box" title="Existing people updated with the values in the file">
+                <div class="cnt-label">Updated</div>
+                <div class="cnt-val">{{ outcomeCount(currentTrackerBatch, 'updated') }}</div>
+              </div>
+              <div class="counter-box good-box" title="Updated, and the file completed the last missing fields">
+                <div class="cnt-label">Completed &amp; promoted</div>
+                <div class="cnt-val">{{ outcomeCount(currentTrackerBatch, 'promoted') }}</div>
+              </div>
+              <div class="counter-box warn-box" title="The person belongs to another recruiter, so the row was skipped">
+                <div class="cnt-label">Skipped (other recruiter)</div>
+                <div class="cnt-val">{{ outcomeCount(currentTrackerBatch, 'skipped_owned') }}</div>
+              </div>
+            </div>
+
             <!-- ERROR LOGS SUB-SECTION -->
             <div *ngIf="currentTrackerBatch.failed_rows > 0" class="error-logs-container">
               <div class="error-logs-head">
