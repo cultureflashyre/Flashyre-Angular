@@ -1,0 +1,1283 @@
+{
+  "page": "candidate",
+  "route": "/recruiter-workflow-candidate",
+  "scenarios": [
+    {
+      "id": "CAND-VAL-001",
+      "title": "Empty form shows every required message",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "_skipFill": true
+      },
+      "expect": {
+        "hints": [
+          "First Name is required.",
+          "Email is required.",
+          "Total Experience is required.",
+          "Skills are required."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-002",
+      "title": "First name with digits is refused",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "first_name": "Asha1"
+      },
+      "expect": {
+        "hints": [
+          "Letters only."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-003",
+      "title": "First name over 15 letters is refused",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "first_name": "Abcdefghijklmnopq"
+      },
+      "expect": {
+        "hints": [],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-004",
+      "title": "First name with an apostrophe is refused (decide if O'Neil should be valid)",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "first_name": "O'Neil"
+      },
+      "expect": {
+        "hints": [
+          "Letters only."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-005",
+      "title": "Whitespace-only first name is refused",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "first_name": "   "
+      },
+      "expect": {
+        "hints": [],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-006",
+      "title": "Invalid email format",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "email": "not-an-email"
+      },
+      "expect": {
+        "hints": [
+          "Enter a valid email."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-007",
+      "title": "Phone with 9 digits",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "phone": "987654321"
+      },
+      "expect": {
+        "hints": [
+          "must be 10 digits"
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-008",
+      "title": "Phone with letters",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "phone": "98765abcde"
+      },
+      "expect": {
+        "hints": [
+          "must be 10 digits"
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-009",
+      "title": "Total experience above 99",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "total_experience": 100,
+        "relevant_experience": 1
+      },
+      "expect": {
+        "hints": [
+          "Experience cannot exceed 99 years."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-010",
+      "title": "Negative total experience",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "total_experience": -1
+      },
+      "expect": {
+        "hints": [
+          "Experience cannot be negative."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-011",
+      "title": "Relevant experience greater than total",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "total_experience": 2,
+        "relevant_experience": 5
+      },
+      "expect": {
+        "hints": [
+          "Relevant experience cannot be greater than Total experience."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-012",
+      "title": "Current CTC with 3 decimals",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "current_ctc": "7.555"
+      },
+      "expect": {
+        "hints": [
+          "up to 2 decimal points"
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-013",
+      "title": "Role longer than 30 characters",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "work_experience": "A very long role title that exceeds thirty characters"
+      },
+      "expect": {
+        "hints": [
+          "Max 30 characters allowed."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-014",
+      "title": "No skills added",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "skills": []
+      },
+      "expect": {
+        "hints": [
+          "Skills are required."
+        ],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-015",
+      "title": "Expected CTC max lower than min",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "expected_ctc_min": 20,
+        "expected_ctc_max": 10
+      },
+      "expect": {
+        "hints": [],
+        "stillOpen": true
+      }
+    },
+    {
+      "id": "CAND-VAL-016",
+      "title": "Script text in role does not run and does not save",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "formValidation",
+      "role": "recruiter1",
+      "input": {
+        "work_experience": "<script>alert(1)</script>"
+      },
+      "expect": {
+        "hints": [],
+        "noDialog": true
+      }
+    },
+    {
+      "id": "CAND-CRE-001",
+      "title": "Create a candidate by hand with all required fields",
+      "tags": [
+        "smoke",
+        "functional",
+        "happy"
+      ],
+      "action": "manualCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "a"
+      },
+      "expect": {
+        "inList": true
+      }
+    },
+    {
+      "id": "CAND-CRE-002",
+      "title": "Create with zero experience and zero CTC (lower boundary)",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "manualCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "over": {
+          "total_experience": 0,
+          "relevant_experience": 0,
+          "current_ctc": 0,
+          "expected_ctc_min": 0,
+          "expected_ctc_max": 0
+        }
+      },
+      "expect": {
+        "inList": true
+      }
+    },
+    {
+      "id": "CAND-CRE-003",
+      "title": "Create with experience 99 (upper boundary)",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "manualCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "c",
+        "over": {
+          "total_experience": 99,
+          "relevant_experience": 99
+        }
+      },
+      "expect": {
+        "inList": true
+      }
+    },
+    {
+      "id": "CAND-UPL-001",
+      "title": "Upload a normal PDF and the form is filled from it",
+      "tags": [
+        "smoke",
+        "functional",
+        "integration",
+        "happy"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "valid_pdf"
+      ],
+      "expect": {
+        "outcome": "parsed"
+      }
+    },
+    {
+      "id": "CAND-UPL-002",
+      "title": "Upload a PDF with a unicode filename",
+      "tags": [
+        "functional",
+        "integration",
+        "happy"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "unicode_name"
+      ],
+      "expect": {
+        "outcome": "parsed"
+      }
+    },
+    {
+      "id": "CAND-UPL-003",
+      "title": "Upload a PDF with spaces and brackets in the name",
+      "tags": [
+        "functional",
+        "integration",
+        "happy"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "spaces_name"
+      ],
+      "expect": {
+        "outcome": "parsed"
+      }
+    },
+    {
+      "id": "CAND-UPL-004",
+      "title": "Empty file is refused",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "empty"
+      ],
+      "expect": {
+        "outcome": "alert",
+        "alert": "empty"
+      }
+    },
+    {
+      "id": "CAND-UPL-005",
+      "title": "Executable renamed .pdf is refused",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "fake_exe"
+      ],
+      "expect": {
+        "outcome": "alert",
+        "alert": "failed|invalid|not|type"
+      }
+    },
+    {
+      "id": "CAND-UPL-006",
+      "title": "Real .exe file is refused",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "exe"
+      ],
+      "expect": {
+        "outcome": "alert",
+        "alert": "failed|invalid|not|type"
+      }
+    },
+    {
+      "id": "CAND-UPL-007",
+      "title": "Plain text renamed .pdf is refused or reported",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "text_as_pdf"
+      ],
+      "expect": {
+        "outcome": "alert",
+        "alert": "failed|invalid|not|type|parsing"
+      }
+    },
+    {
+      "id": "CAND-UPL-008",
+      "title": "Corrupt PDF is reported without a server error",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "corrupt_pdf"
+      ],
+      "expect": {
+        "outcome": "alert",
+        "alert": "failed|invalid|not|type|parsing"
+      }
+    },
+    {
+      "id": "CAND-UPL-009",
+      "title": "Blank PDF (no text) is reported",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "blank_pdf"
+      ],
+      "expect": {
+        "outcome": "alert",
+        "alert": "failed|blank|empty|not|parsing"
+      }
+    },
+    {
+      "id": "CAND-UPL-010",
+      "title": "File over 5 MB is refused with the size message",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "oversized"
+      ],
+      "expect": {
+        "outcome": "dialog",
+        "dialog": "too large"
+      }
+    },
+    {
+      "id": "CAND-UPL-011",
+      "title": "Filename with path characters is handled safely",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "path_name"
+      ],
+      "expect": {
+        "outcome": "safe"
+      }
+    },
+    {
+      "id": "CAND-UPL-012",
+      "title": "Resume without an email: form asks for the email",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "uploadFile",
+      "role": "recruiter1",
+      "files": [
+        "no_email"
+      ],
+      "expect": {
+        "outcome": "parsed",
+        "emailRequired": true
+      }
+    },
+    {
+      "id": "CAND-LST-001",
+      "title": "Search by name finds the candidate",
+      "tags": [
+        "smoke",
+        "functional",
+        "happy"
+      ],
+      "action": "search",
+      "role": "recruiter1",
+      "input": {
+        "term": "{{letters}}"
+      },
+      "expect": {
+        "minRows": 4
+      }
+    },
+    {
+      "id": "CAND-LST-002",
+      "title": "Search for something that does not exist shows no rows",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "search",
+      "role": "recruiter1",
+      "input": {
+        "term": "zzzz-no-such-person-{{runId}}"
+      },
+      "expect": {
+        "rows": 0
+      }
+    },
+    {
+      "id": "CAND-LST-003",
+      "title": "Search with quotes, percent and tags does not break the page",
+      "tags": [
+        "functional",
+        "negative",
+        "security"
+      ],
+      "action": "search",
+      "role": "recruiter1",
+      "input": {
+        "term": "%_'\"<>;--"
+      },
+      "expect": {
+        "rows": 0,
+        "noServerError": true
+      }
+    },
+    {
+      "id": "CAND-LST-004",
+      "title": "Search is case-insensitive",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "search",
+      "role": "recruiter1",
+      "input": {
+        "term": "{{letters}}"
+      },
+      "expect": {
+        "minRows": 4,
+        "upper": true
+      }
+    },
+    {
+      "id": "CAND-LST-005",
+      "title": "Sort A to Z orders the names",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "sort",
+      "role": "recruiter1",
+      "input": {
+        "order": "a-z",
+        "term": "{{letters}}"
+      }
+    },
+    {
+      "id": "CAND-LST-006",
+      "title": "Sort Z to A orders the names",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "sort",
+      "role": "recruiter1",
+      "input": {
+        "order": "z-a",
+        "term": "{{letters}}"
+      }
+    },
+    {
+      "id": "CAND-LST-007",
+      "title": "Filter by skill keeps only matching candidates",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "filter",
+      "role": "recruiter1",
+      "input": {
+        "filter": {
+          "skills": "Python"
+        },
+        "term": "{{letters}}"
+      },
+      "expect": {
+        "include": [
+          "a"
+        ],
+        "exclude": [
+          "b",
+          "c",
+          "d"
+        ]
+      }
+    },
+    {
+      "id": "CAND-LST-008",
+      "title": "Filter by email finds exactly one",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "filter",
+      "role": "recruiter1",
+      "input": {
+        "filter": {
+          "email": "qa-{{runId}}-b@"
+        }
+      },
+      "expect": {
+        "include": [
+          "b"
+        ],
+        "exclude": [
+          "a",
+          "c",
+          "d"
+        ]
+      }
+    },
+    {
+      "id": "CAND-LST-009",
+      "title": "Filter with no match shows the empty state",
+      "tags": [
+        "functional",
+        "negative"
+      ],
+      "action": "filter",
+      "role": "recruiter1",
+      "input": {
+        "filter": {
+          "skills": "cobol-fortran-{{runId}}"
+        }
+      },
+      "expect": {
+        "rows": 0
+      }
+    },
+    {
+      "id": "CAND-LST-010",
+      "title": "Clear filters brings the rows back",
+      "tags": [
+        "functional",
+        "happy"
+      ],
+      "action": "filterClear",
+      "role": "recruiter1",
+      "input": {
+        "filter": {
+          "skills": "cobol-fortran-{{runId}}"
+        },
+        "term": "{{letters}}"
+      },
+      "expect": {
+        "minRows": 4
+      }
+    },
+    {
+      "id": "CAND-ADM-001",
+      "title": "Delete and Export buttons hidden for recruiter1",
+      "tags": [
+        "smoke",
+        "functional",
+        "security"
+      ],
+      "action": "adminControls",
+      "role": "recruiter1",
+      "expect": {
+        "visible": false
+      }
+    },
+    {
+      "id": "CAND-ADM-002",
+      "title": "Delete and Export buttons hidden for admin",
+      "tags": [
+        "smoke",
+        "functional",
+        "security"
+      ],
+      "action": "adminControls",
+      "role": "admin",
+      "expect": {
+        "visible": false
+      }
+    },
+    {
+      "id": "CAND-ADM-003",
+      "title": "Delete and Export buttons shown for super",
+      "tags": [
+        "smoke",
+        "functional",
+        "security"
+      ],
+      "action": "adminControls",
+      "role": "super",
+      "expect": {
+        "visible": true
+      }
+    },
+    {
+      "id": "CAND-ACC-001",
+      "title": "Anonymous user cannot read the candidate list",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "anonymous",
+      "input": {
+        "method": "GET",
+        "path": "api/candidates/?paginate=false"
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      },
+      "knownIssue": "BUG-005 candidate list is readable without login"
+    },
+    {
+      "id": "CAND-ACC-002",
+      "title": "Anonymous user cannot edit a candidate",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "anonymous",
+      "input": {
+        "method": "PATCH",
+        "path": "api/candidates/{{id:y}}/",
+        "form": {
+          "current_location": "Anon"
+        }
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      },
+      "knownIssue": "BUG-002 candidate detail allows anonymous edit"
+    },
+    {
+      "id": "CAND-ACC-003",
+      "title": "Anonymous user cannot delete a candidate",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "anonymous",
+      "input": {
+        "method": "DELETE",
+        "path": "api/candidates/{{id:z}}/"
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      },
+      "knownIssue": "BUG-002 candidate detail allows anonymous delete"
+    },
+    {
+      "id": "CAND-ACC-004",
+      "title": "Recruiter cannot delete a candidate (UI hides Delete)",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter2",
+      "input": {
+        "method": "DELETE",
+        "path": "api/candidates/{{id:y}}/"
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      },
+      "knownIssue": "BUG-002 candidate detail allows any user to delete"
+    },
+    {
+      "id": "CAND-ACC-005",
+      "title": "Anonymous user cannot create a candidate",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "anonymous",
+      "input": {
+        "method": "POST",
+        "path": "api/candidates/",
+        "form": {
+          "first_name": "Anon",
+          "email": "qa-{{runId}}-anon@flashyre-qa.example"
+        }
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-006",
+      "title": "Anonymous user cannot upload a resume for parsing",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "anonymous",
+      "input": {
+        "method": "POST",
+        "path": "api/parse-resume/"
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-007",
+      "title": "Anonymous user cannot get a signed file URL",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "anonymous",
+      "input": {
+        "method": "GET",
+        "path": "api/files/signed-url/?file_path=resumes/x.pdf"
+      },
+      "expect": {
+        "status": [
+          401,
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-008",
+      "title": "Recruiter cannot export all candidates",
+      "tags": [
+        "smoke",
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter1",
+      "input": {
+        "method": "GET",
+        "path": "api/super-admin/export-candidates/"
+      },
+      "expect": {
+        "status": [
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-009",
+      "title": "Non-super admin cannot export all candidates",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "admin",
+      "input": {
+        "method": "GET",
+        "path": "api/super-admin/export-candidates/"
+      },
+      "expect": {
+        "status": [
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-010",
+      "title": "Recruiter cannot create system users",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter1",
+      "input": {
+        "method": "POST",
+        "path": "api/super-admin/create-system-user/",
+        "json": {
+          "user_type": "admin"
+        }
+      },
+      "expect": {
+        "status": [
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-011",
+      "title": "Unknown candidate id returns 404",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter1",
+      "input": {
+        "method": "GET",
+        "path": "api/candidates/999999999/"
+      },
+      "expect": {
+        "status": [
+          404
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-012",
+      "title": "Non-numeric candidate id returns 404",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter1",
+      "input": {
+        "method": "GET",
+        "path": "api/candidates/abc/"
+      },
+      "expect": {
+        "status": [
+          404
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-013",
+      "title": "Signed URL refused for a non-resume path",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter1",
+      "input": {
+        "method": "GET",
+        "path": "api/files/signed-url/?file_path=secrets/notes.txt"
+      },
+      "expect": {
+        "status": [
+          403
+        ]
+      }
+    },
+    {
+      "id": "CAND-ACC-014",
+      "title": "Path traversal in signed URL is refused",
+      "tags": [
+        "functional",
+        "security",
+        "negative"
+      ],
+      "action": "api",
+      "role": "recruiter1",
+      "input": {
+        "method": "GET",
+        "path": "api/files/signed-url/?file_path=resumes/../../etc/passwd"
+      },
+      "expect": {
+        "status": [
+          400,
+          403,
+          404
+        ]
+      }
+    },
+    {
+      "id": "CAND-API-001",
+      "title": "Create with the required fields",
+      "tags": [
+        "smoke",
+        "functional",
+        "happy",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {}
+      },
+      "expect": {
+        "status": [
+          201
+        ],
+        "cleanup": true
+      }
+    },
+    {
+      "id": "CAND-API-002",
+      "title": "Same email twice is rejected cleanly",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "_twice": true
+        }
+      },
+      "expect": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "id": "CAND-API-003",
+      "title": "Invalid email is rejected",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "email": "nope"
+        }
+      },
+      "expect": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "id": "CAND-API-004",
+      "title": "First name with digits is rejected",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "first_name": "Asha1"
+        }
+      },
+      "expect": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "id": "CAND-API-005",
+      "title": "Missing first name is rejected",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "first_name": ""
+        }
+      },
+      "expect": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "id": "CAND-API-006",
+      "title": "SQL text in skills is stored as plain text or refused, never a server error",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "skills": "'; DROP TABLE users;--"
+        }
+      },
+      "expect": {
+        "status": [
+          201,
+          400
+        ],
+        "storedLiteral": true
+      }
+    },
+    {
+      "id": "CAND-API-007",
+      "title": "Very long skills text is handled without a server error",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "skills": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "expect": {
+        "status": [
+          201,
+          400
+        ]
+      }
+    },
+    {
+      "id": "CAND-API-008",
+      "title": "Unicode name is handled without a server error",
+      "tags": [
+        "functional",
+        "negative",
+        "integration"
+      ],
+      "action": "apiCreate",
+      "role": "recruiter1",
+      "input": {
+        "person": "b",
+        "form": {
+          "first_name": "Ångström"
+        }
+      },
+      "expect": {
+        "status": [
+          201,
+          400
+        ]
+      }
+    }
+  ]
+}

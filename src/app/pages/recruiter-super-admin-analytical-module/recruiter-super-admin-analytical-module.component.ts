@@ -12,6 +12,9 @@ import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/re
 import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { ThumbnailService } from '../../services/thumbnail.service';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
+import { QaLabComponent } from './qa-lab/qa-lab.component';
+import { RecruiterInsightsComponent } from '../../components/recruiter-insights/recruiter-insights.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { SuperAdminService } from '../../services/super-admin.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
@@ -26,8 +29,10 @@ import * as FileSaver from 'file-saver';
     ReactiveFormsModule,
     FormsModule,
     RecruiterSidebarComponent,
+    QaLabComponent,
     NotificationBellComponent,
     AlertMessageComponent,
+    RecruiterInsightsComponent,
   ],
   templateUrl: './recruiter-super-admin-analytical-module.component.html',
   styleUrls: ['./recruiter-super-admin-analytical-module.component.css'],
@@ -238,12 +243,15 @@ export class RecruiterSuperAdminAnalyticalModuleComponent implements OnInit, Aft
     private thumbnailService: ThumbnailService,
     private superAdminService: SuperAdminService,
     private reqService: AdbRequirementService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.title.setTitle('Super Admin Dashboard - Flashyre');
   }
 
   ngOnInit() {
+    if (this.route.snapshot.queryParamMap.get('view')) { this.activeTab = 'insights'; }
     this.initForm();
     this.loadDropdowns();
     this.setDatePreset('6m'); // Set 6-month default period and fetch analytics
@@ -253,6 +261,9 @@ export class RecruiterSuperAdminAnalyticalModuleComponent implements OnInit, Aft
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
+    if (tabName !== 'insights' && this.route.snapshot.queryParamMap.get('view')) {
+      this.router.navigate([], { relativeTo: this.route, queryParams: { view: null, rec: null }, queryParamsHandling: 'merge', replaceUrl: true });
+    }
     if (tabName === 'users') {
       if (!this.userList || this.userList.length === 0) {
         this.fetchUsers();
@@ -261,8 +272,6 @@ export class RecruiterSuperAdminAnalyticalModuleComponent implements OnInit, Aft
       this.loadPlatformSettings();
     } else if (tabName === 'reports') {
       this.renderCharts();
-    } else if (tabName === 'insights') {
-      this.fetchInsights();
     }
   }
 
@@ -735,7 +744,6 @@ export class RecruiterSuperAdminAnalyticalModuleComponent implements OnInit, Aft
   }
 
   ngOnDestroy() {
-    this.destroyInsightCharts();
     if (this.recruiterChart) {
       this.recruiterChart.destroy();
       this.recruiterChart = null;
@@ -990,167 +998,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent implements OnInit, Aft
     });
   }
 
-  // =====================================================================
-  // RECRUITER INSIGHTS TAB
-  // =====================================================================
-  insights: any = null;
-  isLoadingInsights = false;
-  insightsError = '';
-  insightsClient = '';
-  expandedClient: string | null = null;
-  readonly insightsPalette = ['#2563eb', '#059669', '#d97706', '#7c3aed', '#dc2626', '#0891b2', '#64748b'];
-  private insightCharts: { [key: string]: Chart } = {};
-
-  fetchInsights() {
-    this.isLoadingInsights = true;
-    this.insightsError = '';
-    this.superAdminService.getRecruiterInsights({ ...this.filters, client_name: this.insightsClient }).subscribe({
-      next: (data: any) => {
-        this.insights = data;
-        this.isLoadingInsights = false;
-        this.cdr.detectChanges();
-        this.renderInsightCharts();
-      },
-      error: (err: any) => {
-        console.error('Failed to load recruiter insights', err);
-        this.insightsError = 'Could not load recruiter insights. Please try again.';
-        this.isLoadingInsights = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  onInsightsClientChange() {
-    this.expandedClient = null;
-    this.fetchInsights();
-  }
-
-  insightsSourcedFor(recruiterId: string): number {
-    const row = (this.insights?.sourcing?.rows || []).find((r: any) => r.recruiter_id === recruiterId);
-    return row ? row.total : 0;
-  }
-
-  toggleClientRow(client: string) {
-    this.expandedClient = this.expandedClient === client ? null : client;
-  }
-
-  /** Conversion cell shading: red below 30%, amber below 60%, green above. */
-  convClass(pct: number | null): string {
-    if (pct === null || pct === undefined) return 'conv-na';
-    return pct < 30 ? 'conv-low' : pct < 60 ? 'conv-mid' : 'conv-high';
-  }
-
-  funnelBarWidth(value: number): number {
-    const max = this.insights?.funnel?.team?.sourced || 0;
-    return max ? Math.max(4, Math.round((100 * value) / max)) : 0;
-  }
-
-  private destroyInsightCharts() {
-    Object.values(this.insightCharts).forEach(c => c.destroy());
-    this.insightCharts = {};
-  }
-
-  private makeInsightChart(id: string, config: any) {
-    const canvas = document.getElementById(id) as HTMLCanvasElement | null;
-    if (!canvas) return;
-    this.insightCharts[id]?.destroy();
-    this.insightCharts[id] = new Chart(canvas, config);
-  }
-
-  renderInsightCharts() {
-    if (this.activeTab !== 'insights' || !this.insights) return;
-    setTimeout(() => {
-      this.destroyInsightCharts();
-      const ins = this.insights;
-      const p = this.insightsPalette;
-
-      // 1. Placements per recruiter (horizontal bars)
-      const pr = ins.placements.rows;
-      this.makeInsightChart('insPlacementsChart', {
-        type: 'bar',
-        data: {
-          labels: pr.map((r: any) => r.recruiter_name),
-          datasets: [
-            { label: 'Hired', data: pr.map((r: any) => r.hired), backgroundColor: p[1] },
-            { label: 'Offers pending', data: pr.map((r: any) => r.offers), backgroundColor: p[2] }
-          ]
-        },
-        options: {
-          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-          scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
-        }
-      });
-
-      // 5. Weekly sourcing, stacked by source
-      const weekly = ins.sourcing.weekly;
-      this.makeInsightChart('insSourcingChart', {
-        type: 'bar',
-        data: {
-          labels: weekly.map((w: any) => w.week),
-          datasets: ins.sourcing.sources.map((s: string, i: number) => ({
-            label: s,
-            data: weekly.map((w: any) => w.by_source[s] || 0),
-            backgroundColor: p[i % p.length]
-          }))
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } }
-        }
-      });
-
-      // 6. Quality scatter: volume vs interview rate
-      const qr = ins.quality.rows.filter((r: any) => r.sub_to_interview_pct !== null);
-      this.makeInsightChart('insQualityChart', {
-        type: 'scatter',
-        data: {
-          datasets: [{
-            label: 'Recruiter',
-            data: qr.map((r: any) => ({ x: r.submitted, y: r.sub_to_interview_pct, name: r.recruiter_name })),
-            backgroundColor: p[0], pointRadius: 6
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx: any) => `${ctx.raw.name}: ${ctx.raw.x} submitted, ${ctx.raw.y}% to interview`
-              }
-            }
-          },
-          scales: {
-            x: { title: { display: true, text: 'Submissions' }, beginAtZero: true, ticks: { precision: 0 } },
-            y: { title: { display: true, text: 'Submit-to-interview %' }, beginAtZero: true, max: 100 }
-          }
-        }
-      });
-
-      // 11. Ageing buckets of open requirements, stacked per recruiter
-      const fa = ins.fill_ageing;
-      this.makeInsightChart('insAgeingChart', {
-        type: 'bar',
-        data: {
-          labels: fa.rows.map((r: any) => r.recruiter_name),
-          datasets: fa.bucket_labels.map((b: string, i: number) => ({
-            label: `${b} days`,
-            data: fa.rows.map((r: any) => r.ageing[b]),
-            backgroundColor: [p[1], p[0], p[2], p[4]][i]
-          }))
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } }
-        }
-      });
-    }, 50);
-  }
-
-  applyFilter() {
-    this.fetchAnalytics();
-    if (this.activeTab === 'insights') { this.fetchInsights(); }
-  }
+  applyFilter() { this.fetchAnalytics(); }
 
   downloadLogs() {
     if (this.activityLogs.length === 0) { alert("No activity logs to export"); return; }

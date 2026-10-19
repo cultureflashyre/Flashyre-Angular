@@ -66,3 +66,13 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+# QA
+e2e/.auth/
+e2e/config/.env.local
+e2e/config/.env.dev
+e2e/config/.env.prod
+playwright-report/
+test-results/
+api/reports/
+api/environments/*.local.json
+e2e/data/*.xlsx

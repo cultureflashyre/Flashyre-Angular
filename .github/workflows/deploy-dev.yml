@@ -3,8 +3,7 @@ name: Deploy Dev Frontend to Firebase Hosting
 on:
   push:
     branches:
-      - dev
-      - prashanth_05_10_26
+      - 'flashyre_*'
     paths-ignore:
       - '**.md'
       - 'documentation/**'

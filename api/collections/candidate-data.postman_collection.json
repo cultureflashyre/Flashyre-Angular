@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "Flashyre - Candidate API (data-driven)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "One request, one row per scenario from api/data/candidate-api.json (generated from e2e/data/candidate.json by tools/data-to-newman.mjs)."
+  },
+  "item": [
+    {
+      "name": "Scenario",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// ---- shared helpers (copied into each request that needs them) ----",
+              "const BASE = pm.environment.get('base_url');",
+              "function ensureRun() {",
+              "  if (!pm.collectionVariables.get('runId')) {",
+              "    pm.collectionVariables.set('runId', Math.random().toString(16).slice(2, 10).padEnd(8, '0'));",
+              "    pm.collectionVariables.set('startedAt', new Date().toISOString());",
+              "  }",
+              "}",
+              "function lettersFor(id) { return 'Qa' + [...id.toLowerCase()].map(c => 'ghijklmnopabcdef'[parseInt(c, 16)]).join(''); }",
+              "",
+              "ensureRun();",
+              "const row = {",
+              "  id: pm.iterationData.get('id'), title: pm.iterationData.get('title'), role: pm.iterationData.get('role'),",
+              "  method: pm.iterationData.get('method'), path: pm.iterationData.get('path'),",
+              "  status: pm.iterationData.get('status'), form: pm.iterationData.get('form'), json: pm.iterationData.get('json'),",
+              "  known: pm.iterationData.get('knownIssue'),",
+              "};",
+              "const emails = { recruiter1: 'email_recruiter1', recruiter2: 'email_recruiter2', admin: 'email_admin', super: 'email_super' };",
+              "function withToken(role, then) {",
+              "  if (!role || role === 'anonymous') return then(null);",
+              "  const have = pm.collectionVariables.get('token_' + role);",
+              "  if (have) return then(have);",
+              "  pm.sendRequest({ url: BASE + 'api/auth/token/', method: 'POST', header: { 'Content-Type': 'application/json' },",
+              "    body: { mode: 'raw', raw: JSON.stringify({ email: pm.environment.get(emails[role]), password: pm.environment.get('qa_password') }) } },",
+              "    (err, res) => { const t = res && res.json().access; if (t) pm.collectionVariables.set('token_' + role, t); then(t); });",
+              "}",
+              "withToken(row.role, token => {",
+              "  const opts = { url: BASE + String(row.path || '').replace('{{runId}}', pm.collectionVariables.get('runId')), method: row.method || 'GET', header: {} };",
+              "  if (token) opts.header['Authorization'] = 'Bearer ' + token;",
+              "  if (row.form) opts.body = { mode: 'formdata', formdata: Object.entries(row.form).map(([key, value]) => ({ key, value: String(value).replace('{{runId}}', pm.collectionVariables.get('runId')) })) };",
+              "  if (row.json) { opts.header['Content-Type'] = 'application/json'; opts.body = { mode: 'raw', raw: JSON.stringify(row.json) }; }",
+              "  pm.sendRequest(opts, (err, res) => {",
+              "    pm.collectionVariables.set('lastCode', res ? res.code : 0);",
+              "    pm.collectionVariables.set('lastErr', err ? String(err) : '');",
+              "  });",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const want = pm.iterationData.get('status');",
+              "const known = pm.iterationData.get('knownIssue');",
+              "pm.test((pm.iterationData.get('id') || '') + ' ' + (pm.iterationData.get('title') || '') + (known ? ' [known issue ' + known + ']' : ''), () => {",
+              "  pm.expect(want, 'HTTP ' + pm.collectionVariables.get('lastCode') + ' ' + pm.collectionVariables.get('lastErr')).to.include(Number(pm.collectionVariables.get('lastCode')));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}",
+          "host": [
+            "{{base_url}}"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+[
+  {
+    "id": "CAND-ACC-001",
+    "title": "Anonymous user cannot read the candidate list",
+    "role": "anonymous",
+    "method": "GET",
+    "path": "api/candidates/?paginate=false",
+    "status": [
+      401,
+      403
+    ],
+    "knownIssue": "BUG-005 candidate list is readable without login"
+  },
+  {
+    "id": "CAND-ACC-005",
+    "title": "Anonymous user cannot create a candidate",
+    "role": "anonymous",
+    "method": "POST",
+    "path": "api/candidates/",
+    "status": [
+      401,
+      403
+    ],
+    "form": {
+      "first_name": "Anon",
+      "email": "qa-{{runId}}-anon@flashyre-qa.example"
+    }
+  },
+  {
+    "id": "CAND-ACC-006",
+    "title": "Anonymous user cannot upload a resume for parsing",
+    "role": "anonymous",
+    "method": "POST",
+    "path": "api/parse-resume/",
+    "status": [
+      401,
+      403
+    ]
+  },
+  {
+    "id": "CAND-ACC-007",
+    "title": "Anonymous user cannot get a signed file URL",
+    "role": "anonymous",
+    "method": "GET",
+    "path": "api/files/signed-url/?file_path=resumes/x.pdf",
+    "status": [
+      401,
+      403
+    ]
+  },
+  {
+    "id": "CAND-ACC-008",
+    "title": "Recruiter cannot export all candidates",
+    "role": "recruiter1",
+    "method": "GET",
+    "path": "api/super-admin/export-candidates/",
+    "status": [
+      403
+    ]
+  },
+  {
+    "id": "CAND-ACC-009",
+    "title": "Non-super admin cannot export all candidates",
+    "role": "admin",
+    "method": "GET",
+    "path": "api/super-admin/export-candidates/",
+    "status": [
+      403
+    ]
+  },
+  {
+    "id": "CAND-ACC-010",
+    "title": "Recruiter cannot create system users",
+    "role": "recruiter1",
+    "method": "POST",
+    "path": "api/super-admin/create-system-user/",
+    "status": [
+      403
+    ],
+    "json": {
+      "user_type": "admin"
+    }
+  },
+  {
+    "id": "CAND-ACC-011",
+    "title": "Unknown candidate id returns 404",
+    "role": "recruiter1",
+    "method": "GET",
+    "path": "api/candidates/999999999/",
+    "status": [
+      404
+    ]
+  },
+  {
+    "id": "CAND-ACC-012",
+    "title": "Non-numeric candidate id returns 404",
+    "role": "recruiter1",
+    "method": "GET",
+    "path": "api/candidates/abc/",
+    "status": [
+      404
+    ]
+  },
+  {
+    "id": "CAND-ACC-013",
+    "title": "Signed URL refused for a non-resume path",
+    "role": "recruiter1",
+    "method": "GET",
+    "path": "api/files/signed-url/?file_path=secrets/notes.txt",
+    "status": [
+      403
+    ]
+  },
+  {
+    "id": "CAND-ACC-014",
+    "title": "Path traversal in signed URL is refused",
+    "role": "recruiter1",
+    "method": "GET",
+    "path": "api/files/signed-url/?file_path=resumes/../../etc/passwd",
+    "status": [
+      400,
+      403,
+      404
+    ]
+  }
+]

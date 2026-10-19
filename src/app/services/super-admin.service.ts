@@ -27,9 +27,16 @@ export class SuperAdminService {
     let params = new HttpParams();
     if (filters.start_date) params = params.set('start_date', filters.start_date);
     if (filters.end_date) params = params.set('end_date', filters.end_date);
-    if (filters.recruiter_id) params = params.set('recruiter_id', filters.recruiter_id);
     if (filters.client_name) params = params.set('client_name', filters.client_name);
     return this.http.get(this.apiUrl + 'recruiter-insights/', { params });
+  }
+
+  getRecruiterDetail(filters: any): Observable<any> {
+    let params = new HttpParams().set('ids', filters.ids);
+    if (filters.start_date) params = params.set('start_date', filters.start_date);
+    if (filters.end_date) params = params.set('end_date', filters.end_date);
+    if (filters.client_name) params = params.set('client_name', filters.client_name);
+    return this.http.get(this.apiUrl + 'recruiter-insights/detail/', { params });
   }
 
    // --- NEW METHOD FOR THE TABLE DATA ---

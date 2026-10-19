@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "e2e:smoke:local": "node e2e/run.mjs local --grep @smoke",
+    "e2e:smoke:dev": "node e2e/run.mjs dev --grep @smoke",
+    "e2e:smoke:prod": "node e2e/run.mjs prod --grep @smoke",
+    "e2e:full:local": "node e2e/run.mjs local",
+    "e2e:chromium:local": "node e2e/run.mjs local --project=chromium",
+    "e2e:regression:dev": "node e2e/run.mjs dev --grep @regression",
+    "e2e:nonfunctional:local": "node e2e/run.mjs local --grep @nonfunctional",
+    "e2e:page": "node e2e/run.mjs local e2e/specs --grep",
+    "e2e:report": "npx playwright show-report",
+    "api:smoke:local": "node api/run.mjs local smoke",
+    "api:smoke:dev": "node api/run.mjs dev smoke",
+    "api:smoke:prod": "node api/run.mjs prod smoke",
+    "api:full:local": "node api/run.mjs local full",
+    "api:data:local": "node api/run.mjs local data",
+    "data:to-excel": "node tools/json-to-excel.mjs",
+    "data:from-excel": "node tools/excel-to-json.mjs",
+    "load:local": "k6 run load/k6/candidate-list.js"
+  },
+  "install": "npm i -D @playwright/test @axe-core/playwright newman newman-reporter-htmlextra (xlsx already present; k6 optional separate install)"
+}

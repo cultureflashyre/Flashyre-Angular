@@ -1,0 +1,661 @@
+<!-- ===== shared templates ===== -->
+<ng-template #searchBox let-t="t" let-ph="ph">
+  <input class="input-control tbl-search" type="search" [placeholder]="ph" [(ngModel)]="t.search" />
+</ng-template>
+
+<ng-template #pagerTpl let-t="t" let-noun="noun">
+  <div class="table-pagination-footer" *ngIf="t.total > 0">
+    <div class="pagination-left">
+      <span class="pagination-count-text">
+        Showing <span class="font-semibold text-accent">{{ t.from }}</span> to
+        <span class="font-semibold text-accent">{{ t.to }}</span> of
+        <span class="font-semibold">{{ t.total }}</span> {{ noun }}
+      </span>
+      <div class="page-size-selector" *ngIf="t.pageSizes.length > 1">
+        <label class="page-size-label">Rows per page:</label>
+        <select class="page-size-select" [value]="t.pageSize" (change)="t.setPageSize($any($event.target).value)">
+          <option *ngFor="let size of t.pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="pagination-nav" *ngIf="t.totalPages > 1">
+      <button type="button" class="pager-btn" [disabled]="t.page === 1" (click)="go(t, t.page - 1)">Prev</button>
+      <div class="pager-numbers">
+        <ng-container *ngFor="let p of t.pageRange">
+          <span *ngIf="p < 0" class="pager-ellipsis">…</span>
+          <button *ngIf="p > 0" type="button" class="pager-num-btn" [class.active]="t.page === p" (click)="go(t, p)">{{ p }}</button>
+        </ng-container>
+      </div>
+      <button type="button" class="pager-btn" [disabled]="t.page === t.totalPages" (click)="go(t, t.page + 1)">Next</button>
+    </div>
+  </div>
+  <div class="ins-empty" *ngIf="t.total === 0">No matching rows.</div>
+</ng-template>
+
+<!-- ===== view switch ===== -->
+<div class="view-switch" role="tablist">
+  <button type="button" role="tab" [class.active]="view === 'team'" (click)="setView('team')">Team overview</button>
+  <button type="button" role="tab" [class.active]="view === 'single'" (click)="setView('single')">Single recruiter</button>
+  <button type="button" role="tab" [class.active]="view === 'compare'" (click)="setView('compare')">Compare recruiters</button>
+</div>
+
+<!-- ===== filters ===== -->
+<div class="card filter-card">
+  <div class="filter-header-wrap">
+    <div class="filter-title-group"><span class="filter-title">Period and client</span></div>
+    <div class="date-presets">
+      <button type="button" class="preset-pill" *ngFor="let p of [['7d','7D'],['30d','30D'],['3m','3 Months'],['6m','6 Months'],['1y','1 Year'],['all','All Time']]"
+              [class.active]="preset === p[0]" (click)="setPreset(p[0])">{{ p[1] }}</button>
+    </div>
+  </div>
+  <div class="filters-row">
+    <div class="filter-field">
+      <label class="field-label">From</label>
+      <input type="date" class="input-control" [(ngModel)]="filters.start_date" (change)="onDateChange()" />
+    </div>
+    <div class="filter-field">
+      <label class="field-label">To</label>
+      <input type="date" class="input-control" [(ngModel)]="filters.end_date" (change)="onDateChange()" />
+    </div>
+    <div class="filter-field">
+      <label class="field-label">Client</label>
+      <select class="select-control" [(ngModel)]="client" (change)="refresh()">
+        <option value="">All Clients</option>
+        <option *ngFor="let c of clients" [value]="c.client_name">{{ c.client_name }}</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ===== recruiter picker (single / compare) ===== -->
+<div class="card picker-card" *ngIf="view !== 'team'">
+  <div class="picker-row">
+    <div class="picker">
+      <label class="field-label">
+        {{ view === 'single' ? 'Choose a recruiter' : 'Add recruiters to compare (up to ' + maxCompare + ')' }}
+      </label>
+      <input class="input-control" type="text" placeholder="Type a name to search…"
+             [(ngModel)]="pickerQuery" (focus)="pickerOpen = true" (input)="pickerOpen = true" (blur)="closePickerSoon()"
+             [disabled]="view === 'compare' && selectedIds.length >= maxCompare" />
+      <ul class="picker-list" *ngIf="pickerOpen && pickerMatches.length">
+        <li *ngFor="let r of pickerMatches" (mousedown)="pick(r.recruiter_id)">{{ r.recruiter_name }}</li>
+      </ul>
+      <div class="picker-empty" *ngIf="pickerOpen && !pickerMatches.length">No recruiter found.</div>
+    </div>
+    <div class="chips" *ngIf="view === 'compare' || selectedIds.length">
+      <span class="chip" *ngFor="let id of selectedIds; let i = index" [style.border-color]="colorFor(i)">
+        <span class="chip-dot" [style.background]="colorFor(i)"></span>{{ nameOf(id) }}
+        <button type="button" class="chip-x" *ngIf="view === 'compare'" (click)="removeCompare(id)" aria-label="Remove">×</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading && !team && !detail" class="card ins-state">Loading recruiter insights…</div>
+<div *ngIf="error" class="card ins-state ins-error">{{ error }}</div>
+
+<!-- ======================================================================= -->
+<!-- TEAM OVERVIEW -->
+<!-- ======================================================================= -->
+<ng-container *ngIf="view === 'team' && team">
+
+  <div class="section-block">
+    <div class="section-title">Placement Scorecard</div>
+    <div class="kpi-grid">
+      <div class="kpi-card highlight-green">
+        <span class="kpi-title">Team Hires</span>
+        <span class="kpi-value">{{ team.placements.team_hired }}</span>
+        <span class="kpi-hint" *ngIf="team.placements.previous_period_hired !== null">
+          Previous period: {{ team.placements.previous_period_hired }}
+          <ng-container *ngIf="team.placements.delta_pct !== null">
+            ({{ team.placements.delta_pct > 0 ? '+' : '' }}{{ team.placements.delta_pct }}%)
+          </ng-container>
+        </span>
+        <span class="kpi-hint" *ngIf="team.placements.previous_period_hired === null">Pick a date range to compare</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-title">Offers Pending</span>
+        <span class="kpi-value">{{ team.placements.team_offers }}</span>
+        <span class="kpi-hint">At Offer stage, not yet joined</span>
+      </div>
+      <div class="kpi-card highlight-blue">
+        <span class="kpi-title">Offer-to-Join</span>
+        <span class="kpi-value">{{ pct(team.offer_to_join.team_offer_to_join_pct) }}</span>
+        <span class="kpi-hint">Joined of offers made</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-title">Candidates Added</span>
+        <span class="kpi-value">{{ team.sourcing.total_added }}</span>
+        <span class="kpi-hint">Sourced by recruiters in period</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hires per recruiter: scales to any team size -->
+  <div class="analytics-charts-grid">
+    <div class="card chart-card">
+      <div class="chart-card-head">
+        <div>
+          <div class="chart-card-badge green">Placements</div>
+          <h3 class="card-title">Hires per Recruiter</h3>
+          <p class="card-sub">Click a bar to open that recruiter. Showing {{ team.recruiters.length }} active recruiters.</p>
+        </div>
+      </div>
+      <div class="seg-row">
+        <button type="button" class="seg" [class.active]="hiresMode === 'top10'" (click)="setHiresMode('top10')">Top 10</button>
+        <button type="button" class="seg" [class.active]="hiresMode === 'top25'" (click)="setHiresMode('top25')">Top 25</button>
+        <button type="button" class="seg" [class.active]="hiresMode === 'bottom10'" (click)="setHiresMode('bottom10')">Bottom 10</button>
+        <button type="button" class="seg" [class.active]="hiresMode === 'all'" (click)="setHiresMode('all')">All (paged)</button>
+      </div>
+      <div class="chart-container" [style.height.px]="hiresHeight"><canvas id="insHiresChart"></canvas></div>
+      <ng-container *ngIf="hiresMode === 'all'">
+        <ng-container *ngTemplateOutlet="pagerTpl; context: { t: hiresPager, noun: 'recruiters' }"></ng-container>
+      </ng-container>
+    </div>
+
+    <div class="card chart-card">
+      <div class="chart-card-head">
+        <div>
+          <div class="chart-card-badge blue">Distribution</div>
+          <h3 class="card-title">How Hires Are Spread</h3>
+          <p class="card-sub">Number of recruiters by hires in the period. Stays readable at any team size.</p>
+        </div>
+      </div>
+      <div class="chart-container"><canvas id="insDistChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Placement scorecard table -->
+  <div class="card table-card ins-table">
+    <div class="table-card-head">
+      <div>
+        <h3 class="card-title">Placement Scorecard by Recruiter</h3>
+        <p class="card-sub">Click a name for a dedicated view. Click a column heading to sort.</p>
+      </div>
+      <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.placements, ph: 'Search recruiter…' }"></ng-container>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead><tr>
+          <th class="sortable" (click)="tables.placements.setSort('recruiter_name')">Recruiter {{ tables.placements.sortIcon('recruiter_name') }}</th>
+          <th class="sortable" (click)="tables.placements.setSort('hired')">Hired {{ tables.placements.sortIcon('hired') }}</th>
+          <th class="sortable" (click)="tables.placements.setSort('offers')">Offers {{ tables.placements.sortIcon('offers') }}</th>
+          <th class="sortable" (click)="tables.placements.setSort('previous_hired')">Prev. period hires {{ tables.placements.sortIcon('previous_hired') }}</th>
+          <th class="sortable" (click)="tables.placements.setSort('active_requirements')">Active requirements {{ tables.placements.sortIcon('active_requirements') }}</th>
+          <th class="sortable" (click)="tables.placements.setSort('hired_per_requirement')">Hired / requirement {{ tables.placements.sortIcon('hired_per_requirement') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let r of tables.placements.pageRows">
+            <td><button type="button" class="name-link" (click)="openSingle(r.recruiter_id)">{{ r.recruiter_name }}</button></td>
+            <td>{{ r.hired }}</td><td>{{ r.offers }}</td>
+            <td>{{ r.previous_hired !== null ? r.previous_hired : '—' }}</td>
+            <td>{{ r.active_requirements }}</td>
+            <td>{{ r.hired_per_requirement !== null ? r.hired_per_requirement : '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.placements, noun: 'recruiters' }"></ng-container>
+  </div>
+
+  <!-- Pipeline funnel with selector -->
+  <div class="card ins-funnel-card">
+    <div class="funnel-head">
+      <div>
+        <h3 class="card-title">{{ funnelView.title }}</h3>
+        <p class="card-sub">Applications in the period, by furthest stage reached.</p>
+      </div>
+      <div class="funnel-select">
+        <label class="field-label">Funnel for</label>
+        <select class="select-control" [(ngModel)]="funnelFor">
+          <option value="">Team (all recruiters)</option>
+          <option *ngFor="let r of team.recruiters" [value]="r.recruiter_id">{{ r.recruiter_name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="ins-funnel">
+      <div class="ins-funnel-row" *ngFor="let s of funnelView.stages">
+        <span class="ins-funnel-label">{{ s.label }}</span>
+        <div class="ins-funnel-track"><div class="ins-funnel-bar" [style.width.%]="barWidth(s.value, funnelView.max)"></div></div>
+        <span class="ins-funnel-num">{{ s.value }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage conversion table -->
+  <div class="card table-card ins-table">
+    <div class="table-card-head">
+      <div>
+        <h3 class="card-title">Stage Conversion by Recruiter</h3>
+        <p class="card-sub">Where each recruiter's candidates drop off. Red under 30%, amber under 60%.</p>
+      </div>
+      <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.funnel, ph: 'Search recruiter…' }"></ng-container>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead><tr>
+          <th class="sortable" (click)="tables.funnel.setSort('recruiter_name')">Recruiter {{ tables.funnel.sortIcon('recruiter_name') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('sourced')">Sourced {{ tables.funnel.sortIcon('sourced') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('submitted')">Submitted {{ tables.funnel.sortIcon('submitted') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('interviewed')">Interviewed {{ tables.funnel.sortIcon('interviewed') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('offered')">Offered {{ tables.funnel.sortIcon('offered') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('hired')">Hired {{ tables.funnel.sortIcon('hired') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('sub_to_interview_pct')">Submit → Interview {{ tables.funnel.sortIcon('sub_to_interview_pct') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('interview_to_offer_pct')">Interview → Offer {{ tables.funnel.sortIcon('interview_to_offer_pct') }}</th>
+          <th class="sortable" (click)="tables.funnel.setSort('offer_to_hired_pct')">Offer → Hired {{ tables.funnel.sortIcon('offer_to_hired_pct') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr class="ins-team-row">
+            <td><strong>Team total</strong></td>
+            <td>{{ team.funnel.team.sourced }}</td><td>{{ team.funnel.team.submitted }}</td><td>{{ team.funnel.team.interviewed }}</td>
+            <td>{{ team.funnel.team.offered }}</td><td>{{ team.funnel.team.hired }}</td>
+            <td><span class="conv-cell" [ngClass]="convClass(team.funnel.team.sub_to_interview_pct)">{{ pct(team.funnel.team.sub_to_interview_pct) }}</span></td>
+            <td><span class="conv-cell" [ngClass]="convClass(team.funnel.team.interview_to_offer_pct)">{{ pct(team.funnel.team.interview_to_offer_pct) }}</span></td>
+            <td><span class="conv-cell" [ngClass]="convClass(team.funnel.team.offer_to_hired_pct)">{{ pct(team.funnel.team.offer_to_hired_pct) }}</span></td>
+          </tr>
+          <tr *ngFor="let r of tables.funnel.pageRows">
+            <td><button type="button" class="name-link" (click)="openSingle(r.recruiter_id)">{{ r.recruiter_name }}</button></td>
+            <td>{{ r.sourced }}</td><td>{{ r.submitted }}</td><td>{{ r.interviewed }}</td><td>{{ r.offered }}</td><td>{{ r.hired }}</td>
+            <td><span class="conv-cell" [ngClass]="convClass(r.sub_to_interview_pct)">{{ pct(r.sub_to_interview_pct) }}</span></td>
+            <td><span class="conv-cell" [ngClass]="convClass(r.interview_to_offer_pct)">{{ pct(r.interview_to_offer_pct) }}</span></td>
+            <td><span class="conv-cell" [ngClass]="convClass(r.offer_to_hired_pct)">{{ pct(r.offer_to_hired_pct) }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.funnel, noun: 'recruiters' }"></ng-container>
+    <p class="ins-note">Stage is stored as the current stage only, so a candidate rejected after an interview counts as submitted but not interviewed.</p>
+  </div>
+
+  <!-- Sourcing + quality charts -->
+  <div class="analytics-charts-grid">
+    <div class="card chart-card">
+      <div class="chart-card-head"><div>
+        <div class="chart-card-badge blue">Sourcing</div>
+        <h3 class="card-title">Candidates Added per Week</h3>
+        <p class="card-sub">Last 12 weeks in range, split by source.</p>
+      </div></div>
+      <div class="chart-container"><canvas id="insSourcingChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-card-head"><div>
+        <div class="chart-card-badge violet">Quality</div>
+        <h3 class="card-title">Volume vs Interview Rate</h3>
+        <p class="card-sub">Top-right is high volume with good quality. Click a dot to open that recruiter.</p>
+      </div></div>
+      <div class="chart-container"><canvas id="insQualityChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Submission quality table -->
+  <div class="card table-card ins-table">
+    <div class="table-card-head">
+      <div>
+        <h3 class="card-title">Submission Quality</h3>
+        <p class="card-sub">Rating is the average overall score on submitted candidates.</p>
+      </div>
+      <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.quality, ph: 'Search recruiter…' }"></ng-container>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead><tr>
+          <th class="sortable" (click)="tables.quality.setSort('recruiter_name')">Recruiter {{ tables.quality.sortIcon('recruiter_name') }}</th>
+          <th class="sortable" (click)="tables.quality.setSort('submitted')">Submitted {{ tables.quality.sortIcon('submitted') }}</th>
+          <th class="sortable" (click)="tables.quality.setSort('sub_to_interview_pct')">Interview rate {{ tables.quality.sortIcon('sub_to_interview_pct') }}</th>
+          <th class="sortable" (click)="tables.quality.setSort('rejected_pct')">Rejected {{ tables.quality.sortIcon('rejected_pct') }}</th>
+          <th class="sortable" (click)="tables.quality.setSort('avg_rating')">Avg rating {{ tables.quality.sortIcon('avg_rating') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let r of tables.quality.pageRows">
+            <td><button type="button" class="name-link" (click)="openSingle(r.recruiter_id)">{{ r.recruiter_name }}</button></td>
+            <td>{{ r.submitted }}</td>
+            <td><span class="conv-cell" [ngClass]="convClass(r.sub_to_interview_pct)">{{ pct(r.sub_to_interview_pct) }}</span></td>
+            <td>{{ pct(r.rejected_pct) }}</td>
+            <td>{{ r.avg_rating !== null ? r.avg_rating : '—' }} <span class="ins-muted" *ngIf="r.rated_count">({{ r.rated_count }})</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.quality, noun: 'recruiters' }"></ng-container>
+  </div>
+
+  <!-- Offer to join -->
+  <div class="card table-card ins-table">
+    <div class="table-card-head">
+      <div>
+        <h3 class="card-title">Offer-to-Join</h3>
+        <p class="card-sub">Offers made = at Offer or Hired, plus rejected after an offer was recorded.</p>
+      </div>
+      <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.offerToJoin, ph: 'Search recruiter…' }"></ng-container>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead><tr>
+          <th class="sortable" (click)="tables.offerToJoin.setSort('recruiter_name')">Recruiter {{ tables.offerToJoin.sortIcon('recruiter_name') }}</th>
+          <th class="sortable" (click)="tables.offerToJoin.setSort('offers_made')">Offers made {{ tables.offerToJoin.sortIcon('offers_made') }}</th>
+          <th class="sortable" (click)="tables.offerToJoin.setSort('joined')">Joined {{ tables.offerToJoin.sortIcon('joined') }}</th>
+          <th class="sortable" (click)="tables.offerToJoin.setSort('dropped_after_offer')">Dropped after offer {{ tables.offerToJoin.sortIcon('dropped_after_offer') }}</th>
+          <th class="sortable" (click)="tables.offerToJoin.setSort('offer_to_join_pct')">Offer-to-join {{ tables.offerToJoin.sortIcon('offer_to_join_pct') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let r of tables.offerToJoin.pageRows">
+            <td><button type="button" class="name-link" (click)="openSingle(r.recruiter_id)">{{ r.recruiter_name }}</button></td>
+            <td>{{ r.offers_made }}</td><td>{{ r.joined }}</td><td>{{ r.dropped_after_offer }}</td>
+            <td><span class="conv-cell" [ngClass]="convClass(r.offer_to_join_pct)">{{ pct(r.offer_to_join_pct) }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.offerToJoin, noun: 'recruiters' }"></ng-container>
+    <div class="ins-reasons" *ngIf="team.offer_to_join.top_drop_reasons.length">
+      <span class="ins-reasons-title">Top reasons candidates dropped after an offer</span>
+      <span class="ins-reason-chip" *ngFor="let d of team.offer_to_join.top_drop_reasons">{{ d.reason }} · {{ d.count }}</span>
+    </div>
+  </div>
+
+  <!-- Workload -->
+  <div class="card table-card ins-table">
+    <div class="table-card-head">
+      <div>
+        <h3 class="card-title">Workload &amp; Capacity</h3>
+        <p class="card-sub">Current snapshot. Capacity compares live pipeline to the team median ({{ team.workload.team_median_pipeline }} candidates): red above 1.5×, amber above 1×.</p>
+      </div>
+      <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.workload, ph: 'Search recruiter…' }"></ng-container>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead><tr>
+          <th class="sortable" (click)="tables.workload.setSort('recruiter_name')">Recruiter {{ tables.workload.sortIcon('recruiter_name') }}</th>
+          <th class="sortable" (click)="tables.workload.setSort('open_requirements')">Open requirements {{ tables.workload.sortIcon('open_requirements') }}</th>
+          <th class="sortable" (click)="tables.workload.setSort('open_vacancies')">Open vacancies {{ tables.workload.sortIcon('open_vacancies') }}</th>
+          <th class="sortable" (click)="tables.workload.setSort('pipeline_candidates')">Candidates in pipeline {{ tables.workload.sortIcon('pipeline_candidates') }}</th>
+          <th>Capacity</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let r of tables.workload.pageRows">
+            <td><button type="button" class="name-link" (click)="openSingle(r.recruiter_id)">{{ r.recruiter_name }}</button></td>
+            <td>{{ r.open_requirements }}</td><td>{{ r.open_vacancies }}</td><td>{{ r.pipeline_candidates }}</td>
+            <td><span class="cap-pill" [ngClass]="'cap-' + r.capacity">{{ r.capacity === 'red' ? 'Overloaded' : r.capacity === 'amber' ? 'Busy' : 'Has room' }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.workload, noun: 'recruiters' }"></ng-container>
+  </div>
+
+  <!-- Ageing + fill rate -->
+  <div class="analytics-charts-grid">
+    <div class="card chart-card">
+      <div class="chart-card-head"><div>
+        <div class="chart-card-badge amber">Ageing</div>
+        <h3 class="card-title">Open Requirement Ageing</h3>
+        <p class="card-sub">Active and on-hold requirements by days since created. Top 10 recruiters by open requirements; the rest are combined.</p>
+      </div></div>
+      <div class="chart-container"><canvas id="insAgeingChart"></canvas></div>
+    </div>
+    <div class="card table-card ins-table">
+      <div class="table-card-head">
+        <div>
+          <h3 class="card-title">Vacancy Fill Rate</h3>
+          <p class="card-sub">Hires divided by vacancies on the recruiter's requirements.</p>
+        </div>
+        <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.fill, ph: 'Search recruiter…' }"></ng-container>
+      </div>
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead><tr>
+            <th class="sortable" (click)="tables.fill.setSort('recruiter_name')">Recruiter {{ tables.fill.sortIcon('recruiter_name') }}</th>
+            <th class="sortable" (click)="tables.fill.setSort('vacancies')">Vacancies {{ tables.fill.sortIcon('vacancies') }}</th>
+            <th class="sortable" (click)="tables.fill.setSort('filled')">Filled {{ tables.fill.sortIcon('filled') }}</th>
+            <th class="sortable" (click)="tables.fill.setSort('fill_pct')">Fill rate {{ tables.fill.sortIcon('fill_pct') }}</th>
+          </tr></thead>
+          <tbody>
+            <tr *ngFor="let r of tables.fill.pageRows">
+              <td><button type="button" class="name-link" (click)="openSingle(r.recruiter_id)">{{ r.recruiter_name }}</button></td>
+              <td>{{ r.vacancies }}</td><td>{{ r.filled }}</td>
+              <td><span class="conv-cell" [ngClass]="convClass(r.fill_pct)">{{ pct(r.fill_pct) }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.fill, noun: 'recruiters' }"></ng-container>
+    </div>
+  </div>
+
+  <!-- Client-wise -->
+  <div class="card table-card ins-table">
+    <div class="table-card-head">
+      <div>
+        <h3 class="card-title">Client-wise Performance</h3>
+        <p class="card-sub">Click a client to see which recruiters work it. Clients are grouped by name text.</p>
+      </div>
+      <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.clients, ph: 'Search client…' }"></ng-container>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead><tr>
+          <th class="sortable" (click)="tables.clients.setSort('client')">Client {{ tables.clients.sortIcon('client') }}</th>
+          <th class="sortable" (click)="tables.clients.setSort('requirements')">Requirements {{ tables.clients.sortIcon('requirements') }}</th>
+          <th class="sortable" (click)="tables.clients.setSort('filled_requirements')">Filled {{ tables.clients.sortIcon('filled_requirements') }}</th>
+          <th class="sortable" (click)="tables.clients.setSort('fill_pct')">Fill rate {{ tables.clients.sortIcon('fill_pct') }}</th>
+          <th class="sortable" (click)="tables.clients.setSort('submissions')">Submissions {{ tables.clients.sortIcon('submissions') }}</th>
+          <th class="sortable" (click)="tables.clients.setSort('sub_to_interview_pct')">Interview rate {{ tables.clients.sortIcon('sub_to_interview_pct') }}</th>
+          <th class="sortable" (click)="tables.clients.setSort('median_days_to_fill')">Median days to fill {{ tables.clients.sortIcon('median_days_to_fill') }}</th>
+        </tr></thead>
+        <tbody>
+          <ng-container *ngFor="let c of tables.clients.pageRows">
+            <tr class="ins-click-row" (click)="toggleClient(c.client)">
+              <td><strong>{{ expandedClient === c.client ? '▾' : '▸' }} {{ c.client }}</strong></td>
+              <td>{{ c.requirements }}</td><td>{{ c.filled_requirements }}</td>
+              <td><span class="conv-cell" [ngClass]="convClass(c.fill_pct)">{{ pct(c.fill_pct) }}</span></td>
+              <td>{{ c.submissions }}</td><td>{{ pct(c.sub_to_interview_pct) }}</td>
+              <td>{{ c.median_days_to_fill !== null ? c.median_days_to_fill : '—' }}</td>
+            </tr>
+            <tr *ngIf="expandedClient === c.client" class="ins-sub-row">
+              <td colspan="7">
+                <div class="ins-sub-list">
+                  <span class="ins-sub-item" *ngFor="let rr of c.recruiters">
+                    <button type="button" class="name-link" (click)="openSingle(rr.recruiter_id)">{{ rr.recruiter_name }}</button>:
+                    {{ rr.submissions }} submitted, {{ rr.interviews }} interviewed, {{ rr.hired }} hired
+                  </span>
+                  <span class="ins-muted" *ngIf="!c.recruiters.length">No recruiter activity in this period.</span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.clients, noun: 'clients' }"></ng-container>
+  </div>
+</ng-container>
+
+<!-- ======================================================================= -->
+<!-- SINGLE RECRUITER -->
+<!-- ======================================================================= -->
+<ng-container *ngIf="view === 'single'">
+  <div class="card ins-state" *ngIf="!selectedIds.length">Choose a recruiter above to see their dedicated analysis.</div>
+
+  <ng-container *ngIf="detail && detail.recruiters.length && selectedIds.length">
+    <ng-container *ngFor="let rec of detail.recruiters">
+      <div class="card profile-card">
+        <div>
+          <h2 class="profile-name">{{ rec.recruiter_name }}</h2>
+          <p class="card-sub">{{ rec.email }} · compared with {{ detail.recruiter_count }} active recruiters in this period</p>
+        </div>
+        <div class="profile-actions">
+          <button type="button" class="btn secondary" (click)="compareWith(rec.recruiter_id)">Compare with others</button>
+          <button type="button" class="btn secondary" (click)="setView('team')">Back to team</button>
+        </div>
+      </div>
+
+      <div class="tiles">
+        <div class="tile" *ngFor="let key of tileKeys">
+          <ng-container *ngIf="defOf(key) as def">
+            <span class="kpi-title">{{ def.label }}</span>
+            <span class="tile-value">{{ fmt(rec.metrics[key].value, def) }}</span>
+            <span class="tile-meta">
+              Team avg {{ fmt(rec.metrics[key].team_avg, def) }}
+              <span class="vs" [ngClass]="'vs-' + vsAvg(rec.metrics[key], def)">
+                {{ vsAvg(rec.metrics[key], def) === 'up' ? '▲' : vsAvg(rec.metrics[key], def) === 'down' ? '▼' : '' }}
+              </span>
+            </span>
+            <span class="tile-rank" *ngIf="rankText(rec.metrics[key])">{{ rankText(rec.metrics[key]) }}</span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="analytics-charts-grid">
+        <div class="card chart-card">
+          <div class="chart-card-head"><div>
+            <div class="chart-card-badge blue">Funnel</div>
+            <h3 class="card-title">Funnel vs Team Average</h3>
+            <p class="card-sub">The grey bar is the average per recruiter across the team.</p>
+          </div></div>
+          <div class="chart-container"><canvas id="insFunnelCompareChart"></canvas></div>
+        </div>
+        <div class="card chart-card">
+          <div class="chart-card-head"><div>
+            <div class="chart-card-badge violet">Trend</div>
+            <h3 class="card-title">Last 12 Weeks</h3>
+            <p class="card-sub">Hires use the date the application last changed, so they are approximate.</p>
+          </div></div>
+          <div class="chart-container"><canvas id="insTrendChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card table-card ins-table">
+        <div class="table-card-head">
+          <div>
+            <h3 class="card-title">Requirements</h3>
+            <p class="card-sub">Requirements assigned to this recruiter, with their candidates per stage (all time).</p>
+          </div>
+          <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.requirements, ph: 'Search requirement or client…' }"></ng-container>
+        </div>
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead><tr>
+              <th class="sortable" (click)="tables.requirements.setSort('job_role')">Requirement {{ tables.requirements.sortIcon('job_role') }}</th>
+              <th class="sortable" (click)="tables.requirements.setSort('client')">Client {{ tables.requirements.sortIcon('client') }}</th>
+              <th class="sortable" (click)="tables.requirements.setSort('status')">Status {{ tables.requirements.sortIcon('status') }}</th>
+              <th class="sortable" (click)="tables.requirements.setSort('age_days')">Age (days) {{ tables.requirements.sortIcon('age_days') }}</th>
+              <th class="sortable" (click)="tables.requirements.setSort('vacancies')">Vacancies {{ tables.requirements.sortIcon('vacancies') }}</th>
+              <th class="sortable" (click)="tables.requirements.setSort('early')">Early stage {{ tables.requirements.sortIcon('early') }}</th>
+              <th>Submitted</th><th>Interview</th><th>Offer</th>
+              <th class="sortable" (click)="tables.requirements.setSort('hired')">Hired {{ tables.requirements.sortIcon('hired') }}</th>
+              <th>Rejected</th>
+            </tr></thead>
+            <tbody>
+              <tr *ngFor="let r of tables.requirements.pageRows">
+                <td><strong>{{ r.job_role }}</strong></td><td>{{ r.client }}</td><td>{{ r.status }}</td>
+                <td>{{ r.age_days }}</td><td>{{ r.vacancies }}</td><td>{{ r.early }}</td>
+                <td>{{ r.stages.Submission }}</td><td>{{ r.stages.Interview }}</td><td>{{ r.stages.Offer }}</td>
+                <td>{{ r.stages.Hired }}</td><td>{{ r.stages.Rejected }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.requirements, noun: 'requirements' }"></ng-container>
+      </div>
+
+      <div class="analytics-charts-grid">
+        <div class="card table-card ins-table">
+          <div class="table-card-head">
+            <div><h3 class="card-title">Clients Served</h3><p class="card-sub">Submissions, interviews and hires by client in this period.</p></div>
+            <ng-container *ngTemplateOutlet="searchBox; context: { t: tables.singleClients, ph: 'Search client…' }"></ng-container>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead><tr>
+                <th class="sortable" (click)="tables.singleClients.setSort('client')">Client {{ tables.singleClients.sortIcon('client') }}</th>
+                <th class="sortable" (click)="tables.singleClients.setSort('submissions')">Submitted {{ tables.singleClients.sortIcon('submissions') }}</th>
+                <th class="sortable" (click)="tables.singleClients.setSort('interviews')">Interviewed {{ tables.singleClients.sortIcon('interviews') }}</th>
+                <th class="sortable" (click)="tables.singleClients.setSort('hired')">Hired {{ tables.singleClients.sortIcon('hired') }}</th>
+                <th class="sortable" (click)="tables.singleClients.setSort('sub_to_interview_pct')">Interview rate {{ tables.singleClients.sortIcon('sub_to_interview_pct') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let c of tables.singleClients.pageRows">
+                  <td><strong>{{ c.client }}</strong></td><td>{{ c.submissions }}</td><td>{{ c.interviews }}</td><td>{{ c.hired }}</td>
+                  <td>{{ pct(c.sub_to_interview_pct) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-container *ngTemplateOutlet="pagerTpl; context: { t: tables.singleClients, noun: 'clients' }"></ng-container>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-card-head"><div>
+            <div class="chart-card-badge amber">Offers</div>
+            <h3 class="card-title">Why Candidates Dropped After an Offer</h3>
+          </div></div>
+          <ul class="reason-list" *ngIf="rec.drop_reasons.length">
+            <li *ngFor="let d of rec.drop_reasons"><span>{{ d.reason }}</span><strong>{{ d.count }}</strong></li>
+          </ul>
+          <p class="ins-muted" *ngIf="!rec.drop_reasons.length">No offers were dropped in this period.</p>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <div class="card ins-state" *ngIf="detail && !detail.recruiters.length && selectedIds.length">No data for this recruiter.</div>
+</ng-container>
+
+<!-- ======================================================================= -->
+<!-- COMPARE -->
+<!-- ======================================================================= -->
+<ng-container *ngIf="view === 'compare'">
+  <div class="card ins-state" *ngIf="!selectedIds.length">Add two to {{ maxCompare }} recruiters above to compare them side by side.</div>
+  <div class="card ins-state" *ngIf="selectedIds.length === 1">Add at least one more recruiter to compare.</div>
+
+  <ng-container *ngIf="detail && detail.recruiters.length && selectedIds.length">
+    <div class="card table-card ins-table">
+      <div class="table-card-head">
+        <div>
+          <h3 class="card-title">Side by Side</h3>
+          <p class="card-sub">The best value in each row is highlighted. Rank is among all {{ detail.recruiter_count }} active recruiters.</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="custom-table compare-table">
+          <thead><tr>
+            <th>Metric</th>
+            <th *ngFor="let rec of detail.recruiters; let i = index">
+              <span class="chip-dot" [style.background]="colorFor(i)"></span>
+              <button type="button" class="name-link" (click)="openSingle(rec.recruiter_id)">{{ rec.recruiter_name }}</button>
+            </th>
+            <th>Team average</th>
+          </tr></thead>
+          <tbody>
+            <tr *ngFor="let def of metricDefs">
+              <td>{{ def.label }}</td>
+              <td *ngFor="let rec of detail.recruiters" [class.best]="isBest(def, rec)">
+                {{ fmt(rec.metrics[def.key].value, def) }}
+                <span class="ins-muted" *ngIf="rankText(rec.metrics[def.key])">{{ rankText(rec.metrics[def.key]) }}</span>
+              </td>
+              <td class="team-col">{{ fmt(detail.team_avg[def.key], def) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="analytics-charts-grid">
+      <div class="card chart-card">
+        <div class="chart-card-head"><div>
+          <div class="chart-card-badge violet">Profile</div>
+          <h3 class="card-title">Strengths at a Glance</h3>
+          <p class="card-sub">Every axis is 0 to 100. Hires are scaled against the top recruiter in the team.</p>
+        </div></div>
+        <div class="chart-container"><canvas id="insRadarChart"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-card-head"><div>
+          <div class="chart-card-badge blue">Funnel</div>
+          <h3 class="card-title">Funnel by Recruiter</h3>
+          <p class="card-sub">Grey is the team average per recruiter.</p>
+        </div></div>
+        <div class="chart-container"><canvas id="insFunnelCompareChart"></canvas></div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
