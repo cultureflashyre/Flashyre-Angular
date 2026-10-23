@@ -113,7 +113,7 @@
             </button>
             <button class="tab" [class.active]="activeTab === 'needs_info'" (click)="setActiveTab('needs_info')">
               Needs info
-              <span class="tab-count">{{ intakeSummary ? intakeSummary.open : intakePeople.length }}</span>
+              <span class="tab-count">{{ needsInfoCount }}</span>
             </button>
           </div>
 
@@ -237,6 +237,8 @@
             <!-- Sort -->
             <select class="sort-select" (change)="sortCandidates($event)">
               <option value="none" selected>Sort</option>
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
               <option value="a-z">A → Z</option>
               <option value="z-a">Z → A</option>
             </select>
@@ -352,7 +354,7 @@
                           <div class="candidate">
                             <div class="candidate-avatar">{{ getInitials(candidate) }}</div>
                             <div>
-                              <div class="candidate-name" (click)="openCandidateDetails(candidate)" title="Click to view full details">
+                              <div class="candidate-name" (click)="openRow(candidate)" title="Click to view full details">
                                 {{ candidate.first_name }} {{ candidate.last_name }}
                                 <span *ngIf="candidate.source_form" class="ai-pill" title="Submitted via Collection Form: {{ candidate.source_form_title }}">
                                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
@@ -360,7 +362,8 @@
                                 </span>
                                 <app-person-badges [missingFields]="candidate.missing_fields" [verificationStatus]="candidate.verification_status"
                                                    [aiFilledFields]="candidate.ai_filled_fields" [legacy]="!!candidate.legacy_incomplete" [compact]="true"
-                                                   [canVerify]="canEditPerson(candidate)" (verify)="verifyCandidate(candidate)"></app-person-badges>
+                                                   [canVerify]="canEditPerson(candidate)" (verifyClick)="openCompleteProfile(candidate)"
+                                                   (needsInfoClick)="openCompleteProfile(candidate)"></app-person-badges>
                               </div>
                               <div class="candidate-id">Sourced By: {{ candidate.sourced_by_name || candidate.recruiter_name || 'N/A' }}</div>
                             </div>
@@ -534,13 +537,13 @@
                         <!-- Actions -->
                         <td data-label="Actions">
                           <div class="row-actions">
-                            <button class="row-action" [class.disabled]="!candidate.resume && !candidate.resume_url" (click)="(candidate.resume || candidate.resume_url) && openResume(candidate.resume || candidate.resume_url)" title="View Resume">
+                            <button class="row-action" [class.disabled]="!hasRowResume(candidate)" (click)="openRowResume(candidate)" title="View Resume">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                             </button>
-                            <button *ngIf="canEditPerson(candidate)" class="row-action" (click)="startEdit(candidate)" title="Edit">
+                            <button *ngIf="canEditPerson(candidate)" class="row-action" (click)="editRow(candidate)" [title]="isIncomplete(candidate) ? 'Complete profile' : 'Edit'">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
-                            <button *ngIf="isSuperUser" class="row-action danger" (click)="deleteCandidate(candidate.id)" title="Delete">
+                            <button *ngIf="isSuperUser" class="row-action danger" (click)="deleteRow(candidate)" title="Delete">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                           </div>
@@ -621,7 +624,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th class="col-check"></th>
+                    <th class="col-check"><input type="checkbox" class="checkbox" (change)="toggleSelectAllIntake($event)" aria-label="Select all" /></th>
                     <th class="col-name">Person</th>
                     <th class="col-meta">Contact</th>
                     <th class="col-tags">Skills</th>
@@ -631,7 +634,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let person of intakePeople">
+                  <tr *ngFor="let person of intakePeople; trackBy: rowKey">
                     <td data-label="">
                       <input type="checkbox" class="checkbox" [(ngModel)]="person.selected" />
                     </td>
@@ -639,11 +642,12 @@
                       <div class="candidate">
                         <div class="candidate-avatar">{{ getInitials(person) || '?' }}</div>
                         <div>
-                          <div class="candidate-name" (click)="openIntake(person)" title="Click to complete this profile">
+                          <div class="candidate-name" (click)="openRow(person)" title="Click to view full details">
                             {{ intakeName(person) }}
                             <app-person-badges [missingFields]="person.missing_fields" [verificationStatus]="person.verification_status"
                                                [aiFilledFields]="person.ai_filled_fields" [compact]="true"
-                                               [canVerify]="canEditPerson(person)" (verify)="verifyIntakePerson(person)"></app-person-badges>
+                                               [canVerify]="canEditPerson(person)" (verifyClick)="openCompleteProfile(person)"
+                                               (needsInfoClick)="openCompleteProfile(person)"></app-person-badges>
                           </div>
                           <div class="candidate-id">Sourced By: {{ person.sourced_by_name || 'N/A' }}</div>
                         </div>
@@ -671,13 +675,13 @@
                     </td>
                     <td data-label="Actions">
                       <div class="row-actions">
-                        <button class="row-action" [class.disabled]="!hasResume(person)" (click)="hasResume(person) && openResume(person.resume_path)" [title]="hasResume(person) ? 'View Resume' : 'No resume yet'">
+                        <button class="row-action" [class.disabled]="!hasRowResume(person)" (click)="openRowResume(person)" [title]="hasRowResume(person) ? 'View Resume' : 'No resume yet'">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </button>
-                        <button class="row-action" (click)="openIntake(person)" [title]="canEditPerson(person) ? 'Complete profile' : 'View details'">
+                        <button class="row-action" (click)="editRow(person)" [title]="canEditPerson(person) ? 'Complete profile' : 'View details'">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </button>
-                        <button *ngIf="isSuperUser" class="row-action danger" (click)="deleteIntakePerson(person)" title="Delete">
+                        <button *ngIf="isSuperUser" class="row-action danger" (click)="deleteRow(person)" title="Delete">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         </button>
                       </div>
@@ -1205,191 +1209,6 @@
   </div>
 </div>
 
-<!-- CANDIDATE DETAILS MODAL -->
-<ng-container *ngIf="showDetailsModal && selectedCandidateDetails">
-  <div class="elegant-modal-backdrop" (click)="closeDetailsModal()">
-    <div class="elegant-modal-content" (click)="$event.stopPropagation()">
-      <div class="elegant-header">
-        <div class="candidate-identity">
-          <div class="candidate-avatar">{{ selectedCandidateDetails.first_name.charAt(0) | uppercase }}{{
-            selectedCandidateDetails.last_name.charAt(0) | uppercase }}</div>
-          <div class="identity-text">
-            <h2>{{ selectedCandidateDetails.first_name }} {{ selectedCandidateDetails.last_name }}</h2>
-            <p>{{ selectedCandidateDetails.work_experience }}</p>
-          </div>
-        </div>
-        <div class="header-actions"><button class="action-icon-btn"
-            (click)="startEdit(selectedCandidateDetails); closeDetailsModal()" title="Edit Candidate"><svg width="18"
-              height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg></button><button class="action-icon-btn" (click)="closeDetailsModal()" title="Close"><svg width="18"
-              height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg></button></div>
-      </div>
-      <div class="elegant-body">
-        <div class="info-section" *ngIf="selectedCandidateDetails.missing_fields?.length || selectedCandidateDetails.verification_status === 'ai_unverified'">
-          <h4 class="section-title">Profile status</h4>
-          <app-person-badges [missingFields]="selectedCandidateDetails.missing_fields" [verificationStatus]="selectedCandidateDetails.verification_status"
-                             [aiFilledFields]="selectedCandidateDetails.ai_filled_fields" [legacy]="!!selectedCandidateDetails.legacy_incomplete"
-                             [canVerify]="canEditPerson(selectedCandidateDetails)" (verify)="verifyCandidate(selectedCandidateDetails)"></app-person-badges>
-          <p style="margin:8px 0 0; font-size:12.5px; color:#64748b;" *ngIf="selectedCandidateDetails.missing_fields?.length">
-            Edit the candidate to fill in what is missing.
-          </p>
-        </div>
-        <div class="info-section">
-          <h4 class="section-title">Contact Information</h4>
-          <div class="info-grid-3">
-            <div class="info-item"><span class="info-label">Phone</span><span class="info-value">{{
-                selectedCandidateDetails.phone_number }}</span></div>
-            <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{
-                selectedCandidateDetails.email }}</span></div>
-            <div class="info-item"><span class="info-label">Location</span><span class="info-value">{{
-                formatLocationList(selectedCandidateDetails.current_location) }}</span></div>
-          </div>
-        </div>
-        <div class="info-section">
-          <h4 class="section-title">Professional Overview</h4>
-          <div class="info-grid-3">
-            <div class="info-item"><span class="info-label">Total Experience</span><span class="info-value">{{
-                selectedCandidateDetails.total_experience }}
-                Yrs</span></div>
-            <div class="info-item"><span class="info-label">Relevant Experience</span><span class="info-value">{{
-                selectedCandidateDetails.relevant_experience }} Yrs</span></div>
-            <div class="info-item"><span class="info-label">Notice Period</span><span class="info-value"
-                style="color: #d97706;">{{ selectedCandidateDetails.notice_period }}</span></div>
-          </div>
-          <div class="info-grid-3" style="margin-top: 20px;">
-            <div class="info-item"><span class="info-label">Current CTC</span><span class="info-value">{{
-                selectedCandidateDetails.current_ctc ? (selectedCandidateDetails.current_ctc + (selectedCandidateDetails.current_ctc.toString().includes('LPA') || selectedCandidateDetails.current_ctc === 'Fresher' ? '' : ' LPA')) : '—' }}</span></div>
-            <div class="info-item"><span class="info-label">Expected CTC</span><span class="info-value">{{
-                selectedCandidateDetails.expected_ctc_min === selectedCandidateDetails.expected_ctc_max ?
-                selectedCandidateDetails.expected_ctc_min : selectedCandidateDetails.expected_ctc_min + " - " +
-                selectedCandidateDetails.expected_ctc_max }} LPA</span></div>
-            <div class="info-item"><span class="info-label">Preferred Location</span><span class="info-value">{{
-                formatLocationList(selectedCandidateDetails.preferred_location) }}</span></div>
-          </div>
-        </div>
-        <div class="info-section" *ngIf="selectedCandidateDetails.latest_education_level">
-          <h4 class="section-title">Education</h4>
-          <div class="info-grid-3">
-            <div class="info-item"><span class="info-label">Highest qualification</span><span class="info-value">{{ selectedCandidateDetails.latest_education_level }}</span></div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.latest_university"><span class="info-label">University / college</span><span class="info-value">{{ selectedCandidateDetails.latest_university }}</span></div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.latest_specialization"><span class="info-label">Specialization</span><span class="info-value">{{ selectedCandidateDetails.latest_specialization }}</span></div>
-          </div>
-        </div>
-        <div class="info-section">
-          <h4 class="section-title">Skills &amp; Expertise</h4>
-          <div class="skills-wrapper"><span *ngFor="let skill of selectedCandidateDetails.skills.split(',')"
-              class="skill-tag">{{ skill.trim() }}</span></div>
-        </div>
-        <div class="info-section">
-          <h4 class="section-title">Documents &amp; Source</h4>
-          <div class="info-grid-2">
-            <div class="info-item"><span class="info-label" style="margin-bottom: 8px;">Resume</span>
-              <div *ngIf="selectedCandidateDetails.resume || selectedCandidateDetails.resume_url; else noResume" class="resume-card"
-                (click)="openResume(selectedCandidateDetails.resume || selectedCandidateDetails.resume_url)">
-                <div class="resume-info"><svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2">
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg><span class="resume-text">{{ selectedCandidateDetails.resume_filename || 'View Resume' }}</span></div><span class="view-link">Open &rarr;</span>
-              </div><ng-template #noResume>
-                <div class="resume-card" style="cursor: default; opacity: 0.7; background: #f9fafb;"><span
-                    class="resume-text" style="font-weight: 400; color: #999;">No Resume Attached</span></div>
-              </ng-template>
-            </div>
-            <div class="info-item"><span class="info-label">Sourced By &amp; Source</span>
-              <div style="margin-top: 5px;">
-                <div style="font-weight: 600; color: #374151;">{{ selectedCandidateDetails.sourced_by_name || selectedCandidateDetails.recruiter_name || 'N/A' }}
-                </div>
-                <div style="font-size: 13px; color: #05356c; margin-top: 4px; font-weight: 500;">via {{
-                  selectedCandidateDetails.source }}</div>
-              </div>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.placement_status">
-              <span class="info-label">Placement &amp; Attribution</span>
-              <div style="margin-top: 5px;">
-                <span class="placement-badge"
-                  [ngClass]="{ 'offered': selectedCandidateDetails.placement_status === 'Offered', 'hired': selectedCandidateDetails.placement_status === 'Hired' }">
-                  {{ selectedCandidateDetails.placement_status }}
-                  <span *ngIf="isRecentlyPlaced(selectedCandidateDetails)">⏳</span>
-                </span>
-                <div class="drawer-placer-chip" *ngIf="selectedCandidateDetails.placed_by_name">
-                  <span class="placer-icon">🏆</span>
-                  <span>Placed By: <strong>{{ selectedCandidateDetails.placed_by_name }}</strong></span>
-                </div>
-                <div style="font-size: 12.5px; color: #475569; margin-top: 6px; font-weight: 500;" *ngIf="selectedCandidateDetails.placement_job_title">
-                  {{ selectedCandidateDetails.placement_job_title }} at {{ selectedCandidateDetails.placement_client_name || 'Client' }}
-                </div>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;" *ngIf="selectedCandidateDetails.placement_at">
-                  Placement Date: {{ selectedCandidateDetails.placement_at | date:'mediumDate' }}
-                </div>
-                <div *ngIf="isRecentlyPlaced(selectedCandidateDetails)" style="font-size: 11.5px; color: #d97706; margin-top: 4px; font-weight: 500;">
-                  ⏳ Cooldown Active (Protected under {{ cooldownMonths }}-month policy)
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="info-section">
-          <app-person-notes kind="candidate" [personId]="selectedCandidateDetails.id ?? null"></app-person-notes>
-        </div>
-
-        <!-- IMPORTED TRACKER DETAILS (BULK IMPORT METADATA) -->
-        <div class="info-section" *ngIf="selectedCandidateDetails.import_metadata && hasImportMetadata(selectedCandidateDetails.import_metadata)">
-          <h4 class="section-title">Imported Tracker Details</h4>
-          <div class="info-grid-3">
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.client">
-              <span class="info-label">Client</span>
-              <span class="info-value">{{ selectedCandidateDetails.import_metadata.client }}</span>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.sub_client">
-              <span class="info-label">Sub Client</span>
-              <span class="info-value">{{ selectedCandidateDetails.import_metadata.sub_client }}</span>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.spoc">
-              <span class="info-label">SPOC</span>
-              <span class="info-value">{{ selectedCandidateDetails.import_metadata.spoc }}</span>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.status">
-              <span class="info-label">Tracker Status</span>
-              <span class="info-value" style="color: #2563eb; font-weight: 600;">{{ selectedCandidateDetails.import_metadata.status }}</span>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.sheet_name">
-              <span class="info-label">Sheet Name</span>
-              <span class="info-value">{{ selectedCandidateDetails.import_metadata.sheet_name }} (Row {{ selectedCandidateDetails.import_metadata.row_number }})</span>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.recruiter">
-              <span class="info-label">Recruiter</span>
-              <span class="info-value">{{ selectedCandidateDetails.import_metadata.recruiter }}</span>
-            </div>
-          </div>
-          <div class="info-grid-2" style="margin-top: 16px;" *ngIf="selectedCandidateDetails.import_metadata.l1_feedback || selectedCandidateDetails.import_metadata.l2_feedback || selectedCandidateDetails.import_metadata.comments">
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.l1_feedback">
-              <span class="info-label">L1 Feedback</span>
-              <span class="info-value" style="font-size: 13px;">{{ selectedCandidateDetails.import_metadata.l1_feedback }}</span>
-            </div>
-            <div class="info-item" *ngIf="selectedCandidateDetails.import_metadata.l2_feedback">
-              <span class="info-label">L2 Feedback</span>
-              <span class="info-value" style="font-size: 13px;">{{ selectedCandidateDetails.import_metadata.l2_feedback }}</span>
-            </div>
-            <div class="info-item" style="grid-column: 1 / -1;" *ngIf="selectedCandidateDetails.import_metadata.comments">
-              <span class="info-label">Tracker Comments</span>
-              <span class="info-value" style="font-size: 13px;">{{ selectedCandidateDetails.import_metadata.comments }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-container>
-
 <!-- Rating Modal (standalone — not nested in details modal) -->
 <div *ngIf="showRatingModal" class="custom-modal-overlay">
   <div class="custom-modal-container rating-modal-container">
@@ -1498,7 +1317,14 @@
 </div>
 
 <!-- Complete-profile panel for a person in the Needs info list -->
-<app-intake-drawer *ngIf="selectedIntake" [person]="selectedIntake"
-                   [canEdit]="canEditPerson(selectedIntake)" [canVerify]="canEditPerson(selectedIntake)"
-                   (closed)="closeIntake()" (updated)="onIntakeUpdated($event)"
+<app-intake-drawer *ngIf="sidebarPerson" [person]="sidebarPerson" [kind]="sidebarKind(sidebarPerson)"
+                   [canEdit]="canEditPerson(sidebarPerson)" [canVerify]="canEditPerson(sidebarPerson)"
+                   (closed)="closeSidebar()" (updated)="onIntakeUpdated($event)"
+                   (viewProfile)="viewProfileFromSidebar()"
                    (openResume)="openResume($event)"></app-intake-drawer>
+
+<!-- Read-only detail card, one for candidates and for Needs info people -->
+<app-person-detail-card *ngIf="detailPerson" [person]="detailPerson" [canEdit]="canEditPerson(detailPerson)" [cooldownMonths]="cooldownMonths"
+                        (closed)="closeDetailCard()" (completeProfile)="openCompleteProfile(detailPerson)" (reviewAi)="openCompleteProfile(detailPerson)"
+                        (edit)="editFromCard(detailPerson)" (retryResume)="retryResumeFromCard(detailPerson)" (refreshPerson)="refreshCardPerson(detailPerson)"
+                        (openResume)="openResume($event)"></app-person-detail-card>

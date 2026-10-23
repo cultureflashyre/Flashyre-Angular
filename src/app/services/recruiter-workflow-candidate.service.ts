@@ -14,6 +14,17 @@ export interface ActiveApplicationSummary {
   updated_at: string | null;
 }
 
+/** Resume reading state shown on a person (server: latest form submission, else whether the resume was parsed). */
+export type ResumeStatus = 'none' | 'processing' | 'done' | 'failed' | 'unreadable';
+
+/** Where an imported person came from (set for people created by a sheet import). */
+export interface ImportSource {
+  file_name: string | null;
+  row_number: number | null;
+  batch_id: number | string | null;
+  imported_at: string | null;
+}
+
 export interface Candidate {
   id?: number;
   first_name: string;
@@ -55,18 +66,24 @@ export interface Candidate {
   latest_rating_breakdown?: { [key: string]: number } | null;
   source_form?: number | string | null;
   source_form_title?: string;
+  /** Set by the server on the combined list: 'candidate' or 'intake' (the two kinds can share an id). */
+  kind?: 'candidate' | 'intake';
   // Completeness (set by the server): which of the seven mandatory fields are still missing,
   // and whether AI-parsed values still need a recruiter to verify them.
   missing_fields?: string[];
   legacy_incomplete?: boolean;
   verification_status?: 'verified' | 'ai_unverified';
   ai_filled_fields?: string[];
+  resume_status?: ResumeStatus;
+  resume_status_detail?: string | null;
   latest_education_level?: string | null;
   latest_university?: string | null;
   latest_specialization?: string | null;
   year_of_graduation?: number | null;
   current_job_title?: string | null;
   latest_company?: string | null;
+  import_source?: ImportSource | null;
+  extra_columns?: { [key: string]: string };
   import_metadata?: {
     client?: string;
     sub_client?: string;
@@ -181,6 +198,8 @@ export interface IntakePerson {
   missing_fields: string[];
   verification_status: 'verified' | 'ai_unverified';
   ai_filled_fields: string[];
+  resume_status?: ResumeStatus;
+  resume_status_detail?: string | null;
   verified_at?: string | null;
   source: string;
   source_form?: number | null;
@@ -188,6 +207,8 @@ export interface IntakePerson {
   sourced_by_name: string | null;
   resume_filename?: string | null;
   resume_path?: string | null;
+  import_source?: ImportSource | null;
+  extra_columns?: { [key: string]: string };
   skills_list: string[];
   preferred_locations: { name: string; lat: number | null; lng: number | null }[];
   education: { level: string | null; institution: string | null; specialization: string | null; year: number | null; is_highest: boolean }[];
@@ -227,6 +248,8 @@ export interface CandidateNote {
   author: string | null;
   author_name: string | null;
   body: string;
+  /** 'import' for notes created from a sheet's Remarks column. */
+  source?: string | null;
   created_at: string;
 }
 
@@ -291,17 +314,29 @@ export class RecruiterWorkflowCandidateService {
     return this.http.put<Candidate>(`${this.apiUrl}${this.endpoint}${id}/`, formData);
   }
 
+  getCandidate(id: number): Observable<Candidate> {
+    return this.http.get<Candidate>(`${this.apiUrl}${this.endpoint}${id}/`);
+  }
+
+  /**
+   * Partial update of the writable fields (the complete-profile sidebar). The candidate endpoint only reads
+   * multipart bodies, so this always takes FormData; a resume is attached with `staging_id` from the parse step.
+   */
+  patchCandidate(id: number, formData: FormData): Observable<Candidate> {
+    return this.http.patch<Candidate>(`${this.apiUrl}${this.endpoint}${id}/`, formData);
+  }
+
   deleteCandidate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${this.endpoint}${id}/`);
   }
 
-  addCandidatesToJob(jobId: number, candidateIds: number[]): Observable<any> {
+  addCandidatesToJob(jobId: number, candidateIds: number[], intakeIds: number[] = []): Observable<any> {
     const userId = localStorage.getItem('user_id');
-    return this.http.post(this.atsUrl, {
-      job_id: jobId,
-      candidate_ids: candidateIds,
-      user_id: userId
-    });
+    const body: any = { job_id: jobId, candidate_ids: candidateIds, user_id: userId };
+    if (intakeIds.length > 0) {
+      body.intake_ids = intakeIds;   // people still in Needs info (a resume is required)
+    }
+    return this.http.post(this.atsUrl, body);
   }
 
   getRegisteredCandidates(): Observable<RegisteredUser[]> {
@@ -338,6 +373,16 @@ export class RecruiterWorkflowCandidateService {
     return this.http.delete<void>(`${this.apiUrl}api/candidate-ratings/${ratingId}/`);
   }
 
+  // ---- Candidates and Needs info people in one list ----
+  getPeople(opts: { page?: number; status?: 'all' | 'incomplete' | 'complete'; sort?: 'newest' | 'oldest'; missing?: string; q?: string; formId?: string | null; unverified?: boolean } = {}): Observable<any> {
+    const params: string[] = [`page=${opts.page || 1}`, `status=${opts.status || 'all'}`, `sort=${opts.sort || 'newest'}`];
+    if (opts.missing) { params.push(`missing=${encodeURIComponent(opts.missing)}`); }
+    if (opts.q) { params.push(`q=${encodeURIComponent(opts.q)}`); }
+    if (opts.formId) { params.push(`form_id=${encodeURIComponent(opts.formId)}`); }
+    if (opts.unverified) { params.push('unverified=1'); }
+    return this.http.get<any>(`${this.apiUrl}api/candidate-intake/people/?${params.join('&')}`);
+  }
+
   // ---- "Needs info" inbox (people missing mandatory fields) ----
   getIntakeList(opts: { page?: number; status?: string; missing?: string; q?: string; formId?: string | null; unverified?: boolean } = {}): Observable<any> {
     const params: string[] = [`page=${opts.page || 1}`];
@@ -361,8 +406,23 @@ export class RecruiterWorkflowCandidateService {
     return this.http.post<IntakeUpdateResult>(`${this.apiUrl}api/candidate-intake/`, data);
   }
 
-  updateIntake(id: number, data: any): Observable<IntakeUpdateResult> {
-    return this.http.patch<IntakeUpdateResult>(`${this.apiUrl}api/candidate-intake/${id}/`, data);
+  /**
+   * Saves a Needs info person. With a resume file the request is multipart (the file as `resume`; lists and
+   * objects such as preferred_location or ai_filled_fields are sent as JSON text), otherwise plain JSON.
+   */
+  updateIntake(id: number, data: any, resume?: File | null): Observable<IntakeUpdateResult> {
+    const url = `${this.apiUrl}api/candidate-intake/${id}/`;
+    if (!resume) {
+      return this.http.patch<IntakeUpdateResult>(url, data);
+    }
+    const body = new FormData();
+    Object.keys(data || {}).forEach(key => {
+      const value = data[key];
+      if (value === undefined || value === null) { return; }
+      body.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
+    });
+    body.append('resume', resume, resume.name);
+    return this.http.patch<IntakeUpdateResult>(url, body);
   }
 
   deleteIntake(id: number): Observable<void> {
@@ -375,6 +435,15 @@ export class RecruiterWorkflowCandidateService {
 
   verifyCandidate(id: number): Observable<Candidate> {
     return this.http.post<Candidate>(`${this.apiUrl}api/candidates/${id}/verify/`, {});
+  }
+
+  /** Queue the stored resume for reading again; the answer is the person with resume_status 'processing'. */
+  reparseIntakeResume(id: number): Observable<IntakePerson> {
+    return this.http.post<IntakePerson>(`${this.apiUrl}api/candidate-intake/${id}/reparse-resume/`, {});
+  }
+
+  reparseCandidateResume(id: number): Observable<Candidate> {
+    return this.http.post<Candidate>(`${this.apiUrl}api/candidates/${id}/reparse-resume/`, {});
   }
 
   addIntakeToJob(jobId: number, intakeIds: number[]): Observable<any> {

@@ -12,13 +12,21 @@ import {
   UnmatchedResumeItem,
   ErrorLogItem,
   HeaderPreviewResponse,
+  SheetLayoutOptions,
   HeaderResolutionItem,
   CanonicalFieldMeta,
   ExportableField,
   ReportFieldsResponse,
   ReportGenerateRequest,
-  ReportApprovalRequest
+  ReportApprovalRequest,
+  ImportPreviewSummary
 } from '../../services/recruiter-workflow-bulk-import.service';
+import { ImportReviewGridComponent } from '../../components/import-review-grid/import-review-grid.component';
+import {
+  ImportWizardStepperComponent,
+  ImportWizardStep,
+  WizardStepInfo
+} from '../../components/import-wizard-stepper/import-wizard-stepper.component';
 import { ApprovalNotificationService } from '../../services/approval-notification.service';
 import {
   RecruiterWorkflowCandidateService,
@@ -41,7 +49,9 @@ import { NotificationBellComponent } from '../../components/notification-bell/no
     RouterModule,
     RecruiterSidebarComponent,
     AlertMessageComponent,
-    NotificationBellComponent
+    NotificationBellComponent,
+    ImportReviewGridComponent,
+    ImportWizardStepperComponent
   ]
 })
 export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
@@ -93,13 +103,30 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     return `${this.selectedResumeFiles[0].name} and ${this.selectedResumeFiles.length - 1} more file(s)`;
   }
 
-  // Header Mapping Preview State
-  showMappingModal: boolean = false;
+  // Import wizard state
+  step: ImportWizardStep = 'upload';
   previewData: HeaderPreviewResponse | null = null;
   userCustomMapping: Record<string, string> = {};
   canonicalFieldsList: CanonicalFieldMeta[] = [];
   previewReportItems: HeaderResolutionItem[] = [];
   missingRequiredFields: string[] = [];
+  headerRowIndex: number = 0;
+  /** Sheet the recruiter picked and the header row they typed; null means "found automatically". */
+  sheetOverride: string | null = null;
+  headerRowOverride: number | null = null;
+  showHeaderRowEditor: boolean = false;
+  headerRowInput: number | string | null = null;
+  previewId: string | null = null;
+  previewSummary: ImportPreviewSummary | null = null;
+  previewCounts: Record<string, number> = {};
+  isCreatingPreview: boolean = false;
+  isExecuting: boolean = false;
+  isDownloadingProblems: boolean = false;
+  mapErrorMsg: string | null = null;
+  importErrorMsg: string | null = null;
+  showLeaveReviewConfirm: boolean = false;
+  pendingStep: ImportWizardStep | null = null;
+  resultsJobId: string | null = null;
 
   // Batch History State
   recentTrackerBatches: UploadBatchDetail[] = [];
@@ -471,6 +498,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     const file = event.target.files?.[0];
     if (file) {
       this.selectedTrackerFile = file;
+      this.resetPreviewState();
       this.trackerUploadErrorMsg = null;
       this.duplicateTrackerConflict = null;
     }
@@ -480,6 +508,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     event.preventDefault();
     if (event.dataTransfer?.files?.length) {
       this.selectedTrackerFile = event.dataTransfer.files[0];
+      this.resetPreviewState();
       this.trackerUploadErrorMsg = null;
       this.duplicateTrackerConflict = null;
     }
@@ -487,6 +516,7 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
 
   removeTrackerFile(): void {
     this.selectedTrackerFile = null;
+    this.resetPreviewState();
     this.trackerUploadErrorMsg = null;
     this.duplicateTrackerConflict = null;
   }
@@ -520,152 +550,397 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
   }
 
   // ==========================================
-  // INGESTION TRIGGER (SINGLE & DUAL)
+  // IMPORT WIZARD (Upload -> Map columns -> Review rows -> Import -> Results)
   // ==========================================
-  startCombinedIngestion(): void {
+  get wizardSteps(): WizardStepInfo[] {
+    const items = this.previewReportItems;
+    const used = items.filter(i => (this.userCustomMapping[i.column_index.toString()] || i.canonical) !== '_unmapped').length;
+    const needInfo = this.previewCounts['created_incomplete'] || 0;
+    return [
+      { key: 'upload', label: 'Upload', sub: this.selectedTrackerFile?.name || (this.hasResumeFiles ? this.resumeFilesSummary : '') },
+      { key: 'map', label: 'Map columns', sub: items.length ? `${used} of ${items.length} used` : '' },
+      { key: 'review', label: 'Review rows', sub: this.previewId ? (needInfo ? `${needInfo} need info` : 'Nothing is saved yet') : '' },
+      { key: 'import', label: 'Import', sub: 'Runs in background' },
+      { key: 'results', label: 'Results', sub: 'Counts and problem rows' },
+    ];
+  }
+
+  /** Once the import has started the earlier steps can no longer be reopened. */
+  get wizardLocked(): boolean {
+    return this.step === 'import' || this.step === 'results';
+  }
+
+  /** Mandatory fields that no column is mapped to. Preferred location is never required: Location fills it. */
+  get missingRequiredList(): string[] {
+    const mapped = new Set(Object.values(this.userCustomMapping));
+    const required = this.canonicalFieldsList.filter(f => f.required);
+    if (required.length === 0) {
+      return [['email', 'Email Address'], ['phone', 'Phone Number']].filter(([k]) => !mapped.has(k)).map(([, l]) => l);
+    }
+    return required.filter(f => !mapped.has(f.key)).map(f => f.label);
+  }
+
+  /** At least one column is mapped to a field. Import is never blocked by unmapped mandatory fields. */
+  get hasMappedColumn(): boolean {
+    return Object.values(this.userCustomMapping).some(v => !!v && v !== '_unmapped');
+  }
+
+  get canContinueFromMap(): boolean {
+    return !!this.previewData && this.hasMappedColumn && !this.isCreatingPreview;
+  }
+
+  /** A Location column is mapped but no Preferred location column: the server uses Location as preferred location. */
+  get showLocationHint(): boolean {
+    const mapped = new Set(Object.values(this.userCustomMapping));
+    return mapped.has('current_location') && !mapped.has('preferred_location');
+  }
+
+  get importRowCount(): number {
+    return this.previewSummary?.total || 0;
+  }
+
+  /** Forgets everything computed from the chosen sheet; used when the sheet changes or the wizard restarts. */
+  private resetPreviewState(): void {
+    this.previewData = null;
+    this.previewReportItems = [];
+    this.userCustomMapping = {};
+    this.missingRequiredFields = [];
+    this.headerRowIndex = 0;
+    this.sheetOverride = null;
+    this.headerRowOverride = null;
+    this.showHeaderRowEditor = false;
+    this.headerRowInput = null;
+    this.discardPreview();
+  }
+
+  private discardPreview(): void {
+    this.previewId = null;
+    this.previewSummary = null;
+    this.previewCounts = {};
+  }
+
+  /** Upload step "Continue": reads the headers and opens the Map step. A resumes-only upload is sent straight away. */
+  continueFromUpload(): void {
     if (!this.selectedTrackerFile && this.selectedResumeFiles.length === 0) {
       this.trackerUploadErrorMsg = 'Please select at least one file (Tracker or Resumes) to import.';
       return;
     }
-
-    // If tracker spreadsheet is selected -> First run 3-Tier Dynamic Header Preview
-    if (this.selectedTrackerFile) {
-      this.isPreviewingHeaders = true;
-      this.trackerUploadErrorMsg = null;
-
-      this.bulkImportService
-        .previewHeaders(this.selectedTrackerFile)
-        .pipe(finalize(() => { this.isPreviewingHeaders = false; }))
-        .subscribe({
-          next: (res: HeaderPreviewResponse) => {
-            this.previewData = res;
-            this.canonicalFieldsList = res.canonical_fields || [];
-            this.previewReportItems = res.resolution_report || [];
-            this.missingRequiredFields = res.missing_required || [];
-            this.userCustomMapping = { ...res.mapping };
-
-            if (res.needs_review) {
-              // Open Column Mapping Preview Modal for user confirmation
-              this.showMappingModal = true;
-            } else {
-              // High confidence resolution & all required present -> Auto-proceed seamlessly!
-              this.executeIngestionWithMapping(this.userCustomMapping);
-            }
-          },
-          error: (err: any) => {
-            this.trackerUploadErrorMsg = err.error?.error || 'Failed to inspect tracker headers.';
-          }
-        });
-    }
-    // Only Resume Files / Archive selected
-    else if (this.selectedResumeFiles.length > 0) {
+    if (!this.selectedTrackerFile) {
       this.uploadResumeZipArchive();
+      return;
+    }
+    if (this.previewData) {   // coming back from Map: the file and the mapping are kept
+      this.step = 'map';
+      return;
+    }
+
+    this.trackerUploadErrorMsg = null;
+    this.readHeaders(undefined, (message) => { this.trackerUploadErrorMsg = message; });
+  }
+
+  /** Asks the server for the columns of the table (optionally a given sheet / header row) and opens the Map step. */
+  private readHeaders(layout: SheetLayoutOptions | undefined, onError: (message: string) => void): void {
+    if (!this.selectedTrackerFile) { return; }
+    this.isPreviewingHeaders = true;
+    const request = layout
+      ? this.bulkImportService.previewHeaders(this.selectedTrackerFile, layout)
+      : this.bulkImportService.previewHeaders(this.selectedTrackerFile);
+    request
+      .pipe(finalize(() => { this.isPreviewingHeaders = false; }))
+      .subscribe({
+        next: (res: HeaderPreviewResponse) => {
+          this.previewData = res;
+          this.canonicalFieldsList = res.canonical_fields || [];
+          this.previewReportItems = res.resolution_report || [];
+          this.userCustomMapping = { ...res.mapping };
+          this.headerRowIndex = res.header_row_index || 0;
+          this.discardPreview();
+          this.missingRequiredFields = this.missingRequiredList;
+          this.mapErrorMsg = null;
+          this.step = 'map';
+        },
+        error: (err: any) => {
+          onError(err.error?.error || 'Failed to inspect tracker headers.');
+        }
+      });
+  }
+
+  // ---- where the table is: the note, the sheet picker and "My header is on another row"
+  get sheetNames(): string[] {
+    return this.previewData?.sheet_names || [];
+  }
+
+  get chosenSheet(): string {
+    return this.previewData?.sheet || '';
+  }
+
+  /** "Table found at row 3, starting at column C (sheet 'Candidates')"; empty for an old server answer. */
+  get tableLocationNote(): string {
+    const data = this.previewData;
+    if (!data || !data.header_row_number) { return ''; }
+    const column = data.first_data_column_letter || 'A';
+    const sheet = data.sheet ? ` (sheet '${data.sheet}')` : '';
+    return `Table found at row ${data.header_row_number}, starting at column ${column}${sheet}`;
+  }
+
+  /** What to send with createPreview so it reads the same sheet and header row the Map step showed. */
+  get sheetLayout(): SheetLayoutOptions | undefined {
+    const layout: SheetLayoutOptions = {};
+    if (this.sheetOverride || (this.previewData?.sheet && this.sheetNames.length > 1)) {
+      layout.sheet = this.sheetOverride || this.previewData?.sheet;
+    }
+    if (this.headerRowOverride) {
+      layout.headerRow = this.headerRowOverride;
+    }
+    return layout.sheet || layout.headerRow ? layout : undefined;
+  }
+
+  onSheetChange(sheet: string): void {
+    if (!sheet || sheet === this.chosenSheet) { return; }
+    this.sheetOverride = sheet;
+    this.headerRowOverride = null;      // the typed row belonged to the other sheet
+    this.mapErrorMsg = null;
+    this.readHeaders({ sheet }, (message) => { this.mapErrorMsg = message; });
+  }
+
+  toggleHeaderRowEditor(): void {
+    this.showHeaderRowEditor = !this.showHeaderRowEditor;
+    if (this.showHeaderRowEditor && !this.headerRowInput) {
+      this.headerRowInput = this.previewData?.header_row_number || null;
     }
   }
 
-  executeIngestionWithMapping(mapping?: Record<string, string>): void {
-    if (!this.selectedTrackerFile) return;
-
-    this.isUploadingTracker = true;
-    this.trackerUploadErrorMsg = null;
-
-    // Scenario A: Both Tracker and Resumes selected
-    if (this.selectedTrackerFile && this.selectedResumeFiles.length > 0) {
-      this.bulkImportService
-        .uploadCandidateFile(this.selectedTrackerFile, false, mapping, this.selectedDefaultSourcerId)
-        .subscribe({
-          next: (res: any) => {
-            this.isUploadingTracker = false;
-            const uploadBatchId = res.batch?.id;
-            this.currentTrackerBatch = res.batch;
-            this.selectedTrackerFile = null;
-
-            // Now upload Resume Files linked with uploadBatchId
-            this.uploadResumeZipArchive(uploadBatchId);
-          },
-          error: (err: any) => {
-            this.isUploadingTracker = false;
-            this.trackerUploadErrorMsg = err.error?.error || 'Tracker upload failed.';
-          }
-        });
+  /** "Use this row": reads the columns again with the header on the row the recruiter typed. */
+  applyHeaderRow(): void {
+    const row = Number(this.headerRowInput);
+    if (!Number.isInteger(row) || row < 1) {
+      this.mapErrorMsg = 'Type the row number of your header row, for example 3.';
+      return;
     }
-    // Scenario B: Only Tracker Spreadsheet selected
-    else {
-      this.bulkImportService
-        .uploadCandidateFile(this.selectedTrackerFile, false, mapping, this.selectedDefaultSourcerId)
-        .pipe(finalize(() => { this.isUploadingTracker = false; }))
-        .subscribe({
-          next: (res: any) => {
-            if (res.batch?.id) {
-              this.selectedTrackerFile = null;
-              this.currentTrackerBatch = res.batch;
-              this.activeLiveType = 'tracker';
-              this.activeTab = 'live';
-              this.trackBatchProgress(res.batch.id);
-            }
-          },
-          error: (err: any) => {
-            this.trackerUploadErrorMsg = err.error?.error || 'Tracker upload failed.';
-          }
-        });
-    }
+    this.headerRowOverride = row;
+    this.mapErrorMsg = null;
+    this.readHeaders(this.sheetLayoutForHeaders(row), (message) => {
+      this.mapErrorMsg = message;
+      this.headerRowOverride = null;
+    });
+  }
+
+  private sheetLayoutForHeaders(headerRow: number): SheetLayoutOptions {
+    const sheet = this.sheetOverride || this.previewData?.sheet || '';
+    return sheet ? { sheet, headerRow } : { headerRow };
   }
 
   onColumnMappingChange(colIndex: number, newCanonical: string): void {
     this.userCustomMapping[colIndex.toString()] = newCanonical;
-
-    // Update the resolution report item tier to manual override
     const reportItem = this.previewReportItems.find(r => r.column_index === colIndex);
     if (reportItem) {
       reportItem.canonical = newCanonical;
       reportItem.tier = 0;
       reportItem.tier_name = 'Manual Override';
       reportItem.confidence = 100.0;
+      reportItem.reason = 'manual';
     }
-
-    // Recheck required fields
-    const mappedValues = new Set(Object.values(this.userCustomMapping));
-    this.missingRequiredFields = [];
-    if (!mappedValues.has('email')) {
-      this.missingRequiredFields.push('Email Address');
-    }
-    if (!mappedValues.has('phone')) {
-      this.missingRequiredFields.push('Phone Number');
-    }
+    this.missingRequiredFields = this.missingRequiredList;
   }
 
-  confirmCustomMappingAndUpload(): void {
-    if (this.missingRequiredFields.length > 0) {
-      this.alertMessage = `Please map all required columns before importing. Missing: ${this.missingRequiredFields.join(', ')}`;
-      this.showAlert = true;
+  /** Friendly label for the chip that says why a column was mapped the way it was. */
+  reasonLabel(item: HeaderResolutionItem): string {
+    const labels: { [key: string]: string } = {
+      manual: 'Chosen by you',
+      matched_name: 'Matched name',
+      similar_name: 'Close match',
+      ai_guess: 'AI guess',
+      looks_like_email: 'Looks like emails',
+      looks_like_phone: 'Looks like phone numbers',
+      ignored_yes_no: 'Yes/No answers ignored',
+      serial_number: 'Row numbers ignored',
+      no_header: 'No header, no match',
+    };
+    return (item.reason && labels[item.reason]) || (item.canonical === '_unmapped' ? 'No matching field' : 'Matched name');
+  }
+
+  /** createPreview's optional last argument, left out when nothing was overridden. */
+  private layoutArgs(): [SheetLayoutOptions] | [] {
+    const layout = this.sheetLayout;
+    return layout ? [layout] : [];
+  }
+
+  reasonIsWarning(item: HeaderResolutionItem): boolean {
+    return item.reason === 'ignored_yes_no' || item.reason === 'ai_guess';
+  }
+
+  sampleValues(item: HeaderResolutionItem): string {
+    return (item.profile?.sample || []).slice(0, 3).join(' · ');
+  }
+
+  /** Map step "Continue": parses the whole sheet on the server and opens the Review step. Nothing is saved yet. */
+  continueFromMap(): void {
+    if (!this.selectedTrackerFile || !this.canContinueFromMap) { return; }
+    this.isCreatingPreview = true;
+    this.mapErrorMsg = null;
+    this.bulkImportService
+      .createPreview(this.selectedTrackerFile, this.userCustomMapping, this.selectedDefaultSourcerId || undefined, ...this.layoutArgs())
+      .pipe(finalize(() => { this.isCreatingPreview = false; }))
+      .subscribe({
+        next: (summary: ImportPreviewSummary) => {
+          this.previewSummary = summary;
+          this.previewId = summary.id;
+          this.previewCounts = summary.counts || {};
+          this.importErrorMsg = null;
+          this.step = 'review';
+        },
+        error: (err: any) => {
+          this.mapErrorMsg = err.error?.error || err.error?.detail || 'Could not read the rows of this sheet.';
+        }
+      });
+  }
+
+  /** Moves between steps. Leaving Review for an earlier step discards the staged rows, so it asks first. */
+  requestStep(target: ImportWizardStep): void {
+    if (this.wizardLocked || target === this.step) { return; }
+    if (this.step === 'review' && (target === 'upload' || target === 'map')) {
+      this.pendingStep = target;
+      this.showLeaveReviewConfirm = true;
       return;
     }
-    this.showMappingModal = false;
-    this.executeIngestionWithMapping(this.userCustomMapping);
+    this.step = target;
   }
 
-  closeMappingModal(): void {
-    this.showMappingModal = false;
+  confirmLeaveReview(): void {
+    const target = this.pendingStep || 'map';
+    this.showLeaveReviewConfirm = false;
+    this.pendingStep = null;
+    this.discardPreview();   // a new preview is built from the mapping when the recruiter continues again
+    this.step = target;
   }
 
-  getTierBadgeClass(tier: number): string {
-    switch (tier) {
-      case 0: return 'tier-manual';
-      case 1: return 'tier-exact';
-      case 2: return 'tier-fuzzy';
-      case 3: return 'tier-ai';
-      default: return 'tier-unmapped';
+  cancelLeaveReview(): void {
+    this.showLeaveReviewConfirm = false;
+    this.pendingStep = null;
+  }
+
+  onReviewCountsChange(counts: Record<string, number>): void {
+    this.previewCounts = counts || {};
+  }
+
+  /** Review step "Import": always allowed, whatever problems are left. */
+  importNow(): void {
+    if (!this.previewId || this.isExecuting) { return; }
+    this.isExecuting = true;
+    this.importErrorMsg = null;
+    this.bulkImportService
+      .executePreview(this.previewId)
+      .pipe(finalize(() => { this.isExecuting = false; }))
+      .subscribe({
+        next: res => this.startWizardImport(res.job_id, res.batch),
+        error: (err: any) => {
+          if (err.status === 409 && err.error?.job_id) {   // already running: follow that job instead
+            this.startWizardImport(String(err.error.job_id));
+            return;
+          }
+          this.importErrorMsg = err.error?.error || err.error?.detail || 'Could not start the import.';
+        }
+      });
+  }
+
+  private startWizardImport(jobId: string, batch?: UploadBatchDetail): void {
+    this.resultsJobId = jobId;
+    this.currentTrackerBatch = batch || null;
+    this.activeLiveType = 'tracker';
+    this.step = 'import';
+    this.trackBatchProgress(jobId);
+    if (this.selectedResumeFiles.length > 0) {
+      this.sendResumesAfterImport(jobId);
     }
   }
 
-  getTierBadgeLabel(tier: number): string {
-    switch (tier) {
-      case 0: return 'Manual';
-      case 1: return 'Exact';
-      case 2: return 'Fuzzy';
-      case 3: return 'AI Inferred';
-      default: return 'Unmapped';
-    }
+  /** The resumes cannot go through execute-from-preview, so they are sent right after Import, linked to the same job. */
+  private sendResumesAfterImport(jobId: string): void {
+    this.isUploadingResumes = true;
+    this.resumeUploadErrorMsg = null;
+    this.bulkImportService
+      .uploadResumeZip(this.selectedResumeFiles, jobId)
+      .pipe(finalize(() => { this.isUploadingResumes = false; }))
+      .subscribe({
+        next: (res: any) => {
+          this.selectedResumeFiles = [];
+          if (res.resume_batch?.id) {
+            this.currentResumeBatch = res.resume_batch;
+            this.trackResumeBatchProgress(res.resume_batch.id);
+          }
+        },
+        error: (err: any) => {
+          this.resumeUploadErrorMsg = err.error?.error || 'Resume upload failed.';
+        }
+      });
+  }
+
+  // ---- Results step ----
+  get resultTiles(): { key: string; label: string; count: number }[] {
+    const b = this.currentTrackerBatch;
+    const tiles = [
+      { key: 'created_complete', label: 'New candidates' },
+      { key: 'created_incomplete', label: 'Added to Needs info' },
+      { key: 'updated', label: 'Updated' },
+      { key: 'promoted', label: 'Completed and promoted' },
+      { key: 'skipped_owned', label: 'Skipped, owned by other recruiters' },
+    ].map(t => ({ ...t, count: this.outcomeCount(b, t.key) }));
+    const invalid = this.outcomeCount(b, 'skipped_invalid');
+    if (invalid > 0) { tiles.push({ key: 'skipped_invalid', label: 'Empty or unreadable rows', count: invalid }); }
+    return tiles;
+  }
+
+  downloadProblemRows(source: 'job' | 'preview' = 'job'): void {
+    const id = source === 'job' ? this.resultsJobId : this.previewId;
+    if (!id) { return; }
+    this.isDownloadingProblems = true;
+    this.bulkImportService.downloadProblems(id, source)
+      .pipe(finalize(() => { this.isDownloadingProblems = false; }))
+      .subscribe({
+        next: blob => this.saveBlob(blob, 'problem_rows.csv'),
+        error: () => { this.alertMessage = 'Could not download the problem rows.'; this.showAlert = true; }
+      });
+  }
+
+  downloadTemplate(): void {
+    this.bulkImportService.downloadTemplate().subscribe({
+      next: blob => this.saveBlob(blob, 'candidate_import_template.xlsx'),
+      error: () => { this.alertMessage = 'Could not download the template.'; this.showAlert = true; }
+    });
+  }
+
+  private saveBlob(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
+  /** The candidate page opens on its Needs info tab with ?tab=needs_info. */
+  openNeedsInfo(): void {
+    this.router.navigate(['/recruiter-workflow-candidate'], { queryParams: { tab: 'needs_info' } });
+  }
+
+  /** Results step "Import another sheet": back to a clean Upload step. */
+  importAnother(): void {
+    this.stopPolling();
+    this.stopResumePolling();
+    this.isProcessing = false;
+    this.selectedTrackerFile = null;
+    this.selectedResumeFiles = [];
+    this.trackerUploadErrorMsg = null;
+    this.resumeUploadErrorMsg = null;
+    this.importErrorMsg = null;
+    this.mapErrorMsg = null;
+    this.resultsJobId = null;
+    this.showLeaveReviewConfirm = false;
+    this.pendingStep = null;
+    this.resetPreviewState();
+    this.step = 'upload';
   }
 
   uploadResumeZipArchive(uploadBatchId?: string): void {
@@ -711,6 +986,9 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
             batch.status === 'FAILED'
           ) {
             this.isProcessing = false;
+            if (this.step === 'import') {
+              this.step = 'results';
+            }
             this.loadBatchHistory();
             if (batch.failed_rows > 0) {
               this.loadErrorLogs(1);

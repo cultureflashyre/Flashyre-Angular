@@ -336,144 +336,311 @@
 
 
         <!-- ==================================================================== -->
-        <!-- TAB 2: DUAL-DROPZONE INGESTION HUB -->
+        <!-- TAB 2: IMPORT WIZARD (Upload, Map columns, Review rows, Import, Results) -->
         <!-- ==================================================================== -->
         <div *ngIf="activeTab === 'upload'" class="tab-pane">
-          <div class="dual-dropzone-container">
-            <div class="dual-intro">
-              <h2>Dual-Source Ingestion & AI Matching</h2>
-              <p>Upload your tracker spreadsheet and resume zip archive together or individually. The AI engine parses candidate documents and compares phone, email, and name to enrich profiles and generate vector embeddings.</p>
+          <div class="wizard">
+            <div class="wizard-head">
+              <h2>Import candidates</h2>
+              <p>Upload a sheet, check every row, then import. Nothing is saved until you press Import.</p>
             </div>
 
-            <!-- DUAL DROPZONES GRID -->
-            <div class="dropzones-grid">
-              <!-- DROPZONE 1: TRACKER SPREADSHEET -->
-              <div class="dropzone-card" [class.has-file]="selectedTrackerFile !== null"
-                (drop)="onTrackerDrop($event)" (dragover)="onDragOver($event)">
-                <div class="dropzone-header">
-                  <div class="dropzone-badge tracker-badge">1. Candidate Tracker</div>
-                  <span class="ext-badge">.xlsx · .csv</span>
-                </div>
+            <app-import-wizard-stepper
+              [steps]="wizardSteps"
+              [current]="step"
+              [locked]="wizardLocked"
+              (stepSelect)="requestStep($event)">
+            </app-import-wizard-stepper>
 
-                <div *ngIf="!selectedTrackerFile" class="dropzone-body">
-                  <div class="drop-icon blue-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <!-- ============ STEP 1: UPLOAD ============ -->
+            <section *ngIf="step === 'upload'" class="wiz-panel" data-panel="upload">
+              <h3>Upload</h3>
+
+              <!-- DUAL DROPZONES GRID -->
+              <div class="dropzones-grid">
+                <!-- DROPZONE 1: TRACKER SPREADSHEET -->
+                <div class="dropzone-card" [class.has-file]="selectedTrackerFile !== null"
+                  (drop)="onTrackerDrop($event)" (dragover)="onDragOver($event)">
+                  <div class="dropzone-header">
+                    <div class="dropzone-badge tracker-badge">1. Candidate Tracker</div>
+                    <span class="ext-badge">.xlsx · .csv</span>
                   </div>
-                  <h3>Select Candidate Spreadsheet</h3>
-                  <p>Drag and drop multi-sheet Excel or CSV file here</p>
-                  <label class="btn select-btn">
-                    <input type="file" (change)="onTrackerFileSelected($event)" accept=".xlsx,.xls,.csv" hidden />
-                    Browse Spreadsheet
-                  </label>
-                  <div class="drop-hint">Max file size 50MB</div>
-                </div>
 
-                <div *ngIf="selectedTrackerFile" class="selected-file-view">
-                  <div class="file-icon-box blue-box">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  </div>
-                  <div class="file-details">
-                    <div class="file-name-lg">{{ selectedTrackerFile.name }}</div>
-                    <div class="file-size-lg">{{ formatFileSize(selectedTrackerFile.size) }}</div>
-                  </div>
-                  <button class="remove-btn" (click)="removeTrackerFile()" title="Remove file">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
-                </div>
-
-                <div *ngIf="trackerUploadErrorMsg" class="upload-error-banner">
-                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  {{ trackerUploadErrorMsg }}
-                </div>
-              </div>
-
-              <!-- DROPZONE 2: RESUME ARCHIVE OR MULTIPLE FILES -->
-              <div class="dropzone-card" [class.has-file]="hasResumeFiles"
-                (drop)="onZipDrop($event)" (dragover)="onDragOver($event)">
-                <div class="dropzone-header">
-                  <div class="dropzone-badge resume-badge">2. Resumes Archive or Documents</div>
-                  <span class="ext-badge">.zip · .pdf · .docx · .doc</span>
-                </div>
-
-                <div *ngIf="!hasResumeFiles" class="dropzone-body">
-                  <div class="drop-icon purple-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                  </div>
-                  <h3>Select Resumes Archive or Documents</h3>
-                  <p>Drag and drop a .zip archive or select multiple PDF / DOCX files</p>
-                  <label class="btn select-btn">
-                    <input type="file" (change)="onZipFileSelected($event)" accept=".zip,.pdf,.docx,.doc" multiple hidden />
-                    Browse Resumes (.zip / .pdf / .docx)
-                  </label>
-                  <div class="drop-hint">Max total upload size 200MB</div>
-                </div>
-
-                <div *ngIf="hasResumeFiles" class="selected-file-view">
-                  <div class="file-icon-box purple-box">
-                    <svg *ngIf="isSingleZip" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                    <svg *ngIf="!isSingleZip" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                  </div>
-                  <div class="file-details">
-                    <div class="file-name-lg">
-                      <span *ngIf="isSingleZip">{{ selectedResumeFiles[0].name }}</span>
-                      <span *ngIf="!isSingleZip">{{ selectedResumeFiles.length }} Resume Documents Selected</span>
+                  <div *ngIf="!selectedTrackerFile" class="dropzone-body">
+                    <div class="drop-icon blue-icon">
+                      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
                     </div>
-                    <div class="file-size-lg">
-                      {{ formatFileSize(totalResumeFilesSize) }}
-                      <span *ngIf="!isSingleZip" class="files-summary-pill">· {{ resumeFilesSummary }}</span>
-                    </div>
+                    <h3>Select Candidate Spreadsheet</h3>
+                    <p>Drag and drop multi-sheet Excel or CSV file here</p>
+                    <label class="btn select-btn">
+                      <input type="file" (change)="onTrackerFileSelected($event)" accept=".xlsx,.xls,.csv" hidden />
+                      Browse Spreadsheet
+                    </label>
+                    <div class="drop-hint">Up to 20 MB</div>
                   </div>
-                  <button class="remove-btn" (click)="removeZipFile()" title="Remove files">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
+
+                  <div *ngIf="selectedTrackerFile" class="selected-file-view">
+                    <div class="file-icon-box blue-box">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div class="file-details">
+                      <div class="file-name-lg">{{ selectedTrackerFile.name }}</div>
+                      <div class="file-size-lg">{{ formatFileSize(selectedTrackerFile.size) }}</div>
+                    </div>
+                    <button class="remove-btn" (click)="removeTrackerFile()" title="Remove file">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </div>
+
+                  <div *ngIf="trackerUploadErrorMsg" class="upload-error-banner">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    {{ trackerUploadErrorMsg }}
+                  </div>
                 </div>
 
-                <div *ngIf="resumeUploadErrorMsg" class="upload-error-banner">
-                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  {{ resumeUploadErrorMsg }}
+                <!-- DROPZONE 2: RESUME ARCHIVE OR MULTIPLE FILES -->
+                <div class="dropzone-card" [class.has-file]="hasResumeFiles"
+                  (drop)="onZipDrop($event)" (dragover)="onDragOver($event)">
+                  <div class="dropzone-header">
+                    <div class="dropzone-badge resume-badge">2. Resumes Archive or Documents</div>
+                    <span class="ext-badge">.zip · .pdf · .docx · .doc</span>
+                  </div>
+
+                  <div *ngIf="!hasResumeFiles" class="dropzone-body">
+                    <div class="drop-icon purple-icon">
+                      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    </div>
+                    <h3>Select Resumes Archive or Documents</h3>
+                    <p>Drag and drop a .zip archive or select multiple PDF / DOCX files</p>
+                    <label class="btn select-btn">
+                      <input type="file" (change)="onZipFileSelected($event)" accept=".zip,.pdf,.docx,.doc" multiple hidden />
+                      Browse Resumes (.zip / .pdf / .docx)
+                    </label>
+                    <div class="drop-hint">ZIP up to 50 MB</div>
+                  </div>
+
+                  <div *ngIf="hasResumeFiles" class="selected-file-view">
+                    <div class="file-icon-box purple-box">
+                      <svg *ngIf="isSingleZip" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                      <svg *ngIf="!isSingleZip" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div class="file-details">
+                      <div class="file-name-lg">
+                        <span *ngIf="isSingleZip">{{ selectedResumeFiles[0].name }}</span>
+                        <span *ngIf="!isSingleZip">{{ selectedResumeFiles.length }} Resume Documents Selected</span>
+                      </div>
+                      <div class="file-size-lg">
+                        {{ formatFileSize(totalResumeFilesSize) }}
+                        <span *ngIf="!isSingleZip" class="files-summary-pill">· {{ resumeFilesSummary }}</span>
+                      </div>
+                    </div>
+                    <button class="remove-btn" (click)="removeZipFile()" title="Remove files">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </div>
+
+                  <div *ngIf="resumeUploadErrorMsg" class="upload-error-banner">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    {{ resumeUploadErrorMsg }}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- COMBINED INGESTION ACTIONS -->
-            <div class="action-footer">
-              <div class="action-summary">
-                <div *ngIf="selectedTrackerFile && hasResumeFiles" class="summary-tag good">
-                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  Dual Ingestion Ready: Tracker + {{ isSingleZip ? 'Zip Archive' : selectedResumeFiles.length + ' Resumes' }}
-                </div>
-                <div *ngIf="selectedTrackerFile && !hasResumeFiles" class="summary-tag blue">
-                  Single Ingestion: Candidate Tracker (.xlsx)
-                </div>
-                <div *ngIf="!selectedTrackerFile && hasResumeFiles" class="summary-tag purple">
-                  Single Ingestion: {{ isSingleZip ? 'Resumes Package (.zip)' : selectedResumeFiles.length + ' Resume Documents' }}
-                </div>
-              </div>
 
-              <!-- Sourcer Attribution Selector (FK) -->
-              <div class="sourcer-selection-box" *ngIf="selectedTrackerFile && recruitersList?.length">
-                <label class="sourcer-label">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  Attributed Sourcer:
-                </label>
-                <select [(ngModel)]="selectedDefaultSourcerId" class="form-select-sm sourcer-select">
-                  <option *ngFor="let r of recruitersList" [value]="r.user_id">
-                    {{ r.first_name }} {{ r.last_name }} ({{ r.email }})
-                  </option>
-                </select>
-                <span class="sourcer-hint">Used when spreadsheet row doesn't specify a recruiter or if unmatched</span>
-              </div>
-
-              <div class="action-buttons">
-                <button class="btn primary btn-lg"
-                  [disabled]="(!selectedTrackerFile && !hasResumeFiles) || isUploadingTracker || isUploadingResumes || isPreviewingHeaders"
-                  (click)="startCombinedIngestion()">
-                  <span *ngIf="isUploadingTracker || isUploadingResumes || isPreviewingHeaders" class="btn-spinner"></span>
-                  <svg *ngIf="!isUploadingTracker && !isUploadingResumes && !isPreviewingHeaders" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  {{ isPreviewingHeaders ? 'Analyzing Headers...' : (isUploadingTracker ? 'Uploading Tracker...' : (isUploadingResumes ? 'Uploading Resumes...' : 'Start Ingestion & AI Matching')) }}
+              <div class="wiz-row">
+                <div class="sourcer-selection-box" *ngIf="selectedTrackerFile && recruitersList?.length">
+                  <label class="sourcer-label" for="wizSourcer">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Attributed Sourcer:
+                  </label>
+                  <select id="wizSourcer" [(ngModel)]="selectedDefaultSourcerId" class="form-select-sm sourcer-select">
+                    <option *ngFor="let r of recruitersList" [value]="r.user_id">
+                      {{ r.first_name }} {{ r.last_name }} ({{ r.email }})
+                    </option>
+                  </select>
+                  <span class="sourcer-hint">Used when a row doesn't name a recruiter</span>
+                </div>
+                <span class="wiz-spacer"></span>
+                <button type="button" class="btn" data-action="template" (click)="downloadTemplate()">Download template</button>
+                <button type="button" class="btn primary" data-action="continue-upload"
+                  [disabled]="(!selectedTrackerFile && !hasResumeFiles) || isUploadingResumes || isPreviewingHeaders"
+                  (click)="continueFromUpload()">
+                  <span *ngIf="isPreviewingHeaders || isUploadingResumes" class="btn-spinner"></span>
+                  {{ isPreviewingHeaders ? 'Reading columns...' : (isUploadingResumes ? 'Uploading Resumes...' : (selectedTrackerFile ? 'Continue' : 'Upload resumes')) }}
                 </button>
               </div>
-            </div>
+            </section>
+
+            <!-- ============ STEP 2: MAP COLUMNS ============ -->
+            <section *ngIf="step === 'map' && previewData" class="wiz-panel" data-panel="map">
+              <div class="wiz-row">
+                <h3>Map columns</h3>
+                <span class="wiz-spacer"></span>
+              </div>
+
+              <div class="wiz-row wiz-layout" data-note="table-location" *ngIf="tableLocationNote">
+                <span class="wiz-hint" data-note="table-found">{{ tableLocationNote }}</span>
+                <label class="wiz-hint wiz-inline" *ngIf="sheetNames.length > 1">Sheet
+                  <select data-field="sheet-select" [ngModel]="chosenSheet" (ngModelChange)="onSheetChange($event)" [disabled]="isPreviewingHeaders">
+                    <option *ngFor="let name of sheetNames" [value]="name">{{ name }}</option>
+                  </select>
+                </label>
+                <button type="button" class="btn-xs" data-action="header-row-toggle" (click)="toggleHeaderRowEditor()">My header is on another row</button>
+                <span class="wiz-inline" *ngIf="showHeaderRowEditor">
+                  <input type="number" min="1" class="wiz-row-input" data-field="header-row-input" placeholder="Row number"
+                    [(ngModel)]="headerRowInput" (keyup.enter)="applyHeaderRow()" />
+                  <button type="button" class="btn-xs primary" data-action="header-row-apply" [disabled]="isPreviewingHeaders" (click)="applyHeaderRow()">Use this row</button>
+                </span>
+              </div>
+
+              <div *ngIf="missingRequiredList.length > 0" class="mapping-alert-banner" data-note="unmapped-mandatory">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Rows will go to Needs info until these are filled: <strong>{{ missingRequiredList.join(', ') }}</strong>. You can still continue.</span>
+              </div>
+
+              <div class="mapping-table-wrap">
+                <table class="tbl mapping-tbl">
+                  <thead>
+                    <tr>
+                      <th style="width: 24%;">Column in your sheet</th>
+                      <th style="width: 28%;">Sample values</th>
+                      <th style="width: 30%;">Saved as</th>
+                      <th style="width: 18%;">Why</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of previewReportItems" [class.unmapped-row]="(userCustomMapping[item.column_index.toString()] || item.canonical) === '_unmapped'">
+                      <td>
+                        <div class="raw-header-title">{{ item.raw_header }}</div>
+                        <div class="raw-header-sub">Column #{{ item.column_index + 1 }}</div>
+                      </td>
+                      <td class="wiz-samples">{{ sampleValues(item) || '-' }}</td>
+                      <td>
+                        <select
+                          class="form-select-sm mapping-select"
+                          [attr.aria-label]="'Saved as for ' + item.raw_header"
+                          [ngModel]="userCustomMapping[item.column_index.toString()] || item.canonical"
+                          (ngModelChange)="onColumnMappingChange(item.column_index, $event)">
+                          <option value="_unmapped">Don't import</option>
+                          <option *ngFor="let f of canonicalFieldsList" [value]="f.key">
+                            {{ f.label }}{{ f.required ? ' *' : '' }}
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <span class="reason-chip" [class.warn]="reasonIsWarning(item)">{{ reasonLabel(item) }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="wiz-note" data-note="location-hint" *ngIf="showLocationHint">
+                Location will be used as preferred location. If a sheet has both columns, Preferred Location wins and Location fills only the rows where it is blank.
+              </div>
+
+              <div *ngIf="mapErrorMsg" class="upload-error-banner">{{ mapErrorMsg }}</div>
+
+              <div class="wiz-row">
+                <button type="button" class="btn" data-action="back-map" (click)="requestStep('upload')">Back</button>
+                <span class="wiz-spacer"></span>
+                <button type="button" class="btn primary" data-action="continue-map"
+                  [disabled]="!canContinueFromMap" (click)="continueFromMap()">
+                  <span *ngIf="isCreatingPreview" class="btn-spinner"></span>
+                  {{ isCreatingPreview ? 'Checking rows...' : 'Continue' }}
+                </button>
+              </div>
+            </section>
+
+            <!-- ============ STEP 3: REVIEW ROWS ============ -->
+            <section *ngIf="step === 'review'" class="wiz-panel" data-panel="review">
+              <div class="wiz-row">
+                <h3>Review rows</h3>
+                <span class="wiz-spacer"></span>
+                <button type="button" class="btn" data-action="download-preview-problems"
+                  [disabled]="isDownloadingProblems" (click)="downloadProblemRows('preview')">Download problem rows (.csv)</button>
+              </div>
+
+              <app-import-review-grid [previewId]="previewId" (countsChange)="onReviewCountsChange($event)"></app-import-review-grid>
+
+              <div *ngIf="importErrorMsg" class="upload-error-banner">{{ importErrorMsg }}</div>
+
+              <div *ngIf="showLeaveReviewConfirm" class="wiz-confirm" role="alertdialog" aria-labelledby="leaveReviewTitle">
+                <div>
+                  <strong id="leaveReviewTitle">Go back and discard this review?</strong>
+                  <p>The fixes you ticked and the cells you edited here will be lost. Your column choices are kept.</p>
+                </div>
+                <div class="wiz-confirm-actions">
+                  <button type="button" class="btn" data-action="stay-in-review" (click)="cancelLeaveReview()">Stay here</button>
+                  <button type="button" class="btn danger" data-action="leave-review" (click)="confirmLeaveReview()">Discard and go back</button>
+                </div>
+              </div>
+
+              <div class="wiz-row">
+                <button type="button" class="btn" data-action="back-review" (click)="requestStep('map')">Back</button>
+                <span class="wiz-spacer"></span>
+                <span class="wiz-hint">Ticked fixes are saved. Unticked ones keep the email empty. Rows with problems still import and land in Needs info.</span>
+                <button type="button" class="btn primary" data-action="import"
+                  [disabled]="isExecuting || !previewId" (click)="importNow()">
+                  <span *ngIf="isExecuting" class="btn-spinner"></span>
+                  {{ isExecuting ? 'Starting...' : (importRowCount ? 'Import ' + importRowCount + ' rows' : 'Import') }}
+                </button>
+              </div>
+            </section>
+
+            <!-- ============ STEP 4: IMPORT (live progress) ============ -->
+            <section *ngIf="step === 'import'" class="wiz-panel" data-panel="import">
+              <h3>Importing</h3>
+              <div class="progress-card">
+                <div class="progress-labels">
+                  <span class="current-step" *ngIf="currentTrackerBatch">
+                    {{ currentTrackerBatch.success_rows + currentTrackerBatch.failed_rows }} of {{ currentTrackerBatch.total_rows || importRowCount }} rows
+                  </span>
+                  <span class="current-step" *ngIf="!currentTrackerBatch">Starting...</span>
+                  <span class="progress-pct">{{ getProgressPercentage(currentTrackerBatch) }}%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" [style.width.%]="getProgressPercentage(currentTrackerBatch)"></div>
+                </div>
+              </div>
+              <div *ngIf="currentResumeBatch" class="wiz-hint">
+                Resumes: {{ currentResumeBatch.matched_files }} matched, {{ currentResumeBatch.unmatched_files }} unmatched of {{ currentResumeBatch.total_files }}.
+              </div>
+              <div *ngIf="isUploadingResumes" class="wiz-hint">Sending your resumes...</div>
+              <div *ngIf="resumeUploadErrorMsg" class="upload-error-banner">{{ resumeUploadErrorMsg }}</div>
+              <div class="wiz-row">
+                <span class="wiz-hint">You can leave this page. Progress also shows in Live monitor.</span>
+                <span class="wiz-spacer"></span>
+                <button type="button" class="btn" data-action="open-live" (click)="setTab('live')">Open Live monitor</button>
+              </div>
+            </section>
+
+            <!-- ============ STEP 5: RESULTS ============ -->
+            <section *ngIf="step === 'results'" class="wiz-panel" data-panel="results">
+              <h3>{{ currentTrackerBatch?.status === 'FAILED' ? 'Import failed' : 'Import finished' }}</h3>
+              <div *ngIf="currentTrackerBatch?.status === 'FAILED' && currentTrackerBatch?.failure_reason" class="upload-error-banner">
+                {{ currentTrackerBatch?.failure_reason }}
+              </div>
+              <div class="wiz-summary">
+                <div class="wiz-tile" *ngFor="let t of resultTiles" [attr.data-outcome]="t.key">
+                  <b>{{ t.count }}</b>
+                  <small>{{ t.label }}</small>
+                </div>
+              </div>
+              <div class="wiz-hint" *ngIf="currentTrackerBatch && currentTrackerBatch.failed_rows > 0">
+                {{ currentTrackerBatch.failed_rows }} row(s) had errors. The problem rows file lists them.
+              </div>
+              <div *ngIf="currentResumeBatch" class="wiz-hint">
+                Resumes: {{ currentResumeBatch.matched_files }} matched, {{ currentResumeBatch.unmatched_files }} unmatched.
+              </div>
+              <div class="wiz-row">
+                <button type="button" class="btn" data-action="download-problems"
+                  [disabled]="isDownloadingProblems" (click)="downloadProblemRows('job')">Download problem rows (.csv)</button>
+                <button type="button" class="btn" data-action="open-needs-info" (click)="openNeedsInfo()">Open Needs info</button>
+                <span class="wiz-spacer"></span>
+                <button type="button" class="btn primary" data-action="import-another" (click)="importAnother()">Import another sheet</button>
+              </div>
+            </section>
           </div>
         </div>
 
@@ -1273,82 +1440,6 @@
           <button class="btn primary" [disabled]="!selectedCandidateForResolve || isResolving" (click)="confirmResolveUnmatched()">
             <span *ngIf="isResolving" class="btn-spinner"></span>
             {{ isResolving ? 'Linking & Embedding...' : 'Confirm Link & Attach Resume' }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================================================================== -->
-    <!-- MODAL: COLUMN MAPPING REVIEW & OVERRIDE -->
-    <!-- ==================================================================== -->
-    <div *ngIf="showMappingModal" class="modal-backdrop" (click)="closeMappingModal()">
-      <div class="modal-content mapping-modal" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <div>
-            <h3>Review Column Mapping</h3>
-            <p>Our 3-tier engine mapped your spreadsheet headers. Review and adjust mappings before ingestion.</p>
-          </div>
-          <button class="close-btn" (click)="closeMappingModal()">✕</button>
-        </div>
-
-        <div class="modal-body">
-          <div *ngIf="missingRequiredFields.length > 0" class="mapping-alert-banner">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>Required fields missing: <strong>{{ missingRequiredFields.join(', ') }}</strong>. Please assign these columns below.</span>
-          </div>
-
-          <div class="mapping-table-wrap">
-            <table class="tbl mapping-tbl">
-              <thead>
-                <tr>
-                  <th style="width: 30%;">Spreadsheet Header</th>
-                  <th style="width: 40%;">Target Candidate Field</th>
-                  <th style="width: 18%;">Matching Tier</th>
-                  <th style="width: 12%;">Confidence</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of previewReportItems" [class.unmapped-row]="userCustomMapping[item.column_index.toString()] === '_unmapped'">
-                  <td>
-                    <div class="raw-header-title">"{{ item.raw_header }}"</div>
-                    <div class="raw-header-sub">Column #{{ item.column_index + 1 }}</div>
-                  </td>
-                  <td>
-                    <select
-                      class="form-select-sm mapping-select"
-                      [ngModel]="userCustomMapping[item.column_index.toString()] || item.canonical"
-                      (ngModelChange)="onColumnMappingChange(item.column_index, $event)">
-                      <option value="_unmapped">— Unmapped (Store as metadata) —</option>
-                      <optgroup label="Core Profile Fields">
-                        <option *ngFor="let f of canonicalFieldsList" [value]="f.key">
-                          {{ f.label }} {{ f.required ? '*' : '' }}
-                        </option>
-                      </optgroup>
-                    </select>
-                  </td>
-                  <td>
-                    <span class="tier-badge" [ngClass]="getTierBadgeClass(item.tier)">
-                      {{ item.tier_name }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="confidence-bar-wrap">
-                      <span class="confidence-pct">{{ item.confidence }}%</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn" (click)="closeMappingModal()">Cancel</button>
-          <button class="btn primary"
-            [disabled]="missingRequiredFields.length > 0 || isUploadingTracker"
-            (click)="confirmCustomMappingAndUpload()">
-            <span *ngIf="isUploadingTracker" class="btn-spinner"></span>
-            {{ isUploadingTracker ? 'Ingesting...' : 'Confirm & Start Ingestion' }}
           </button>
         </div>
       </div>

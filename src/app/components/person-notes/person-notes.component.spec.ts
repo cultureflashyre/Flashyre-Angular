@@ -42,6 +42,15 @@ describe('PersonNotesComponent', () => {
     expect(text).toContain('second');
   });
 
+  it('tags notes created from an imported sheet', () => {
+    create();
+    http.expectOne(list).flush([{ ...note(1, 'REC1', 'from excel'), source: 'import' }, note(2, 'REC1', 'typed')]);
+    fixture.detectChanges();
+    const tags = (fixture.nativeElement as HTMLElement).querySelectorAll('.tag-import');
+    expect(tags.length).toBe(1);
+    expect(tags[0].textContent).toContain('Imported from sheet');
+  });
+
   it('adds a note at the top and clears the box; ignores blank notes', () => {
     create();
     http.expectOne(list).flush([note(1, 'REC1')]);

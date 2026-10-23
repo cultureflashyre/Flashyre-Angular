@@ -6,8 +6,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { RecruiterSidebarComponent } from '../../components/recruiter-sidebar/recruiter-sidebar.component';
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser, RatingCriteria, RatingScore, CandidateRating, IntakePerson, IntakeSummary, IntakeUpdateResult } from '../../services/recruiter-workflow-candidate.service';
 import { PersonBadgesComponent, missingFieldLabel } from '../../components/person-badges/person-badges.component';
-import { PersonNotesComponent } from '../../components/person-notes/person-notes.component';
 import { IntakeDrawerComponent } from '../../components/intake-drawer/intake-drawer.component';
+import { PersonDetailCardComponent } from '../../components/person-detail-card/person-detail-card.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, Subject, of, Observable, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap, tap, takeWhile } from 'rxjs/operators';
@@ -86,8 +86,8 @@ import { NotificationBellComponent } from '../../components/notification-bell/no
     AlertMessageComponent,
     NotificationBellComponent,
     PersonBadgesComponent,
-    PersonNotesComponent,
-    IntakeDrawerComponent
+    IntakeDrawerComponent,
+    PersonDetailCardComponent
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewInit {
@@ -96,7 +96,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   activeTab: 'sourced' | 'registered' | 'needs_info' = 'sourced';
 
   // --- NEEDS INFO (people still missing mandatory fields) ---
-  intakePeople: IntakePerson[] = [];
+  /** Rows of the Needs info tab: inbox people and candidates that are still missing fields (see `kind`). */
+  intakePeople: any[] = [];
   intakeSummary: IntakeSummary | null = null;
   isIntakeLoading = false;
   hasIntakeLoaded = false;
@@ -105,13 +106,19 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   intakePages = 1;
   intakeMissingFilter = '';
   intakeUnverifiedOnly = false;
-  selectedIntake: IntakePerson | null = null;
-  detailsNotesKind: 'candidate' | 'intake' = 'candidate';
+  /** The person in the read-only detail card (name click). A candidate or a Needs info person. */
+  detailPerson: any | null = null;
+  /** The person in the complete-profile sidebar (Needs info badge, Complete profile, edit of an incomplete person). */
+  sidebarPerson: any | null = null;
+  /** The `?person=` deep link last acted on, so a later query change does not reopen a closed card. */
+  private handledPersonLink = '';
   readonly missingFieldChoices = ['first_name', 'last_name', 'phone', 'email', 'skills', 'education', 'preferred_location'];
   missingFieldLabel = missingFieldLabel;
   currentUserId = '';
   isAdminUser = false;
   private intakeSearch$ = new Subject<void>();
+  /** Order of the lists by date added; the server sorts so it holds across pages. */
+  serverSort: 'newest' | 'oldest' = 'newest';
   registeredCandidates: RegisteredUser[] = [];
   displayRegisteredCandidates: RegisteredUser[] = [];
 
@@ -129,10 +136,6 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   hasSourcedLoaded: boolean = false;
   hasRegisteredLoaded: boolean = false;
   isActionLoading: boolean = false;
-
-  // --- Detail Modal ---
-  showDetailsModal = false;
-  selectedCandidateDetails: Candidate | null = null;
 
   // --- Form Properties ---
   candidateForm!: FormGroup;
@@ -383,6 +386,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.subscriptions.add(
       this.route.queryParams.subscribe(params => {
         this.formIdFilter = params['form_id'] || null;
+        if (params['tab'] === 'needs_info' && this.activeTab !== 'needs_info') {
+          this.setActiveTab('needs_info');   // deep link from the bulk import results step
+        }
+        this.applyPersonLink(params);
         if (params['search']) {
           this.searchQuery = params['search'];
           if (this.filterForm) {
@@ -548,6 +555,203 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   // NEEDS INFO: people who are missing one or more mandatory fields
   // =========================================================
 
+  /** True for a person from Needs info; candidates and inbox people can have the same id number. */
+  isIntakeRow(row: any): boolean {
+    return row?.kind === 'intake';
+  }
+
+  /** The tab count: inbox people plus candidates that are still missing mandatory fields. */
+  get needsInfoCount(): number {
+    return this.intakeSummary
+      ? this.intakeSummary.open + this.intakeSummary.legacy_incomplete_candidates
+      : this.intakePeople.length;
+  }
+
+  /** Gives a row from the server the fields the table and the filters expect, whatever its kind. */
+  private toRow(raw: any): any {
+    const row: any = { ...raw, selected: false };
+    if (this.isIntakeRow(row)) {
+      row.first_name = row.first_name || '';
+      row.last_name = row.last_name || '';
+      row.email = row.email || '';
+      row.phone_number = row.phone_number || '';
+      row.resume = row.resume_path || null;
+      row.active_applications = row.active_applications || [];
+      row.lead_pipeline = row.lead_pipeline || null;
+      row.latest_rating_score = row.latest_rating_score ?? null;
+      row.latest_rating_breakdown = row.latest_rating_breakdown || null;
+      row.placement_status = null;
+    }
+    return row;
+  }
+
+  rowKey(index: number, row: any): string {
+    return `${row?.kind || 'candidate'}-${row?.id}`;
+  }
+
+  hasRowResume(row: any): boolean {
+    return this.isIntakeRow(row) ? !!row.resume_path : !!(row.resume || row.resume_url);
+  }
+
+  openRowResume(row: any): void {
+    const url = this.isIntakeRow(row) ? row.resume_path : (row.resume || row.resume_url);
+    if (url) { this.openResume(url); }
+  }
+
+  deleteRow(row: any): void {
+    if (this.isIntakeRow(row)) { this.deleteIntakePerson(row); } else { this.deleteCandidate(row.id); }
+  }
+
+  /**
+   * The card rule, for every list: a click on the name (or the row) opens the read-only detail card, whatever the
+   * kind. The Needs info badge, "Complete profile" and the edit action of an incomplete person open the sidebar.
+   */
+  openRow(row: any): void {
+    this.openDetailCard(row);
+  }
+
+  /** True while the person is missing mandatory fields (every Needs info person is). */
+  isIncomplete(row: any): boolean {
+    return this.isIntakeRow(row) || (row?.missing_fields?.length ?? 0) > 0;
+  }
+
+  /** The edit action of a row: the sidebar for an incomplete person, the existing edit form for a complete one. */
+  editRow(row: any): void {
+    if (this.isIncomplete(row)) {
+      this.openCompleteProfile(row);
+    } else if (this.canEditPerson(row)) {
+      this.startEdit(row);
+    } else {
+      this.openDetailCard(row);
+    }
+  }
+
+  /** The Edit button of the detail card: closes the card first. */
+  editFromCard(row: any): void {
+    this.closeDetailCard();
+    this.editRow(row);
+  }
+
+  openDetailCard(row: any): void {
+    this.sidebarPerson = null;
+    this.detailPerson = row;
+    this.hydrate(row, person => { if (this.detailPerson === row) { this.detailPerson = person; } });
+  }
+
+  closeDetailCard(): void {
+    this.detailPerson = null;
+  }
+
+  /** Retry on the detail card's resume status line: the stored resume is queued again and the card shows 'processing'. */
+  retryResumeFromCard(row: any): void {
+    if (!row || !this.canEditPerson(row)) { return; }
+    const kind = this.sidebarKind(row);
+    const request: Observable<any> = kind === 'intake'
+      ? this.candidateService.reparseIntakeResume(row.id) : this.candidateService.reparseCandidateResume(row.id);
+    request.subscribe({
+      next: person => this.applyReloadedCardPerson(row, person, kind),
+      error: () => this.showAlert('Could not retry reading the resume. Try again in a moment.', ['Close'])
+    });
+  }
+
+  /** Refresh on the detail card's resume status line: the person is loaded again. */
+  refreshCardPerson(row: any): void {
+    if (!row || row.id == null) { return; }
+    const kind = this.sidebarKind(row);
+    const request: Observable<any> = kind === 'intake' ? this.candidateService.getIntake(row.id) : this.candidateService.getCandidate(row.id);
+    request.subscribe({
+      next: person => this.applyReloadedCardPerson(row, person, kind),
+      error: () => { /* keep the card as it is */ }
+    });
+  }
+
+  private applyReloadedCardPerson(row: any, person: any, kind: 'candidate' | 'intake'): void {
+    const merged = { ...row, ...person, kind, selected: row.selected };
+    if (this.detailPerson === row) { this.detailPerson = merged; }
+    for (const list of [this.masterCandidates, this.intakePeople]) {
+      (list || []).filter((r: any) => (r.kind || 'candidate') === kind && r.id === row.id).forEach((r: any) => {
+        r.resume_status = person?.resume_status;
+        r.resume_status_detail = person?.resume_status_detail;
+      });
+    }
+  }
+
+  /**
+   * The Verify tag (in either list, or on the detail card) never verifies by itself: it opens the sidebar, where the
+   * AI-filled values are listed and highlighted and the Verify button is the one action that clears the tag.
+   */
+  openCompleteProfile(row: any): void {
+    this.detailPerson = null;
+    this.sidebarPerson = row;
+    this.hydrate(row, person => { if (this.sidebarPerson === row) { this.sidebarPerson = person; } });
+  }
+
+  closeSidebar(): void {
+    this.sidebarPerson = null;
+  }
+
+  /** "View full profile" in the sidebar: the sidebar closes and the detail card opens. */
+  viewProfileFromSidebar(): void {
+    const person = this.sidebarPerson;
+    if (person) { this.openDetailCard(person); }
+  }
+
+  /** `candidate` rows are saved through the candidate endpoint, `intake` rows through the Needs info one. */
+  sidebarKind(row: any): 'candidate' | 'intake' {
+    return this.isIntakeRow(row) ? 'intake' : 'candidate';
+  }
+
+  /**
+   * A list row may lack the sheet details and the rest of the record. In that case the full record is fetched and
+   * handed to `apply` (the row stays on screen meanwhile). A failure keeps what the row has.
+   */
+  private hydrate(row: any, apply: (person: any) => void): void {
+    if (!row || row.id == null || 'extra_columns' in row) { return; }
+    const kind = this.sidebarKind(row);
+    const request: Observable<any> = kind === 'intake' ? this.candidateService.getIntake(row.id) : this.candidateService.getCandidate(row.id);
+    request.subscribe({
+      next: (full: any) => apply({ ...row, ...full, kind, selected: row.selected }),
+      error: () => { /* keep the row as it is */ }
+    });
+  }
+
+  /**
+   * Deep link: `?person=<kind>:<id>&card=detail|sidebar` (kind is candidate or intake). The card is the default.
+   * It is acted on once per distinct link.
+   */
+  applyPersonLink(params: { [key: string]: any }): void {
+    const link = String(params?.['person'] || '');
+    const key = link + '|' + (params?.['card'] || '');
+    if (!link || key === this.handledPersonLink) { return; }
+    const match = /^(candidate|intake):(\d+)$/.exec(link);
+    if (!match) { return; }
+    this.handledPersonLink = key;
+    const kind = match[1] as 'candidate' | 'intake';
+    const id = Number(match[2]);
+    const sidebar = params['card'] === 'sidebar';
+    const request: Observable<any> = kind === 'intake' ? this.candidateService.getIntake(id) : this.candidateService.getCandidate(id);
+    request.subscribe({
+      next: (person: any) => {
+        const row = this.toRow({ ...person, kind });
+        if (sidebar) { this.openCompleteProfile(row); } else { this.openDetailCard(row); }
+      },
+      error: () => this.showAlert('Could not open that person. They may have been removed.', ['Close'])
+    });
+  }
+
+  toggleSelectAllIntake(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.intakePeople.forEach(p => p.selected = checked);
+  }
+
+  /** Updates the shown rating of a person in whichever lists they appear. */
+  private setRowRating(kind: string, id: number, score: number | null): void {
+    for (const list of [this.masterCandidates, this.intakePeople]) {
+      list.filter((r: any) => (r.kind || 'candidate') === kind && r.id === id)
+          .forEach((r: any) => r.latest_rating_score = score);
+    }
+  }
+
   loadIntakeSummary(): void {
     this.candidateService.getIntakeSummary().subscribe({
       next: summary => { this.intakeSummary = summary; },
@@ -558,19 +762,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   loadIntake(page: number = 1): void {
     this.isIntakeLoading = true;
     this.intakePage = page;
-    this.candidateService.getIntakeList({
+    this.candidateService.getPeople({
       page,
-      status: 'open',
+      status: 'incomplete',
+      sort: this.serverSort,
       missing: this.intakeMissingFilter || undefined,
       q: this.searchQuery.trim() || undefined,
       formId: this.formIdFilter,
       unverified: this.intakeUnverifiedOnly,
     }).subscribe({
       next: (response: any) => {
-        const data: IntakePerson[] = response.results || response;
+        const data: any[] = response.results || response;
         this.intakeTotal = response.count ?? data.length;
         this.intakePages = Math.max(1, Math.ceil(this.intakeTotal / 30));
-        this.intakePeople = data.map(p => ({ ...p, selected: false }));
+        this.intakePeople = data.map(p => this.toRow(p));
         this.isIntakeLoading = false;
         this.hasIntakeLoaded = true;
         this.isPageLoading = false;
@@ -594,51 +799,49 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     return !!owner && !!this.currentUserId && owner === this.currentUserId;
   }
 
-  openIntake(person: IntakePerson): void {
-    this.selectedIntake = person;
-  }
-
-  closeIntake(): void {
-    this.selectedIntake = null;
-  }
-
-  onIntakeUpdated(event: { result?: IntakeUpdateResult; promoted: boolean }): void {
+  /** After the sidebar saved or verified: refresh the row and the lists, and the sidebar itself. */
+  onIntakeUpdated(event: { result?: IntakeUpdateResult; promoted: boolean; candidate?: Candidate; saved?: boolean }): void {
+    if (event.candidate) {
+      this.onCandidateUpdated(event.candidate, !!event.saved);
+      return;
+    }
+    const open = this.sidebarPerson;
     if (event.promoted) {
-      this.selectedIntake = null;
+      this.sidebarPerson = null;
       this.showAlert('All mandatory fields are filled in. The person has moved to Sourced Database.', ['Close']);
       this.loadCandidates(this.currentPage);
     }
     this.loadIntake(this.intakePage);
+    this.loadCandidates(this.currentPage);   // the same person also shows in Sourced Database
     this.loadIntakeSummary();
-    if (!event.promoted && this.selectedIntake) {
-      this.candidateService.getIntake(this.selectedIntake.id).subscribe({
-        next: person => { this.selectedIntake = person; },
+    if (!event.promoted && open) {
+      this.candidateService.getIntake(open.id).subscribe({
+        next: person => { if (this.sidebarPerson === open) { this.sidebarPerson = { ...person, kind: 'intake' }; } },
         error: () => { /* keep the panel as it is */ }
       });
     }
   }
 
-  verifyCandidate(candidate: Candidate): void {
-    if (!candidate.id) { return; }
-    this.candidateService.verifyCandidate(candidate.id).subscribe({
-      next: updated => {
-        candidate.verification_status = updated.verification_status;
-        candidate.ai_filled_fields = updated.ai_filled_fields;
-        this.loadIntakeSummary();
-      },
-      error: err => this.showAlert(err?.error?.detail || 'Could not verify this candidate.', ['Close'])
-    });
-  }
-
-  verifyIntakePerson(person: IntakePerson): void {
-    this.candidateService.verifyIntake(person.id).subscribe({
-      next: updated => {
-        person.verification_status = updated.verification_status;
-        person.ai_filled_fields = updated.ai_filled_fields;
-        this.loadIntakeSummary();
-      },
-      error: err => this.showAlert(err?.error?.detail || 'Could not verify this person.', ['Close'])
-    });
+  /** A candidate saved from the sidebar: the server's record replaces the row everywhere it is shown. */
+  private onCandidateUpdated(updated: Candidate, saved: boolean): void {
+    const open = this.sidebarPerson;
+    const merged = { ...(open || {}), ...updated, kind: 'candidate' } as any;
+    for (const list of [this.masterCandidates, this.intakePeople]) {
+      list.filter((r: any) => (r.kind || 'candidate') === 'candidate' && r.id === updated.id).forEach((r: any) => {
+        const selected = r.selected;
+        Object.assign(r, merged, { selected });
+      });
+    }
+    const complete = !(updated.missing_fields && updated.missing_fields.length);
+    if (saved && complete) {
+      this.sidebarPerson = null;
+      this.showAlert('All mandatory fields are filled in.', ['Close']);
+    } else if (open && open.id === updated.id) {
+      this.sidebarPerson = merged;
+    }
+    this.loadIntake(this.intakePage);
+    this.loadCandidates(this.currentPage);
+    this.loadIntakeSummary();
   }
 
   deleteIntakePerson(person: IntakePerson): void {
@@ -647,8 +850,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.pendingAction = () => {
       this.candidateService.deleteIntake(person.id).subscribe({
         next: () => {
-          this.intakePeople = this.intakePeople.filter(p => p.id !== person.id);
+          this.intakePeople = this.intakePeople.filter(p => !(this.isIntakeRow(p) && p.id === person.id));
+          this.masterCandidates = this.masterCandidates.filter(p => !(this.isIntakeRow(p) && p.id === person.id));
           this.intakeTotal = Math.max(0, this.intakeTotal - 1);
+          this.applyFiltersAndSort();
           this.loadIntakeSummary();
         },
         error: () => this.showAlert('Only a super admin can delete.', ['Close'])
@@ -676,7 +881,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   loadCandidates(page: number = 1): void {
     this.isSourcedLoading = true;
     this.currentPage = page;
-    this.candidateService.getCandidates(page, true, this.formIdFilter).subscribe({
+    // Everyone: candidates and people from Needs info, each row tells its `kind`
+    this.candidateService.getPeople({ page, status: 'all', sort: this.serverSort, formId: this.formIdFilter }).subscribe({
       next: (response: any) => {
         // Handle paginated response
         const data = response.results || response;
@@ -685,7 +891,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         this.nextPageUrl = response.next;
         this.prevPageUrl = response.previous;
 
-        this.masterCandidates = data.map((c: any) => ({ ...c, selected: false }));
+        this.masterCandidates = data.map((c: any) => this.toRow(c));
         this.applyFiltersAndSort();
         this.isSourcedLoading = false;
         this.hasSourcedLoaded = true;
@@ -728,20 +934,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     if (filterValues.name) {
       const nameFilter = filterValues.name.toLowerCase();
       candidates = candidates.filter(c =>
-        (c.first_name + ' ' + c.last_name).toLowerCase().includes(nameFilter)
+        `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase().includes(nameFilter)
       );
     }
 
     // Email Filter
     if (filterValues.email) {
       const emailFilter = filterValues.email.toLowerCase();
-      candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
+      candidates = candidates.filter(c => (c.email || '').toLowerCase().includes(emailFilter));
     }
 
     // Phone Filter
     if (filterValues.phone) {
       const phoneFilter = filterValues.phone.trim();
-      candidates = candidates.filter(c => c.phone_number.includes(phoneFilter));
+      candidates = candidates.filter(c => (c.phone_number || '').includes(phoneFilter));
     }
 
     // --- COMPLEX FILTERS (DATA SOURCE DIFFERS) ---
@@ -822,11 +1028,13 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     }
 
     // --- SORTING ---
+    const fullName = (c: any) => `${c.first_name || ''} ${c.last_name || ''}`;
     if (this.currentSort === 'a-z') {
-      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
+      candidates.sort((a, b) => fullName(a).localeCompare(fullName(b)));
     } else if (this.currentSort === 'z-a') {
-      candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
+      candidates.sort((a, b) => fullName(b).localeCompare(fullName(a)));
     }
+    // newest / oldest come from the server in date order; nothing to re-sort here
 
     // 2. Assign Back to Display Array
     if (isSourced) {
@@ -905,6 +1113,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
   sortCandidates(event: Event): void {
     this.currentSort = (event.target as HTMLSelectElement).value;
+    if (this.currentSort === 'newest' || this.currentSort === 'oldest') {
+      // Date order is decided by the server so it holds across all pages
+      this.serverSort = this.currentSort;
+      if (this.activeTab === 'needs_info') {
+        this.loadIntake(1);
+      } else if (this.activeTab === 'sourced') {
+        this.loadCandidates(1);
+      }
+      return;
+    }
     this.applyFiltersAndSort();
   }
 
@@ -945,6 +1163,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       this.showAlert('Please select at least one candidate to delete.', ['Close']);
       return;
     }
+    const removeRow = (c: any) => this.isIntakeRow(c)
+      ? this.candidateService.deleteIntake(c.id!)
+      : this.candidateService.deleteCandidate(c.id!);
 
     this.alertMessage = `Are you sure you want to delete ${selectedCandidates.length} selected candidate(s)?`;
     this.alertButtons = ['Cancel', 'Delete'];
@@ -952,7 +1173,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.pendingAction = () => {
       this.isDeleting = true;
       const deleteRequests = selectedCandidates.map(c =>
-        this.candidateService.deleteCandidate(c.id!).pipe(catchError(err => of(c.id)))
+        (removeRow(c) as Observable<any>).pipe(catchError(err => of(c.id)))
       );
 
       forkJoin(deleteRequests).subscribe(results => {
@@ -996,16 +1217,6 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       });
     };
     this.isAlertVisible = true;
-  }
-
-  openCandidateDetails(candidate: Candidate): void {
-    this.selectedCandidateDetails = candidate;
-    this.showDetailsModal = true;
-  }
-
-  closeDetailsModal(): void {
-    this.showDetailsModal = false;
-    this.selectedCandidateDetails = null;
   }
 
   toggleSelectAll(event: Event): void {
@@ -1543,6 +1754,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   }
 
   startEdit(candidate: Candidate): void {
+    if (this.isIncomplete(candidate)) {
+      this.openCompleteProfile(candidate);   // fixing what is missing happens in the sidebar
+      return;
+    }
     // Same rule as the server: the recruiter who sourced the candidate, or an admin
     if (this.canEditPerson(candidate)) {
       if (candidate.id) {
@@ -1921,11 +2136,6 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     return String(locations);
   }
 
-  hasImportMetadata(metadata: any): boolean {
-    if (!metadata || typeof metadata !== 'object') return false;
-    return Object.keys(metadata).some(k => metadata[k] !== null && metadata[k] !== undefined && metadata[k] !== '');
-  }
-
   onSubmit(): void {
     this.candidateForm.markAllAsTouched();
     this.duplicatePhoneValidator(this.candidateForm); // Check for internal duplicates
@@ -2109,32 +2319,22 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   }
 
   openAddToWorkflowModal() {
-    if (this.activeTab === 'needs_info') {
-      // People still in the inbox can join a pipeline once they have a resume
-      const chosen = this.intakePeople.filter(p => p.selected);
-      if (chosen.length === 0) {
-        this.showAlert("Please select at least one person.", ["Close"]);
-        return;
-      }
-      const withoutResume = chosen.filter(p => !this.hasResume(p));
-      if (withoutResume.length > 0) {
-        this.showAlert(
-          `A resume is needed before someone can be added to a pipeline. Missing resume: ${withoutResume.map(p => this.intakeName(p)).join(', ')}. Please uncheck them or upload a resume first.`,
-          ["Close"]
-        );
-        return;
-      }
-      this.selectedCandidateCount = chosen.length;
-      this.selectedJobId = null;
-      this.loadJobsForWorkflowModal();
-      return;
-    }
-
-    const selected = this.masterCandidates.filter(c => c.selected);
-    if (selected.length === 0) {
+    // Candidates and people from Needs info can be mixed in one selection
+    const rows: any[] = this.activeTab === 'needs_info' ? this.intakePeople : this.masterCandidates;
+    const chosenRows = rows.filter(r => r.selected);
+    if (chosenRows.length === 0) {
       this.showAlert("Please select at least one candidate.", ["Close"]);
       return;
     }
+    const withoutResume = chosenRows.filter(r => this.isIntakeRow(r) && !this.hasRowResume(r));
+    if (withoutResume.length > 0) {
+      this.showAlert(
+        `A resume is needed before someone from Needs info can be added to a pipeline. Missing resume: ${withoutResume.map(p => this.intakeName(p)).join(', ')}. Please uncheck them or upload a resume first.`,
+        ["Close"]
+      );
+      return;
+    }
+    const selected = chosenRows.filter(r => !this.isIntakeRow(r));
 
     const placedInCooldown = selected.filter(c => c.placement_status === 'Hired' && this.isRecentlyPlaced(c));
     if (placedInCooldown.length > 0) {
@@ -2146,25 +2346,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       return;
     }
 
-    this.selectedCandidateCount = selected.length;
+    this.selectedCandidateCount = chosenRows.length;
     this.selectedJobId = null;
-
-    this.adbRequirementService.getRequirements().subscribe({
-      next: (jobs: any) => {
-        const allJobs = Array.isArray(jobs) ? jobs : (jobs?.results || []);
-        this.availableJobs = (this.isRecruiterUser && !this.isSuperUser)
-          ? allJobs.filter((job: any) => this.isUserAuthorizedForJob(job))
-          : allJobs;
-
-        if (this.availableJobs.length === 0) {
-          this.showAlert("No authorized job requirements available for ATS.", ["Close"]);
-          return;
-        }
-
-        this.showWorkflowModal = true;
-      },
-      error: () => this.showAlert("Failed to load job requirements.", ["Close"])
-    });
+    this.loadJobsForWorkflowModal();
   }
 
   closeWorkflowModal() {
@@ -2176,36 +2360,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
     this.isActionLoading = true;
 
-    if (this.activeTab === 'needs_info') {
-      const intakeIds = this.intakePeople.filter(p => p.selected).map(p => p.id);
-      this.candidateService.addIntakeToJob(this.selectedJobId, intakeIds).subscribe({
-        next: (res: any) => {
-          this.isActionLoading = false;
-          this.closeWorkflowModal();
-          let msg = `Successfully added ${res.added} person(s).`;
-          if (res.existing > 0) { msg += ` ${res.existing} already in the workflow.`; }
-          if (res.no_resume_skipped > 0) { msg += ` ${res.no_resume_skipped} skipped because they have no resume.`; }
-          this.showAlert(msg, ["Close"]);
-          this.intakePeople.forEach(p => p.selected = false);
-        },
-        error: () => {
-          this.isActionLoading = false;
-          this.closeWorkflowModal();
-          this.showAlert("Failed to add people to the workflow.", ["Close"]);
-        }
-      });
-      return;
-    }
+    const rows: any[] = this.activeTab === 'needs_info' ? this.intakePeople : this.masterCandidates;
+    const chosen = rows.filter(r => r.selected && r.id);
+    const selectedIds = chosen.filter(r => !this.isIntakeRow(r)).map(r => r.id as number);
+    const intakeIds = chosen.filter(r => this.isIntakeRow(r)).map(r => r.id as number);
 
-    const selectedIds = this.masterCandidates.filter(c => c.selected && c.id).map(c => c.id!);
-
-    this.candidateService.addCandidatesToJob(this.selectedJobId, selectedIds).subscribe({
+    this.candidateService.addCandidatesToJob(this.selectedJobId, selectedIds, intakeIds).subscribe({
       next: (res: any) => {
         this.isActionLoading = false;
         this.closeWorkflowModal();
 
         let msg = '';
-        if (res.cooldown_skipped > 0) {
+        if (res.no_resume_skipped > 0) {
+          msg = `Added ${res.added}. Note: ${res.no_resume_skipped} skipped because they have no resume.`;
+        } else if (res.cooldown_skipped > 0) {
           msg = `Added ${res.added}. Note: ${res.cooldown_skipped} candidate(s) were skipped as they are currently placed in cooldown.`;
         } else if (res.existing > 0) {
           msg = `Added ${res.added}. Note: ${res.existing} already in workflow.`;
@@ -2215,6 +2383,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
         this.showAlert(msg, ["Close"]);
         this.masterCandidates.forEach(c => c.selected = false);
+        this.intakePeople.forEach(c => c.selected = false);
         this.updateSelectAllState();
       },
       error: (err) => {
@@ -2244,7 +2413,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
     this.onRatingCategoryChange(this.selectedRatingCategory);
 
-    if (this.activeTab === 'needs_info') {
+    if (this.isIntakeRow(candidate)) {
       this.candidateService.getIntakeRatings(candidate.id).subscribe({
         next: (history) => { this.candidateRatings = history; },
         error: (err) => { console.error("Failed to load rating history", err); }
@@ -2252,7 +2421,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       return;
     }
 
-    const candId = this.activeTab === 'sourced' ? candidate.id : (candidate.sourced_data?.id || null);
+    const candId = this.activeTab !== 'registered' ? candidate.id : (candidate.sourced_data?.id || null);
     if (candId) {
       this.candidateService.getCandidateRatings(candId).subscribe({
         next: (history) => {
@@ -2346,8 +2515,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       return;
     }
 
-    const isSourced = this.activeTab === 'sourced';
-    const isIntake = this.activeTab === 'needs_info';
+    const isIntake = this.isIntakeRow(this.ratingCandidate);
+    const isSourced = this.activeTab !== 'registered' && !isIntake;
     const payload: any = {
       job_requirement_id: this.selectedRatingJobId,
       rating_category: this.selectedRatingCategory,
@@ -2373,16 +2542,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       next: (newRating) => {
         this.isActionLoading = false;
 
-        if (isSourced) {
-          const cand = this.masterCandidates.find(c => c.id === this.ratingCandidate.id);
-          if (cand) {
-            cand.latest_rating_score = newRating.overall_score;
-          }
-        } else if (isIntake) {
-          const person = this.intakePeople.find(p => p.id === this.ratingCandidate.id);
-          if (person) {
-            person.latest_rating_score = newRating.overall_score;
-          }
+        if (isSourced || isIntake) {
+          this.setRowRating(isIntake ? 'intake' : 'candidate', this.ratingCandidate.id, newRating.overall_score);
         } else {
           const user = this.registeredCandidates.find(u => u.user_id === this.ratingCandidate.user_id);
           if (user) {
@@ -2434,16 +2595,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
           const latest = this.candidateRatings[0];
           const latestScore = latest ? latest.overall_score : null;
 
-          if (this.activeTab === 'sourced') {
-            const cand = this.masterCandidates.find(c => c.id === this.ratingCandidate.id);
-            if (cand) {
-              cand.latest_rating_score = latestScore;
-            }
-          } else if (this.activeTab === 'needs_info') {
-            const person = this.intakePeople.find(p => p.id === this.ratingCandidate.id);
-            if (person) {
-              person.latest_rating_score = latestScore;
-            }
+          if (this.activeTab !== 'registered') {
+            this.setRowRating(this.isIntakeRow(this.ratingCandidate) ? 'intake' : 'candidate', this.ratingCandidate.id, latestScore);
           } else {
             const user = this.registeredCandidates.find(u => u.user_id === this.ratingCandidate.user_id);
             if (user && user.sourced_data) {
@@ -2472,8 +2625,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     return ['Needs Improvement', 'Average', 'Good', 'Excellent'];
   }
 
-  trackByCandidate(index: number, candidate: any): number {
-    return candidate.id;
+  trackByCandidate(index: number, candidate: any): string {
+    return `${candidate?.kind || 'candidate'}-${candidate?.id}`;
   }
 
   // =========================================================

@@ -50,6 +50,27 @@ describe('RecruiterWorkflowCandidateService (Needs info inbox)', () => {
     patch.flush({ kind: 'intake', id: 5, missing_fields: [] });
   });
 
+  it('sends multipart with the resume when a file is given, lists as JSON text', () => {
+    const file = new File(['%PDF-1.4'], 'cv.pdf', { type: 'application/pdf' });
+    service.updateIntake(5, { skills: 'Go', preferred_location: [{ name: 'Hubli', lat: 1, lng: 2 }], ai_filled_fields: ['skills'] }, file).subscribe();
+    const req = http.expectOne(`${api}api/candidate-intake/5/`);
+    expect(req.request.method).toBe('PATCH');
+    const body = req.request.body as FormData;
+    expect(body instanceof FormData).toBeTrue();
+    expect((body.get('resume') as File).name).toBe('cv.pdf');
+    expect(body.get('skills')).toBe('Go');
+    expect(JSON.parse(body.get('preferred_location') as string)).toEqual([{ name: 'Hubli', lat: 1, lng: 2 }]);
+    expect(JSON.parse(body.get('ai_filled_fields') as string)).toEqual(['skills']);
+    req.flush({});
+  });
+
+  it('keeps plain JSON when there is no file', () => {
+    service.updateIntake(5, { skills: 'Go' }, null).subscribe();
+    const req = http.expectOne(`${api}api/candidate-intake/5/`);
+    expect(req.request.body).toEqual({ skills: 'Go' });
+    req.flush({});
+  });
+
   it('verifies candidates and inbox people', () => {
     service.verifyCandidate(7).subscribe();
     const a = http.expectOne(`${api}api/candidates/7/verify/`);
@@ -60,6 +81,18 @@ describe('RecruiterWorkflowCandidateService (Needs info inbox)', () => {
     const b = http.expectOne(`${api}api/candidate-intake/8/verify/`);
     expect(b.request.method).toBe('POST');
     b.flush({});
+  });
+
+  it('asks for the resume to be read again, for inbox people and candidates', () => {
+    service.reparseIntakeResume(8).subscribe(p => expect(p.resume_status).toBe('processing'));
+    const a = http.expectOne(`${api}api/candidate-intake/8/reparse-resume/`);
+    expect(a.request.method).toBe('POST');
+    a.flush({ id: 8, resume_status: 'processing', resume_status_detail: 'Reading the resume' });
+
+    service.reparseCandidateResume(7).subscribe(c => expect(c.resume_status).toBe('processing'));
+    const b = http.expectOne(`${api}api/candidates/7/reparse-resume/`);
+    expect(b.request.method).toBe('POST');
+    b.flush({ id: 7, resume_status: 'processing', resume_status_detail: null });
   });
 
   it('adds inbox people to a job pipeline by intake_ids', () => {
@@ -78,6 +111,21 @@ describe('RecruiterWorkflowCandidateService (Needs info inbox)', () => {
 
     service.getIntakeRatings(4).subscribe();
     http.expectOne(`${api}api/candidate-ratings/?intake_id=4`).flush([]);
+  });
+
+  it('reads one candidate and updates it with a partial multipart PATCH (the sidebar)', () => {
+    service.getCandidate(7).subscribe();
+    const get = http.expectOne(`${api}api/candidates/7/`);
+    expect(get.request.method).toBe('GET');
+    get.flush({ id: 7 });
+
+    const form = new FormData();
+    form.append('skills', 'Go');
+    service.patchCandidate(7, form).subscribe();
+    const patch = http.expectOne(`${api}api/candidates/7/`);
+    expect(patch.request.method).toBe('PATCH');
+    expect(patch.request.body).toBe(form);
+    patch.flush({ id: 7 });
   });
 
   it('reads, adds and deletes notes for either kind of person', () => {

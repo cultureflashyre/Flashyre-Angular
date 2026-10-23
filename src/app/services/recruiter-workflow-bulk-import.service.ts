@@ -39,6 +39,10 @@ export interface HeaderResolutionItem {
   tier: number;
   tier_name: string;
   confidence: number;
+  /** Why the column was mapped: manual, matched_name, similar_name, ai_guess, looks_like_email, looks_like_phone, ignored_yes_no */
+  reason?: string;
+  /** What the cells look like: kind (email, phone, yes_no, number, date, text, empty), share and a few sample values. */
+  profile?: { kind: string; share: number; sample: string[] } | null;
 }
 
 export interface CanonicalFieldMeta {
@@ -56,6 +60,24 @@ export interface HeaderPreviewResponse {
   missing_required: string[];
   needs_review: boolean;
   canonical_fields: CanonicalFieldMeta[];
+  /** 0-based row of the detected header; rows above it were a title or blank. */
+  header_row_index?: number;
+  /** The same row as Excel numbers it (1-based). */
+  header_row_number?: number;
+  /** 0-based column (A = 0) where the table starts, and its letter. Mapping keys count from this column. */
+  first_data_column?: number;
+  first_data_column_letter?: string;
+  /** The sheet that was read and every visible sheet of the file. */
+  sheet?: string;
+  sheet_names?: string[];
+  /** Range of the Excel Table / filter the table was taken from, when there is one. */
+  table_ref?: string | null;
+}
+
+/** Overrides for where the table is: a sheet name and/or the real Excel row of the header. */
+export interface SheetLayoutOptions {
+  sheet?: string;
+  headerRow?: number;
 }
 
 export interface ResumeBatchDetail {
@@ -166,6 +188,86 @@ export interface PaginatedResponse<T> {
   results: T[];
 }
 
+// -------------------------------------------------------------
+// REVIEW-BEFORE-IMPORT (PREVIEW) TYPES
+// -------------------------------------------------------------
+export type PreviewOutcome =
+  | 'created_complete' | 'created_incomplete' | 'updated' | 'promoted' | 'matched'
+  | 'skipped_owned' | 'skipped_invalid' | 'merged_into_row';
+
+export type PreviewFilter = 'all' | 'ready' | 'needs_info' | 'fixes' | 'skipped' | 'errors';
+
+export interface EmailFix {
+  original: string;
+  suggested: string;
+  confidence: 'likely' | 'guess';
+  reason: string;
+  accepted: boolean;
+  field: 'email';
+  /** Checkbox state in the grid: likely starts ticked, guess unticked. */
+  ticked: boolean;
+}
+
+export interface RowPreview {
+  row_number: number;
+  /** Canonical field -> cell value; unmapped columns are keyed `_unmapped_<header>`. */
+  values: Record<string, any>;
+  accepted_fixes: Record<string, string>;
+  outcome: PreviewOutcome;
+  missing: string[];
+  fixes: EmailFix[];
+  problems: string[];
+  duplicate_of: number | null;
+  owner_name: string | null;
+  person_kind?: string | null;
+  person_id?: number | null;
+  merged_rows?: number[];
+}
+
+export interface ImportPreviewSummary {
+  id: string;
+  total: number;
+  counts: Record<string, number>;
+  filter_counts: Record<string, number>;
+  fixes_suggested: number;
+  file_name: string;
+  expires_at: string;
+  header_row_index: number;
+  header_row_number?: number;
+  first_data_column?: number;
+  first_data_column_letter?: string;
+  sheet?: string;
+  sheet_names?: string[];
+}
+
+export interface PreviewRowsResponse {
+  results: RowPreview[];
+  count: number;
+  page: number;
+  page_size: number;
+  counts: Record<string, number>;
+  filter_counts: Record<string, number>;
+}
+
+export interface PreviewRowUpdateResponse extends RowPreview {
+  changed_rows: number[];
+  counts: Record<string, number>;
+  filter_counts: Record<string, number>;
+}
+
+export interface PreviewAcceptFixesResponse {
+  updated: number;
+  counts: Record<string, number>;
+  filter_counts: Record<string, number>;
+}
+
+export interface PreviewExecuteResponse {
+  success: boolean;
+  job_id: string;
+  message: string;
+  batch?: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -180,9 +282,10 @@ export class RecruiterWorkflowBulkImportService {
   /**
    * Fast header extraction and 3-tier dynamic header mapping preview.
    */
-  previewHeaders(file: File): Observable<HeaderPreviewResponse> {
+  previewHeaders(file: File, layout?: SheetLayoutOptions): Observable<HeaderPreviewResponse> {
     const formData = new FormData();
     formData.append('file', file);
+    this.appendLayout(formData, layout);
     return this.http.post<HeaderPreviewResponse>(`${this.baseUrl}preview-headers/`, formData);
   }
 
@@ -438,6 +541,79 @@ export class RecruiterWorkflowBulkImportService {
    */
   getRecruitersList(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}api/super-admin/list/`);
+  }
+
+  // -------------------------------------------------------------
+  // REVIEW-BEFORE-IMPORT (PREVIEW) METHODS
+  // -------------------------------------------------------------
+  /** `sheet` and `header_row` form fields; both endpoints take the same ones so they read the same table. */
+  private appendLayout(formData: FormData, layout?: SheetLayoutOptions): void {
+    if (layout?.sheet) {
+      formData.append('sheet', layout.sheet);
+    }
+    if (layout?.headerRow) {
+      formData.append('header_row', String(layout.headerRow));
+    }
+  }
+
+  /** Parses the whole sheet on the server and stages it for review. Nothing is saved yet. */
+  createPreview(
+    file: File, mapping: Record<string, string>, sourcerId?: string, layout?: SheetLayoutOptions
+  ): Observable<ImportPreviewSummary> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('mapping', JSON.stringify(mapping || {}));
+    if (sourcerId) {
+      formData.append('sourcer_id', sourcerId);
+    }
+    this.appendLayout(formData, layout);
+    return this.http.post<ImportPreviewSummary>(`${this.baseUrl}previews/`, formData);
+  }
+
+  /** One page (100 rows) of the staged rows, optionally filtered. */
+  getPreviewRows(id: string, page: number = 1, filter: PreviewFilter = 'all'): Observable<PreviewRowsResponse> {
+    const params = new HttpParams().set('page', page.toString()).set('filter', filter);
+    return this.http.get<PreviewRowsResponse>(`${this.baseUrl}previews/${id}/rows/`, { params });
+  }
+
+  /**
+   * Edits cells and/or accepts a suggested email fix for one row. An empty accepted_fixes.email withdraws the fix.
+   * When the response's changed_rows is non-empty, other rows changed too, so the page should be re-fetched.
+   */
+  updatePreviewRow(
+    id: string,
+    rowNumber: number,
+    edits?: Record<string, any>,
+    acceptedFixes?: Record<string, string>
+  ): Observable<PreviewRowUpdateResponse> {
+    const body: { edits?: Record<string, any>; accepted_fixes?: Record<string, string> } = {};
+    if (edits) { body.edits = edits; }
+    if (acceptedFixes) { body.accepted_fixes = acceptedFixes; }
+    return this.http.patch<PreviewRowUpdateResponse>(`${this.baseUrl}previews/${id}/rows/${rowNumber}/`, body);
+  }
+
+  /** Accepts every suggested fix of the given confidences ('auto', 'likely'). */
+  acceptFixes(id: string, confidences: string[]): Observable<PreviewAcceptFixesResponse> {
+    return this.http.post<PreviewAcceptFixesResponse>(`${this.baseUrl}previews/${id}/accept-fixes/`, { confidence: confidences });
+  }
+
+  /** Runs the import on the staged, corrected rows. Returns the job to monitor. 409 if already running. */
+  executePreview(id: string): Observable<PreviewExecuteResponse> {
+    return this.http.post<PreviewExecuteResponse>(`${this.baseUrl}previews/${id}/execute/`, {});
+  }
+
+  /**
+   * Problem rows as CSV. These endpoints need the auth header, so this is a blob request, not a plain link.
+   * `source` says whether `id` is a preview id (before Import) or a job id (after Import).
+   */
+  downloadProblems(id: string, source: 'preview' | 'job' = 'preview'): Observable<Blob> {
+    const path = source === 'job' ? `jobs/${id}/problems.csv` : `previews/${id}/problems.csv`;
+    return this.http.get(`${this.baseUrl}${path}`, { responseType: 'blob' });
+  }
+
+  /** Starter spreadsheet template (.xlsx) as a blob. */
+  downloadTemplate(): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}template.xlsx`, { responseType: 'blob' });
   }
 }
 

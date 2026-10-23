@@ -1,0 +1,175 @@
+<div class="elegant-modal-backdrop" (click)="closed.emit()">
+  <div class="elegant-modal-content" role="dialog" aria-modal="true" [attr.aria-label]="fullName() + ' details'" (click)="$event.stopPropagation()">
+    <div class="elegant-header">
+      <div class="candidate-identity">
+        <div class="candidate-avatar">{{ initials() }}</div>
+        <div class="identity-text">
+          <h2>{{ fullName() }}<app-person-badges [missingFields]="missing()" [verificationStatus]="person().verification_status"
+              [aiFilledFields]="person().ai_filled_fields" [legacy]="!!person().legacy_incomplete" [compact]="true"
+              [canVerify]="canEdit()" (verifyClick)="reviewAi.emit()"></app-person-badges></h2>
+          <p *ngIf="subtitle()">{{ subtitle() }}</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="head-btn" data-test="resume-btn" [disabled]="!resumeRef()" (click)="open()"
+                [title]="resumeRef() ? 'Open resume' : 'No resume yet'">Resume</button>
+        <button type="button" class="head-btn" data-test="edit-btn" *ngIf="showEdit()" (click)="edit.emit()">Edit</button>
+        <button type="button" class="head-btn primary" data-test="complete-btn" *ngIf="showComplete()" (click)="completeProfile.emit()">Complete profile</button>
+        <button type="button" class="action-icon-btn" data-test="close-btn" (click)="closed.emit()" title="Close" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="placement-strip" *ngIf="placement() as pl" data-test="placement">
+      <span class="placement-badge" [class.hired]="pl.status === 'Hired'" [class.offered]="pl.status === 'Offered'" data-test="placement-status">{{ pl.status }}</span>
+      <span *ngIf="pl.cooldown" class="cooldown-tag" data-test="cooldown" [title]="'Placed recently, in ' + cooldownMonths() + ' months cooldown'">&#8987;</span>
+      <span class="placement-text">
+        <span *ngIf="pl.placedBy">Placed by <strong>{{ pl.placedBy }}</strong></span>
+        <span *ngIf="pl.job"> &middot; {{ pl.job }}</span>
+        <span *ngIf="pl.client"> &middot; {{ pl.client }}</span>
+        <span *ngIf="pl.at"> &middot; {{ pl.at | date: 'mediumDate' }}</span>
+      </span>
+    </div>
+
+    <div class="resume-status-strip" *ngIf="resumeStatus() !== 'none' && resumeStatus() !== 'done'" data-test="resume-status-strip">
+      <app-resume-status-line [status]="resumeStatus()" [canRetry]="canEdit()"
+                              (retry)="retryResume.emit()" (refresh)="refreshPerson.emit()"></app-resume-status-line>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button *ngFor="let t of tabs()" type="button" role="tab" class="tab" [class.active]="tab() === t.id"
+              [attr.aria-selected]="tab() === t.id" [attr.data-tab]="t.id" (click)="select(t.id)">{{ t.label }}</button>
+    </div>
+
+    <div class="elegant-body">
+      <ng-container [ngSwitch]="tab()">
+
+        <ng-container *ngSwitchCase="'overview'">
+          <div class="info-section">
+            <h4 class="section-title">Contact Information</h4>
+            <div class="info-grid-3">
+              <div class="info-item"><span class="info-label">Phone</span><span class="info-value" data-test="phone">{{ phone() || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Email</span><span class="info-value" data-test="email">{{ email() || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Location</span><span class="info-value" data-test="location">{{ currentLocation() || '—' }}</span></div>
+            </div>
+          </div>
+          <div class="info-section">
+            <h4 class="section-title">Professional Overview</h4>
+            <div class="info-grid-3">
+              <div class="info-item"><span class="info-label">Total Experience</span><span class="info-value" data-test="total-exp">{{ totalExperience() || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Relevant Experience</span><span class="info-value">{{ relevantExperience() || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Notice Period</span><span class="info-value warn">{{ noticePeriod() || '—' }}</span></div>
+            </div>
+            <div class="info-grid-3 spaced">
+              <div class="info-item"><span class="info-label">Current CTC</span><span class="info-value">{{ currentCtc() || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Expected CTC</span><span class="info-value">{{ expectedCtc() || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Preferred Locations</span><span class="info-value" data-test="preferred">{{ preferredLocations() || '—' }}</span></div>
+            </div>
+          </div>
+          <div class="info-section">
+            <h4 class="section-title">Education</h4>
+            <div *ngIf="!education().length" class="muted" data-test="no-education">No education recorded yet.</div>
+            <div *ngFor="let e of education(); trackBy: trackByIndex" class="info-grid-3 edu-row" data-test="education-row">
+              <div class="info-item"><span class="info-label">Qualification</span><span class="info-value">{{ e.level || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">University / college</span><span class="info-value">{{ e.institution || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Specialization{{ e.year ? ' / year' : '' }}</span><span class="info-value">{{ e.specialization || '—' }}{{ e.year ? ' (' + e.year + ')' : '' }}</span></div>
+            </div>
+          </div>
+          <div class="info-section">
+            <h4 class="section-title">Skills &amp; Expertise</h4>
+            <div *ngIf="!skills().length" class="muted">No skills recorded yet.</div>
+            <div class="skills-wrapper"><span *ngFor="let skill of skills(); trackBy: trackByIndex" class="skill-tag" data-test="skill">{{ skill }}</span></div>
+          </div>
+          <div class="info-section" *ngIf="sourcedBy() || person().source">
+            <h4 class="section-title">Source</h4>
+            <div class="info-value">{{ sourcedBy() || 'N/A' }}</div>
+            <div class="source-line" *ngIf="person().source">via {{ person().source }}</div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'resume'">
+          <div class="info-section">
+            <h4 class="section-title">Resume</h4>
+            <div *ngIf="resumeRef(); else noResume" class="resume-card" data-test="resume-card" (click)="open()">
+              <div class="resume-info">
+                <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <span class="resume-text">{{ resumeName() }}</span>
+              </div>
+              <span class="view-link">Open &rarr;</span>
+            </div>
+            <ng-template #noResume><div class="empty" data-test="no-resume">No resume yet</div></ng-template>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'notes'">
+          <app-person-notes [kind]="kind()" [personId]="person().id ?? null"></app-person-notes>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'sheet'">
+          <div class="info-section" *ngIf="importSource() as src" data-test="import-source">
+            <h4 class="section-title">Imported from</h4>
+            <div class="info-grid-3">
+              <div class="info-item"><span class="info-label">File</span><span class="info-value">{{ src.file_name || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Row</span><span class="info-value">{{ src.row_number ?? '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Imported at</span><span class="info-value">{{ src.imported_at ? (src.imported_at | date: 'medium') : '—' }}</span></div>
+            </div>
+          </div>
+          <div class="info-section" *ngIf="metaRows().length" data-test="import-meta">
+            <h4 class="section-title">Sheet details</h4>
+            <dl class="kv">
+              <div class="kv-row" *ngFor="let r of metaRows(); trackBy: trackByKey" data-test="meta-row">
+                <dt>{{ r.label }}</dt>
+                <dd>
+                  <span class="kv-value">{{ shown(r) }}</span>
+                  <button *ngIf="r.long" type="button" class="link-btn" (click)="toggle(r.key)">{{ isExpanded(r.key) ? 'Show less' : 'Show more' }}</button>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div class="info-section" *ngIf="sheetRows().length">
+            <h4 class="section-title">Other columns</h4>
+            <dl class="kv">
+              <div class="kv-row" *ngFor="let r of sheetRows(); trackBy: trackByKey" data-test="sheet-row">
+                <dt>{{ r.key }}</dt>
+                <dd>
+                  <span class="kv-value">{{ shown(r) }}</span>
+                  <button *ngIf="r.long" type="button" class="link-btn" (click)="toggle(r.key)">{{ isExpanded(r.key) ? 'Show less' : 'Show more' }}</button>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div *ngIf="!hasSheetDetails()" class="empty" data-test="no-sheet">Nothing from a sheet for this person.</div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'applications'">
+          <div class="info-section" *ngIf="applications().length">
+            <h4 class="section-title">Active applications</h4>
+            <ul class="plain-list">
+              <li *ngFor="let a of applications(); trackBy: trackByIndex" data-test="application">
+                <strong>{{ a.job_role }}</strong><span *ngIf="a.client_name"> at {{ a.client_name }}</span>
+                <span class="skill-tag stage">{{ a.stage }}</span>
+                <span class="muted" *ngIf="a.recruiter_name"> · {{ a.recruiter_name }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="info-section" *ngIf="submissions().length">
+            <h4 class="section-title">Form submissions</h4>
+            <ul class="plain-list">
+              <li *ngFor="let s of submissions(); trackBy: trackByIndex" data-test="submission">
+                <strong>{{ s.form }}</strong>
+                <span class="skill-tag stage">{{ s.status }}</span>
+                <span class="muted" *ngIf="s.submitted_at"> · {{ s.submitted_at | date: 'medium' }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="info-section" *ngIf="formTitle() && !submissions().length">
+            <h4 class="section-title">Form</h4>
+            <div class="info-value">{{ formTitle() }}</div>
+          </div>
+        </ng-container>
+
+      </ng-container>
+    </div>
+  </div>
+</div>
