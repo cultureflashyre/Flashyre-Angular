@@ -420,6 +420,7 @@ describe('RecruiterWorkflowCandidate: which card opens', () => {
       c.loadIntake = jasmine.createSpy('loadIntake');
       c.loadCandidates = jasmine.createSpy('loadCandidates');
       c.loadIntakeSummary = jasmine.createSpy('loadIntakeSummary');
+      c.fetchStatistics = jasmine.createSpy('fetchStatistics');
       c.intakePage = 1;
       c.currentPage = 1;
     });
@@ -477,6 +478,7 @@ describe('RecruiterWorkflowCandidate: which card opens', () => {
       c.loadIntake = jasmine.createSpy('loadIntake');
       c.loadCandidates = jasmine.createSpy('loadCandidates');
       c.loadIntakeSummary = jasmine.createSpy('loadIntakeSummary');
+      c.fetchStatistics = jasmine.createSpy('fetchStatistics');
       c.intakePage = 1;
       c.currentPage = 1;
       c.sidebarPerson = needsInfo();

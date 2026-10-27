@@ -945,7 +945,7 @@
             <div class="dropzone-text">
               <div class="name">{{ selectedFileName || 'Drop candidate resume PDF or DOCX here' }}</div>
               <div class="meta" [ngClass]="{'error': showFileError}">
-                {{ showFileError ? 'Resume file is required.' : 'PDF or DOCX · Max 5 MB · AI will auto-fill the form fields below' }}
+                {{ showFileError ? 'Could not use this file.' : 'Optional · PDF or DOCX · Max 5 MB · AI will auto-fill the form fields below' }}
               </div>
             </div>
             <div class="file-status" *ngIf="selectedFileName" style="display:flex;">
@@ -1020,10 +1020,9 @@
               </ng-container>
             </div>
             <div class="field">
-              <label>Email Id <span class="req">*</span></label>
+              <label>Email Id</label>
               <input type="email" formControlName="email" placeholder="Enter Email" class="form-input" [class.invalid]="f['email'].invalid && f['email'].touched" />
               <div class="hint" *ngIf="f['email'].invalid && f['email'].touched" style="color:var(--bad)">
-                <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
                 <span *ngIf="f['email'].errors?.['email']">Enter a valid email.</span>
               </div>
             </div>
@@ -1038,19 +1037,17 @@
           </div>
           <div class="form-grid-2">
             <div class="field">
-              <label>Total Experience <span class="req">*</span></label>
+              <label>Total Experience</label>
               <input type="number" formControlName="total_experience" placeholder="Exp (e.g. 2.5)" class="form-input" min="0" max="99" step="0.1" (keydown)="preventInvalidChars($event)" [class.invalid]="candidateForm.get('total_experience')?.invalid && candidateForm.get('total_experience')?.touched" />
               <div class="hint" *ngIf="candidateForm.get('total_experience')?.invalid && candidateForm.get('total_experience')?.touched" style="color:var(--bad)">
-                <span *ngIf="candidateForm.get('total_experience')?.errors?.['required']">Total Experience is required.</span>
                 <span *ngIf="candidateForm.get('total_experience')?.errors?.['max']">Experience cannot exceed 99 years.</span>
                 <span *ngIf="candidateForm.get('total_experience')?.errors?.['min']">Experience cannot be negative.</span>
               </div>
             </div>
             <div class="field">
-              <label>Relevant Experience <span class="req">*</span></label>
+              <label>Relevant Experience</label>
               <input type="number" formControlName="relevant_experience" placeholder="Rel Exp (e.g. 1.5)" class="form-input" min="0" max="99" step="0.1" (keydown)="preventInvalidChars($event)" [class.invalid]="candidateForm.get('relevant_experience')?.invalid && candidateForm.get('relevant_experience')?.touched" />
               <div class="hint" *ngIf="candidateForm.get('relevant_experience')?.invalid && candidateForm.get('relevant_experience')?.touched" style="color:var(--bad)">
-                <span *ngIf="candidateForm.get('relevant_experience')?.errors?.['required']">Relevant Experience is required.</span>
                 <span *ngIf="candidateForm.get('relevant_experience')?.errors?.['minGreaterThanMax']">Max experience must be greater than Min experience.</span>
                 <span *ngIf="candidateForm.get('relevant_experience')?.errors?.['relevantExceedsTotal']">Relevant experience cannot be greater than Total experience.</span>
               </div>
@@ -1061,24 +1058,23 @@
 
           <div class="form-grid-2">
             <div class="field">
-              <label>Current CTC <span class="req">*</span></label>
+              <label>Current CTC</label>
               <input type="number" formControlName="current_ctc" placeholder="Current CTC (e.g., 6.5)" class="form-input" min="0" step="0.01" (keydown)="preventInvalidChars($event)" [class.invalid]="f['current_ctc'].invalid && f['current_ctc'].touched" />
               <div class="hint">LPA</div>
               <div class="hint" *ngIf="f['current_ctc'].invalid && f['current_ctc'].touched" style="color:var(--bad)">
-                <span *ngIf="f['current_ctc'].errors?.['required']">Current CTC is required.</span>
                 <span *ngIf="f['current_ctc'].errors?.['min']">Current CTC must be greater than or equal to 0.</span>
                 <span *ngIf="f['current_ctc'].errors?.['pattern']">Current CTC can have up to 2 decimal points only (e.g., 7.5 or 7.55).</span>
               </div>
             </div>
             <div class="field">
-              <label>Expected CTC Range <span class="req">*</span></label>
+              <label>Expected CTC Range</label>
               <div class="range-row">
                 <input type="number" formControlName="expected_ctc_min" placeholder="Min" class="form-input" min="0" (keydown)="preventInvalidChars($event)" />
                 <span class="sep">to</span>
                 <input type="number" formControlName="expected_ctc_max" placeholder="Max" class="form-input" min="0" (keydown)="preventInvalidChars($event)" />
               </div>
               <div class="hint">LPA</div>
-              <div class="hint" *ngIf="(f['expected_ctc_min'].invalid && f['expected_ctc_min'].touched) || (f['expected_ctc_max'].invalid && f['expected_ctc_max'].touched)" style="color:var(--bad)">Expected CTC is required.</div>
+              <div class="hint" *ngIf="(f['expected_ctc_min'].invalid && f['expected_ctc_min'].touched) || (f['expected_ctc_max'].invalid && f['expected_ctc_max'].touched)" style="color:var(--bad)">Enter a valid Expected CTC (0 or more).</div>
             </div>
           </div>
         </div>
@@ -1091,15 +1087,14 @@
           </div>
           <div class="form-grid-2">
             <div class="field">
-              <label>Role <span class="req">*</span></label>
+              <label>Role</label>
               <input type="text" formControlName="work_experience" placeholder="Enter Role" class="form-input" (input)="allowAlphanumericOnly($event)" [class.invalid]="f['work_experience'].invalid && f['work_experience'].touched" />
               <div class="hint" *ngIf="f['work_experience'].invalid && f['work_experience'].touched" style="color:var(--bad)">
-                <span *ngIf="f['work_experience'].errors?.['required']">Role is required.</span>
                 <span *ngIf="f['work_experience'].errors?.['maxlength']">Max 30 characters allowed.</span>
               </div>
             </div>
             <div class="field">
-              <label>Skills <span class="req">*</span></label>
+              <label>Skills</label>
               <div class="chip-input scrollable-chips">
                 <span class="chip-pill" *ngFor="let skill of skills; let i = index">
                   {{ skill }}
@@ -1108,14 +1103,12 @@
                 <input type="text" placeholder="+ Add skill (press Enter)" (input)="allowAlphabetsOnly($event)" (keydown.enter)="$event.preventDefault(); addSkill($event)" />
               </div>
               <input type="hidden" formControlName="skills">
-              <div class="hint" *ngIf="f['skills'].invalid && f['skills'].touched" style="color:var(--bad)">Skills are required.</div>
             </div>
           </div>
           <div class="form-grid-2">
             <div class="field">
-              <label>Highest Qualification <span class="req">*</span></label>
+              <label>Highest Qualification</label>
               <input type="text" formControlName="latest_education_level" placeholder="e.g. B.Tech, MBA, MCA" maxlength="255" class="form-input" [class.invalid]="f['latest_education_level'].invalid && f['latest_education_level'].touched" />
-              <div class="hint" *ngIf="f['latest_education_level'].invalid && f['latest_education_level'].touched" style="color:var(--bad)">Highest qualification is required.</div>
             </div>
             <div class="field">
               <label>University / College</label>
@@ -1132,7 +1125,7 @@
           </div>
           <div class="form-grid-2">
             <div class="field" style="position: relative;">
-              <label>Preferred Location <span class="req">*</span></label>
+              <label>Preferred Location</label>
               <div class="chip-input" [class.invalid]="f['preferred_location'].invalid && f['preferred_location'].touched">
                 <span class="chip-pill blue" *ngFor="let loc of preferredLocationsList; let i = index">
                   {{ loc.name || loc }}
@@ -1146,11 +1139,10 @@
                 </div>
               </div>
               <input type="hidden" formControlName="preferred_location">
-              <div class="hint" *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched" style="color:var(--bad)">Preferred Location is required.</div>
               <div class="hint">Enter location and press Enter.</div>
             </div>
             <div class="field" style="position: relative;">
-              <label>Current Location <span class="req">*</span></label>
+              <label>Current Location</label>
               <div class="chip-input" [class.invalid]="f['current_location'].invalid && f['current_location'].touched">
                 <span class="chip-pill blue" *ngFor="let loc of currentLocationsList; let i = index">
                   {{ loc.name || loc }}
@@ -1164,7 +1156,6 @@
                 </div>
               </div>
               <input type="hidden" formControlName="current_location">
-              <div class="hint" *ngIf="f['current_location'].invalid && f['current_location'].touched" style="color:var(--bad)">Current Location is required.</div>
               <div class="hint">Enter location and press Enter.</div>
             </div>
           </div>
@@ -1173,20 +1164,18 @@
 
           <div class="form-grid-2">
             <div class="field">
-              <label>Notice Period <span class="req">*</span></label>
+              <label>Notice Period</label>
               <select formControlName="notice_period" class="form-select" [class.invalid]="f['notice_period'].invalid && f['notice_period'].touched">
                 <option value="" disabled class="placeholder">Select Notice Period</option>
                 <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
               </select>
-              <div class="hint" *ngIf="f['notice_period'].invalid && f['notice_period'].touched" style="color:var(--bad)">Notice Period is required.</div>
             </div>
             <div class="field">
-              <label>Gender <span class="req">*</span></label>
+              <label>Gender</label>
               <select formControlName="gender" class="form-select" [class.invalid]="f['gender'].invalid && f['gender'].touched">
                 <option value="" disabled class="placeholder">Select Gender</option>
                 <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
               </select>
-              <div class="hint" *ngIf="f['gender'].invalid && f['gender'].touched" style="color:var(--bad)">Gender is required.</div>
             </div>
           </div>
         </div>

@@ -21,12 +21,17 @@ import { SuperAdminService } from '../../services/super-admin.service';
 import { AtsPipelineEventService, AtsPipelineEvent } from '../../services/ats-pipeline-event.service';
 
 // Custom Validators
+// An empty optional number ('' / null / undefined / NaN) must never fail a cross-field check.
+function hasNumber(value: any): boolean {
+  return value !== null && value !== undefined && String(value).trim() !== '' && !isNaN(parseFloat(value));
+}
+
 export function minMaxValidator(minControlName: string, maxControlName: string) {
   return (formGroup: AbstractControl): ValidationErrors | null => {
     const minControl = formGroup.get(minControlName);
     const maxControl = formGroup.get(maxControlName);
 
-    if (minControl && maxControl && minControl.value != null && maxControl.value != null) {
+    if (minControl && maxControl && hasNumber(minControl.value) && hasNumber(maxControl.value)) {
       const minVal = parseFloat(minControl.value);
       const maxVal = parseFloat(maxControl.value);
 
@@ -788,6 +793,19 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     });
   }
 
+  /**
+   * Reloads everything a change to a person can touch (Sourced Database, Needs info, the tab counts and
+   * the statistics) from the server. Filters, search, sort and the active tab are kept, and the lists on
+   * screen stay until the new data arrives. After a create the lists go back to page 1.
+   */
+  refreshAfterChange(opts: { goToFirstPage?: boolean } = {}): void {
+    const first = !!opts.goToFirstPage;
+    this.loadCandidates(first ? 1 : this.currentPage);
+    this.loadIntake(first ? 1 : this.intakePage);
+    this.loadIntakeSummary();
+    this.fetchStatistics();
+  }
+
   onIntakeFilterChange(): void {
     this.loadIntake(1);
   }
@@ -809,11 +827,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     if (event.promoted) {
       this.sidebarPerson = null;
       this.showAlert('All mandatory fields are filled in. The person has moved to Sourced Database.', ['Close']);
-      this.loadCandidates(this.currentPage);
     }
-    this.loadIntake(this.intakePage);
-    this.loadCandidates(this.currentPage);   // the same person also shows in Sourced Database
-    this.loadIntakeSummary();
+    this.refreshAfterChange();   // the same person also shows in Sourced Database
     if (!event.promoted && open) {
       this.candidateService.getIntake(open.id).subscribe({
         next: person => { if (this.sidebarPerson === open) { this.sidebarPerson = { ...person, kind: 'intake' }; } },
@@ -839,9 +854,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     } else if (open && open.id === updated.id) {
       this.sidebarPerson = merged;
     }
-    this.loadIntake(this.intakePage);
-    this.loadCandidates(this.currentPage);
-    this.loadIntakeSummary();
+    this.refreshAfterChange();
   }
 
   deleteIntakePerson(person: IntakePerson): void {
@@ -854,7 +867,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
           this.masterCandidates = this.masterCandidates.filter(p => !(this.isIntakeRow(p) && p.id === person.id));
           this.intakeTotal = Math.max(0, this.intakeTotal - 1);
           this.applyFiltersAndSort();
-          this.loadIntakeSummary();
+          this.refreshAfterChange();
         },
         error: () => this.showAlert('Only a super admin can delete.', ['Close'])
       });
@@ -1184,10 +1197,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         this.showAlert(`${successCount} candidate(s) successfully deleted.`, ['Close']);
 
         if (this.masterCandidates.length === successCount && this.currentPage > 1) {
-          this.loadCandidates(this.currentPage - 1);
-        } else {
-          this.loadCandidates(this.currentPage);
+          this.currentPage = this.currentPage - 1;
         }
+        this.refreshAfterChange();
       });
     };
 
@@ -1205,10 +1217,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         next: () => {
           this.showAlert('Candidate successfully deleted.', ['Close']);
           if (this.masterCandidates.length === 1 && this.currentPage > 1) {
-            this.loadCandidates(this.currentPage - 1);
-          } else {
-            this.loadCandidates(this.currentPage);
+            this.currentPage = this.currentPage - 1;
           }
+          this.refreshAfterChange();
         },
         error: (err) => {
           console.error('Failed to delete candidate', err);
@@ -1549,22 +1560,22 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
         Validators.pattern(/^[a-zA-Z\s]*$/),
         Validators.maxLength(15)
       ]],
-      // CHANGED: phone_number is now a FormArray
+      // CHANGED: phone_number is now a FormArray. Mandatory: first name, last name, at least one phone.
+      // Every other control is optional: no 'required', but entered values are still format-checked.
       phone_numbers: this.fb.array([], [Validators.required, this.minPhoneNumbersValidator]),
-      email: ['', [Validators.required, Validators.email]],
-      total_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
-      relevant_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
-      expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
-      expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
-      current_ctc: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      preferred_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
-      current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
-      notice_period: ['', Validators.required],
-      gender: ['', Validators.required],
-      work_experience: ['', [Validators.required, Validators.maxLength(30)]],
-      skills: ['', Validators.required,],
-      // Highest qualification is one of the seven mandatory fields (the others are already required above)
-      latest_education_level: ['', [Validators.required, Validators.maxLength(255)]],
+      email: ['', [Validators.email]],
+      total_experience: [null, [Validators.min(0), Validators.max(99)]],
+      relevant_experience: [null, [Validators.min(0), Validators.max(99)]],
+      expected_ctc_min: [null, [Validators.min(0)]],
+      expected_ctc_max: [null, [Validators.min(0)]],
+      current_ctc: [null, [Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      preferred_location: ['', [Validators.pattern(locationPattern)]],
+      current_location: ['', [Validators.pattern(locationPattern)]],
+      notice_period: [''],
+      gender: [''],
+      work_experience: ['', [Validators.maxLength(30)]],
+      skills: [''],
+      latest_education_level: ['', [Validators.maxLength(255)]],
       latest_university: ['', [Validators.maxLength(255)]],
     }, {
       validators: [
@@ -1636,7 +1647,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     const total = group.get('total_experience');
     const relevant = group.get('relevant_experience');
 
-    if (total && relevant && total.value != null && relevant.value != null) {
+    if (total && relevant && hasNumber(total.value) && hasNumber(relevant.value)) {
       if (parseFloat(relevant.value) > parseFloat(total.value)) {
         relevant.setErrors({ ...relevant.errors, relevantExceedsTotal: true });
         return { relevantExceedsTotal: true };
@@ -2140,14 +2151,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.candidateForm.markAllAsTouched();
     this.duplicatePhoneValidator(this.candidateForm); // Check for internal duplicates
 
-    const isFileMissing = !this.selectedFileName || this.selectedFileName.trim() === '';
-    this.showFileError = isFileMissing;
-
-    if (this.candidateForm.invalid || isFileMissing || this.phoneNumbersArray.invalid) {
+    // The resume is optional; only first name, last name and a valid phone number block the save.
+    if (this.candidateForm.invalid || this.phoneNumbersArray.invalid) {
       const invalidFields: string[] = [];
-      if (isFileMissing) invalidFields.push('Resume File');
 
-      // Collect errors for alert
+      // Collect errors for alert (only controls that are actually invalid)
       Object.keys(this.candidateForm.controls).forEach(key => {
         if (this.candidateForm.get(key)?.invalid) {
           // Handle FormArray separately for better naming
@@ -2170,25 +2178,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.isSubmitting = true;
     const formData = new FormData();
 
-    Object.keys(this.candidateForm.controls).forEach(key => {
-      if (key === 'phone_numbers') {
-        const phoneValues = this.phoneNumbersArray.value;
-        const joinedPhones = phoneValues.join(', ');
-        formData.append('phone_number', joinedPhones);
-      }
-      else if (key === 'preferred_location') {
-        formData.append('preferred_location', JSON.stringify(this.preferredLocationsList));
-      }
-      else if (key === 'total_experience' && this.candidateForm.get(key)?.value !== null) {
-        formData.append('total_experience', this.candidateForm.get(key)?.value);
-      }
-      else if (key === 'relevant_experience' && this.candidateForm.get(key)?.value !== null) {
-        formData.append('relevant_experience', this.candidateForm.get(key)?.value);
-      }
-      else if (this.candidateForm.get(key)?.value !== null && this.candidateForm.get(key)?.value !== undefined) {
-        formData.append(key, this.candidateForm.get(key)?.value);
-      }
-    });
+    this.buildCandidateFormData(formData);
 
     // Append structured location fields
     if (this.selectedCity) formData.append('city', this.selectedCity);
@@ -2207,15 +2197,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     formData.append('source', this.formSource);
 
     const handleSuccess = (candidate: Candidate) => {
-      if (this.editingCandidateId) {
-        const index = this.masterCandidates.findIndex(c => c.id === this.editingCandidateId);
-        if (index !== -1) this.masterCandidates[index] = { ...candidate, selected: false };
-      } else {
-        this.masterCandidates.unshift({ ...candidate, selected: false });
-      }
-      this.applyFiltersAndSort();
+      // Every list, tab count and statistic comes from the server (no hand-built rows). A person saved
+      // without an email is stored in Needs info (the server answers kind 'intake') and shows on both tabs.
+      const isEdit = !!this.editingCandidateId;
+      this.refreshAfterChange(isEdit ? {} : { goToFirstPage: true });
       this.isSuccessAlert = true;
-      this.showAlert(this.editingCandidateId ? 'Updated successfully!' : 'Created successfully!', ['Close']);
+      if (isEdit) {
+        this.showAlert('Updated successfully!', ['Close']);
+      } else if (this.serverSort === 'oldest') {
+        this.showAlert('Created. The list is sorted oldest first, so the new person is on the last page.', ['Close']);
+      } else if ((candidate as any)?.kind === 'intake') {
+        this.showAlert('Created successfully! This person is in Needs info until the missing details are added.', ['Close']);
+      } else {
+        this.showAlert('Created successfully!', ['Close']);
+      }
       this.onCancel();
     };
 
@@ -2269,6 +2264,31 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     } else {
       this.candidateService.createCandidate(formData).subscribe({ next: handleSuccess, error: handleError });
     }
+  }
+
+  /**
+   * Adds the form values to `formData`, skipping empty optional values (no '' , null or NaN is sent), so a
+   * candidate with only first name, last name and phone is accepted by the server as a partial candidate.
+   * When editing, an emptied preferred location is still sent (as []) so a recruiter can clear it.
+   */
+  buildCandidateFormData(formData: FormData): FormData {
+    const hasValue = (v: any): boolean =>
+      v !== null && v !== undefined && !(typeof v === 'number' && isNaN(v)) && String(v).trim() !== '';
+
+    Object.keys(this.candidateForm.controls).forEach(key => {
+      const value = this.candidateForm.get(key)?.value;
+      if (key === 'phone_numbers') {
+        const phones = (this.phoneNumbersArray.value as string[]).map(p => (p || '').trim()).filter(Boolean);
+        if (phones.length) formData.append('phone_number', phones.join(', '));
+      } else if (key === 'preferred_location') {
+        if (this.preferredLocationsList.length || this.editingCandidateId) {
+          formData.append('preferred_location', JSON.stringify(this.preferredLocationsList));
+        }
+      } else if (hasValue(value)) {
+        formData.append(key, typeof value === 'string' ? value.trim() : value);
+      }
+    });
+    return formData;
   }
 
   onCancel(): void {
