@@ -824,9 +824,17 @@
             </div>
           </div>
 
+          <div class="unmatched-bulk-bar" *ngIf="unmatchedResumes.length">
+            <span>Not in the sheet and not in the database? Tick the resumes that belong to new people.</span>
+            <button type="button" class="btn-xs primary" data-test="create-people-selected"
+                    [disabled]="!selectedUnmatchedIds.size || isCreatingPeople" (click)="createPeopleFromSelected()">
+              Create {{ selectedUnmatchedIds.size || '' }} new {{ selectedUnmatchedIds.size === 1 ? 'person' : 'people' }} (max {{ maxCreatePeople }})
+            </button>
+          </div>
           <div class="unmatched-cards-grid">
             <div *ngFor="let un of unmatchedResumes" class="unmatched-card">
               <div class="unmatched-card-head">
+                <input type="checkbox" [checked]="selectedUnmatchedIds.has(un.id)" (change)="toggleUnmatchedSelected(un.id)" [attr.aria-label]="'Select ' + un.original_filename" />
                 <div class="file-badge pdf-badge">PDF</div>
                 <div class="unmatched-file-name" [title]="getDisplayFileName(un.original_filename)">{{ getDisplayFileName(un.original_filename) }}</div>
               </div>
@@ -859,9 +867,10 @@
               <!-- Action -->
               <div class="unmatched-card-footer">
                 <a *ngIf="un.gcs_url" [href]="un.gcs_url" target="_blank" class="btn-xs">Download</a>
+                <button class="btn-xs" data-test="create-person" [disabled]="isCreatingPeople" (click)="createPersonFromResume(un)">Create new person</button>
                 <button class="btn-xs primary resolve-action-btn" (click)="openResolveModal(un)">
                   <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  Resolve & Attach
+                  Link to existing person
                 </button>
               </div>
             </div>

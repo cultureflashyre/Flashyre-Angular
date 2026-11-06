@@ -459,6 +459,17 @@ export class RecruiterWorkflowBulkImportService {
     return this.http.post(`${this.baseUrl}resume/unmatched/${unmatchedId}/resolve/`, { candidate_id: candidateId });
   }
 
+  /** The resume belongs to a new, independent person: creates a Needs info person from it. */
+  createPersonFromUnmatched(unmatchedId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}resume/unmatched/${unmatchedId}/create-person/`, {});
+  }
+
+  /** The same for several resumes at once (at most 50). */
+  createPeopleFromUnmatched(ids: number[]): Observable<{ created: number; people: any[]; failed: { id: number; detail: string }[] }> {
+    return this.http.post<{ created: number; people: any[]; failed: { id: number; detail: string }[] }>(
+      `${this.baseUrl}resume/unmatched/create-people/`, { ids });
+  }
+
   /**
    * Triggers the stalled batch reconciliation sweeper.
    */

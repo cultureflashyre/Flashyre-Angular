@@ -118,17 +118,13 @@
 
           <!-- Gender Dropdown -->
           <div class="form-group">
-            <label for="gender">Gender <span class="required">*</span></label>
-            <select id="gender" formControlName="gender" [class.is-invalid]="applyForm.get('gender')?.invalid && applyForm.get('gender')?.touched">
-              <option value="" disabled selected>-- Select Gender --</option>
+            <label for="gender">Gender <span class="optional">(optional)</span></label>
+            <select id="gender" formControlName="gender">
+              <option value="" selected>-- Prefer not to say --</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Others">Others</option>
             </select>
-            
-            <div class="validation-error" *ngIf="applyForm.get('gender')?.invalid && applyForm.get('gender')?.touched">
-              <span>Please select your gender.</span>
-            </div>
           </div>
 
           <!-- Template Specific Fields: Campus -->
@@ -159,12 +155,12 @@
           <ng-container *ngIf="formDetails.template_type === 'experienced'">
             <div class="form-group">
               <label for="latest_company">Latest Company <span class="required">*</span></label>
-              <input type="text" id="latest_company" formControlName="latest_company" placeholder="Enter company name" maxlength="30"
+              <input type="text" id="latest_company" formControlName="latest_company" placeholder="Enter company name" maxlength="100"
                      [class.is-invalid]="applyForm.get('latest_company')?.invalid && applyForm.get('latest_company')?.touched">
               <div class="validation-error" *ngIf="applyForm.get('latest_company')?.invalid && applyForm.get('latest_company')?.touched">
                 <span *ngIf="applyForm.get('latest_company')?.errors?.['required']">Company name is required.</span>
-                <span *ngIf="applyForm.get('latest_company')?.errors?.['pattern']">Only letters, numbers and spaces are allowed.</span>
-                <span *ngIf="applyForm.get('latest_company')?.errors?.['maxlength']">Cannot exceed 30 characters.</span>
+                <span *ngIf="applyForm.get('latest_company')?.errors?.['pattern']">Only letters, numbers, spaces and & . , - are allowed.</span>
+                <span *ngIf="applyForm.get('latest_company')?.errors?.['maxlength']">Cannot exceed 100 characters.</span>
               </div>
             </div>
 

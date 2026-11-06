@@ -34,6 +34,8 @@ export interface Candidate {
   gender: string;
   work_experience: string;
   skills: string;
+  skills_list?: string[];
+  skills_detail?: SkillDetail[];
   total_experience: number;
   relevant_experience: number;
   current_ctc: string;
@@ -100,6 +102,16 @@ export interface Candidate {
     batch_id?: string;
     [key: string]: any;
   } | null;
+}
+
+/** One skill on a person: confirmed or stated (shown as normal chips) or suggested (waiting for a recruiter). */
+export interface SkillDetail {
+  name: string;
+  status: 'confirmed' | 'stated' | 'suggested';
+  source?: string | null;
+  section?: string | null;
+  evidence?: string | null;
+  active?: boolean;
 }
 
 // --- VERIFY THIS INTERFACE ---
@@ -210,6 +222,7 @@ export interface IntakePerson {
   import_source?: ImportSource | null;
   extra_columns?: { [key: string]: string };
   skills_list: string[];
+  skills_detail?: SkillDetail[];
   preferred_locations: { name: string; lat: number | null; lng: number | null }[];
   education: { level: string | null; institution: string | null; specialization: string | null; year: number | null; is_highest: boolean }[];
   submissions: { form: string; form_id: string; status: string; submitted_at: string }[];
@@ -374,12 +387,16 @@ export class RecruiterWorkflowCandidateService {
   }
 
   // ---- Candidates and Needs info people in one list ----
-  getPeople(opts: { page?: number; status?: 'all' | 'incomplete' | 'complete'; sort?: 'newest' | 'oldest'; missing?: string; q?: string; formId?: string | null; unverified?: boolean } = {}): Observable<any> {
+  getPeople(opts: { page?: number; status?: 'all' | 'incomplete' | 'complete'; sort?: 'newest' | 'oldest'; missing?: string; q?: string; formId?: string | null; unverified?: boolean; skills?: string[]; includeSuggested?: boolean } = {}): Observable<any> {
     const params: string[] = [`page=${opts.page || 1}`, `status=${opts.status || 'all'}`, `sort=${opts.sort || 'newest'}`];
     if (opts.missing) { params.push(`missing=${encodeURIComponent(opts.missing)}`); }
     if (opts.q) { params.push(`q=${encodeURIComponent(opts.q)}`); }
     if (opts.formId) { params.push(`form_id=${encodeURIComponent(opts.formId)}`); }
     if (opts.unverified) { params.push('unverified=1'); }
+    if (opts.skills && opts.skills.length) {
+      params.push(`skills=${encodeURIComponent(opts.skills.join(','))}`);
+      params.push(`include_suggested=${opts.includeSuggested === false ? 'false' : 'true'}`);
+    }
     return this.http.get<any>(`${this.apiUrl}api/candidate-intake/people/?${params.join('&')}`);
   }
 
@@ -431,6 +448,26 @@ export class RecruiterWorkflowCandidateService {
 
   verifyIntake(id: number): Observable<IntakePerson> {
     return this.http.post<IntakePerson>(`${this.apiUrl}api/candidate-intake/${id}/verify/`, {});
+  }
+
+  /** Confirm suggested skills (all of them when no names are given). The answer is the person, as the list gives it. */
+  confirmSkills(kind: 'candidate' | 'intake', id: number, names?: string[]): Observable<any> {
+    return this.http.post<any>(this.skillsUrl(kind, id, 'confirm'), names ? { names } : {});
+  }
+
+  removeSkills(kind: 'candidate' | 'intake', id: number, names: string[]): Observable<any> {
+    return this.http.post<any>(this.skillsUrl(kind, id, 'remove'), { names });
+  }
+
+  /** "Add as skill" on a person whose resume only mentions it: saved as a confirmed skill. */
+  addSkills(kind: 'candidate' | 'intake', id: number, names: string[]): Observable<any> {
+    return this.http.post<any>(this.skillsUrl(kind, id, 'add'), { names });
+  }
+
+  private skillsUrl(kind: 'candidate' | 'intake', id: number, action: string): string {
+    return kind === 'candidate'
+      ? `${this.apiUrl}api/candidates/${id}/skills/${action}/`
+      : `${this.apiUrl}api/candidate-intake/${id}/skills/${action}/`;
   }
 
   verifyCandidate(id: number): Observable<Candidate> {

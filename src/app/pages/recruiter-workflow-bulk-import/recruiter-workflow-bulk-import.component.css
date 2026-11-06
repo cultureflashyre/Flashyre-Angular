@@ -2410,3 +2410,5 @@ svg {
 .wiz-tile { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; background: var(--surface); }
 .wiz-tile b { display: block; font-size: 22px; font-variant-numeric: tabular-nums; color: var(--ink); }
 .wiz-tile small { color: var(--ink-2); }
+
+.unmatched-bulk-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 13px; }

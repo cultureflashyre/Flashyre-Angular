@@ -80,6 +80,10 @@
             <h4 class="section-title">Skills &amp; Expertise</h4>
             <div *ngIf="!skills().length" class="muted">No skills recorded yet.</div>
             <div class="skills-wrapper"><span *ngFor="let skill of skills(); trackBy: trackByIndex" class="skill-tag" data-test="skill">{{ skill }}</span></div>
+            <div *ngIf="suggestedSkills().length" class="skills-suggested" data-test="suggested-skills">
+              <span class="muted">Suggested from the resume, not confirmed yet:</span>
+              <div class="skills-wrapper"><span *ngFor="let skill of suggestedSkills(); trackBy: trackByIndex" class="skill-tag suggested" data-test="suggested-skill">{{ skill }}</span></div>
+            </div>
           </div>
           <div class="info-section" *ngIf="sourcedBy() || person().source">
             <h4 class="section-title">Source</h4>

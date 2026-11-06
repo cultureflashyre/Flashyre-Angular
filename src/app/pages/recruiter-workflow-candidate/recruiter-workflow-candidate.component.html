@@ -153,6 +153,10 @@
                   <div class="filter-group">
                     <label for="filter-skills">Skills (comma-separated)</label>
                     <input id="filter-skills" type="text" formControlName="skills" placeholder="e.g., java, python" class="input">
+                    <label class="switch-row" for="filter-include-suggested">
+                      <input id="filter-include-suggested" type="checkbox" [checked]="includeSuggested" (change)="onIncludeSuggestedChange($event)">
+                      Include suggested skills
+                    </label>
                   </div>
                   <div class="filter-group">
                     <label for="filter-ctc">Max Current CTC (LPA)</label>
@@ -387,6 +391,9 @@
                           <div class="tag-row">
                             <span *ngFor="let skill of getSkillsList(candidate.skills).visible" class="tag">{{ skill }}</span>
                             <span *ngIf="getSkillsList(candidate.skills).overflow > 0" class="tag">+{{ getSkillsList(candidate.skills).overflow }}</span>
+                            <span *ngIf="candidate.skill_match?.tier === 'suggested' || candidate.skill_match?.tier === 'mentioned'" class="tag tag-suggested" data-test="skill-tier"
+                                  [attr.title]="candidate.skill_match.mention || null">{{ candidate.skill_match.tier === 'mentioned' ? 'Mentioned in resume' : 'Suggested' }}</span>
+                            <button *ngIf="candidate.skill_match?.tier === 'mentioned'" type="button" class="tag tag-add" data-test="add-as-skill" (click)="addMentionedSkill(candidate)">Add as skill</button>
                           </div>
                         </td>
 
@@ -1090,7 +1097,7 @@
               <label>Role</label>
               <input type="text" formControlName="work_experience" placeholder="Enter Role" class="form-input" (input)="allowAlphanumericOnly($event)" [class.invalid]="f['work_experience'].invalid && f['work_experience'].touched" />
               <div class="hint" *ngIf="f['work_experience'].invalid && f['work_experience'].touched" style="color:var(--bad)">
-                <span *ngIf="f['work_experience'].errors?.['maxlength']">Max 30 characters allowed.</span>
+                <span *ngIf="f['work_experience'].errors?.['maxlength']">Max 100 characters allowed.</span>
               </div>
             </div>
             <div class="field">

@@ -1169,6 +1169,47 @@ export class RecruiterWorkflowBulkImportComponent implements OnInit, OnDestroy {
     this.selectedCandidateForResolve = candidate;
   }
 
+  // ---- Create a new person from an unmatched resume (it is independent: not in the sheet, not in the database) ----
+  selectedUnmatchedIds = new Set<number>();
+  isCreatingPeople = false;
+  readonly maxCreatePeople = 50;
+
+  toggleUnmatchedSelected(id: number): void {
+    if (this.selectedUnmatchedIds.has(id)) { this.selectedUnmatchedIds.delete(id); } else { this.selectedUnmatchedIds.add(id); }
+  }
+
+  createPersonFromResume(resume: UnmatchedResumeItem): void {
+    this.createPeople([resume.id]);
+  }
+
+  createPeopleFromSelected(): void {
+    this.createPeople(Array.from(this.selectedUnmatchedIds).slice(0, this.maxCreatePeople));
+  }
+
+  private createPeople(ids: number[]): void {
+    if (!ids.length || this.isCreatingPeople) return;
+    this.isCreatingPeople = true;
+    this.bulkImportService
+      .createPeopleFromUnmatched(ids)
+      .pipe(finalize(() => { this.isCreatingPeople = false; }))
+      .subscribe({
+        next: (res) => {
+          const failed = res.failed || [];
+          const reasons = failed.slice(0, 3).map(f => f.detail).join(' ');
+          this.alertMessage = `${res.created} new ${res.created === 1 ? 'person' : 'people'} created in Needs info.`
+            + (failed.length ? ` ${failed.length} could not be created. ${reasons}` : '');
+          this.showAlert = true;
+          this.selectedUnmatchedIds.clear();
+          this.loadUnmatchedResumes();
+          this.loadResumeBatches();
+        },
+        error: (err: any) => {
+          this.alertMessage = `Failed to create people: ${err.error?.detail || 'Server error'}`;
+          this.showAlert = true;
+        }
+      });
+  }
+
   confirmResolveUnmatched(): void {
     if (!this.activeResolvingResume || !this.selectedCandidateForResolve?.id) return;
 

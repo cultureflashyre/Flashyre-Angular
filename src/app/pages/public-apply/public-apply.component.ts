@@ -53,7 +53,7 @@ export class PublicApplyComponent implements OnInit {
         Validators.required, 
         Validators.pattern(/^\d{10}$/)
       ]],
-      gender: ['', [Validators.required]],
+      gender: [''],
       website: [''] // Honeypot field (hidden from view)
     });
   }
@@ -84,8 +84,8 @@ export class PublicApplyComponent implements OnInit {
         } else if (details.template_type === 'experienced') {
           this.applyForm.addControl('latest_company', this.fb.control('', [
             Validators.required, 
-            Validators.maxLength(30),
-            Validators.pattern(/^[a-zA-Z0-9\s]+$/)
+            Validators.maxLength(100),
+            Validators.pattern(/^[\w\s&.,'-]+$/)
           ]));
           this.applyForm.addControl('current_ctc', this.fb.control('', [
             Validators.required
@@ -212,7 +212,7 @@ export class PublicApplyComponent implements OnInit {
     formData.append('name', this.applyForm.value.name);
     formData.append('email', this.applyForm.value.email);
     formData.append('phone_number', this.applyForm.value.phone_number);
-    formData.append('gender', this.applyForm.value.gender);
+    if (this.applyForm.value.gender) formData.append('gender', this.applyForm.value.gender);
     formData.append('website', this.applyForm.value.website); // honeypot
     
     // Append optional fields if they exist

@@ -353,6 +353,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   selectedPlaceId: string = '';
 
   formIdFilter: string | null = null;
+  /** Switch in the filter panel: include suggested skills and "mentioned in resume" matches (on by default). */
+  includeSuggested = true;
+  private loadedSkills = '|true';
   statisticsData: any = null;
 
   constructor(
@@ -895,7 +898,12 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
     this.isSourcedLoading = true;
     this.currentPage = page;
     // Everyone: candidates and people from Needs info, each row tells its `kind`
-    this.candidateService.getPeople({ page, status: 'all', sort: this.serverSort, formId: this.formIdFilter }).subscribe({
+    const skills = this.skillSearchTerms();
+    this.loadedSkills = skills.join(',') + '|' + this.includeSuggested;
+    this.candidateService.getPeople({
+      page, status: 'all', sort: this.serverSort, formId: this.formIdFilter,
+      skills, includeSuggested: this.includeSuggested
+    }).subscribe({
       next: (response: any) => {
         // Handle paginated response
         const data = response.results || response;
@@ -975,30 +983,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       });
     }
 
-    // Skills Filter (Dynamic Substring)
-    if (filterValues.skills) {
-      // User might enter "java, python"
-      const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
-
-      if (skillFilters.length > 0) {
-        candidates = candidates.filter(c => {
-          // Get raw string (e.g., "html5, css, react")
-          const rawSkills = isSourced ? c.skills : (c.sourced_data?.skills || '');
-          if (!rawSkills) return false;
-
-          // Split candidate skills into array
-          const candidateSkills = rawSkills.toLowerCase().split(',').map((s: string) => s.trim());
-
-          // LOGIC UPDATE:
-          // Check if ANY of the user's search terms match ANY of the candidate's skills.
-          // "html" (search) -> "html5" (candidate skill) => TRUE
-          // "java" (search) -> "javascript" (candidate skill) => TRUE
-          return skillFilters.some((skillFilter: string) =>
-            candidateSkills.some((skill: string) => skill.includes(skillFilter))
-          );
-        });
-      }
-    }
+    // Skills are searched on the server (whole skill names, every page, ranked); see loadCandidates.
 
     // CTC Filter (Numerical comparison: Candidate CTC <= Filter CTC)
     if (filterValues.current_ctc) {
@@ -1063,12 +1048,42 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
   }
 
   applyFiltersFromPanel(): void {
-    this.applyFiltersAndSort();
+    if (this.skillsSearchChanged()) {
+      this.loadCandidates(1);
+    } else {
+      this.applyFiltersAndSort();
+    }
     this.isFilterPanelVisible = false;
   }
 
+  /** Skills typed in the filter panel, as a clean list (the server finds whole skills, through the alias list). */
+  skillSearchTerms(): string[] {
+    const raw = String(this.filterForm?.value?.skills || '');
+    return raw.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  private skillsSearchChanged(): boolean {
+    return (this.skillSearchTerms().join(',') + '|' + this.includeSuggested) !== this.loadedSkills;
+  }
+
+  onIncludeSuggestedChange(event: Event): void {
+    this.includeSuggested = (event.target as HTMLInputElement).checked;
+  }
+
+  /** "Add as skill" on a person whose resume only mentions the searched skill: it is saved as a confirmed skill. */
+  addMentionedSkill(row: any): void {
+    const names = this.skillSearchTerms();
+    if (!names.length) { return; }
+    this.candidateService.addSkills(row.kind === 'intake' ? 'intake' : 'candidate', row.id, names).subscribe({
+      next: () => this.loadCandidates(this.currentPage),
+      error: () => this.showAlert('Could not add the skill. Only the sourcing recruiter or an admin can.', ['Close'])
+    });
+  }
+
   clearFilters(): void {
+    const hadSkills = this.skillSearchTerms().length > 0;
     this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '', phone: '' });
+    if (hadSkills) { this.loadCandidates(1); }
     this.filterOverallRating = '';
     this.filterUnrated = false;
     this.activeCriteriaFilters = [];
@@ -1573,7 +1588,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
       current_location: ['', [Validators.pattern(locationPattern)]],
       notice_period: [''],
       gender: [''],
-      work_experience: ['', [Validators.maxLength(30)]],
+      work_experience: ['', [Validators.maxLength(100)]],
       skills: [''],
       latest_education_level: ['', [Validators.maxLength(255)]],
       latest_university: ['', [Validators.maxLength(255)]],
@@ -2309,13 +2324,13 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy, AfterViewI
 
   allowAlphanumericOnly(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
+    input.value = input.value.replace(/[^a-zA-Z0-9 .,&\/'-]/g, '');   // Sr. Developer, Sales & Marketing
     this.candidateForm.get('work_experience')?.setValue(input.value);
   }
 
   allowAlphabetsOnly(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^a-zA-Z #+]/g, '');
+    input.value = input.value.replace(/[^a-zA-Z0-9 #+.&\/-]/g, '');   // C++, C#, Node.js, Python3, CI/CD, R&D
   }
 
   /** Loads the job requirements the user may use and opens the "Add to ATS" modal. */

@@ -5,7 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, Subscription, timer } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 import {
-  Candidate, IntakePerson, IntakeUpdateResult, RecruiterWorkflowCandidateService
+  Candidate, IntakePerson, IntakeUpdateResult, RecruiterWorkflowCandidateService, SkillDetail
 } from '../../services/recruiter-workflow-candidate.service';
 import { PersonBadgesComponent, aiFieldLabel, missingFieldLabel } from '../person-badges/person-badges.component';
 import { PersonNotesComponent } from '../person-notes/person-notes.component';
@@ -51,10 +51,26 @@ const NO_TEXT_MESSAGE = 'The file has no readable text (it may be blank or a sca
           <strong>Still needed for a complete profile:</strong>
           <span>{{ missingText }}</span>
         </div>
+        <section class="skills-review" *ngIf="suggestedSkills.length" data-test="skills-review" role="region" aria-label="Skills to review">
+          <div class="ai-panel-head">
+            <strong>Skills to review</strong>
+            <button type="button" class="btn small" data-test="confirm-all-skills" *ngIf="canEdit" (click)="confirmSkills()" [disabled]="busy">Confirm all</button>
+          </div>
+          <div class="ai-panel-text">
+            These were found in the resume but are not written as skills (for example, taken from a job title). Confirm the ones that are right.
+            Verify is available once none are left.
+          </div>
+          <div class="chips">
+            <span class="chip suggested" *ngFor="let s of suggestedSkills" data-test="suggested-skill" [attr.title]="s.evidence || null">{{ s.name }}
+              <span class="from" *ngIf="s.section">from {{ s.section }}</span>
+              <button type="button" *ngIf="canEdit" class="ok" (click)="confirmSkills([s.name])" [disabled]="busy" [attr.aria-label]="'Confirm ' + s.name">✓</button>
+              <button type="button" *ngIf="canEdit" (click)="removeSuggested(s.name)" [disabled]="busy" [attr.aria-label]="'Remove ' + s.name">×</button></span>
+          </div>
+        </section>
         <section class="ai-panel" *ngIf="needsReview" data-test="ai-panel" role="region" aria-label="Check what the AI filled in">
           <div class="ai-panel-head">
             <strong>Check what the AI filled in</strong>
-            <button type="button" class="btn small" data-test="verify-btn" *ngIf="canVerify" (click)="verify()" [disabled]="busy">Verify</button>
+            <button type="button" class="btn small" data-test="verify-btn" *ngIf="canVerify" (click)="verify()" [disabled]="busy || suggestedSkills.length > 0" [attr.title]="suggestedSkills.length ? 'Review the suggested skills first' : null">Verify</button>
           </div>
           <div class="ai-panel-text">
             Some details were filled in by AI from the resume<ng-container *ngIf="aiFieldLabels.length"> (marked <em>From resume, please check</em> below)</ng-container>.
@@ -227,6 +243,10 @@ const NO_TEXT_MESSAGE = 'The file has no readable text (it may be blank or a sca
     .chips { display: flex; flex-wrap: wrap; gap: 6px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; }
     .chips input { border: 0; flex: 1; min-width: 140px; padding: 2px 4px; }
     .chip { background: #f1f5f9; border-radius: 999px; padding: 2px 4px 2px 10px; display: inline-flex; gap: 4px; align-items: center; }
+    .skills-review { border: 1px solid #fcd34d; background: #fffbeb; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+    .chip.suggested { background: #fef3c7; }
+    .chip .from { font-size: 11px; color: #92400e; }
+    .chip button.ok { color: #166534; }
     .chip button { border: 0; background: none; cursor: pointer; color: #64748b; font-size: 15px; line-height: 1; }
     .btn { border: 1px solid #0f172a; background: #0f172a; color: #fff; border-radius: 8px; padding: 8px 14px; cursor: pointer; font: inherit; }
     .btn.small { padding: 4px 10px; background: #b45309; border-color: #b45309; }
@@ -625,8 +645,37 @@ export class IntakeDrawerComponent implements OnChanges, OnDestroy {
     }
   }
 
+  /** Skills the resume suggested that nobody has confirmed yet (the server also refuses Verify while any exist). */
+  get suggestedSkills(): SkillDetail[] {
+    const rows: SkillDetail[] = Array.isArray(this.person?.skills_detail) ? this.person.skills_detail : [];
+    return rows.filter(r => r.status === 'suggested');
+  }
+
+  confirmSkills(names?: string[]): void {
+    this.changeSkills(this.service.confirmSkills(this.kind, this.person.id, names));
+  }
+
+  removeSuggested(name: string): void {
+    this.changeSkills(this.service.removeSkills(this.kind, this.person.id, [name]));
+  }
+
+  private changeSkills(call: Observable<any>): void {
+    if (!this.person || !this.canEdit || this.busy) { return; }
+    this.busy = true;
+    this.error = '';
+    call.subscribe({
+      next: person => {
+        this.busy = false;
+        this.person = { ...this.person, ...person, kind: this.kind };
+        this.skills = this.skillsOf(this.person);
+        this.updated.emit(this.kind === 'candidate' ? { promoted: false, candidate: person } : { promoted: false });
+      },
+      error: err => { this.busy = false; this.error = this.describeError(err); }
+    });
+  }
+
   verify(): void {
-    if (!this.person || !this.canVerify || this.busy) { return; }
+    if (!this.person || !this.canVerify || this.busy || this.suggestedSkills.length) { return; }
     this.busy = true;
     if (this.kind === 'candidate') {
       this.service.verifyCandidate(this.person.id).subscribe({

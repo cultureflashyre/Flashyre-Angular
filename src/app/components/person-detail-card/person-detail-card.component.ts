@@ -137,6 +137,12 @@ export class PersonDetailCardComponent {
     return list.map(s => String(s).trim()).filter(s => !!s);
   });
 
+  /** Skills the resume suggested that no recruiter has confirmed yet; shown apart from the confirmed ones. */
+  readonly suggestedSkills = computed<string[]>(() => {
+    const rows: any[] = Array.isArray(this.person()?.skills_detail) ? this.person().skills_detail : [];
+    return rows.filter(r => r?.status === 'suggested').map(r => String(r.name || '').trim()).filter(s => !!s);
+  });
+
   readonly resumeRef = computed<string>(() => {
     const p = this.person() || {};
     return p.resume || p.resume_url || p.resume_path || '';
